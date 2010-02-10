@@ -51,6 +51,6 @@ function neatlinefeatures_routes($router)
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
 {
-	return "<div>WINNNN!!!!</div>"
+	return "<div>WINNNN!!!!</div>";
 }
 
