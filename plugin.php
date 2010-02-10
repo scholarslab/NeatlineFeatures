@@ -6,19 +6,9 @@
  * @package neatline
  **/
 
-define('NEATLINEFEATURES_PLUGIN_VERSION', get_plugin_ini('neatlinefeatures', 'version'));
+define('NEATLINEFEATURES_PLUGIN_VERSION', get_plugin_ini('NeatlineFeatures', 'version'));
 define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
 
-/*
- define('NEATLINE_GEOSERVER', 'http://localhost:8080/geoserver');
- define('NEATLINE_GEOSERVER_NAMESPACE_PREFIX', 'neatline');
- define('NEATLINE_GEOSERVER_NAMESPACE_URL', 'http://www.neatline.org');
- define('NEATLINE_GEOSERVER_ADMINUSER', 'admin');
- define('NEATLINE_GEOSERVER_ADMINPW', 'geoserver');
-
-
- define('NEATLINE_SPATIAL_REFERENCE_SERVICE','http://spatialreference.org/ref');
- */
 
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
