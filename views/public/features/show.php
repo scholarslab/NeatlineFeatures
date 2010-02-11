@@ -7,7 +7,7 @@
 		<title>Neatline feature display</title>
 		
 		<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">Ê</script>
-		<script type="text/javascript">
+		<script type="text/javascript" defer="">
 		//<![CDATA[
 			feature = new OpenLayers.Format.GML().read("<?php echo $gml ?>");		
 			//]]>		
