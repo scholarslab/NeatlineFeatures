@@ -6,6 +6,7 @@
 	<head>
 		<title>Neatline feature display</title>
 		<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css" type="text/css" />
+		<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.8/examples/style.css" type="text/css" />
 		
 		<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 		<script type="text/javascript" defer="">
@@ -17,7 +18,7 @@
 	</head>
 	<body onload="init()">
 		 
-		 <div id="map"></div>
+		 <div id="map" class="smallmap"></div>
 		
 		 
 	</body>
