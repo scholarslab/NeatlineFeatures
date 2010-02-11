@@ -3,7 +3,8 @@ var init = function() {
 	wgs84 = new OpenLayers.Projection("EPSG:4326");
 	
 	map = new OpenLayers.Map('map',{
-		projection : wgs84
+		projection : wgs84,
+		numZoomLevels : 128
 	});
 	
 	layer = new OpenLayers.Layer.Vector("feature");
