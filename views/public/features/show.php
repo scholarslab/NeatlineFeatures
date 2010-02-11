@@ -10,7 +10,10 @@
 		<script type="text/javascript" defer="">
 		//<![CDATA[
 			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
-			//]]>		
+			//]]><?php 
+			if ($backgroundMap) {?>
+				backgroundMap = <?php echo $backgroundMap ?>;
+			<?php }?>		
 		</script>
 		<?php echo js("features/show/init"); ?>
 	</head>
