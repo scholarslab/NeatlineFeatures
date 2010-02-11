@@ -1,9 +1,8 @@
 <?php 
 	$wkt = item("Dublin Core","Coverage",$item);
+	head();
 ?>
-<html>
 
-	<head>
 		<title>Neatline feature display</title>
 		<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css" type="text/css" />
 
@@ -13,7 +12,7 @@
 			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
 			//]]>		
 		</script>
-		<?php echo js("show-feature/init"); ?>
+		<?php echo js("features/show/init"); ?>
 	</head>
 	<body onload="init()">
 		 <span><?php echo $backgroundMap?></span>
@@ -22,4 +21,3 @@
 		 
 	</body>
 
-</html>
