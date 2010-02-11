@@ -20,7 +20,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$item = $this->findById($id,"Item");
 		//$gml = $this->itemMetadata($item,'Dublin Core', 'Coverage');
 		$r = new ReflectionObject($item);
-		$mets = implode($r->getMethods(),",");
+		$mets = implode(var_export($r->getMethods()),",");
 		
 		//$this->view->gml = $gml;
 	}
