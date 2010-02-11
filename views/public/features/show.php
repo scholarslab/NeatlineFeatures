@@ -7,7 +7,7 @@
 
 	<head/>
 	<body>
-		<?php echo $gml ; ?>
+		<?php echo $mets ; ?>
 	</body>
 
 </html>

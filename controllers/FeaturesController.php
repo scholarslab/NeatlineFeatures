@@ -18,8 +18,11 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 
 		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
 		$item = $this->findById($id,"Item");
-		$gml = $this->itemMetadata($item,'Dublin Core', 'Coverage');
-		$this->view->gml = $gml;
+		//$gml = $this->itemMetadata($item,'Dublin Core', 'Coverage');
+		$r = new ReflectionObject($item);
+		$mets = implode($r->getMethods(),",");
+		
+		//$this->view->gml = $gml;
 	}
 	
 
