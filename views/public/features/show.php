@@ -1,7 +1,5 @@
 <?php 
-
-	
-
+	$gml = item("Dublin Core","Coverage",$item);
 ?>
 <html>
 
