@@ -3,7 +3,6 @@ var init = function() {
 	wgs84 = new OpenLayers.Projection("EPSG:4326");
 	
 	map = new OpenLayers.Map('map',{
-		allOverlays: true,
 		projection : wgs84
 	});
 	
@@ -16,6 +15,7 @@ var init = function() {
 		map.addLayer(backgroundlayer);
 	}
 	map.addControl(new OpenLayers.Control.NavToolbar());
+	map.addControl(new OpenLayers.Control.LayerSwitcher());
 
 	map.zoomToExtent(feature.geometry.getBounds());
 }
