@@ -13,7 +13,7 @@ define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_routes', 'neatlinefeatures_routes');
-add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
+//add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
 function neatlinefeatures_uninstall()
 {

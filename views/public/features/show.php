@@ -1,10 +1,13 @@
 <?php 
+
+	$gml = itemMetadata($item,'Dublin Core', 'Coverage');
+
 ?>
 <html>
 
 	<head/>
 	<body>
-		show.php
+		<?php echo $gml ; ?>
 	</body>
 
 </html>
