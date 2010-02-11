@@ -16,7 +16,7 @@
 		<?php echo js("show-feature/init"); ?>
 	</head>
 	<body onload="init()">
-		 
+		 <span><?php echo $backgroundMap?></span>
 		 <div id="map" style="height: 400px; width: 700px; border: 1px solid #ccc;"></div>
 		
 		 
