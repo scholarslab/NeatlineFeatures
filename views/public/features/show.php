@@ -7,7 +7,7 @@
 
 	<head/>
 	<body>
-		<?php echo $mets ;
+		<?php
 		echo $item->getElementText(); ?>
 	</body>
 
