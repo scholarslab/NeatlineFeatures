@@ -8,7 +8,7 @@
 	<head/>
 	<body>
 		<?php
-		var_dump( $item->getElementText()); ?>
+		 echo item("Dublin Core", "Coverage', $item); ?>
 	</body>
 
 </html>
