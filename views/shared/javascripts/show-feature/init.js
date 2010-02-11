@@ -5,7 +5,7 @@ var init = function() {
 	});
 	
 	layer = new OpenLayers.Layer.Vector("feature");
-	layer.addFeature(feature);
+	layer.addFeatures([ feature ]);
 	map.addLayer(layer);
 	map.zoomToExtent(feature.geometry.getBounds());
 }
