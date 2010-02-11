@@ -25,6 +25,12 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		//$this->view->gml = $gml;
 	}
 	
+	public function libAction()
+	{
+		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
+		$this->view->render("shared/javascripts/OpenLayers/" . $id);
+	}
+	
 
 
 }
