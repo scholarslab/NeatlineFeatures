@@ -12,7 +12,7 @@ var init = function() {
 	map.addLayer(layer);
 	if (backgroundMap.length > 0) {
 		var backgroundWMS;
-		Ajax.Request("/maps/wms/" + backgroundMap, {
+		new Ajax.Request("/maps/wms/" + backgroundMap, {
 			asynchronous : false,
 			onSuccess : function(response) {
 				backgroundWMS = response.text;
