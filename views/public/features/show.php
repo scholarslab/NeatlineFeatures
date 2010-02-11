@@ -8,7 +8,7 @@
 	<head/>
 	<body>
 		<?php
-		echo $item->getElementText(); ?>
+		var_dump( $item->getElementText()); ?>
 	</body>
 
 </html>
