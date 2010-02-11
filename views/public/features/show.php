@@ -8,7 +8,9 @@
 		
 		<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 		<script type="text/javascript">
+		//<![CDATA[
 			feature = new OpenLayers.Format.GML().read("<?php echo $gml ?>");		
+			//]]>		
 		</script>
 		<?php echo js("show-feature/init"); ?>
 	</head>
