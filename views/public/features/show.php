@@ -8,7 +8,7 @@
 	<head>
 		<title>Neatline feature display</title>
 		<?php 
-			js('OpenLayers/OpenLayers');
+			echo js('OpenLayers/OpenLayers');
 		
 		?>
 	</head>
