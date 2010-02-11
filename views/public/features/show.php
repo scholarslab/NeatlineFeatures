@@ -1,5 +1,5 @@
 <?php 
-	$gml = item("Dublin Core","Coverage",$item);
+	$wkt = item("Dublin Core","Coverage",$item);
 ?>
 <html>
 
@@ -9,7 +9,7 @@
 		<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 		<script type="text/javascript" defer="">
 		//<![CDATA[
-			feature = new OpenLayers.Format.GML().read("<?php echo $gml ?>");		
+			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
 			//]]>		
 		</script>
 		<?php echo js("show-feature/init"); ?>
