@@ -15,10 +15,8 @@
 		<?php echo js("show-feature/init"); ?>
 	</head>
 	<body onload="init()">
-		<?php
-		 echo item("Dublin Core", "Coverage", $item); ?>
 		 
-		 <div id="map"/>
+		 <div id="map"></div>
 		
 		 
 	</body>
