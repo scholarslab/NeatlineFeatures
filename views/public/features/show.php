@@ -8,7 +8,7 @@
 	<head/>
 	<body>
 		<?php
-		 echo item("Dublin Core", "Coverage', $item); ?>
+		 echo item("Dublin Core", "Coverage", $item); ?>
 	</body>
 
 </html>
