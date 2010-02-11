@@ -13,6 +13,7 @@ var init = function() {
 	if (backgroundMap.length > 0) {
 		var backgroundWMS;
 		new Ajax.Request("/maps/wms/" + backgroundMap, {
+			method: "get",
 			asynchronous : false,
 			onSuccess : function(transport) {
 				backgroundWMS = transport.responseText;
