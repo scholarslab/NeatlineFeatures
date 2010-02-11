@@ -12,7 +12,7 @@ var init = function() {
 	map.addLayer(layer);
 	if (backgroundMap.length > 0) {
 		var backgroundlayer =
-			new OpenLayers.Layer.WMS(background,"http://scholarslab.org:8080/geoserver", { srs:"EPSG:4326", layers:"neatline:"  + backgroundMap })	
+			new OpenLayers.Layer.WMS(backgroundMap,"http://scholarslab.org:8080/geoserver", { srs:"EPSG:4326", layers:"neatline:"  + backgroundMap })	
 		map.addLayer(backgroundlayer);
 	}
 	map.addControl(new OpenLayers.Control.NavToolbar());
