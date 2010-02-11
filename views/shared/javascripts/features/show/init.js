@@ -14,8 +14,8 @@ var init = function() {
 		var backgroundWMS;
 		new Ajax.Request("/maps/wms/" + backgroundMap, {
 			asynchronous : false,
-			onSuccess : function(response) {
-				backgroundWMS = response.text;
+			onSuccess : function(transport) {
+				backgroundWMS = transport.responseText;
 			}
 		});
 		var backgroundlayer = new OpenLayers.Layer.WMS(backgroundMap,
