@@ -1,6 +1,6 @@
 <?php 
 
-	$gml = itemMetadata($item,'Dublin Core', 'Coverage');
+	
 
 ?>
 <html>
