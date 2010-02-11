@@ -1,10 +1,7 @@
 var init = function() {
 	
 	map = new OpenLayers.Map('map',{
-		allOverlays: true,
-		maxExtent: new OpenLayers.Bounds(
-                0, 0, 50, 50
-            )
+		allOverlays: true
 	});
 	
 	layer = new OpenLayers.Layer.Vector("feature");
