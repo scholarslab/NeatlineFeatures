@@ -10,7 +10,7 @@
 		<script type="text/javascript">
 			feature = new OpenLayers.Format.GML().read("<?php echo $gml ?>");		
 		</script>
-		<?php echo js("showfeature/init"); ?>
+		<?php echo js("show-feature/init"); ?>
 	</head>
 	<body onload="init()">
 		<?php
