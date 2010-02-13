@@ -10,7 +10,7 @@ var init = function() {
 	var featurelayer = new OpenLayers.Layer.Vector("feature");
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
-	console.log(layers.title);
+	console.log(layers);
 	if (layers.length > 0) {
 		for (var i = 0; i < layers.length; i++) {
 				var backgroundlayer = new OpenLayers.Layer.WMS(layer[i].title,
@@ -18,7 +18,7 @@ var init = function() {
 							srs : "EPSG:4326",
 							layers : layer[i].layername,
 						})
-//				console.log(layer);
+				console.log(layer);
 				map.addLayer(backgroundlayer);
 			
 		}
