@@ -13,10 +13,10 @@ var init = function() {
 	console.log(layers);
 	if (layers.length > 0) {
 		for (var i = 0; i < layers.length; i++) {
-				var backgroundlayer = new OpenLayers.Layer.WMS(layer[i].title,
-						layer[i].address, {
+				var backgroundlayer = new OpenLayers.Layer.WMS(layers[i].title,
+						layers[i].address, {
 							srs : "EPSG:4326",
-							layers : layer[i].layername,
+							layers : layers[i].layername,
 						})
 				console.log(backgroundlayer);
 				map.addLayer(backgroundlayer);
