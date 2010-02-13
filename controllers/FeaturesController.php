@@ -21,7 +21,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$item = $this->findById($id,"Item");
 		$this->view->item = $item;
 		
-		$backgroundMaps = explode($backgroundMap,',');
+		$backgroundMaps = explode(',',$backgroundMap);
 
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
