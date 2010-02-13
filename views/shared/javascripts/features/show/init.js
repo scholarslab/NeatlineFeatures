@@ -1,16 +1,29 @@
 var init = function() {
 
 	wgs84 = new OpenLayers.Projection("EPSG:4326");
+	
+	var myStyles = new OpenLayers.StyleMap({
+        "default": new OpenLayers.Style({
+            fillColor: "#66ccff",
+            strokeColor: "#6600ff",
+            strokeWidth: 3
+        }),
+        "select": new OpenLayers.Style({
+            fillColor: "#66ccff",
+            strokeColor: "#3399ff"
+        })
+    });
+
 
 	map = new OpenLayers.Map('map', {
 		projection : wgs84,
 		numZoomLevels : 128
 	});
 
-	var featurelayer = new OpenLayers.Layer.Vector("feature");
+	var featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
-	console.log(layers);
+	//console.log(layers);
 	if (layers.length > 0) {
 		for (var i = 0; i < layers.length; i++) {
 				var backgroundlayer = new OpenLayers.Layer.WMS(layers[i].title,
@@ -18,7 +31,7 @@ var init = function() {
 							srs : "EPSG:4326",
 							layers : layers[i].layername,
 						})
-				console.log(backgroundlayer);
+				//console.log(backgroundlayer);
 				map.addLayer(backgroundlayer);
 			
 		}
