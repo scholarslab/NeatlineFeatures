@@ -13,8 +13,9 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 
 	public function showAction()
 	{
-		$logger = Omeka_Context::getInstance()->getLogger();
-
+		$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
+		$logger = new Zend_Log($writer);
+		
 		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
 		$backgroundMap = (!$backgroundMap) ? $this->getRequest()->getParam('backgroundMap') : $backgroundMap;
 
@@ -22,7 +23,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$this->view->item = $item;
 		
 		$backgroundMaps = explode(',',$backgroundMap);
-
+		$logger->log("backgroundMaps: " . $backgroundmaps);
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
@@ -32,7 +33,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$layername = $this->getLayerName($map);
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
-		
+		$logger->log($backgroundLayers);
 		$this->view->backgroundLayers = $backgroundLayers;
 	}
 
