@@ -18,7 +18,7 @@ var init = function() {
 							srs : "EPSG:4326",
 							layers : layers.layername,
 						})
-				console.log(backgroundlayer);
+				console.log(layer);
 				map.addLayer(backgroundlayer);
 			}
 		}
