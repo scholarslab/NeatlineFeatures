@@ -37,11 +37,8 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			}	
 			$serviceaddy = $this->getServiceAddy($map);
 			$layername = $this->getLayerName($map);
-			$logger->info("title, addy, name: " . $layertitle . ", " . $serviceaddy . ", " . $layername);
-
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
-		$logger->info("backgroundLayers: " . var_dump($backgroundLayers));
 		$this->view->backgroundLayers = $backgroundLayers;
 	}
 
