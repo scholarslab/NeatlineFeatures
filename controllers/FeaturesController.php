@@ -23,7 +23,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$this->view->item = $item;
 		
 		$backgroundMaps = explode(',',$backgroundMap);
-		$logger->log("backgroundMaps: " . $backgroundmaps);
+		$logger->info("backgroundMaps: " . var_export($backgroundmaps));
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
@@ -33,7 +33,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$layername = $this->getLayerName($map);
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
-		$logger->log($backgroundLayers);
+		$logger->info("backgroundLayers" . var_export($backgroundLayers));
 		$this->view->backgroundLayers = $backgroundLayers;
 	}
 
