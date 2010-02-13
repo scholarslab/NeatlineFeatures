@@ -30,7 +30,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$layertitle = "A map with no title";
 			try {
 				$layertitles = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
-				$layertitle = $layertitles[0];
+				$layertitle = $layertitles[0]->text;
 			}
 			catch (Omeka_Record_Exception $e) {
 				$logger->err($e);
