@@ -12,11 +12,11 @@
 			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
 			layers = new Array();
 			<?php 
-				while (list($layername, $layervalues) = each($backgroundLayers)) {
+				foreach ($backgroundLayers as $layername => $layervalues) {
  				   ?> 
  				   layers.push( { "title":<?php echo $layername ?>, 
- 		 				   			"address":<?php echo $layername["serviceaddy"] ?>,
- 		 		 				   	"layername":<?php echo $layername["layername"] ?> } ) ;
+ 		 				   			"address":<?php echo $layervalues["serviceaddy"] ?>,
+ 		 		 				   	"layername":<?php echo $layervalues["layername"] ?> } ) ;
  				   <?php 
 				}
 			?>
