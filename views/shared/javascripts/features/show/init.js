@@ -11,13 +11,14 @@ var init = function() {
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
 	if (layers.length > 0) {
-		layers
-		var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
-				layer.serviceaddy, {
-					srs : "EPSG:4326",
-					layers : layers.layername,
-				})
-		map.addLayer(backgroundlayer);
+		for (var layer in layers) {
+			var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
+					layer.serviceaddy, {
+						srs : "EPSG:4326",
+						layers : layers.layername,
+					})
+			map.addLayer(backgroundlayer);
+		}
 	}
 	map.addControl(new OpenLayers.Control.NavToolbar());
 	map.addControl(new OpenLayers.Control.LayerSwitcher());
