@@ -12,13 +12,15 @@ var init = function() {
 	map.addLayer(featurelayer);
 	if (layers.length > 0) {
 		for (var layer in layers) {
-			var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
-					layer.address, {
-						srs : "EPSG:4326",
-						layers : layers.layername,
-					})
-			console.log(backgroundlayer);
-			map.addLayer(backgroundlayer);
+			if (layers.hasOwnProperty(layer)) {
+				var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
+						layer.address, {
+							srs : "EPSG:4326",
+							layers : layers.layername,
+						})
+				console.log(backgroundlayer);
+				map.addLayer(backgroundlayer);
+			}
 		}
 	}
 	map.addControl(new OpenLayers.Control.NavToolbar());
