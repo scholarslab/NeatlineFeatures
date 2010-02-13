@@ -14,9 +14,9 @@
 			<?php 
 				foreach ($backgroundLayers as $layername => $layervalues) {
  				   ?> 
- 				   layers.push( { "title":<?php echo $layername ?>, 
- 		 				   			"address":<?php echo $layervalues["serviceaddy"] ?>,
- 		 		 				   	"layername":<?php echo $layervalues["layername"] ?> } ) ;
+ 				   layers.push( { "title":"<?php echo $layername ?>", 
+ 		 				   			"address":"<?php echo $layervalues["serviceaddy"] ?>",
+ 		 		 				   	"layername":"<?php echo $layervalues["layername"] ?>" } ) ;
  				   <?php 
 				}
 			?>
