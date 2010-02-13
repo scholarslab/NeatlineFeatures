@@ -26,11 +26,12 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
-			$logger->info("Operating on: " . $mapid);
 			$map = $this->findById($mapid,"Item");
 			$layertitle = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
 			$serviceaddy = $this->getServiceAddy($map);
 			$layername = $this->getLayerName($map);
+			$logger->info("title, addy, name: " . $layertitle . ", " . $serviceaddy . ", " . $layername);
+		
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
 		$logger->info("backgroundLayers: " . var_dump($backgroundLayers));
