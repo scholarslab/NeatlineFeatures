@@ -10,7 +10,7 @@ var init = function() {
 	var featurelayer = new OpenLayers.Layer.Vector("feature");
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
-	console.log(layers);
+	console.log(layers.title);
 	if (layers.length > 0) {
 		for (var layer in layers) {
 			if (layers.hasOwnProperty(layer)) {
