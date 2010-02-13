@@ -13,7 +13,7 @@ var init = function() {
 	if (layers.length > 0) {
 		for (var layer in layers) {
 			var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
-					layer.serviceaddy, {
+					layer.address, {
 						srs : "EPSG:4326",
 						layers : layers.layername,
 					})
