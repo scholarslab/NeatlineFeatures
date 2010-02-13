@@ -23,11 +23,10 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$this->view->item = $item;
 		
 		$backgroundMaps = explode(',',$backgroundMap);
-		$logger->info("backgroundMap: " . $backgroundMap);
-		$logger->info("backgroundMaps: " . var_dump($backgroundMaps));
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
+			$logger->info("Operating on: " . $mapid);
 			$map = $this->findById($mapid,"Item");
 			$layertitle = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
 			$serviceaddy = $this->getServiceAddy($map);
