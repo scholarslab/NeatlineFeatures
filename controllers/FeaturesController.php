@@ -23,8 +23,8 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$this->view->item = $item;
 		
 		$backgroundMaps = explode(',',$backgroundMap);
-		$logger->info("backgroundMap: " . $backgroundmaps);
-		$logger->info("backgroundMaps: " . var_dump($backgroundmaps));
+		$logger->info("backgroundMap: " . $backgroundMap);
+		$logger->info("backgroundMaps: " . var_dump($backgroundMaps));
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
