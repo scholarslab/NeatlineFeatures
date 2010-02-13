@@ -15,23 +15,30 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 	{
 		$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 		$logger = new Zend_Log($writer);
-		
+
 		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
 		$backgroundMap = (!$backgroundMap) ? $this->getRequest()->getParam('backgroundMap') : $backgroundMap;
 
 		$item = $this->findById($id,"Item");
 		$this->view->item = $item;
-		
+
 		$backgroundMaps = explode(',',$backgroundMap);
 		$backgroundLayers = array();
 		foreach ( $backgroundMaps as $mapid )
 		{
 			$map = $this->findById($mapid,"Item");
-			$layertitle = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
+			$layertitle = "A map with no title";
+			try {
+				$layertitles = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
+				$layertitle = $layertitles[0];
+			}
+			catch (Omeka_Record_Exception $e) {
+				$logger->err($e);
+			}	
 			$serviceaddy = $this->getServiceAddy($map);
 			$layername = $this->getLayerName($map);
 			$logger->info("title, addy, name: " . $layertitle . ", " . $serviceaddy . ", " . $layername);
-		
+
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
 		$logger->info("backgroundLayers: " . var_dump($backgroundLayers));
