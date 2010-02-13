@@ -30,7 +30,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$layertitle = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
 			$serviceaddy = $this->getServiceAddy($map);
 			$layername = $this->getLayerName($map);
-			$backgroundLayers[$layertitle] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
+			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
 		
 		$this->view->backgroundLayers = $backgroundLayers;
