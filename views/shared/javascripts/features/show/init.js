@@ -12,7 +12,7 @@ var init = function() {
 	map.addLayer(featurelayer);
 	if (layers.length > 0) {
 		for (var layer in layers) {
-			console.debug(layer);
+			console.log(layer);
 			var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
 					layer.address, {
 						srs : "EPSG:4326",
