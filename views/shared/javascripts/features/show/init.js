@@ -10,6 +10,7 @@ var init = function() {
 	var featurelayer = new OpenLayers.Layer.Vector("feature");
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
+	console.log(layers);
 	if (layers.length > 0) {
 		for (var layer in layers) {
 			if (layers.hasOwnProperty(layer)) {
@@ -18,7 +19,7 @@ var init = function() {
 							srs : "EPSG:4326",
 							layers : layers.layername,
 						})
-				console.log(layer);
+//				console.log(layer);
 				map.addLayer(backgroundlayer);
 			}
 		}
