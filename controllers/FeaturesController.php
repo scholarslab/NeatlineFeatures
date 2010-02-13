@@ -51,7 +51,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 	private function getServiceAddy($item)
 	{
 		try {
-			$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Service address', 'Item Type Metadata');
+			$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Service Address', 'Item Type Metadata');
 		}
 		catch (Omeka_Record_Exception $e) {
 		}
