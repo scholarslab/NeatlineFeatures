@@ -7,22 +7,15 @@ var init = function() {
 		numZoomLevels : 128
 	});
 
-	layer = new OpenLayers.Layer.Vector("feature");
-	layer.addFeatures(feature);
-	map.addLayer(layer);
-	if (backgroundMap.length > 0) {
-		var backgroundWMS;
-		new Ajax.Request("/maps/wms/" + backgroundMap, {
-			method: "get",
-			asynchronous : false,
-			onSuccess : function(transport) {
-				backgroundWMS = transport.responseText;
-			}
-		});
-		var backgroundlayer = new OpenLayers.Layer.WMS(backgroundMap,
-				backgroundWMS, {
+	var featurelayer = new OpenLayers.Layer.Vector("feature");
+	featurelayer.addFeatures(feature);
+	map.addLayer(featurelayer);
+	if (layers.length > 0) {
+		layers
+		var backgroundlayer = new OpenLayers.Layer.WMS(layer.title,
+				layer.serviceaddy, {
 					srs : "EPSG:4326",
-					layers : "neatline:" + backgroundMap
+					layers : layers.layername,
 				})
 		map.addLayer(backgroundlayer);
 	}

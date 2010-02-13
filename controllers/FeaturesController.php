@@ -19,8 +19,8 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$backgroundMap = (!$backgroundMap) ? $this->getRequest()->getParam('backgroundMap') : $backgroundMap;
 
 		$item = $this->findById($id,"Item");
-
 		$this->view->item = $item;
+		
 		$backgroundMaps = explode($backgroundMap,',');
 
 		$backgroundLayers = array();
@@ -32,6 +32,8 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$layername = $map->getLayerName();
 			$backgroundLayers[$layertitle] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
+		
+		$this->view->backgroundLayers = $backgroundLayers;
 	}
 
 	public function editAction()

@@ -10,7 +10,16 @@
 		<script type="text/javascript" defer="">
 		//<![CDATA[
 			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
-			backgroundMap = "<?php echo $backgroundMap ?>";
+			layers = new Array();
+			<?php 
+				while (list($layername, $layervalues) = each($backgroundLayers)) {
+ 				   ?> 
+ 				   layers.push( { "title":<?php echo $layername ?>, 
+ 		 				   			"address":<?php echo $layername["serviceaddy"] ?>,
+ 		 		 				   	"layername":<?php echo $layername["layername"] ?> } ) ;
+ 				   <?php 
+				}
+			?>
 			//]]> 	
 		</script>
 		<?php echo js("features/show/init"); ?>
