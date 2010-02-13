@@ -28,8 +28,8 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		{
 			$map = $this->findById($mapid,"Item");
 			$layertitle = $map->getElementTextsByElementNameAndSetName( 'Title', 'Dublin Core');
-			$serviceaddy = $this->getServiceAddy();
-			$layername = $this->getLayerName();
+			$serviceaddy = $this->getServiceAddy($map);
+			$layername = $this->getLayerName($map);
 			$backgroundLayers[$layertitle] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
 		
