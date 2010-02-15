@@ -61,7 +61,7 @@ var edit = function() {
                     featureunhighlighted: report
                 }
             }),
-            selectCtrl : new OpenLayers.Control.SelectFeature(vectors,
+            selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
                     {clickout: true}
                 )
         };
