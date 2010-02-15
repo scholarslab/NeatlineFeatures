@@ -95,7 +95,7 @@ controls = {
             			title: "Use this control to select shapes"}
                 ),
             save : new OpenLayers.Control.Button( {
-                    trigger : function() {},
+                    trigger : function() {console.log("Save triggered") },
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
             })
