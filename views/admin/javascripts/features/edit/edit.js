@@ -24,15 +24,14 @@ var edit = function() {
 	var featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
-	// console.log(layers);
+
 	if (layers.length > 0) {
 		for (var i = 0; i < layers.length; i++) {
 				var backgroundlayer = new OpenLayers.Layer.WMS(layers[i].title,
 						layers[i].address, {
 							srs : "EPSG:4326",
 							layers : layers[i].layername,
-						})
-				// console.log(backgroundlayer);
+						});				
 				map.addLayer(backgroundlayer);
 			
 		}
