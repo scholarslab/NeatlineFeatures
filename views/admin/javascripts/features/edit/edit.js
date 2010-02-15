@@ -76,7 +76,8 @@ controls = {
 				        title: "Modify a feature on the image"
 				}),
             drag: new OpenLayers.Control.DragFeature(featurelayer, {
-            		displayClass : "olControlDragFeature"
+            		displayClass : "olControlDragFeature",
+            		title: "Move a feature around once selected"
             }),
             highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
                 hover: true,
