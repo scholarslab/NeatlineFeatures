@@ -3,7 +3,7 @@
 	head();
 ?>
 
-		<title>Neatline feature display</title>
+		<title>Neatline feature edit</title>
 		<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css" type="text/css" />
 		<style type="text/css">
 			.olControlSaveFeaturesActive {
@@ -17,11 +17,18 @@
 				background-repeat: no-repeat;
   				background-position: 0px 1px;
 			}
-			.olControlDragFeaturesActive {
+			.olControlDragFeatureActive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png");
 			}
-			.olControlDragFeaturesInactive {
+			.olControlDragFeatureInactive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_off.png");
+			}
+						}
+			.olControlSelectFeatureActive {
+				background-image: url("http://www.developertutorials.com/images/flashtutorial/arrow.jpg");
+			}
+			.olControlSelectFeatureInactive {
+				background-image: url("http://wiki.altium.com/download/attachments/3080266/Button_Arrow.png");
 			}
 			
 			
