@@ -70,7 +70,7 @@ controls = {
 				        onDelete : function(feature) {
 				        },
 				        displayClass : "olControlModifyFeature"
-				})
+				}),
             drag: new OpenLayers.Control.DragFeature(featurelayer),
             highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
                 hover: true,
