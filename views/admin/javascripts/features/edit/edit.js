@@ -107,7 +107,7 @@ controls = {
             panel.addControls(controls[key]);
         }
         map.addControl(panel);
-        controls.highlightCtrl.activate();
+        //controls.highlightCtrl.activate();
         controls.selectCtrl.activate();
 
 
