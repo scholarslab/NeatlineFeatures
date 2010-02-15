@@ -5,7 +5,22 @@
 
 		<title>Neatline feature display</title>
 		<link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css" type="text/css" />
-
+		<style type="text/css">
+			.olControlSaveFeaturesActive {
+				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_on.png");
+			}
+			.olControlSaveFeaturesInactive {
+				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_off.png");
+			}
+			.olControlDragFeaturesActive {
+				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png");
+			}
+			.olControlDragFeaturesInactive {
+				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_off.png");
+			}
+			
+			
+		</style>
 		<script type="text/javascript" src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 		<script type="text/javascript" defer="">
 		//<![CDATA[
