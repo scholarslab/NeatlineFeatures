@@ -62,7 +62,7 @@ controls = {
         				},
         				displayClass : "olControlDrawFeaturePolygon"
                     }),
-            modify : new OpenLayers.Control.ModifyFeature(shapes, {
+            modify : new OpenLayers.Control.ModifyFeature(featurelayer, {
                 onModificationEnd : function(feature) {
                 /* the UPDATE state is modified here!!!! */
                 feature.state = OpenLayers.State.UPDATE;
