@@ -10,23 +10,7 @@ head();
 	type="text/css" />
 <style type="text/css">
 
-.olControlEditingToolbar {
-	float: right;
-	right: 0px;
-	height: 30px;
-	width: 200px;
-}
-.olControlEditingToolbar div { 
-  /* background-image: url("img/editing_tool_bar.png"); */
-  background-repeat: no-repeat;
-  float:right;
-  width:  24px;
-  height: 24px;
-  margin: 5px;
-}
-
-
-.olControlSaveFeaturesActive {
+.olControlSaveFeaturesItemActive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_on.png")
 		;
@@ -34,7 +18,7 @@ head();
 	background-position: 0px 1px;
 }
 
-.olControlSaveFeaturesInactive {
+.olControlSaveFeaturesItemInactive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_off.png")
 		;
@@ -42,26 +26,25 @@ head();
 	background-position: 0px 1px;
 }
 
-.olControlDragFeatureActive {
+.olControlDragFeatureItemActive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png")
 		;
 }
 
-.olControlDragFeatureInactive {
+.olControlDragFeatureItemInactive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_off.png")
 		;
 }
 
-}
-.olControlSelectFeatureActive {
+.olControlSelectFeatureItemActive {
 	background-image:
 		url("http://www.developertutorials.com/images/flashtutorial/arrow.jpg")
 		;
 }
 
-.olControlSelectFeatureInactive {
+.olControlSelectFeatureItemInactive {
 	background-image:
 		url("http://wiki.altium.com/download/attachments/3080266/Button_Arrow.png")
 		;
