@@ -10,7 +10,7 @@ head();
 	type="text/css" />
 <style type="text/css">
 
-.olControlSaveFeaturesItemActive {
+.olControlEditingToolbar  .olControlSaveFeaturesItemActive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_on.png")
 		;
@@ -18,7 +18,7 @@ head();
 	background-position: 0px 1px;
 }
 
-.olControlSaveFeaturesItemInactive {
+.olControlEditingToolbar .olControlSaveFeaturesItemInactive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_off.png")
 		;
@@ -26,16 +26,16 @@ head();
 	background-position: 0px 1px;
 }
 
-.olControlDragFeatureItemActive {
+.olControlEditingToolbar .olControlDragFeatureItemActive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png")
-		;
+		;		background-repeat: no-repeat;
 }
 
-.olControlDragFeatureItemInactive {
+.olControlEditingToolbar  .olControlDragFeatureItemInactive {
 	background-image:
 		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_off.png")
-		;
+		; 		background-repeat: no-repeat;
 }
 
 .olControlEditingToolbar .olControlSelectFeaturesItemActive {
