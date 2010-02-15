@@ -37,12 +37,11 @@ var edit = function() {
 		}
 	}
     var report = function(e) {
-      //  OpenLayers.Console.log(e.type, e.feature.id);
+      // OpenLayers.Console.log(e.type, e.feature.id);
     };
 
 	
-	map.addControl(new OpenLayers.Control.NavToolbar());
-	map.addControl(new OpenLayers.Control.LayerSwitcher());
+	map.addControls([new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()]);
     controls = {
             point: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Point),
@@ -67,7 +66,7 @@ var edit = function() {
         };
     		var panel = new OpenLayers.Control.Panel();
         for(var key in controls) {
-            panel.addControl(controls[key]);
+            panel.addControls(controls[key]);
         }
         map.addControl(panel);
         controls.highlightCtrl.activate();
