@@ -75,7 +75,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 		}
 		$this->view->backgroundLayers = $backgroundLayers;
-		$this->render("edit");
+
 	}
 
 	private function getServiceAddy($item)
