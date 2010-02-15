@@ -69,8 +69,8 @@ var edit = function() {
         for(var key in controls) {
             map.addControl(controls[key]);
         }
-        highlightCtrl.activate();
-        selectCtrl.activate();
+        controls.highlightCtrl.activate();
+        controls.selectCtrl.activate();
 
 
 
