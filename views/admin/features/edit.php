@@ -22,7 +22,7 @@
 			?>
 			//]]> 	
 		</script>
-		<?php echo js("features/show/edit"); ?>
+		<?php echo js("features/edit/edit"); ?>
 	</head>
 	<body onload="edit()">
 		<?php echo $backgroundMap?>
