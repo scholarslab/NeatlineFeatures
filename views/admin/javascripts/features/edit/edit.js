@@ -41,7 +41,7 @@ var edit = function() {
     };
 
 	
-	map.addControls([new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()]);
+	map.addControl([new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()]);
     controls = {
             point: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Point),
