@@ -84,7 +84,11 @@ controls = {
             }),
             selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
                     {clickout: true}
-                )
+                ),
+            save : new OpenLayers.Control.Button( {
+                    trigger : function() {},
+                    displayClass : "olControlSaveFeatures"
+            })
         };
     		var panel = new OpenLayers.Control.Panel();
         for(var key in controls) {
