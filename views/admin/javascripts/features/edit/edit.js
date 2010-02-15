@@ -4,13 +4,13 @@ var edit = function() {
 	
 	var myStyles = new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
-            fillColor: "#66ccff",
-            strokeColor: "#6600ff",
+            fillColor: "#3333ff",
+            strokeColor: "#3399ff",
             strokeWidth: 3
         }),
         "select": new OpenLayers.Style({
-            fillColor: "#66ccff",
-            strokeColor: "#3399ff"
+            fillColor: "#ff3366",
+            strokeColor: "#330033"
         })
     });
 
@@ -36,6 +36,11 @@ var edit = function() {
 			
 		}
 	}
+    var report = function(e) {
+      //  OpenLayers.Console.log(e.type, e.feature.id);
+    };
+
+	
 	map.addControl(new OpenLayers.Control.NavToolbar());
 	map.addControl(new OpenLayers.Control.LayerSwitcher());
     controls = {
@@ -45,12 +50,28 @@ var edit = function() {
                         OpenLayers.Handler.Path),
             polygon: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Polygon),
-            drag: new OpenLayers.Control.DragFeature(featurelayer)
+            drag: new OpenLayers.Control.DragFeature(featurelayer),
+            highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
+                hover: true,
+                highlightOnly: true,
+                renderIntent: "temporary",
+                eventListeners: {
+                    beforefeaturehighlighted: report,
+                    featurehighlighted: report,
+                    featureunhighlighted: report
+                }
+            }),
+            selectCtrl : new OpenLayers.Control.SelectFeature(vectors,
+                    {clickout: true}
+                )
         };
 
         for(var key in controls) {
             map.addControl(controls[key]);
         }
+        highlightCtrl.activate();
+        selectCtrl.activate();
+
 
 
 
