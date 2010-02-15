@@ -17,6 +17,7 @@ var edit = function() {
 
 	map = new OpenLayers.Map('map', {
 		projection : wgs84,
+		controls: [new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
 
@@ -40,8 +41,6 @@ var edit = function() {
       // OpenLayers.Console.log(e.type, e.feature.id);
     };
 
-	
-	map.addControl([new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()]);
     controls = {
             point: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Point),
