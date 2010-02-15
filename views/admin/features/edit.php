@@ -38,13 +38,13 @@ head();
 		;
 }
 
-.olControlSelectFeatureItemActive {
+.olControlSelectFeaturesItemActive {
 	background-image:
 		url("http://www.developertutorials.com/images/flashtutorial/arrow.jpg")
 		;
 }
 
-.olControlSelectFeatureItemInactive {
+.olControlSelectFeaturesItemInactive {
 	background-image:
 		url("http://wiki.altium.com/download/attachments/3080266/Button_Arrow.png")
 		;
