@@ -9,6 +9,21 @@ head();
 	href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css"
 	type="text/css" />
 <style type="text/css">
+.olControlEditingToolbar  .olControlModifyFeatureItemActive {
+	background-image:
+		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/remove_point_on.png")
+		;
+	background-repeat: no-repeat;
+	background-position: 0px 1px;
+}
+
+.olControlEditingToolbar .olControlModifyFeatureItemInactive {
+	background-image:
+		url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/remove_point_off.png")
+		;
+	background-repeat: no-repeat;
+	background-position: 0px 1px;
+}
 
 .olControlEditingToolbar  .olControlSaveFeaturesItemActive {
 	background-image:
