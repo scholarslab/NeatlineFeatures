@@ -65,10 +65,11 @@ var edit = function() {
                     {clickout: true}
                 )
         };
-
+    		var panel = new OpenLayers.Control.Panel();
         for(var key in controls) {
-            map.addControl(controls[key]);
+            panel.addControl(controls[key]);
         }
+        map.addControl(panel);
         controls.highlightCtrl.activate();
         controls.selectCtrl.activate();
 
