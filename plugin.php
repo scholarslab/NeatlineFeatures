@@ -42,9 +42,9 @@ function neatlinefeatures_routes($router)
 
 function neatlinefeatures_define_acl($acl)
 {
-	// only allow super users and admins to import csv files
+	// only allow super users and admins to edit shapes
 	$acl->loadResourceList(array(
-                                    'NeatlineFeatures_Index' => array('edit')
+                                    'NeatlineFeatures_Features' => array('edit')
 	));
 }
 
