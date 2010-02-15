@@ -4,13 +4,13 @@ var edit = function() {
 	
 	var myStyles = new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
-            fillColor: "#3333ff",
-            strokeColor: "#3399ff",
+            fillColor: "none",
+            strokeColor: "blue",
             strokeWidth: 3
         }),
         "select": new OpenLayers.Style({
-            fillColor: "#ff3366",
-            strokeColor: "#330033"
+            fillColor: "red",
+            strokeColor: "red"
         })
     });
 
@@ -40,13 +40,37 @@ var edit = function() {
       // OpenLayers.Console.log(e.type, e.feature.id);
     };
 
-    controls = {
+controls = {
             point: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Point),
+                        OpenLayers.Handler.Point,
+                        { handlerOptions : {
+                				multi : true
+            				},
+            				displayClass : "olControlDrawFeaturePoint"
+                        }),
             line: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Path),
+                        OpenLayers.Handler.Path,
+                        { handlerOptions : {
+            				multi : true
+        				},
+        				displayClass : "olControlDrawFeaturePath"
+                    }),
             polygon: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Polygon),
+                        OpenLayers.Handler.Polygon,
+                        { handlerOptions : {
+            				multi : true
+        				},
+        				displayClass : "olControlDrawFeaturePolygon"
+                    }),
+            modify : new OpenLayers.Control.ModifyFeature(shapes, {
+                onModificationEnd : function(feature) {
+                /* the UPDATE state is modified here!!!! */
+                feature.state = OpenLayers.State.UPDATE;
+				        },
+				        onDelete : function(feature) {
+				        },
+				        displayClass : "olControlModifyFeature"
+				})
             drag: new OpenLayers.Control.DragFeature(featurelayer),
             highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
                 hover: true,
