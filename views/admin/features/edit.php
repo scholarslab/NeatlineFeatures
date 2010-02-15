@@ -8,9 +8,14 @@
 		<style type="text/css">
 			.olControlSaveFeaturesActive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_on.png");
+				background-repeat: no-repeat;
+  				background-position: 0px 1px;
+				
 			}
 			.olControlSaveFeaturesInactive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_off.png");
+				background-repeat: no-repeat;
+  				background-position: 0px 1px;
 			}
 			.olControlDragFeaturesActive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png");
