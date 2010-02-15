@@ -46,21 +46,24 @@ controls = {
                         { handlerOptions : {
                 				multi : true
             				},
-            				displayClass : "olControlDrawFeaturePoint"
+            				displayClass : "olControlDrawFeaturePoint",
+            		        title: "Draw a point feature"
                         }),
             line: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Path,
                         { handlerOptions : {
             				multi : true
         				},
-        				displayClass : "olControlDrawFeaturePath"
+        				displayClass : "olControlDrawFeaturePath",
+        		        title: "Draw a linear feature"
                     }),
             polygon: new OpenLayers.Control.DrawFeature(featurelayer,
                         OpenLayers.Handler.Polygon,
                         { handlerOptions : {
             				multi : true
         				},
-        				displayClass : "olControlDrawFeaturePolygon"
+        				displayClass : "olControlDrawFeaturePolygon",
+        		        title: "Draw a polygonal feature"
                     }),
             modify : new OpenLayers.Control.ModifyFeature(featurelayer, {
                 onModificationEnd : function(feature) {
@@ -69,7 +72,8 @@ controls = {
 				        },
 				        onDelete : function(feature) {
 				        },
-				        displayClass : "olControlModifyFeature"
+				        displayClass : "olControlModifyFeature",
+				        title: "Modify a feature on the image"
 				}),
             drag: new OpenLayers.Control.DragFeature(featurelayer),
             highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
@@ -87,10 +91,13 @@ controls = {
                 ),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {},
-                    displayClass : "olControlSaveFeatures"
+                    displayClass : "olControlSaveFeatures",
+                    title: "Save your changes"
             })
         };
-    		var panel = new OpenLayers.Control.Panel();
+    		var panel = new OpenLayers.Control.Panel({
+    	        displayClass: "olControlEditingToolbar"
+    	    });
         for(var key in controls) {
             panel.addControls(controls[key]);
         }
