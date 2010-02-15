@@ -24,7 +24,7 @@
 		</script>
 		<?php echo js("features/show/edit"); ?>
 	</head>
-	<body onload="init()">
+	<body onload="edit()">
 		<?php echo $backgroundMap?>
 		 <div id="map" style="height: 400px; width: 700px; 
 border: 1px solid #ccc; float:right;"></div>
