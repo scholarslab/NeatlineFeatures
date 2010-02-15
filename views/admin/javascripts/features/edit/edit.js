@@ -79,7 +79,7 @@ controls = {
             		displayClass : "olControlDragFeature",
             		title: "Move a feature around once selected"
             }),
-            highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
+            /* highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
                 hover: true,
                 highlightOnly: true,
                 renderIntent: "temporary",
@@ -88,9 +88,11 @@ controls = {
                     featurehighlighted: report,
                     featureunhighlighted: report
                 }
-            }),
+            }), */
             selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
-                    {clickout: true}
+                    { clickout: true,
+            			displayClass: "olControlSelectFeatures",
+            			title: "Use this control to select shapes"}
                 ),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {},
