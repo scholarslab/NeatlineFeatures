@@ -10,15 +10,17 @@
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_on.png");
 				background-repeat: no-repeat;
   				background-position: 0px 1px;
-				
+				!important
 			}
 			.olControlSaveFeaturesInactive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/save_features_off.png");
 				background-repeat: no-repeat;
   				background-position: 0px 1px;
+  				!important
 			}
 			.olControlDragFeatureActive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_on.png");
+			
 			}
 			.olControlDragFeatureInactive {
 				background-image: url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/move_feature_off.png");
