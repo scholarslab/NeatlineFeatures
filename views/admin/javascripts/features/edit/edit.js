@@ -101,7 +101,7 @@ controls = {
             })
         };
     		var panel = new OpenLayers.Control.Panel({
-    	        displayClass: "olControlEditingToolbar"
+    	       // displayClass: "olControlEditingToolbar"
     	    });
         for(var key in controls) {
             panel.addControls(controls[key]);
