@@ -13,6 +13,7 @@ define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_routes', 'neatlinefeatures_routes');
+add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
 //add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
 function neatlinefeatures_uninstall()
@@ -37,6 +38,14 @@ function neatlinefeatures_routes($router)
 {
 	$router->addConfig(new Zend_Config_Ini(NEATLINEFEATURES_PLUGIN_DIR .
 	DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
+}
+
+function neatlinefeatures_define_acl($acl)
+{
+	// only allow super users and admins to import csv files
+	$acl->loadResourceList(array(
+                                    'NeatlineFeatures_Index' => array('edit')
+	));
 }
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
