@@ -14,8 +14,9 @@ add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_routes', 'neatlinefeatures_routes');
 add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
-//add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
-add_plugin_hook('admin_append_to_item_form', 'neatlinefeatures_geolocation_tab');
+add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
+//add_plugin_hook('admin_append_to_item_form', 'neatlinefeatures_geolocation_tab');
+add_filter('admin_items_form_tabs', 'neatline_location_tab');
 
 function neatlinefeatures_uninstall()
 {
@@ -54,10 +55,10 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	return "<div>WINNNN!!!!</div>";
 }
 
-function neatlinefeatures_geolocation_tab() {
+function neatlinefeatures_location_tab($tabs) {
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
 	$logger->info("geolocate tab called");
-	return "<div id='geolocate'>
-	GEOLOCATE!</div>";
+	$tabs["locate"] = "<div id='locate'>GEOLOCATE!</div>";
+	return $tabs;
 }
