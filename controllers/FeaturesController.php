@@ -88,7 +88,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		
 		$logger->info("Here's what we got in wkts: " . $shapes);
 		$o = new ReflectionObject($item);
-		var_dump($o->getMethods());
+		$logger->var_export($o->getMethods());
 		//$item->save();
 		
 		$this->_forward("admin/edit");
