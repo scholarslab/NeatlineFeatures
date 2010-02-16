@@ -73,6 +73,7 @@ head();
 	src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 <script type="text/javascript" defer="">
 		//<![CDATA[
+			itemid = "<?php echo $item.id ?>";
 			feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ?>");		
 			layers = new Array();
 			<?php 
@@ -87,6 +88,7 @@ head();
 			//]]> 	
 		</script>
 			<?php echo js("features/edit/edit"); ?>
+			<?php echo js("features/edit/save"); ?>
 </head>
 <body onload="edit()">
 			<?php echo $backgroundMap?>

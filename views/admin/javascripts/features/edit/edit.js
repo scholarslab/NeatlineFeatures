@@ -79,23 +79,22 @@ controls = {
             		displayClass : "olControlDragFeature",
             		title: "Move a feature around once selected"
             }),
-            /* highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
-                hover: true,
-                highlightOnly: true,
-                renderIntent: "temporary",
-                eventListeners: {
-                    beforefeaturehighlighted: report,
-                    featurehighlighted: report,
-                    featureunhighlighted: report
-                }
-            }), */
+            /*
+			 * highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
+			 * hover: true, highlightOnly: true, renderIntent: "temporary",
+			 * eventListeners: { beforefeaturehighlighted: report,
+			 * featurehighlighted: report, featureunhighlighted: report } }),
+			 */
             selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
                     { clickout: true,
             			displayClass: "olControlSelectFeatures",
             			title: "Use this control to select shapes"}
                 ),
             save : new OpenLayers.Control.Button( {
-                    trigger : function() {console.log("Save triggered") },
+                    trigger : function(variableName){
+            				save(variableName);
+            			}
+,
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
             })
@@ -107,11 +106,12 @@ controls = {
             panel.addControls(controls[key]);
         }
         map.addControl(panel);
-        //controls.highlightCtrl.activate();
+        // controls.highlightCtrl.activate();
         controls.selectCtrl.activate();
 
-
-
-
 	map.zoomToExtent(feature.geometry.getBounds());
+}
+
+var closesave = function(wkt) {
+	save(itemid, new OpenLayers.Format.WKT().write(featurelayer.features));
 }

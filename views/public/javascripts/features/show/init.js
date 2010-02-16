@@ -4,13 +4,13 @@ var init = function() {
 	
 	var myStyles = new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
-            fillColor: "#66ccff",
-            strokeColor: "#6600ff",
+            fillColor: "none",
+            strokeColor: "blue",
             strokeWidth: 3
         }),
         "select": new OpenLayers.Style({
-            fillColor: "#66ccff",
-            strokeColor: "#3399ff"
+            fillColor: "red",
+            strokeColor: "red"
         })
     });
 
