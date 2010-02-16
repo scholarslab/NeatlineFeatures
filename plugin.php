@@ -16,7 +16,7 @@ add_plugin_hook('define_routes', 'neatlinefeatures_routes');
 add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 //add_plugin_hook('admin_append_to_item_form', 'neatlinefeatures_geolocation_tab');
-add_filter('admin_items_form_tabs', 'neatline_location_tab');
+add_filter('admin_items_form_tabs', 'neatlinefeatures_location_tab');
 
 function neatlinefeatures_uninstall()
 {
