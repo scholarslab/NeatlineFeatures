@@ -55,5 +55,6 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 }
 
 function neatlinefeatures_geolocation_tab() {
-	return "<p>GEOLOCATE!</p>";
+	return "<div id='geolocate'>
+	GEOLOCATE!</div>";
 }
