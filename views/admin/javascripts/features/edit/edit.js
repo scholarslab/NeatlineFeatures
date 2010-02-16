@@ -21,7 +21,7 @@ var edit = function() {
 		numZoomLevels : 128
 	});
 
-	var featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
+	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	featurelayer.addFeatures(feature);
 	map.addLayer(featurelayer);
 
