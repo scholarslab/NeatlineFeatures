@@ -90,7 +90,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$logger->info(Reflection::export($o,true));
 		//$item->save();
 		
-		$this->_forward("admin/edit");
+		$this->_forward("edit");
 	}
 
 	private function getServiceAddy($item)
