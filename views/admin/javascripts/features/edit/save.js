@@ -1,6 +1,6 @@
 function save(id, shapes) {
 	new Ajax.Request(
-			"/features/" + id,
+			"/features/save/" + id,
 			{
 				method: 'post',
 				parameters: { "shapes" : shapes } ,
