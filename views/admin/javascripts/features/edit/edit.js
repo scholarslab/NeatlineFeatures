@@ -91,8 +91,7 @@ controls = {
             			title: "Use this control to select shapes"}
                 ),
             save : new OpenLayers.Control.Button( {
-                    trigger : function(variableName){
-            				save(variableName);
+                    trigger : closesave;
             			}
 ,
                     displayClass : "olControlSaveFeatures",
@@ -105,13 +104,13 @@ controls = {
         for(var key in controls) {
             panel.addControls(controls[key]);
         }
-        map.addControl(panel);
-        // controls.highlightCtrl.activate();
-        controls.selectCtrl.activate();
+    map.addControl(panel);
+  // controls.highlightCtrl.activate();
+    controls.selectCtrl.activate();
 
 	map.zoomToExtent(feature.geometry.getBounds());
 }
 
-var closesave = function(wkt) {
+var closesave = function() {
 	save(itemid, new OpenLayers.Format.WKT().write(featurelayer.features));
 }

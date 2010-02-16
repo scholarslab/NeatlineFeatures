@@ -3,7 +3,7 @@ function save(id, shapes) {
 			"/features/" + id,
 			{
 				method: 'post',
-				parameters: { "wkt" : shapes } ,
+				parameters: { "shapes" : shapes } ,
 				onSuccess: function() {}
 			}
 	);
