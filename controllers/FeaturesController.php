@@ -87,8 +87,11 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$item = $this->findById($id,"Item");
 		
 		$logger->info("Here's what we got in wkts: " . $shapes);
+		$o = new ReflectionObject($item);
+		var_dump($o->getMethods());
+		//$item->save();
 		
-		$this->_forward("edit");
+		$this->_forward("admin/edit");
 	}
 
 	private function getServiceAddy($item)
