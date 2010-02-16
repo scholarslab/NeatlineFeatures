@@ -77,6 +77,19 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		$this->view->backgroundLayers = $backgroundLayers;
 
 	}
+	
+	public function saveAction(){
+		$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
+		$logger = new Zend_Log($writer);
+
+		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
+		$shapes = (!$shapes) ? $this->getRequest()->getParam('shapes') : $shapes;
+		$item = $this->findById($id,"Item");
+		
+		$logger->info("Here's what we got in wkts: " . $shapes);
+		
+		$this->_forward("edit");
+	}
 
 	private function getServiceAddy($item)
 	{
