@@ -8,7 +8,7 @@
 
 define('NEATLINEFEATURES_PLUGIN_VERSION', get_plugin_ini('NeatlineFeatures', 'version'));
 define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
-
+define('NEATLINEFEATURES_LIB_DIR', NEATLINEFEATURES_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR);
 
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
@@ -56,6 +56,6 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 }
 
 function neatlinefeatures_location_tab($tabs) {
-	$tabs["locate"] = "<div id='Locate'>GEOLOCATE iorgjhoid!</div>";
+	$tabs["locate"] = implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php"));
 	return $tabs;
 }
