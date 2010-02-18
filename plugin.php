@@ -56,9 +56,6 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 }
 
 function neatlinefeatures_location_tab($tabs) {
-	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
-	$logger = new Zend_Log($writer);
-	$logger->info("geolocate tab called");
-	$tabs["locate"] = "<div id='locate'>GEOLOCATE!</div>";
+	$tabs["locate"] = "<div id='Locate'>GEOLOCATE iorgjhoid!</div>";
 	return $tabs;
 }
