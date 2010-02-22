@@ -1,12 +1,11 @@
 <?php
 $wkt = item('Dublin Core','Coverage');
 $logger->info('The wkt is: ' . $wkt);
-$tags = get_tags();
 function pull_name($thing)
 {
  return $thing->name;
 }
-$query = array('tags' => implode(',',array_map("pull_name",$tags)));
+$query = array('tags' => implode(',',array_map("pull_name",get_tags())));
 $logger->info("The tags are:" . print_r($query,true));
 $backgroundMaps = get_items($query);
 //$logger->info("The background maps are: " . var_export($backgroundMaps));
