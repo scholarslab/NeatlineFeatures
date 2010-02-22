@@ -6,7 +6,7 @@ function pull_name($thing)
 {
  return $thing->name;
 }
-$query = array('tags' => implode(',',array_map("pull_name",$tag)));
+$query = array('tags' => implode(',',array_map("pull_name",$tags)));
 $logger->info("The tags are:" . print_r($query,true));
 $backgroundMaps = get_items($query);
 //$logger->info("The background maps are: " . var_export($backgroundMaps));
