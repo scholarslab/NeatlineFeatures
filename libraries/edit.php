@@ -24,8 +24,8 @@ foreach ( $backgroundMaps as $mapid )
 	type="text/css" />
 <link rel="stylesheet" href="<?php echo css('edit'); ?>" />
 <script type="text/javascript"
-	src="http://openlayers.org/api/OpenLayers.js">Ê</script> <script
-	type="text/javascript" defer="defer">
+	src="http://openlayers.org/api/OpenLayers.js">Ê</script>
+	<script type="text/javascript" defer="defer">
 			//<![CDATA[
 				itemid = "<?php echo item('ID'); ?>";
 				feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ; ?>");		
