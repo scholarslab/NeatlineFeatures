@@ -14,8 +14,8 @@ foreach ( $backgroundMaps as $mapid )
 	catch (Omeka_Record_Exception $e) {
 		$logger->err($e);
 	}
-	$serviceaddy = $this->getServiceAddy($map);
-	$layername = $this->getLayerName($map);
+	$serviceaddy = getServiceAddy($map);
+	$layername = getLayerName($map);
 	$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
 }
 ?>
