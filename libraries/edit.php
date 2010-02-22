@@ -1,22 +1,21 @@
-<?php
-$wkt = item("Dublin Core","Coverage");
+$wkt = item('Dublin Core','Coverage');
 $tags = item_tags_as_string( );
-$query = array("tags" => $tag);
+$query = array('tags' => $tag);
 $backgroundMaps = get_items($query);
 $backgroundLayers = array();
 foreach ( $backgroundMaps as $mapid )
 {
-	$map = get_item_by_id($mapid,"Item");
-	$layertitle = "A map with no title";
+	$map = get_item_by_id($mapid,'Item');
+	$layertitle = 'A map with no title';
 	try {
-		$layertitle = item( 'Dublin Core', 'Title', array("delimiter" => ",", "snippet" => 20, "all" => true),$map);
+		$layertitle = item( 'Dublin Core', 'Title', array('delimiter' => ',', 'snippet' => 20, 'all' => true),$map);
 	}
 	catch (Omeka_Record_Exception $e) {
 		$logger->err($e);
 	}
 	$serviceaddy = getServiceAddy($map);
 	$layername = getLayerName($map);
-	$backgroundLayers["$layertitle"] = array("layername" => $layername, "serviceaddy" => $serviceaddy);
+	$backgroundLayers['$layertitle'] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
 ?>
 <div id='Locate'>
