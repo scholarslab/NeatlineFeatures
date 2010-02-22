@@ -48,8 +48,10 @@ function neatlinefeatures_define_acl($acl)
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
 {
+	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
+	$logger = new Zend_Log($writer);
 	//return partial('foo.phtml', array());
-	return "<div>WIDGET</div>";
+	return "<div><?php echo js('features/edit/edit'); ?>WIDGET</div>";
 	return eval(implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php")) );
 }
 
