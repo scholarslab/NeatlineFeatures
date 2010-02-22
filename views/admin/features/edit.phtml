@@ -4,11 +4,12 @@ $tags = item_tags_as_string( );
 $logger->info("The tags are:" . $tags);
 $query = array('tags' => $tag);
 $backgroundMaps = get_items($query);
-$logger->info("The background maps are: " . var_dump($backgroundMaps));
+$logger->info("The background maps are: " . var_export($backgroundMaps));
 $backgroundLayers = array();
 foreach ( $backgroundMaps as $mapid )
 {
 	$map = get_item_by_id($mapid,'Item');
+	$logger->info("Now using a map with id: " . $mapid);
 	$layertitle = 'A map with no title';
 	try {
 		$layertitle = item( 'Dublin Core', 'Title', array('delimiter' => ',', 'snippet' => 20, 'all' => true),$map);
