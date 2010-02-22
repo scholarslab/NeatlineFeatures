@@ -17,6 +17,8 @@ add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 //add_plugin_hook('admin_append_to_item_form', 'neatlinefeatures_geolocation_tab');
 add_filter('admin_items_form_tabs', 'neatlinefeatures_location_tab');
+add_filter(array('Form', 'Item', 'Dublin Core', 'Coverage'), neatlinefeatures_map_widget);
+
 
 function neatlinefeatures_uninstall()
 {
@@ -31,11 +33,7 @@ function neatlinefeatures_install()
 
 }
 
-/**
- * Add the routes from routes.ini in this plugin folder.
- *
- * @return void
- **/
+// Add the routes from routes.ini in this plugin folder.
 function neatlinefeatures_routes($router)
 {
 	$router->addConfig(new Zend_Config_Ini(NEATLINEFEATURES_PLUGIN_DIR .
@@ -45,14 +43,12 @@ function neatlinefeatures_routes($router)
 function neatlinefeatures_define_acl($acl)
 {
 	// only allow super users and admins to edit shapes
-	$acl->loadResourceList(array(
-                                    'NeatlineFeatures_Features' => array('edit')
-	));
+	$acl->loadResourceList(array('NeatlineFeatures_Features' => array('edit')));
 }
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
 {
-	return "<div>WINNNN!!!!</div>";
+	return "<div></div>";
 }
 
 function neatlinefeatures_location_tab($tabs) {
