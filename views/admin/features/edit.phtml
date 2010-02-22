@@ -2,7 +2,7 @@
 $wkt = item('Dublin Core','Coverage');
 $logger->info('The wkt is: ' . $wkt);
 $tags = get_tags();
-$logger->info("The tags are:" . $tags);
+$logger->info("The tags are:" . print_r($tags,true));
 $query = array('tags' => $tag);
 $backgroundMaps = get_items($query);
 //$logger->info("The background maps are: " . var_export($backgroundMaps));
