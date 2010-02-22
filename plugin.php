@@ -50,7 +50,7 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 {
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
-	$div = $__v->partial('foo.phtml', array());
+	$div = __v()->partial('foo.phtml', array());
 	return $div;
 }
 
