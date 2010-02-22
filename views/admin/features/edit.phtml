@@ -10,7 +10,7 @@ $backgroundLayers = array();
 foreach ( $backgroundMaps as $mapid => $map)
 {
 	//$map = get_item_by_id($mapid,'Item');
-	$logger->info("Now using a map with id: " . $mapid);
+	$logger->info("Now processing an item with id: " . $mapid);
 	$layertitle = 'A map with no title';
 	try {
 		$layertitle = item( 'Dublin Core', 'Title', array('delimiter' => ',', 'snippet' => 20, 'all' => true),$map);
