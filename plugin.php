@@ -55,3 +55,41 @@ function neatlinefeatures_location_tab($tabs) {
 	$tabs["locate"] = implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php"));
 	return $tabs;
 }
+
+function getServiceAddy($item)
+{
+	try {
+		$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Service Address', 'Item Type Metadata');
+	}
+	catch (Omeka_Record_Exception $e) {
+	}
+
+	if ($serviceaddys) {
+		$serviceaddy = $serviceaddys[0]->text;
+	}
+	if ($serviceaddy) {
+		return $serviceaddy;
+	}
+	else {
+		return NEATLINE_GEOSERVER . "/wms";
+	}
+}
+
+function getLayerName($item)
+{
+	try {
+		$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Layername', 'Item Type Metadata');
+	}
+	catch (Omeka_Record_Exception $e) {
+	}
+
+	if ($serviceaddys) {
+		$serviceaddy = $serviceaddys[0]->text;
+	}
+	if ($serviceaddy) {
+		return $serviceaddy;
+	}
+	else {
+		return NEATLINE_GEOSERVER_NAMESPACE_PREFIX . ":" . $item->id;
+	}
+}
