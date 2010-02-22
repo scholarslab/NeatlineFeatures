@@ -1,4 +1,4 @@
-
+<?php
 $wkt = item("Dublin Core","Coverage");
 $tags = item_tags_as_string( );
 $query = array("tags" => $tag);
