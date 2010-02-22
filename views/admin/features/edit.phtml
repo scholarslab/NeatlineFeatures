@@ -4,6 +4,7 @@ $tags = item_tags_as_string( );
 $logger->info("The tags are:" . $tags);
 $query = array('tags' => $tag);
 $backgroundMaps = get_items($query);
+$logger->info("The background maps are: " . var_dump($backgroundMaps));
 $backgroundLayers = array();
 foreach ( $backgroundMaps as $mapid )
 {
