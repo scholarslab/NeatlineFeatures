@@ -49,6 +49,7 @@ function neatlinefeatures_define_acl($acl)
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
 {
 	//return partial('foo.phtml', array());
+	return "<div>WIDGET</div>";
 	return eval(implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php")) );
 }
 
