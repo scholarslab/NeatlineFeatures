@@ -15,7 +15,7 @@ foreach ( $backgroundMaps as $mapid )
 	}
 	$serviceaddy = getServiceAddy($map);
 	$layername = getLayerName($map);
-	$backgroundLayers['$layertitle'] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
+	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
 ?>
 <div id='Locate'>
