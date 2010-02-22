@@ -50,11 +50,8 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 {
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
-	//return partial('foo.phtml', array());
-	$div =eval("?><div><?php echo js('features/edit/edit'); ?>WIDGET</div><?php ;");
-	$logger->info("Here's the div for the widget: " . $div);
+	$div = $__v->partial('foo.phtml', array());
 	return $div;
-	return eval(implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php")) );
 }
 
 function neatlinefeatures_location_tab($tabs) {
