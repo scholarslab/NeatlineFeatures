@@ -61,15 +61,15 @@ echo js("features/edit/save");
  		   <?php 
 		}
 	?>
-	var $dialog = $("#coveragemap").dialog({
+	var $dialog = jQuery("#coveragemap").dialog({
 		autoOpen: false,
 		title: 'Coverage',
 		modal:true
 		});
-	$('#mapbutton').click(function() {
+	jQuery('#mapbutton').click(function() {
 		$dialog.dialog('open');
 	});
-	$(document).ready(edit());			
+	jQuery(document).ready(edit());			
 	//]]> 	
 </script> 
 
