@@ -65,7 +65,10 @@ echo js("features/edit/save");
 	jQuery(document).ready(function() {
 		jQuery("#coveragemap").dialog({
 			autoOpen: false,
-			modal:true
+			modal:true,
+			width: 500,
+			height: 500,
+			closeOnEscape: true
 			})
 		jQuery('#mapbutton').click(function() {
 			jQuery("#coveragemap").dialog('open');
