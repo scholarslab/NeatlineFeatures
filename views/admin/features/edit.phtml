@@ -2,7 +2,8 @@
 $wkt = item('Dublin Core','Coverage');
 $logger->info('The wkt is: ' . $wkt);
 function pull_name($thing) { return $thing->name; }
-$query = array("type" => 19, 'tags' => implode(',',array_map("pull_name",get_tags())));
+$logger->info("Using historical map itemtype id: " . getNeatlineMapsItemTypeID());
+$query = array("type" => getNeatlineMapsItemTypeID(), 'tags' => implode(',',array_map("pull_name",get_tags())));
 $logger->info("The backrgound map query is:" . print_r($query,true));
 $backgroundMaps = get_items($query);
 $logger->info("The background maps are: " . print_r($backgroundMaps,true));

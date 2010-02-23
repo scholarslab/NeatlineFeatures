@@ -95,4 +95,8 @@ function getLayerName($item)
 	else {
 		return NEATLINE_GEOSERVER_NAMESPACE_PREFIX . ":" . $item->id;
 	}
+	
+	function getNeatlineMapsItemTypeID() {
+		return $this->findByName("Historical Map", "Itemtype")->id;
+	}
 }
