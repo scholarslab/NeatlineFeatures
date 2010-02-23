@@ -52,11 +52,11 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	$types = get_db()->getTable("ItemType")->findBy(array("name" => "Historical map"));
 	function pull_by_name($itemtype){ return ($itemtype->name == "Historical map");}
 	$types = array_filter($types,"pull_by_name");
-	$logger->info("Filtered types from db: " . print_r($types,true));
+	//$logger->info("Filtered types from db: " . print_r($types,true));
 	
 	$type = "NO NEATLINEMAPS INSTALLED";
 	if (count($types) > 0) {
-		$type = $types[0]->id;
+		$type = reset($types)->id;
 	}
 	$div = __v()->partial('features/edit.phtml', array("logger" => $logger, "item" => __v()->item, "NEATLINEMAPS_ITEMTYPE" => $type));
 	return $div;
