@@ -26,9 +26,11 @@ foreach ( $backgroundMaps as $map)
 	$layername = getLayerName($map);
 	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
+
+echo js('jquery-1.3.2.min'); 
+echo js('jquery-ui-1.7.2.custom.min');
 ?>
-<?php echo js('lightbox'); ?>
-<link rel="stylesheet" href="<?php echo css('lightbox'); ?>" />
+<link rel="stylesheet" href="<?php echo css('ui-lightness/jquery-ui-1.7.2.custom'); ?>" />
 
 <div id="coveragetext">
 <?php echo $textarea; ?>
