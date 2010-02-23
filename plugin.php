@@ -49,13 +49,13 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 {
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
-	$logger->info("Using view item: " . print_r(__v()->item,true));
+//	$logger->info("Using view item: " . print_r(__v()->item,true));
 	$types = get_db()->getTable("ItemType")->findBy(array("name" => "Historical map"));
 	$type = "NO NEATLINEMAPS INSTALLED";
 	if (count($types) > 0) {
 		$type = $types[0]->id;
 	}
-	$div = __v()->partial('features/edit.phtml', array("logger" => $logger, "NEATLINEMAPS_ITEMTYPE" => $type));
+	$div = __v()->partial('features/edit.phtml', array("logger" => $logger, "item" => __v()->item, "NEATLINEMAPS_ITEMTYPE" => $type));
 	return $div;
 }
 
