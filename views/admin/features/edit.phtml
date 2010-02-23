@@ -61,21 +61,25 @@ echo js("features/edit/save");
  		   <?php 
 		}
 	?>
-	var dialog = jQuery("#coveragemap").dialog({
-		autoOpen: false,
-		title: 'Coverage',
-		modal:true
-		})
-	jQuery('#mapbutton').click(function() {
-		dialog.dialog('open');
-	});
-	jQuery(document).ready(edit());			
+
+	jQuery(document).ready(function() {
+		jQuery("#coveragemap").dialog({
+			autoOpen: false,
+			modal:true
+			})
+		jQuery('#mapbutton').click(function() {
+			jQuery("#coveragemap").dialog('open');
+		});
+
+		edit();
+
+		});			
 	//]]> 	
 </script> 
 
 <div id="coveragetext"><?php echo $textarea; ?></div>
 <div id="mapbutton">Open the map, boyo.</div>
-<div id='coveragemap' style="visibility:hidden" class="ui-dialog-content ui-widget-content">
+<div id='coveragemap' title="Coverage" class="ui-dialog-content ui-widget-content">
 	<div id="map"
 		style="height: 400px; width: 700px; border: 1px solid #ccc; float: right;"></div>
 </div>
