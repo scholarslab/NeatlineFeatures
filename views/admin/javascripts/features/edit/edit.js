@@ -22,7 +22,9 @@ var edit = function() {
 	});
 
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
-	featurelayer.addFeatures(feature);
+	if (feature) {
+		featurelayer.addFeatures(feature);
+	}
 	map.addLayer(featurelayer);
 
 	if (layers.length > 0) {

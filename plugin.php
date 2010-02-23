@@ -50,13 +50,15 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
 	$types = get_db()->getTable("ItemType")->findBy(array("name" => "Historical map"));
+	
+/*	 we need to add the following workaround because Omeka's ItemType table lacks filtering right now
+	 the findBy above -should- take care of this for us, but it doesn't */
 	function pull_by_name($itemtype){ return ($itemtype->name == "Historical map");}
 	$types = array_filter($types,"pull_by_name");
-	//$logger->info("Filtered types from db: " . print_r($types,true));
-	
+
 	$type = "NO NEATLINEMAPS INSTALLED";
 	if (count($types) > 0) {
-		$type = reset($types)->id;
+		$type = reset($types)->id; // a PHP idiom is that reset() returns the first element of an assoc array
 	}
 	$div = __v()->partial('features/edit.phtml', array("logger" => $logger, "item" => __v()->item, "NEATLINEMAPS_ITEMTYPE" => $type));
 	return $div;
