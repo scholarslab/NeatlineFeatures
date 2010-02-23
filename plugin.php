@@ -50,7 +50,7 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
 	$logger = new Zend_Log($writer);
 	$types = get_db()->getTable("ItemType")->findBy(array("name" => "Historical map"));
-	$logger->info("Types from db: " . print_r($types,true));
+	//$logger->info("Types from db: " . print_r($types,true));
 	function pull_by_name($itemtype){ return ($itemtype->name == "Historical map");}
 	$types = array_filter($types,"pull_by_name");
 	$type = "NO NEATLINEMAPS INSTALLED";
