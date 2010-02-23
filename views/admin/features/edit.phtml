@@ -1,0 +1,69 @@
+<?php
+$wkt = item('Dublin Core','Coverage', $item);
+$logger->info('The wkt is: ' . $wkt);
+//$logger->info("Item tags: " . print_r($item->getTags(),true));
+function pull_name($thing) { return $thing->name; }
+/* the following query should restrict our returned items to Historical maps that
+ share all of our items tags. we may need to change this to sharing any of our
+ items tags. */
+$query = array("type" => $NEATLINEMAPS_ITEMTYPE, 'tags' => implode(',',array_map("pull_name",$item->getTags())));
+$logger->info("The background map query is:" . print_r($query,true));
+$backgroundMaps = get_items($query);
+//$logger->info("The background maps are: " . print_r($backgroundMaps,true));
+$backgroundLayers = array();
+foreach ( $backgroundMaps as $map)
+{
+	//$map = get_item_by_id($mapid,'Item');
+	$logger->info("Now processing an item with id: " . $map->id);
+	$layertitle = 'A map with no title';
+	try {
+		$layertitle = item( 'Dublin Core', 'Title', array('delimiter' => ',', 'snippet' => 20, 'all' => true),$map);
+	}
+	catch (Omeka_Record_Exception $e) {
+		$logger->err($e);
+	}
+	$serviceaddy = getServiceAddy($map);
+	$layername = getLayerName($map);
+	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
+}
+?>
+<?php echo js('lightbox'); ?>
+<link rel="stylesheet" href="<?php echo css('lightbox'); ?>" />
+
+<div id="coveragetext">
+<?php echo $textarea; ?>
+</div>
+
+<a id='coveragemap' rel="lightbox">
+<link rel="stylesheet"
+	href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css"
+	type="text/css" />
+<link rel="stylesheet" href="<?php echo css('edit'); ?>" />
+<script type="text/javascript"
+	src="http://openlayers.org/api/OpenLayers.js">Ê</script>
+	<script type="text/javascript" defer="defer">
+			//<![CDATA[
+				itemid = "<?php echo $item->id; ?>";
+				feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ; ?>");		
+				layers = new Array();
+				<?php 
+					foreach ($backgroundLayers as $layername => $layervalues) {
+	 				   ?> 
+	 				   layers.push( { "title":"<?php echo $layername ?>", 
+	 		 				   			"address":"<?php echo $layervalues["serviceaddy"] ?>",
+	 		 		 				   	"layername":"<?php echo $layervalues["layername"] ?>" } ) ;
+	 				   <?php 
+					}
+				?>
+				//]]> 	
+			</script> <?php echo js("features/edit/edit"); ?> <?php echo js("features/edit/save"); ?>
+
+
+<div id="map"
+	style="height: 400px; width: 700px; border: 1px solid #ccc; float: right;"></div>
+<script type="text/javascript" defer="defer">
+		//<![CDATA[
+		edit();
+		//]]>
+	</script></a>
+
