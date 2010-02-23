@@ -1,7 +1,7 @@
 <?php
 $wkt = item('Dublin Core','Coverage', $item);
 $logger->info('The wkt is: ' . $wkt);
-
+$textarea = display_form_input_for_element($element, $record, $options);
 //$logger->info("Item tags: " . print_r($item->getTags(),true));
 function pull_name($thing) { return $thing->name; }
 /* the following query should restrict our returned items to Historical maps that
@@ -28,7 +28,9 @@ foreach ( $backgroundMaps as $map)
 	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
 ?>
-<div id='Locate'>
+<div id="coveragetext"><?php echo $textarea; ?></div>
+
+<div id='coveragemap'>
 <link rel="stylesheet"
 	href="http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/style.css"
 	type="text/css" />

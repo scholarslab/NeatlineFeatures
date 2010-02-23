@@ -107,8 +107,9 @@ controls = {
     map.addControl(panel);
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
-
-	map.zoomToExtent(feature.geometry.getBounds());
+    if (feature) {
+    		map.zoomToExtent(feature.geometry.getBounds());
+	}
 }
 
 var closesave = function() {
