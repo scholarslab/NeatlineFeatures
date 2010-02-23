@@ -27,7 +27,11 @@ foreach ( $backgroundMaps as $map)
 	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
 ?>
-<div id="coveragetext"><?php echo $textarea; ?></div>
+<div id="coveragetext">
+<textarea cols="50" rows="2" class="textinput"
+id="Elements-49-0-text" name="<?php echo $inputNameStem; ?>[text]"><?php echo $element;?></textarea>
+
+</div>
 
 <div id='coveragemap'>
 <link rel="stylesheet"
