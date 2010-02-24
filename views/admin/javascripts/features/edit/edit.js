@@ -21,10 +21,7 @@ var edit = function() {
 		numZoomLevels : 128
 	});
 	
-    hybrid = new OpenLayers.Layer.VirtualEarth("VirtualEarth Hybrid", {
-        type: VEMapStyle.Hybrid
-    });
-
+    hybrid = new OpenLayers.Layer.OSM("OpenStreetMap");
 
 	map.addLayer(hybrid);
 	
