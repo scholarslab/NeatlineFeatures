@@ -24,7 +24,7 @@ var edit = function() {
     hybrid = new OpenLayers.Layer.OSM("OpenStreetMap");
 
 	map.addLayer(hybrid);
-	feature = new OpenLayers.Format.WKT().read(jQuery("textarea[name='" + inputNameStem + "']").html());	
+	feature = new OpenLayers.Format.WKT().read(jQuery("textarea[name='" + inputNameStem + "[text]']").html());	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	if (feature) {
 		featurelayer.addFeatures(feature);
@@ -122,5 +122,5 @@ controls = {
 
 var savetofield = function() {
 	wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
-	jQuery("textarea[name='" + inputNameStem + "']").html(wkt);
+	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
 }
