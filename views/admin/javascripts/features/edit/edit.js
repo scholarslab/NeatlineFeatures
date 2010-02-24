@@ -25,10 +25,10 @@ var edit = function() {
 
 	map.addLayer(hybrid);
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
-	feature = new OpenLayers.Format.WKT().read(wkt);	
+	features = new OpenLayers.Format.WKT().read(wkt);	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
-	if (feature) {
-		featurelayer.addFeatures(feature);
+	if (features) {
+		featurelayer.addFeatures(features);
 	}
 	map.addLayer(featurelayer);
 
@@ -44,7 +44,7 @@ var edit = function() {
 		}
 	}
     var report = function(e) {
-      // OpenLayers.Console.log(e.type, e.feature.id);
+      // OpenLayers.Console.log(e.type, e.features.id);
     };
 
 controls = {
@@ -112,10 +112,8 @@ controls = {
     map.addControl(panel);
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
-    if (feature) console.log(feature.geometry);
-    if (feature) {
-    		
-    		map.zoomToExtent(feature.geometry.getBounds());
+    if (features) {  		
+    		map.zoomToExtent(new OpenLayers.Geometry.Collection(features.pluck("geometry")).getBounds());
 	}
     else {
     		map.zoomToMaxExtent();
