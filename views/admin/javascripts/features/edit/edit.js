@@ -114,8 +114,12 @@ controls = {
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
     if (feature) {
-    		map.zoomToExtent(feature.geometry.getBounds());
+    		map.zoomToExtent(feature.geometry.getBounds(0,-90,180,90));
 	}
+    else {
+    	map.zoomToExtent(new OpenLayers.Bounds());
+    }
+    
 }
 
 var closesave = function() {
