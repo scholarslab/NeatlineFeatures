@@ -115,7 +115,7 @@ controls = {
     		map.zoomToExtent(feature.geometry.getBounds());
 	}
     else {
-    	map.zoomToExtent(new OpenLayers.Bounds(0,-90,180,90));
+    		map.zoomToMaxExtent();
     }
     
 }
