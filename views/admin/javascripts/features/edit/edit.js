@@ -112,7 +112,7 @@ controls = {
     map.addControl(panel);
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
-    if (feature) alert(feature);
+    if (feature) console.log(feature);
     if (feature && feature.geometry) {
     		map.zoomToExtent(feature.geometry.getBounds());
 	}
