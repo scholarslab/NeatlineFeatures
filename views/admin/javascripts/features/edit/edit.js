@@ -121,5 +121,6 @@ controls = {
 }
 
 var savetofield = function() {
-	save(new OpenLayers.Format.WKT().write(featurelayer.features));
+	wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
+	jQuery(inputNameStem + "");
 }
