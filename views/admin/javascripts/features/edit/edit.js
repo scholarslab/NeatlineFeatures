@@ -97,7 +97,7 @@ controls = {
             			title: "Use this control to select shapes"}
                 ),
             save : new OpenLayers.Control.Button( {
-                    trigger : closesave,
+                    trigger : savetofield,
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
             })
@@ -120,6 +120,6 @@ controls = {
     
 }
 
-var closesave = function() {
+var savetofield = function() {
 	save(new OpenLayers.Format.WKT().write(featurelayer.features));
 }

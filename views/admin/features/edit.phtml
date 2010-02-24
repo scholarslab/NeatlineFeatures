@@ -1,5 +1,4 @@
 <?php
-$wkt = item('Dublin Core','Coverage', $item);
 $logger->info('The wkt is: ' . $wkt);
 //$logger->info("Item tags: " . print_r($item->getTags(),true));
 function pull_name($thing) { return $thing->name; }
@@ -44,15 +43,14 @@ foreach ( $backgroundMaps as $map)
 echo js('jquery-1.3.2.min');
 echo js('jquery-ui-1.7.2.custom.min');
 echo js("features/edit/edit"); 
-echo js("features/edit/save");
 ?>
 
 <script
 	type="text/javascript" defer="defer">
 	//<![CDATA[
 	jQuery.noConflict();
-	itemid = "<?php echo $item->id; ?>";
-	feature = new OpenLayers.Format.WKT().read("<?php echo $wkt ; ?>");		
+	inputNameStem = "<?php echo $inputNameStem; ?>";
+	feature = new OpenLayers.Format.WKT().read("<?php echo $value ; ?>");		
 	layers = new Array();
 	<?php 
 		foreach ($backgroundLayers as $layername => $layervalues) {
