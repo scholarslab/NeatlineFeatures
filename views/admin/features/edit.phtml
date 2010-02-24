@@ -49,8 +49,7 @@ echo js("features/edit/edit");
 	type="text/javascript" defer="defer">
 	//<![CDATA[
 	jQuery.noConflict();
-	inputNameStem = "<?php echo $inputNameStem; ?>";
-	feature = new OpenLayers.Format.WKT().read("<?php echo $value ; ?>");		
+	inputNameStem = "<?php echo $inputNameStem; ?>";	
 	layers = new Array();
 	<?php 
 		foreach ($backgroundLayers as $layername => $layervalues) {

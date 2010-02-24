@@ -24,7 +24,7 @@ var edit = function() {
     hybrid = new OpenLayers.Layer.OSM("OpenStreetMap");
 
 	map.addLayer(hybrid);
-	
+	feature = new OpenLayers.Format.WKT().read(jQuery("textarea[name='" + inputNameStem + "']").html());	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	if (feature) {
 		featurelayer.addFeatures(feature);
