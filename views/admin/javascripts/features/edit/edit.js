@@ -122,5 +122,5 @@ controls = {
 
 var savetofield = function() {
 	wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
-	jQuery(inputNameStem + "");
+	jQuery("textarea[name='" + inputNameStem + "']").html(wkt);
 }
