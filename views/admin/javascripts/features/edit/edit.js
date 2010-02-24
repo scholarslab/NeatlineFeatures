@@ -24,7 +24,8 @@ var edit = function() {
     hybrid = new OpenLayers.Layer.OSM("OpenStreetMap");
 
 	map.addLayer(hybrid);
-	feature = new OpenLayers.Format.WKT().read(jQuery("textarea[name='" + inputNameStem + "[text]']").html());	
+	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
+	feature = new OpenLayers.Format.WKT().read(wkt);	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	if (feature) {
 		featurelayer.addFeatures(feature);
@@ -111,7 +112,7 @@ controls = {
     map.addControl(panel);
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
-    if (feature) {
+    if (feature && feature.geometry) {
     		map.zoomToExtent(feature.geometry.getBounds());
 	}
     else {
