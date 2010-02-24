@@ -21,11 +21,12 @@ var edit = function() {
 		numZoomLevels : 128
 	});
 	
-	worldwind = new OpenLayers.Layer.WorldWind( "LANDSAT",
-            "http://worldwind25.arc.nasa.gov/tile/tile.aspx", 2.25, 4,
-            {T:"105"});
+    hybrid = new OpenLayers.Layer.VirtualEarth("VirtualEarth Hybrid", {
+        type: VEMapStyle.Hybrid
+    });
 
-	map.addLayer(worldwind);
+
+	map.addLayer(hybrid);
 	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	if (feature) {
