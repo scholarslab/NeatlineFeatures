@@ -115,10 +115,10 @@ controls = {
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
     if (feature) {
-    		map.zoomToExtent(feature.geometry.getBounds(0,-90,180,90));
+    		map.zoomToExtent(feature.geometry.getBounds());
 	}
     else {
-    	map.zoomToExtent(new OpenLayers.Bounds());
+    	map.zoomToExtent(new OpenLayers.Bounds(0,-90,180,90));
     }
     
 }
