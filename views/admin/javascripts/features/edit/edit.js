@@ -20,7 +20,13 @@ var edit = function() {
 		controls: [new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
+	
+	worldwind = new OpenLayers.Layer.WorldWind( "LANDSAT",
+            "http://worldwind25.arc.nasa.gov/tile/tile.aspx", 2.25, 4,
+            {T:"105"});
 
+	map.addLayer(worldwind);
+	
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
 	if (feature) {
 		featurelayer.addFeatures(feature);
@@ -113,5 +119,5 @@ controls = {
 }
 
 var closesave = function() {
-	save(itemid, new OpenLayers.Format.WKT().write(featurelayer.features));
+	save(new OpenLayers.Format.WKT().write(featurelayer.features));
 }
