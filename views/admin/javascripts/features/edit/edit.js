@@ -114,7 +114,7 @@ controls = {
     controls.selectCtrl.activate();
     if (feature) console.log(feature.geometry);
     if (feature) {
-    		while (!feature.geometry) {}
+    		
     		map.zoomToExtent(feature.geometry.getBounds());
 	}
     else {
