@@ -112,8 +112,10 @@ controls = {
     map.addControl(panel);
   // controls.highlightCtrl.activate();
     controls.selectCtrl.activate();
-    if (features) {  		
-    		map.zoomToExtent(new OpenLayers.Geometry.Collection(features.pluck("geometry")).getBounds());
+    if (features) {  	
+    		var coll = new OpenLayers.Geometry.Collection(features.pluck("geometry"));
+    		coll.calculateBoundaries();
+    		map.zoomToExtent(coll.getBounds());
 	}
     else {
     		map.zoomToMaxExtent();
