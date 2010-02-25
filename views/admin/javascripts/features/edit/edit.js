@@ -114,7 +114,7 @@ controls = {
     controls.selectCtrl.activate();
     if (features) {  	
     		var coll = new OpenLayers.Geometry.Collection(features.pluck("geometry"));
-    		coll.calculateBoundaries();
+    		coll.calculateBounds();
     		map.zoomToExtent(coll.getBounds());
 	}
     else {
