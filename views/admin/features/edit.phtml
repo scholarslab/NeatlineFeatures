@@ -1,11 +1,14 @@
 <?php
 $logger->info('The wkt is: ' . $wkt);
 //$logger->info("Item tags: " . print_r($item->getTags(),true));
-function pull_name($thing) { return $thing->name; }
+$tags = array();
+foreach ($item->getTags() as $tag) {
+	array_push($tags, $tag->name);
+}
 /* the following query should restrict our returned items to Historical maps that
  share all of our items tags. we may need to change this to sharing any of our
  items tags. */
-$query = array("type" => $NEATLINEMAPS_ITEMTYPE, 'tags' => implode(',',array_map("pull_name",$item->getTags())));
+$query = array("type" => $NEATLINEMAPS_ITEMTYPE, 'tags' => implode(',',$tags));
 $logger->info("The background map query is:" . print_r($query,true));
 $backgroundMaps = get_items($query);
 //$logger->info("The background maps are: " . print_r($backgroundMaps,true));
