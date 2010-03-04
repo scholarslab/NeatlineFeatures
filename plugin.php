@@ -52,10 +52,16 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	$types = get_db()->getTable("ItemType")->findBy(array("name" => "Historical map"));
 	
 /*	 we need to add the following workaround because Omeka's ItemType table lacks filtering right now
-	 the findBy above -should- take care of this for us, but it doesn't */
-	$pull_by_name = create_function('$itemtype', "return ($itemtype->name == 'Historical map')");
-	$types = array_filter($types,"pull_by_name");
-
+	 the findBy above -should- take care of this for us, but it doesn't. we should be able to do this with a 
+	 filtering closure, but PHP is confusion */
+	$tmp = array();
+	foreach ($types as $itemtype) {
+		if ($itemtype->name == 'Historical map') {
+			array_push($tmp, $itemtype);		
+		}
+	}	
+	$types = $tmp;
+	
 	$type = "NO NEATLINEMAPS INSTALLED";
 	if (count($types) > 0) {
 		$type = reset($types)->id; // a PHP idiom is that reset() returns the first element of an assoc array
