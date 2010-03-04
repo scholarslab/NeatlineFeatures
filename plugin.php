@@ -53,7 +53,7 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	
 /*	 we need to add the following workaround because Omeka's ItemType table lacks filtering right now
 	 the findBy above -should- take care of this for us, but it doesn't */
-	function pull_by_name($itemtype){ return ($itemtype->name == "Historical map");}
+	$pull_by_name = create_function('$itemtype', "return ($itemtype->name == 'Historical map')");
 	$types = array_filter($types,"pull_by_name");
 
 	$type = "NO NEATLINEMAPS INSTALLED";
