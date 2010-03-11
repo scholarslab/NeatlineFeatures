@@ -12,7 +12,7 @@ define('NEATLINEFEATURES_LIB_DIR', NEATLINEFEATURES_PLUGIN_DIR . DIRECTORY_SEPAR
 
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
-add_plugin_hook('define_routes', 'neatlinefeatures_routes');
+//add_plugin_hook('define_routes', 'neatlinefeatures_routes');
 add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
