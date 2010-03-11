@@ -1,3 +1,22 @@
+#mapbutton {
+	float:none;
+	cursor:pointer;
+}
+
+#mappanel {
+	-moz-border-radius:6px 6px 6px 6px;
+	background:none repeat scroll 0 0 #DDDDDD;
+	border:1px solid #888888;
+	height:auto;
+	margin:5px 0;
+	padding:4px;
+	width:auto;
+}
+
+#mappanel div {
+	cursor: pointer;
+}
+
 .olControlEditingToolbar  .olControlModifyFeatureItemActive {
 		background-image:
 			url("http://dev.openlayers.org/releases/OpenLayers-2.8/theme/default/img/remove_point_on.png")
@@ -20,6 +39,7 @@
 			;
 		background-repeat: no-repeat;
 		background-position: 0px 1px;
+		margin-right: 30px;
 	}
 	
 	.olControlEditingToolbar .olControlSaveFeaturesItemInactive {
@@ -28,6 +48,7 @@
 			;
 		background-repeat: no-repeat;
 		background-position: 0px 1px;
+		margin-right: 30px;
 	}
 	
 	.olControlEditingToolbar .olControlDragFeatureItemActive {
@@ -56,4 +77,9 @@
 			;
 			background-repeat: no-repeat;
 			
+	}
+	
+	.olControlEditingToolbar .olControlDrawFeaturePolygonItemInactive, 
+	.olControlEditingToolbar .olControlDrawFeaturePolygonItemActive {
+		margin-right: 30px;
 	}

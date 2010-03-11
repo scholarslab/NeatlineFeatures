@@ -17,7 +17,7 @@ var edit = function() {
 
 	map = new OpenLayers.Map('map', {
 		projection : wgs84,
-		controls: [new OpenLayers.Control.NavToolbar(), new OpenLayers.Control.LayerSwitcher()], 
+		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
 	
@@ -48,31 +48,7 @@ var edit = function() {
     };
 
 controls = {
-            point: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Point,
-                        { handlerOptions : {
-                				multi : true
-            				},
-            				displayClass : "olControlDrawFeaturePoint",
-            		        title: "Draw a point feature"
-                        }),
-            line: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Path,
-                        { handlerOptions : {
-            				multi : true
-        				},
-        				displayClass : "olControlDrawFeaturePath",
-        		        title: "Draw a linear feature"
-                    }),
-            polygon: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Polygon,
-                        { handlerOptions : {
-            				multi : true
-        				},
-        				displayClass : "olControlDrawFeaturePolygon",
-        		        title: "Draw a polygonal feature"
-                    }),
-            modify : new OpenLayers.Control.ModifyFeature(featurelayer, {
+            modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
                 onModificationEnd : function(feature) {
                 /* the UPDATE state is modified here!!!! */
                 feature.state = OpenLayers.State.UPDATE;
@@ -86,25 +62,43 @@ controls = {
             		displayClass : "olControlDragFeature",
             		title: "Move a feature around once selected"
             }),
-            /*
-			 * highlightCtrl: new OpenLayers.Control.SelectFeature(featurelayer, {
-			 * hover: true, highlightOnly: true, renderIntent: "temporary",
-			 * eventListeners: { beforefeaturehighlighted: report,
-			 * featurehighlighted: report, featureunhighlighted: report } }),
-			 */
-            selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
-                    { clickout: true,
-            			displayClass: "olControlSelectFeatures",
-            			title: "Use this control to select shapes"}
-                ),
+            polygon: new OpenLayers.Control.DrawFeature(featurelayer,
+                        OpenLayers.Handler.Polygon,
+                        { handlerOptions : {
+            				multi : true
+        				},
+        				displayClass : "olControlDrawFeaturePolygon",
+        		        title: "Draw a polygonal feature"
+                    }),
+            line: new OpenLayers.Control.DrawFeature(featurelayer,
+                        OpenLayers.Handler.Path,
+                        { handlerOptions : {
+            				multi : true
+        				},
+        				displayClass : "olControlDrawFeaturePath",
+        		        title: "Draw a linear feature"
+            }),
+            point: new OpenLayers.Control.DrawFeature(featurelayer,
+                        OpenLayers.Handler.Point,
+                        { handlerOptions : {
+                				multi : true
+            				},
+            				displayClass : "olControlDrawFeaturePoint",
+            		        title: "Draw a point feature"
+            }),
             save : new OpenLayers.Control.Button( {
                     trigger : savetofield,
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
-            })
+            }),
+            selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
+                    { clickout: true,
+            			displayClass: "olControlSelectFeatures",
+            			title: "Use this control to select shapes and navigate the map"}
+                )
         };
     		var panel = new OpenLayers.Control.Panel({
-    	        displayClass: "olControlEditingToolbar"
+				div: document.getElementById('mappanel')
     	    });
         for(var key in controls) {
             panel.addControls(controls[key]);
