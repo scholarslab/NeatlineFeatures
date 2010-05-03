@@ -26,8 +26,6 @@ function neatlinefeatures_uninstall()
 
 function neatlinefeatures_install()
 {
-	$writer = new Zend_Log_Writer_Stream(LOGS_DIR . DIRECTORY_SEPARATOR . "neatline.log");
-	$logger = new Zend_Log($writer);
 	set_option('neatlinefeatures_version', NEATLINEFEATURES_PLUGIN_VERSION);
 
 }
@@ -75,7 +73,7 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 function neatlinefeatures_location_tab($tabs) {
 	$tabs["locate"] = implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php"));
 	return $tabs;
-} */
+} 
 
 function getServiceAddy($item)
 {
@@ -114,5 +112,5 @@ function getLayerName($item)
 		return NEATLINE_GEOSERVER_NAMESPACE_PREFIX . ":" . $item->id;
 	}
 	
-
+*/
 }
