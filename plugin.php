@@ -16,9 +16,6 @@ add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_acl', 'neatlinefeatures_define_acl');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
-//add_filter('admin_items_form_tabs', 'neatlinefeatures_location_tab');
-
-
 function neatlinefeatures_uninstall()
 {
 	delete_option('neatlinefeatures_plugin_version');
@@ -69,48 +66,3 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	return $div;
 }
 
-/*
-function neatlinefeatures_location_tab($tabs) {
-	$tabs["locate"] = implode('',file(NEATLINEFEATURES_LIB_DIR . "edit.php"));
-	return $tabs;
-} 
-
-function getServiceAddy($item)
-{
-	try {
-		$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Service Address', 'Item Type Metadata');
-	}
-	catch (Omeka_Record_Exception $e) {
-	}
-
-	if ($serviceaddys) {
-		$serviceaddy = $serviceaddys[0]->text;
-	}
-	if ($serviceaddy) {
-		return $serviceaddy;
-	}
-	else {
-		return NEATLINE_GEOSERVER . "/wms";
-	}
-}
-
-function getLayerName($item)
-{
-	try {
-		$serviceaddys = $item->getElementTextsByElementNameAndSetName( 'Layername', 'Item Type Metadata');
-	}
-	catch (Omeka_Record_Exception $e) {
-	}
-
-	if ($serviceaddys) {
-		$serviceaddy = $serviceaddys[0]->text;
-	}
-	if ($serviceaddy) {
-		return $serviceaddy;
-	}
-	else {
-		return NEATLINE_GEOSERVER_NAMESPACE_PREFIX . ":" . $item->id;
-	}
-	
-*/
-}
