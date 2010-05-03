@@ -27,11 +27,9 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		}
 	}
 
-
-
 	private function isWKT($i)
 	{
-		$j = strtoupper(strstr($i,'(',true));
+		$j = strtoupper( strstrb($i, '(') );
 		switch($j) {
 			case "POINT":
 				return true;
@@ -59,6 +57,10 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 				break;
 		}
 		return false;
+	}
+
+	private function strstrb($h,$n){
+		return array_shift(explode($n,$h,2));
 	}
 }
 ?>
