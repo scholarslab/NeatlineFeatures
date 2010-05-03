@@ -29,7 +29,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 
 	private function isWKT($i)
 	{
-		$j = strtoupper( strstrb($i, '(') );
+		$j = strtoupper( $this->strstrb($i, '(') );
 		switch($j) {
 			case "POINT":
 				return true;
