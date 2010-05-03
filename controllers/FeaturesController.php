@@ -21,7 +21,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 		}
 		$this->view->wkts = array();
 		foreach($coverages as $coverage) {
-			if ( isWKT($coverage->text) ) {
+			if ( $this->isWKT($coverage->text) ) {
 				array_push($this->view->wkts, $coverage->text);
 			}
 		}
