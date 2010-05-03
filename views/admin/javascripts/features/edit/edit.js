@@ -43,9 +43,11 @@ var edit = function() {
 			
 		}
 	}
+	/*
     var report = function(e) {
       // OpenLayers.Console.log(e.type, e.features.id);
     };
+	*/
 
 controls = {
             modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
