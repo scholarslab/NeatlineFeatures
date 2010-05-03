@@ -1,0 +1,1 @@
+GEOMETRYCOLLECTION( <?php echo implode(',', $wkts) ?> )

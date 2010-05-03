@@ -1,0 +1,64 @@
+<?php
+
+/**
+ * @package Neatline
+ **/
+
+class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
+{
+
+
+	/* returns the wkt for any particular Item's coverages */
+
+	public function wktAction()
+	{
+		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
+		$item = $this->findById($id,"Item");
+		try {
+			$coverages = $item->getElementTextsByElementNameAndSetName( 'Coverage', 'Dublin Core');
+		}
+		catch (Omeka_Record_Exception $e) {
+		}
+		$this->view->wkts = array();
+		foreach($coverages as $coverage) {
+			if ( isWKT($coverage->text) ) {
+				array_push($this->view->wkts, $coverage->text);
+			}
+		}
+	}
+
+
+
+	private function isWKT($i)
+	{
+		$j = strtoupper(strstr($i,'(',true));
+		switch($j) {
+			case "POINT":
+				return true;
+				break;
+			case "LINESTRING":
+				return true;
+				break;
+			case "POLYGON":
+				return true;
+				break;
+			case "MULTIPOINT":
+				return true;
+				break;
+			case "MULTILINESTRING":
+				return true;
+				break;
+			case "MULTIPOLYGON":
+				return true;
+				break;
+			case "GEOMETRYCOLLECTION":
+				return true;
+				break;
+			case "MULTIPOINT":
+				return true;
+				break;
+		}
+		return false;
+	}
+}
+?>
