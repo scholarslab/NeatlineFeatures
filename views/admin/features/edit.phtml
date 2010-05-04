@@ -8,6 +8,7 @@ foreach ($item->getTags() as $tag) {
 /* the following query should restrict our returned items to Historical maps that
  share all of our items tags. we may need to change this to sharing any of our
  items tags. */
+/*
 $query = array("type" => $NEATLINEMAPS_ITEMTYPE, 'tags' => implode(',',$tags));
 $logger->info("The background map query is:" . print_r($query,true));
 $backgroundMaps = get_items($query);
@@ -28,6 +29,9 @@ foreach ( $backgroundMaps as $map)
 	$layername = getLayerName($map);
 	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
 }
+*/
+# temporary fix for ignoring background maps
+$backgroundLayers = array();
 ?>
 
 <!--link
