@@ -73,14 +73,13 @@
     margin-right: 30px;
 }
 
-.olControlEditingToolbar .olNewLayerButtonItemInactive {
+.olControlEditingToolbar .olNewLayerItemInactive {
     background-image:
     url("http://openparachute.files.wordpress.com/2007/06/feed-icon-24x24.png?w=24")
 ;
     background-repeat: no-repeat;
 }
 
-.olControlEditingToolbar .olNewLayerButtonItemInactive,
-.olControlEditingToolbar .olNewLayerButtonItemActive {
+.olControlEditingToolbar .olNewLayerItemInactive {
     margin-right: 30px;
 }
