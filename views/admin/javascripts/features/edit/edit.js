@@ -14,7 +14,6 @@ var edit = function() {
         })
     });
 
-
 	map = new OpenLayers.Map('map', {
 		projection : wgs84,
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
@@ -43,11 +42,6 @@ var edit = function() {
 			
 		}
 	}
-	/*
-    var report = function(e) {
-      // OpenLayers.Console.log(e.type, e.features.id);
-    };
-	*/
 
 controls = {
             modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
@@ -106,7 +100,7 @@ controls = {
             panel.addControls(controls[key]);
         }
     map.addControl(panel);
-  // controls.highlightCtrl.activate();
+
     controls.selectCtrl.activate();
     if (features) {  	
     		var coll = new OpenLayers.Geometry.Collection(features.pluck("geometry"));
