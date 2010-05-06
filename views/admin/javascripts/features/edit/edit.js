@@ -87,6 +87,11 @@ controls = {
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
             }),
+            newlayer : new OpenLayers.Control.Button( {
+                trigger : addnewlayer,
+                displayClass : "olNewLayer",
+                title: "Add new layer"
+            }),
             selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
                     { clickout: true,
             			displayClass: "olControlSelectFeatures",
@@ -116,4 +121,8 @@ controls = {
 var savetofield = function() {
 	wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
 	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
+}
+
+var addnewlayer = function() {
+	
 }
