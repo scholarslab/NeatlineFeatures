@@ -124,6 +124,7 @@ var savetofield = function() {
 }
 
 var addnewlayer = function() {
+	OpenLayers.Console.trace();
 	var options = { "draggable" : true,
 					"height" : 'auto',
 					"title" : "Add a Layer..."};
