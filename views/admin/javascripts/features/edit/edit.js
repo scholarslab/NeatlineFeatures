@@ -124,5 +124,9 @@ var savetofield = function() {
 }
 
 var addnewlayer = function() {
+	var options = { "draggable" : true,
+					"height" : 'auto',
+					"title" : "Add a Layer..."};
 	
+	jQuery("map").dialog(options);
 }
