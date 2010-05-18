@@ -98,13 +98,14 @@ controls = {
             			title: "Use this control to select shapes and navigate the map"}
                 )
         };
+/*
 addlayer = jQuery(controls.newlayer.div).dialog( {
 					"autoOpen": false,
 					"draggable" : true,
 					"height" : 'auto',
 					"title" : "Add a Layer...",
 					"closeOnEscape": true});
-
+*/
     		var panel = new OpenLayers.Control.Panel({
 				div: document.getElementById('mappanel')
     	    });
