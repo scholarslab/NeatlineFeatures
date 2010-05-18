@@ -107,12 +107,13 @@ controls = {
         }
     map.addControl(panel);
     
-	addlayer = jQuery(controls.newlayer.div).dialog( {
+	addlayerdialog = jQuery("addlayerdialog").dialog( {
 		"autoOpen": false,
 		"draggable" : true,
 		"height" : 'auto',
 		"title" : "Add a Layer...",
-		"closeOnEscape": true});
+		"closeOnEscape": true,
+		"open" : function() {} });
 
     controls.selectCtrl.activate();
     if (features) {  	
@@ -132,6 +133,6 @@ var savetofield = function() {
 }
 
 var addnewlayer = function() {
-	addlayer.dialog("open");
-
+	addlayerdialog.dialog("open");
 }
+
