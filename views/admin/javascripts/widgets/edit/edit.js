@@ -109,12 +109,12 @@ controls = {
     
 	addlayerdialog = jQuery("#addlayerdialog").dialog( {
 		"autoOpen": false,
-		"draggable" : true,
-		"height" : 'auto',
-		"width" : 500,
-		"title" : "Add a Layer...",
+		"draggable": true,
+		"height": 'auto',
+		"width": 500,
+		"title": "Add a Layer...",
 		"closeOnEscape": true,
-		"buttons": { "Add": 
+		"buttons": { Add: 
 				function() { $(this).dialog("close"); } }
 		});
 
