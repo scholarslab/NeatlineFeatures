@@ -83,7 +83,10 @@ controls = {
             		        title: "Draw a point feature"
             }),
             save : new OpenLayers.Control.Button( {
-                    trigger : savetofield,
+                    trigger : function() {
+		                    var wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
+		                    	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
+		                    },
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
             }),
@@ -132,9 +135,5 @@ controls = {
     
 }
 
-var savetofield = function() {
-	wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
-	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
-}
 
 
