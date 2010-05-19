@@ -61,7 +61,7 @@ function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$recor
 	if (count($types) > 0) {
 		$type = reset($types)->id; // a PHP idiom is that reset() returns the first element of an assoc array
 	}
-	$div = __v()->partial('features/edit.phtml', array("logger" => $logger, "item" => __v()->item, "NEATLINEMAPS_ITEMTYPE" => $type,
+	$div = __v()->partial('widgets/edit.phtml', array("logger" => $logger, "item" => __v()->item, "NEATLINEMAPS_ITEMTYPE" => $type,
 				"textarea" => __v()->formTextarea($inputNameStem . "[text]",$value,array('class'=>'textinput', 'rows'=>5, 'cols'=>50))	, "inputNameStem" =>$inputNameStem, "value" => $value, "options" => $options, "record" => $record, "element" => $element));
 	return $div;
 }
