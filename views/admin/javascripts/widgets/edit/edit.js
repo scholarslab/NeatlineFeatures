@@ -43,7 +43,7 @@ var edit = function() {
 		}
 	}
 
-controls = {
+var controls = {
             modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
                 onModificationEnd : function(feature) {
                 /* the UPDATE state is modified here!!!! */
