@@ -119,7 +119,7 @@ controls = {
 		"closeOnEscape": true,
 		"buttons": { "Add": 
 				function() { 
-					id = jQuery("#layerselect").first().value;
+					id = jQuery("#layerselect")[0].value;
 					jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
 						jQuery.get("/maps/layername/" + id, function(layername) {
 							map.addLayers([new OpenLayers.Layer.WMS( layername, serviceaddy, {"layers": layername})]);
