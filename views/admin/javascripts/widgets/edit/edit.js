@@ -113,7 +113,7 @@ controls = {
 		"height" : 'auto',
 		"title" : "Add a Layer...",
 		"closeOnEscape": true,
-		"open" : function(event, ui) {  });
+		"open" : function(event, ui) {  } });
 
     controls.selectCtrl.activate();
     if (features) {  	
