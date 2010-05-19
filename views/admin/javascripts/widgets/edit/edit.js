@@ -119,7 +119,12 @@ controls = {
 		"closeOnEscape": true,
 		"buttons": { "Add": 
 				function() { 
-					addlayer(jQuery("#layerselect")[0].value);
+					id = jQuery("#layerselect").first().value;
+					jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
+						jQuery.get("/maps/layername/" + id, function(layername) {
+							map.addLayers([new OpenLayers.Layer.WMS( layername, serviceaddy, {"layers": layername})]);
+						});
+					});
 					jQuery(this).dialog("close"); } }
 		});
 
@@ -133,13 +138,5 @@ controls = {
     		map.zoomToMaxExtent();
     }
     
-}
-
-var addlayer = function(id) {
-	jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
-		jQuery.get("/maps/layername/" + id, function(layername) {
-			map.addLayers([new OpenLayers.Layer.WMS( layername, serviceaddy, {"layers": layername})]);
-		});
-	});
 }
 
