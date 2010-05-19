@@ -111,9 +111,12 @@ controls = {
 		"autoOpen": false,
 		"draggable" : true,
 		"height" : 'auto',
+		"width" : 500,
 		"title" : "Add a Layer...",
 		"closeOnEscape": true,
-		"open" : function(event, ui) {  } });
+		"buttons": { "Add": 
+				function() { $(this).dialog("close"); } }
+		});
 
     controls.selectCtrl.activate();
     if (features) {  	
