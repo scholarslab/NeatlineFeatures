@@ -110,7 +110,7 @@ controls = {
         }
     map.addControl(panel);
     
-	addlayerdialog = jQuery("#addlayerdialog").dialog( {
+	var addlayerdialog = jQuery("#addlayerdialog").dialog( {
 		"autoOpen": false,
 		"draggable": true,
 		"height": 'auto',
