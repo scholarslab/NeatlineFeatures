@@ -115,7 +115,7 @@ controls = {
 		"title": "Add a Layer...",
 		"closeOnEscape": true,
 		"buttons": { Add: 
-				function() { $(this).dialog("close"); } }
+				function() { console.log($(this));$(this).dialog("close"); } }
 		});
 
     controls.selectCtrl.activate();
