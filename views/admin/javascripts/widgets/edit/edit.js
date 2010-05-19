@@ -88,7 +88,7 @@ controls = {
                     title: "Save your changes"
             }),
             newlayer : new OpenLayers.Control.Button( {
-                trigger : addnewlayer,
+                trigger : function() { addlayerdialog.dialog("open"); },
                 displayClass : "olNewLayer",
                 title: "Add new layer"
             }),
@@ -137,7 +137,4 @@ var savetofield = function() {
 	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
 }
 
-var addnewlayer = function() {
-	addlayerdialog.dialog("open");
-}
 
