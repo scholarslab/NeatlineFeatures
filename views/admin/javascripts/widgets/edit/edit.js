@@ -116,7 +116,7 @@ controls = {
 		"closeOnEscape": true,
 		"buttons": { "Add": 
 				function() { 
-					alert(jQuery("#layerselect").value);
+					console.log(jQuery("#layerselect"));
 					jQuery(this).dialog("close"); } }
 		});
 
