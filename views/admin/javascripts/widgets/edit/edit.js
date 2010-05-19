@@ -119,7 +119,7 @@ controls = {
 		"closeOnEscape": true,
 		"buttons": { "Add": 
 				function() { 
-					console.log(jQuery("#layerselect")[0].value);
+					addlayer(jQuery("#layerselect").first.value);
 					jQuery(this).dialog("close"); } }
 		});
 
@@ -135,5 +135,11 @@ controls = {
     
 }
 
-
+var addlayer = function(id) {
+	jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
+		jQuery.get("/maps/layername/" + id, function(layername) {
+			map.addLayers([new OpenLayers.Layer.WMS( layername, serviceaddy, {"layers": layername})]);
+		});
+	});
+}
 
