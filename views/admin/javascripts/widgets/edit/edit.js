@@ -21,9 +21,9 @@ var edit = function() {
 	});
 	
 	map.addLayer(new OpenLayers.Layer.WMS(
-            "USGS WMS",
-            "http://ims.cr.usgs.gov:80/wmsconnector/com.esri.wms.Esrimap/USGS_EDC_Ortho_Urban",
-            {layers: 'USGS_EDC_Ortho_Urban', srs:"EPSG:4326"}, {projection: wgs84}
+            "NASA Landsat WMS",
+            "http://onearth.jpl.nasa.gov/wms.cgi",
+            {layers: 'global_mosaic', srs:"EPSG:4326"}, {projection: wgs84}
         ));
 	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
