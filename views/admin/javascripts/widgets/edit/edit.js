@@ -29,7 +29,7 @@ var edit = function() {
 	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
-	features = new OpenLayers.Format.WKT().read(wkt);
+	features = wkt ? new OpenLayers.Format.WKT().read(wkt) : new Array();
 	features.each(function(feature){feature.geometry.transform(wgs84,spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
 	if (features) {
