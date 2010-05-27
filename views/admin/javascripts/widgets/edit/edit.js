@@ -21,11 +21,11 @@ var edit = function() {
 	});
 	
 	map.addLayer(new OpenLayers.Layer.WMS(
-            "OpenLayers WMS",
-            "http://labs.metacarta.com/wms/vmap0",
-            {layers: 'basic', srs:"EPSG:4326"}, {projection: wgs84}
+            "OpenStreetMap WMS",
+            "http://osm.wheregroup.com/cgi-bin/osm_basic.xml",
+            {layers: 'OSM_Basic', srs:"EPSG:4326"}, {projection: wgs84}
         ));
-	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
+	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
 	features = new OpenLayers.Format.WKT().read(wkt);	
@@ -127,7 +127,7 @@ var controls = {
 					jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
 						jQuery.get("/maps/layername/" + id, function(layername) {
 							var label =jQuery("#layerselect option")[jQuery("#layerselect")[0].selectedIndex].label;
-							map.addLayers([new OpenLayers.Layer.WMS( label, serviceaddy, {"layers": layername})]);
+							map.addLayers([new OpenLayers.Layer.WMS( label, serviceaddy, {"layers": layername, "srs": "EPSG:4326"}, {projection:wgs84})]);
 						});
 					});
 					jQuery(this).dialog("close"); } }
