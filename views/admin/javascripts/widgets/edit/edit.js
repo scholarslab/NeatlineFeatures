@@ -15,7 +15,7 @@ var edit = function() {
         })
     });
 
-	map = new OpenLayers.Map('map', {
+	var map = new OpenLayers.Map('map', {
 		projection : wgs84,
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
