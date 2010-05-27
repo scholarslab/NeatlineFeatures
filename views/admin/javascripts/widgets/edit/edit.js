@@ -21,9 +21,9 @@ var edit = function() {
 	});
 	
 	map.addLayer(new OpenLayers.Layer.WMS(
-            "OpenStreetMap WMS",
-            "http://osm.wheregroup.com/cgi-bin/osm_basic.xml",
-            {layers: 'OSM_Basic', srs:"EPSG:4326"}, {projection: wgs84}
+            "USGS WMS",
+            "http://ims.cr.usgs.gov/wmsconnector/com.esri.wms.Esrimap/USGS_EDC_Ortho_StateLocal",
+            {layers: 'USGS_EDC_Ortho_StateLocal', srs:"EPSG:4326"}, {projection: wgs84}
         ));
 	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
