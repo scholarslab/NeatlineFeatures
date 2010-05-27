@@ -21,9 +21,9 @@ var edit = function() {
 	});
 	
 	map.addLayer(new OpenLayers.Layer.WMS(
-            "NASA Landsat WMS",
-            "http://onearth.jpl.nasa.gov/wms.cgi",
-            {layers: 'global_mosaic', srs:"EPSG:4326"}, {projection: wgs84}
+            "NASA Blue Marble WMS",
+            "http://wms.jpl.nasa.gov/wms.cgi",
+            {layers: 'BMNG', srs:"EPSG:4326"}, {projection: wgs84}
         ));
 	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
