@@ -20,12 +20,12 @@ var edit = function() {
 		numZoomLevels : 128
 	});
 	
-	map.addLayer(new OpenLayers.Layer.WMS(
+/*	map.addLayer(new OpenLayers.Layer.WMS(
             "Terraserver",
             " http://terraservice.net/ogcmap.ashx",
             {layers: 'DOQ', srs:"EPSG:4326"}, {projection: wgs84}
-        ));
-	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
+        ));*/
+	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
 	features = new OpenLayers.Format.WKT().read(wkt);	
