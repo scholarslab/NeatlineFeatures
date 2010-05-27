@@ -19,7 +19,12 @@ var edit = function() {
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
-
+	
+	map.addLayer(new OpenLayers.Layer.WMS(
+            "OpenLayers WMS",
+            "http://labs.metacarta.com/wms/vmap0",
+            {layers: 'basic', srs:"EPSG:4326"}, {projection: wgs84}
+        ));
 	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
