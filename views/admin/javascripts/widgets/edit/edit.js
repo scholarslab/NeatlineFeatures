@@ -1,6 +1,7 @@
 var edit = function() {
 
 	wgs84 = new OpenLayers.Projection("EPSG:4326");
+	spherical = new OpenLayers.Projection("EPSG:900913");
 	
 	var myStyles = new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
@@ -20,15 +21,16 @@ var edit = function() {
 		numZoomLevels : 128
 	});
 	
-/*	map.addLayer(new OpenLayers.Layer.WMS(
-            "Terraserver",
-            " http://terraservice.net/ogcmap.ashx",
-            {layers: 'DOQ', srs:"EPSG:4326"}, {projection: wgs84}
-        ));*/
+/*
+ * map.addLayer(new OpenLayers.Layer.WMS( "Terraserver", "
+ * http://terraservice.net/ogcmap.ashx", {layers: 'DOQ', srs:"EPSG:4326"},
+ * {projection: wgs84} ));
+ */
 	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
-	features = new OpenLayers.Format.WKT().read(wkt);	
+	features = new OpenLayers.Format.WKT().read(wkt);
+	features.each(function(feature){feature.geometry.transform(wgs84,spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
 	if (features) {
 		featurelayer.addFeatures(features);
@@ -88,8 +90,9 @@ var controls = {
             }),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {
+            					featurelayer.features.each(function(feature){feature.geometry.transform(spherical,wgs84)});
 		                    var wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
-		                    	jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
+		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
 		                    },
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
