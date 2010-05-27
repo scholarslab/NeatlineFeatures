@@ -130,7 +130,7 @@ var controls = {
 					jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
 						jQuery.get("/maps/layername/" + id, function(layername) {
 							var label =jQuery("#layerselect option")[jQuery("#layerselect")[0].selectedIndex].label;
-							map.addLayers([new OpenLayers.Layer.WMS( label, serviceaddy, {"layers": layername, "srs": "EPSG:4326"}, {projection:wgs84})]);
+							map.addLayer(new OpenLayers.Layer.WMS( label, serviceaddy, {"layers": layername, "srs": "EPSG:4326"}, {projection:wgs84}));
 						});
 					});
 					jQuery(this).dialog("close"); } }
