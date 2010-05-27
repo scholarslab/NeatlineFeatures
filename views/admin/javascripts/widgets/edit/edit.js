@@ -22,8 +22,8 @@ var edit = function() {
 	
 	map.addLayer(new OpenLayers.Layer.WMS(
             "USGS WMS",
-            "http://ims.cr.usgs.gov/wmsconnector/com.esri.wms.Esrimap/USGS_EDC_Ortho_StateLocal",
-            {layers: 'USGS_EDC_Ortho_StateLocal', srs:"EPSG:4326"}, {projection: wgs84}
+            "http://ims.cr.usgs.gov:80/wmsconnector/com.esri.wms.Esrimap/USGS_EDC_Ortho_Urban",
+            {layers: 'USGS_EDC_Ortho_Urban', srs:"EPSG:4326"}, {projection: wgs84}
         ));
 	//map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
