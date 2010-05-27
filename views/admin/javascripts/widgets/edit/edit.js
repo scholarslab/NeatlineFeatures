@@ -19,13 +19,12 @@ var edit = function() {
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
-	
-    hybrid = new OpenLayers.Layer.OSM("OpenStreetMap");
 
-	map.addLayer(hybrid);
+	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
+	
 	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
 	features = new OpenLayers.Format.WKT().read(wkt);	
-	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles });
+	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
 	if (features) {
 		featurelayer.addFeatures(features);
 	}
