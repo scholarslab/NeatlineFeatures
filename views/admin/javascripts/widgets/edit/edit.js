@@ -90,10 +90,8 @@ var controls = {
             }),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {
-            					featurelayer.features.each(function(feature){feature.geometry.transform(spherical,wgs84)});
-            					var features = new OpenLayers.Geometry.Collection(featurelayer.features);
-            					features.transform(spherical, wgs84);
-		                    var wkt = new OpenLayers.Format.WKT().write(features);
+            					featurelayer.features.each(function(feature){feature.geometry.transform(spherical,wgs84)});	
+		                    var wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
 		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
 		                    },
                     displayClass : "olControlSaveFeatures",
