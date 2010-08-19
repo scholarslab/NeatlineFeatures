@@ -1,0 +1,7 @@
+NeatlineFeatures requires Geoserver in order to function. This is the quickest way to get up and running:
+
+- Download the Stable Binary(OS independent) Geoserver from Geoserver (http://geoserver.org/display/GEOS/Stable)
+- Unzip the file
+- From a terminal/command prompt, change into the geoserver directory
+- Start Geoserver with java -jar start.jar
+- Take a look at http://localhost:8080
