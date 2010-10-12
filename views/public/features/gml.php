@@ -6,10 +6,5 @@ foreach ($gmls as $gml) {
 	$output .= '<gml:featureMember> <n:feature gml:id="' . md5($gml) . '.feature">' . $gml .' </n:feature> </gml:featureMember>';
 }
 $output .= '</gml:FeatureCollection>';
-$sxml = new SimpleXMLElement($output);
-$dom = new DOMDocument('1.0');
-$dom->preserveWhiteSpace = false;
-$dom->formatOutput = true;
-$dom->loadXML($sxml->asXML());
-print $dom->saveXML();
+print neatlinefeatures_formatXML($output);
 ?>
