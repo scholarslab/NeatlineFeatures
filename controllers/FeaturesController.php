@@ -26,6 +26,23 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 			}
 		}
 	}
+	
+	public function gmlAction()
+	{
+		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
+		$item = $this->findById($id,"Item");
+		try {
+			$coverages = $item->getElementTextsByElementNameAndSetName( 'Coverage', 'Dublin Core');
+		}
+		catch (Omeka_Record_Exception $e) {
+		}
+		$this->view->gmls = array();
+		foreach($coverages as $coverage) {
+			if ( $this->isGML($coverage->text) ) {
+				array_push($this->view->gmls, $coverage->text);
+			}
+		}
+	}
 
 	private function isWKT($i)
 	{
@@ -57,6 +74,10 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 				break;
 		}
 		return false;
+	}
+	
+	private function isGML($i) {
+		return (stripos($i,"<gml") == 0) ;
 	}
 
 	private function strstrb($h,$n){
