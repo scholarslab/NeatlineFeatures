@@ -28,26 +28,14 @@ var edit = function() {
  */
 	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
-	var wkt = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
-	features = wkt ? new OpenLayers.Format.WKT().read(wkt) : new Array();
+	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
+	features = gml ? new OpenLayers.Format.GML().read(gml) : new Array();
 	features.each(function(feature){feature.geometry.transform(wgs84,spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
 	if (features) {
 		featurelayer.addFeatures(features);
 	}
 	map.addLayer(featurelayer);
-
-	if (layers.length > 0) {
-		for (var i = 0; i < layers.length; i++) {
-				var backgroundlayer = new OpenLayers.Layer.WMS(layers[i].title,
-						layers[i].address, {
-							srs : "EPSG:4326",
-							layers : layers[i].layername,
-						});				
-				map.addLayer(backgroundlayer);
-			
-		}
-	}
 
 var controls = {
             modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
@@ -91,8 +79,8 @@ var controls = {
             save : new OpenLayers.Control.Button( {
                     trigger : function() {
             					featurelayer.features.each(function(feature){feature.geometry.transform(spherical,wgs84)});	
-		                    var wkt = new OpenLayers.Format.WKT().write(featurelayer.features);
-		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(wkt);
+		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
+		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
 		                    },
                     displayClass : "olControlSaveFeatures",
                     title: "Save your changes"
