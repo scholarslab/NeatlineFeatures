@@ -11,10 +11,12 @@ foreach ($gmls as $gml) {
 $output .= '</gml:FeatureCollection>';
 <?php 
 print $output;
-$sxml = new SimpleXMLElement($output);
+/*
+ * 
+ $sxml = new SimpleXMLElement($output);
 $dom = new DOMDocument('1.0');
 $dom->preserveWhiteSpace = false;
 $dom->formatOutput = true;
 $dom->loadXML($sxml->asXML());
-print $dom->saveXML();
+print $dom->saveXML();*/
 ?>
