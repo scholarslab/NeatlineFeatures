@@ -1,18 +1,19 @@
-<gml:FeatureCollection
-	xmlns:gml="http://www.opengis.net/gml/3.2"
-	gml:id="id"
-	xmlns:n="http://<?php print $_SERVER['SERVER_NAME'];?>">
-
+<?php header('Content-Type: text/xml'); ?>
+$output = "<gml:FeatureCollection xmlns:gml=\"http://www.opengis.net/gml/3.2\"
+	gml:id=\"id\"
+	xmlns:n=\"http://" . $_SERVER['SERVER_NAME'] . '>';
 <?php
 foreach ($gmls as $gml) {
-	?>
-	<gml:featureMember>
-			<n:feature gml:id="<?php print md5($gml) . ".feature" ?>">
-				<?php print $gml;?>
-			</n:feature>
-	</gml:featureMember>
-	<?php 
+	$output .= '<gml:featureMember> <n:feature gml:id=' . md5($gml) . '.feature"' . $gml .' </n:feature> </gml:featureMember>';
 }
 
 ?>
-</gml:FeatureCollection>
+$output .= '</gml:FeatureCollection>';
+<?php 
+$sxml = new SimpleXMLElement($output);
+$dom = new DOMDocument('1.0');
+$dom->preserveWhiteSpace = false;
+$dom->formatOutput = true;
+$dom->loadXML($sxml->asXML());
+print $dom->saveXML();
+?>
