@@ -1,7 +1,7 @@
 var edit = function() {
 
-	wgs84 = new OpenLayers.Projection("EPSG:4326");
-	spherical = new OpenLayers.Projection("EPSG:900913");
+	var wgs84 = new OpenLayers.Projection("EPSG:4326");
+	var spherical = new OpenLayers.Projection("EPSG:900913");
 	
 	var myStyles = new OpenLayers.StyleMap({
         "default": new OpenLayers.Style({
@@ -15,7 +15,7 @@ var edit = function() {
         })
     });
 
-	var map = new OpenLayers.Map('map', {
+	 map = new OpenLayers.Map('map', {
 		projection : wgs84,
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
