@@ -1,39 +1,3 @@
-<?php
-$logger->info('The wkt is: ' . $wkt);
-//$logger->info("Item tags: " . print_r($item->getTags(),true));
-$tags = array();
-foreach ($item->getTags() as $tag) {
-	array_push($tags, $tag->name);
-}
-/* the following query should restrict our returned items to Historical maps that
- share all of our items tags. we may need to change this to sharing any of our
- items tags. */
-/*
-$query = array("type" => $NEATLINEMAPS_ITEMTYPE, 'tags' => implode(',',$tags));
-$logger->info("The background map query is:" . print_r($query,true));
-$backgroundMaps = get_items($query);
-//$logger->info("The background maps are: " . print_r($backgroundMaps,true));
-$backgroundLayers = array();
-foreach ( $backgroundMaps as $map)
-{
-	//$map = get_item_by_id($mapid,'Item');
-	$logger->info("Now processing an item with id: " . $map->id);
-	$layertitle = 'A map with no title';
-	try {
-		$layertitle = item( 'Dublin Core', 'Title', array('delimiter' => ',', 'snippet' => 20, 'all' => true),$map);
-	}
-	catch (Omeka_Record_Exception $e) {
-		$logger->err($e);
-	}
-	$serviceaddy = getServiceAddy($map);
-	$layername = getLayerName($map);
-	$backgroundLayers[$layertitle] = array('layername' => $layername, 'serviceaddy' => $serviceaddy);
-}
-*/
-# temporary fix for ignoring background maps
-$backgroundLayers = array();
-?>
-
 <!--link
 	rel="stylesheet"
 	href="<?php # echo css('ui-lightness/jquery-ui-1.7.2.custom'); ?>" /> -->
@@ -51,21 +15,10 @@ echo js('proj4js/proj4js-compressed');
 echo js("widgets/edit/edit"); 
 ?>
 
-<script
-	type="text/javascript" defer="defer">
+<script type="text/javascript">
 	//<![CDATA[
 	jQuery.noConflict();
 	inputNameStem = "<?php echo $inputNameStem; ?>";	
-	layers = new Array();
-	<?php 
-		foreach ($backgroundLayers as $layername => $layervalues) {
- 		   ?> 
- 		   layers.push( { "title":"<?php echo $layername ?>", 
-  				   			"address":"<?php echo $layervalues["serviceaddy"] ?>",
-  		 				   	"layername":"<?php echo $layervalues["layername"] ?>" } ) ;
- 		   <?php 
-		}
-	?>
 
 	jQuery(document).ready(function() {
 		jQuery("#coveragemap").dialog({
@@ -79,7 +32,7 @@ echo js("widgets/edit/edit");
 			jQuery("#coveragemap").dialog('open');
 		});
 
-		edit();
+		Omeka.NeatlineFeatures.edit();
 
 		});			
 	//]]> 	

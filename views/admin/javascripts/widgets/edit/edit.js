@@ -1,4 +1,12 @@
-var edit = function() {
+if (typeof (Omeka) == 'undefined') {
+	Omeka = new Object();
+}
+
+if (!Omeka.NeatlineFeatures) {
+	Omeka.NeatlineFeatures = new Array();
+}
+
+var Omeka.NeatlineFeatures.edit = function() {
 
 	var wgs84 = new OpenLayers.Projection("EPSG:4326");
 	var spherical = new OpenLayers.Projection("EPSG:900913");
