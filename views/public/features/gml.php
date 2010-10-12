@@ -10,6 +10,7 @@ foreach ($gmls as $gml) {
 ?>
 $output .= '</gml:FeatureCollection>';
 <?php 
+print $output;
 $sxml = new SimpleXMLElement($output);
 $dom = new DOMDocument('1.0');
 $dom->preserveWhiteSpace = false;
