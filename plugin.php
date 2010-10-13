@@ -35,9 +35,10 @@ function neatlinefeatures_routes($router)
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
 {
-
+	debug("value = " .  $value);
+	debug("html_entity_decode(value) = " .  html_entity_decode($value));
 	$div = __v()->partial('widgets/edit.phtml', array("item" => __v()->item, 
-				"textarea" => __v()->formTextarea($inputNameStem . "[text]",$value,array('class'=>'textinput', 'rows'=>5, 'cols'=>50))	, "inputNameStem" =>$inputNameStem, "value" => html_entity_decode($value), "options" => $options, "record" => $record, "element" => $element));
+				"textarea" => __v()->formTextarea($inputNameStem . "[text]",html_entity_decode($value),array('class'=>'textinput', 'rows'=>5, 'cols'=>50))	, "inputNameStem" =>$inputNameStem, "value" => html_entity_decode($value), "options" => $options, "record" => $record, "element" => $element));
 	return $div;
 }
 
