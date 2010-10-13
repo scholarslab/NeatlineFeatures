@@ -36,7 +36,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
  */
 	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
-	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").html();
+	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").val();
 	features = gml ? new OpenLayers.Format.GML().read(gml) : new Array();
 	features.each(function(feature){feature.geometry.transform(wgs84,spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
