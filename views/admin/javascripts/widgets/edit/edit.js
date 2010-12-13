@@ -135,9 +135,10 @@ var controls = {
     controls.selectCtrl.activate();
     if (features.length > 0) {  	
     		var coll = new OpenLayers.Geometry.Collection();
-    		for (feature in features) {
-    			coll.addComponents([feature.geometry]);
-    		}
+    		var coll = new OpenLayers.Geometry.Collection();
+        jQuery(features).each(function() {
+        		coll.addComponents([this.geometry]);
+        });
     		coll.calculateBounds();
     		map.zoomToExtent(coll.getBounds());
 	}
