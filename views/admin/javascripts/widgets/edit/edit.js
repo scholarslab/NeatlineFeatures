@@ -86,7 +86,7 @@ var controls = {
             }),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {
-            					featurelayer.features.each(function(feature){feature.geometry.transform(spherical,wgs84)});	
+            					jQuery(featurelayer.features).each(function(feature){feature.geometry.transform(spherical,wgs84)});	
 		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
 		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
 		                    },
