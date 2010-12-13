@@ -38,7 +38,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 	
 	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").val();
 	features = gml ? new OpenLayers.Format.GML().read(gml) : new Array();
-	jQuery(features).each(function(feature){feature.geometry.transform(wgs84,spherical)});
+	jQuery(features).each(function(){this.geometry.transform(wgs84,spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: wgs84 });
 	if (features) {
 		featurelayer.addFeatures(features);
@@ -86,7 +86,7 @@ var controls = {
             }),
             save : new OpenLayers.Control.Button( {
                     trigger : function() {
-            					jQuery(featurelayer.features).each(function(feature){feature.geometry.transform(spherical,wgs84)});	
+            					jQuery(featurelayer.features).each(function(){this.geometry.transform(spherical,wgs84)});	
 		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
 		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
 		                    },
