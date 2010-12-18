@@ -72,7 +72,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        			title: "Use this control to select shapes and navigate the map"}
 	            )
 	];
-	var panel = new OpenLayers.Control.Panel();
+	var panel = new OpenLayers.Control.Panel({div: jQuery("mappanel")});
 	panel.addControls(controls);
 	return panel;
 }
