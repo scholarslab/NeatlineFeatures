@@ -52,7 +52,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        new OpenLayers.Control.Button( {
 	        			name: "save",
 	                trigger : function() {
-	        					jQuery(featurelayer.features).each(function(){this.geometry.transform(spherical,wgs84)});	
+	        					jQuery(featurelayer.features).each(function(){this.geometry.transform(Omeka.NeatlineFeatures.spherical,Omeka.NeatlineFeatures.wgs84)});	
 		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
 		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
 		                    },
