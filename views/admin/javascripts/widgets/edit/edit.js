@@ -1,7 +1,6 @@
 if (typeof (Omeka) == 'undefined') {
 	Omeka = new Object();
 }
-
 if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
@@ -23,19 +22,26 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
         })
     });
 
-	 map = new OpenLayers.Map('map', {
+	// a map with very basic controls
+	map = new OpenLayers.Map('map', {
 		projection : wgs84,
 		controls: [new OpenLayers.Control.Navigation(),new OpenLayers.Control.PanZoom(), new OpenLayers.Control.LayerSwitcher()], 
 		numZoomLevels : 128
 	});
+	
+	// a simple background
+	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
 	
 /*
  * map.addLayer(new OpenLayers.Layer.WMS( "Terraserver", "
  * http://terraservice.net/ogcmap.ashx", {layers: 'DOQ', srs:"EPSG:4326"},
  * {projection: wgs84} ));
  */
-	map.addLayer(new OpenLayers.Layer.OSM("OpenStreetMap"));
-	
+
+	// retrieve our shape information from the editing form
+	// notice that we transform out of wgs84 into "Google projection"
+	// we'll have to transform back to persist back into the form
+	// but that happens in the drawing tools "save" tool
 	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").val();
 	features = gml ? new OpenLayers.Format.GML().read(gml) : new Array();
 	jQuery(features).each(function(){this.geometry.transform(wgs84,spherical)});
@@ -45,6 +51,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 	}
 	map.addLayer(featurelayer);
 	
+	// get some actual drawing controls 
 	var panel = Omeka.NeatlineFeatures.createDrawingControlPanel(
 			featurelayer,inputNameStem);
     map.addControl(panel);
@@ -67,10 +74,11 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 					});
 					jQuery(this).dialog("close"); } }
 		});
-
+	
     panel.getControlsByName("selectCtrl")[0].activate();
+    
+    // we now try to zoom to an appropriate ROI
     if (features.length > 0) {  	
-    		var coll = new OpenLayers.Geometry.Collection();
     		var coll = new OpenLayers.Geometry.Collection();
         jQuery(features).each(function() {
         		coll.addComponents([this.geometry]);
