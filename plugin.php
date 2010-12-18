@@ -53,9 +53,8 @@ function neatlinefeatures_header() {
 			echo js('proj4js/proj4js-compressed');
 			echo js("drawing-tools"); 
 			echo js("widgets/edit/edit"); 
-			?>
-	echo "<!-- End Neatline Features Dependencies -->\n\n";
-	break;
+			echo "<!-- End Neatline Features Dependencies -->\n\n";
+		break;
 default:
 	}
 }
