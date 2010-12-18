@@ -14,6 +14,7 @@ add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_routes', 'neatlinefeatures_routes');
 add_plugin_hook('public_theme_header', 'neatlinefeatures_header');
+add_plugin_hook('admin_theme_header', 'neatlinefeatures_header');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
 function neatlinefeatures_uninstall()
