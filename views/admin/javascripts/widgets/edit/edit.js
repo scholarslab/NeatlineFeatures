@@ -68,7 +68,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 					jQuery(this).dialog("close"); } }
 		});
 
-    panel.getControlsByName("selectCtrl").activate();
+    panel.getControlsByName("selectCtrl")[0].activate();
     if (features.length > 0) {  	
     		var coll = new OpenLayers.Geometry.Collection();
     		var coll = new OpenLayers.Geometry.Collection();
