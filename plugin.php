@@ -13,6 +13,7 @@ define('NEATLINEFEATURES_LIB_DIR', NEATLINEFEATURES_PLUGIN_DIR . DIRECTORY_SEPAR
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
 add_plugin_hook('define_routes', 'neatlinefeatures_routes');
+add_plugin_hook('public_theme_header', 'neatlinefeatures_header');
 add_filter(array('Form','Item','Dublin Core','Coverage'),"neatlinefeatures_map_widget");
 
 function neatlinefeatures_uninstall()
@@ -31,6 +32,32 @@ function neatlinefeatures_routes($router)
 {
 	$router->addConfig(new Zend_Config_Ini(NEATLINEFEATURES_PLUGIN_DIR .
 	DIRECTORY_SEPARATOR . 'routes.ini', 'routes'));
+}
+
+function neatlinefeatures_header() {
+	switch (Zend_Controller_Front::getInstance()->getRequest()->getActionName()) {
+		case 'show' :
+		case 'edit' :
+		?>
+			<!-- Neatline Features Dependencies -->
+			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/overcast/jquery-ui.css" type="text/css" />
+			<link rel="stylesheet" href="<?php echo css('edit'); ?>" />
+			
+			<script type="text/javascript"
+				src="http://openlayers.org/api/OpenLayers.js">Ê</script>
+			<script type="text/javascript"
+				src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js">Ê</script>
+			<script type="text/javascript"
+				src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js">Ê</script>
+			<?php
+			echo js('proj4js/proj4js-compressed');
+			echo js("drawing-tools"); 
+			echo js("widgets/edit/edit"); 
+			?>
+	echo "<!-- End Neatline Features Dependencies -->\n\n";
+	break;
+default:
+	}
 }
 
 function neatlinefeatures_map_widget($html,$inputNameStem,$value,$options,$record,$element)
