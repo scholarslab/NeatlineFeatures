@@ -4,7 +4,7 @@ if (typeof (Omeka) == 'undefined') {
 if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
-Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNameStem) {
+Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNameStem,div) {
 	var controls = [
 	        new OpenLayers.Control.ModifyFeature(featurelayer, {
 	        		name: "modify",
@@ -72,7 +72,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        			title: "Use this control to select shapes and navigate the map"}
 	            )
 	];
-	var panel = new OpenLayers.Control.Panel({div: jQuery("mappanel")});
+	var panel = new OpenLayers.Control.Panel({"div": div});
 	panel.addControls(controls);
 	return panel;
 }

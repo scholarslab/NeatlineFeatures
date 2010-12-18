@@ -53,7 +53,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 	
 	// get some actual drawing controls 
 	var panel = Omeka.NeatlineFeatures.createDrawingControlPanel(
-			featurelayer,inputNameStem);
+			featurelayer,inputNameStem, getElementById("mappanel"));
     map.addControl(panel);
     
 	var addlayerdialog = jQuery("#addlayerdialog").dialog( {
