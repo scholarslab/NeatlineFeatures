@@ -66,11 +66,18 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	            title: "Add new layer"
 	        }),
 	        new OpenLayers.Control.SelectFeature(featurelayer, {
-	        			name: "selectCtrl",
-	        			clickout: true,
-	        			displayClass: "olControlSelectFeatures",
-	        			title: "Use this control to select shapes and navigate the map"}
-	            )
+        			name: "selectCtrl",
+        			displayClass: "olControlSelectFeatures",
+        			title: "Use this control to select shapes and navigate the map"}
+	        ),
+	        new OpenLayers.Control.SelectFeature(featurelayer, {
+        			name: "annotateCtrl",
+        			displayClass: "olControlAnnotateFeatures",
+        			title: "Use this control to annotate features",
+        			box: false,
+        			onSelect: function(feature) {
+	        		}
+	        })
 	];
 	var panel = new OpenLayers.Control.Panel({"div": div});
 	panel.addControls(controls);

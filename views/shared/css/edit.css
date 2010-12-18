@@ -68,6 +68,18 @@
 ;
     background-repeat: no-repeat;
 }
+.olControlEditingToolbar .olControlAnnotateFeaturesItemActive {
+    background-image:
+    url("http://forums.meez.com/forums/images/threadicons/smile_icon.gif")
+;
+    background-repeat: no-repeat;
+}
+.olControlEditingToolbar .olControlAnnotateFeaturesItemInactive {
+    background-image:
+    url("http://chatter.flooble.com/images/chatter/icons/icon_frown.gif")
+;
+    background-repeat: no-repeat;
+}
 .olControlEditingToolbar .olControlDrawFeaturePolygonItemInactive,
 .olControlEditingToolbar .olControlDrawFeaturePolygonItemActive {
     margin-right: 30px;
