@@ -25,7 +25,6 @@ function neatlinefeatures_uninstall()
 function neatlinefeatures_install()
 {
 	set_option('neatlinefeatures_version', NEATLINEFEATURES_PLUGIN_VERSION);
-
 }
 
 // Add the routes from routes.ini in this plugin folder.
@@ -43,7 +42,6 @@ function neatlinefeatures_header() {
 			<!-- Neatline Features Dependencies -->
 			<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/overcast/jquery-ui.css" type="text/css" />
 			<link rel="stylesheet" href="<?php echo css('edit'); ?>" />
-			
 			<script type="text/javascript"
 				src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 			<script type="text/javascript"
