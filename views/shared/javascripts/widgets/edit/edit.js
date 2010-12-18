@@ -5,8 +5,8 @@ if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
 
-var Omeka.NeatlineFeatures.wgs84 = new OpenLayers.Projection("EPSG:4326");
-var Omeka.NeatlineFeatures.spherical = new OpenLayers.Projection("EPSG:900913");
+Omeka.NeatlineFeatures.wgs84 = new OpenLayers.Projection("EPSG:4326");
+Omeka.NeatlineFeatures.spherical = new OpenLayers.Projection("EPSG:900913");
 
 Omeka.NeatlineFeatures.initializeWidget = function() {
 
