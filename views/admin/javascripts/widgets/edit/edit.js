@@ -44,73 +44,9 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 		featurelayer.addFeatures(features);
 	}
 	map.addLayer(featurelayer);
-
-var controls = {
-            modify: new OpenLayers.Control.ModifyFeature(featurelayer, {
-                onModificationEnd : function(feature) {
-                /* the UPDATE state is modified here!!!! */
-                feature.state = OpenLayers.State.UPDATE;
-				        },
-				        onDelete : function(feature) {
-				        },
-				        displayClass : "olControlModifyFeature",
-				        title: "Modify a feature on the image"
-				}),
-            drag: new OpenLayers.Control.DragFeature(featurelayer, {
-            		displayClass : "olControlDragFeature",
-            		title: "Move a feature around once selected"
-            }),
-            polygon: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Polygon,
-                        { handlerOptions : {
-            				multi : true
-        				},
-        				displayClass : "olControlDrawFeaturePolygon",
-        		        title: "Draw a polygonal feature"
-                    }),
-            line: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Path,
-                        { handlerOptions : {
-            				multi : true
-        				},
-        				displayClass : "olControlDrawFeaturePath",
-        		        title: "Draw a linear feature"
-            }),
-            point: new OpenLayers.Control.DrawFeature(featurelayer,
-                        OpenLayers.Handler.Point,
-                        { handlerOptions : {
-                				multi : true
-            				},
-            				displayClass : "olControlDrawFeaturePoint",
-            		        title: "Draw a point feature"
-            }),
-            save : new OpenLayers.Control.Button( {
-                    trigger : function() {
-            					jQuery(featurelayer.features).each(function(){this.geometry.transform(spherical,wgs84)});	
-		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
-		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
-		                    },
-                    displayClass : "olControlSaveFeatures",
-                    title: "Save your changes"
-            }),
-            newlayer : new OpenLayers.Control.Button( {
-                trigger : function() { addlayerdialog.dialog("open"); },
-                displayClass : "olNewLayer",
-                title: "Add new layer"
-            }),
-            selectCtrl : new OpenLayers.Control.SelectFeature(featurelayer,
-                    { clickout: true,
-            			displayClass: "olControlSelectFeatures",
-            			title: "Use this control to select shapes and navigate the map"}
-                )
-        };
-
-    		var panel = new OpenLayers.Control.Panel({
-				div: document.getElementById('mappanel')
-    	    });
-        for(var key in controls) {
-            panel.addControls(controls[key]);
-        }
+	
+	var panel = Omeka.NeatlineFeatures.createDrawingControlPanel(
+			featurelayer,inputNameStem);
     map.addControl(panel);
     
 	var addlayerdialog = jQuery("#addlayerdialog").dialog( {
@@ -132,7 +68,7 @@ var controls = {
 					jQuery(this).dialog("close"); } }
 		});
 
-    controls.selectCtrl.activate();
+    panel.getControlsByName("selectCtrl").activate();
     if (features.length > 0) {  	
     		var coll = new OpenLayers.Geometry.Collection();
     		var coll = new OpenLayers.Geometry.Collection();
