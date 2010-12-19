@@ -29,6 +29,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 	
 	public function gmlAction()
 	{
+		$coverages = array();
 		$id = (!$id) ? $this->getRequest()->getParam('id') : $id;
 		$item = $this->findById($id,"Item");
 		try {
