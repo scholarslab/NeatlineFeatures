@@ -77,7 +77,7 @@ class NeatlineFeatures_FeaturesController extends Omeka_Controller_Action
 	}
 	
 	private function isGML($i) {
-		return (stripos($i,"<gml") == 0) ;
+		return (stripos($i,"<gml") == 0) || (stripos($i,"<wfs") == 0) ;
 	}
 
 	private function strstrb($h,$n){
