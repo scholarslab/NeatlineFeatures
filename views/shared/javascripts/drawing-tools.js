@@ -84,7 +84,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        			jQuery(annotatedialog).dialog({
 	        				"feature": feature,
 	        				"title":"Annotate this feature",
-	        				"closeOnEscape": true, // would conflict with Coverage editor esc-close
+	        				"closeOnEscape": true, 
 	        				"draggable": true,
 	        				"height": 'auto',
 	        				"buttons": { "Save": 
