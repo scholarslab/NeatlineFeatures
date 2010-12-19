@@ -4,10 +4,27 @@ if (typeof (Omeka) == 'undefined') {
 if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
+/**
+ * Creates a new panel of drawing and annotation tools for use in Neatline/Omeka contexts
+ * @author ajs6f
+ * @param {OpenLayers.Layer.Vector} featurelayer 	An <code>OpenLayers.Layer.Vector</code> over which this panel will operate
+ * @param {string} inputNameStem     				A string that will be used to find the element into which to persist shape-dc:coverages 
+ * @param {div} div 									An HTML div to which this panel will be attached
+ * @returns {OpenLayers.Control.Panel} 				A new panel of drawing and annotation tools
+ */
+
 Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNameStem,div) {
+	
+	// this is the form that will appear when the annotate tool is clicked on a feature
+	// it is hard-wired to the code that persists its input-fields into the GML ofthat feature
 	var annotatedialog = jQuery("<form id='annotatedialog'><span>Name:</span><input name='name' id='featurename'/><span>Text:</span><textarea id='featuredescription' name='description'/></form>");
 	annotatedialog.appendTo(div);
+	
+	// we will use these references later to move data in and out of this form
 	var name = jQuery("#featurename"), description = jQuery("#featuredescription");
+	
+	// these controls are the meat of the matter. they should be accessed via the 
+	// OpenLayers panel.get
 	var controls = [
 	        new OpenLayers.Control.ModifyFeature(featurelayer, {
 	        		name: "modify",
