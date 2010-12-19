@@ -87,9 +87,9 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        				"height": 'auto',
 	        				"buttons": { "Save": 
 	        					function() { 
-	        						console.log(feature);
 	        						// save the annotations
-	        						//feature.attributes.description = description.val();
+	        						feature.attributes.description = description.val();
+	        						feature.attributes.name = name.val();
 	        						jQuery(this).dialog("close"); 
 	        					} 
 	        				}
