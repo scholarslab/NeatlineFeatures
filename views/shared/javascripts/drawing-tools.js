@@ -76,6 +76,17 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
         			title: "Use this control to annotate features",
         			box: false,
         			onSelect: function(feature) {
+	        			this.map.addPopup(new OpenLayers.Popup.FramedCloud(
+                        "annotatebox", 
+                        feature.geometry.getBounds().getCenterLonLat(),
+                        null,
+                        "annotate me!",
+                        null,
+                        true,
+                        function() {
+                        	// responsible for saving the added annotations
+                        }
+	        			));
 	        		}
 	        })
 	];
