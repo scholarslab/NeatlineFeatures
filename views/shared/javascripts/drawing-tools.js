@@ -79,7 +79,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
         			title: "Use this control to annotate features",
         			box: false,
         			onSelect: function(feature) {
-	        			jQuery(annotatedialog).
+	        			//jQuery(annotatedialog).
 	        			jQuery(annotatedialog).dialog({
 	        				"feature": feature,
 	        				"title":"Annotate this feature",
