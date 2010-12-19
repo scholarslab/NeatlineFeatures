@@ -5,7 +5,7 @@ if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
 Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNameStem,div) {
-	var annotatedialog = jQuery("<div><input name='name' id='featurename' value='Put a name here'/><textarea id='featuredescription' name='description'>Put a description here</textarea><label for='featurename'/><label for='featuredescription'/></div>");
+	var annotatedialog = jQuery("<div><span>Name:</span><input name='name' id='featurename' value='Put a name here'/><span>Text:</span><textarea id='featuredescription' name='description'>Put a description here</textarea></div>");
 	annotatedialog.appendTo(div);
 	var controls = [
 	        new OpenLayers.Control.ModifyFeature(featurelayer, {
