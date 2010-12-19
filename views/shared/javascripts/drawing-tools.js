@@ -5,7 +5,7 @@ if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
 Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNameStem,div) {
-	var annotatedialog = jQuery("<form><fieldset><span>Name:</span><input name='name' id='featurename' value='Put a name here'/><span>Text:</span><textarea id='featuredescription' name='description'>Put a description here</textarea></fieldset></form>");
+	var annotatedialog = jQuery("<form id='annotatedialog'><span>Name:</span><input name='name' id='featurename'/><span>Text:</span><textarea id='featuredescription' name='description'/></form>");
 	annotatedialog.appendTo(div);
 	var name = jQuery("#featurename"), description = jQuery("#featuredescription");
 	var controls = [
@@ -79,10 +79,11 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
         			title: "Use this control to annotate features",
         			box: false,
         			onSelect: function(feature) {
+	        			jQuery(annotatedialog).
 	        			jQuery(annotatedialog).dialog({
 	        				"feature": feature,
 	        				"title":"Annotate this feature",
-	        				"closeOnEscape": false, // would conflict with Coverage editor esc-close
+	        				"closeOnEscape": true, // would conflict with Coverage editor esc-close
 	        				"draggable": true,
 	        				"height": 'auto',
 	        				"buttons": { "Save": 
