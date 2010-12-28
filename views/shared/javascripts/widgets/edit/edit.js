@@ -1,6 +1,16 @@
 if (typeof (Omeka) == 'undefined') {
 	Omeka = new Object();
 }
+
+if (Omeka.Neatline) { 
+	if (!Omeka.Neatline.jQuery) {
+		Omeka.Neatline.jQuery = jQuery.noConflict();
+}
+else {
+	Omeka.Neatline = new Object();
+	Omeka.Neatline.jQuery = jQuery.noConflict();
+}
+	
 if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
@@ -42,9 +52,9 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 	// notice that we transform out of wgs84 into "Google projection"
 	// we'll have to transform back to persist back into the form
 	// but that happens in the drawing tools "save" tool
-	var gml = jQuery("textarea[name='" + inputNameStem + "[text]']").val();
+	var gml = Omeka.Neatline.jQuery("textarea[name='" + inputNameStem + "[text]']").val();
 	features = gml ? new OpenLayers.Format.GML().read(gml) : new Array();
-	jQuery(features).each(function(){this.geometry.transform(Omeka.NeatlineFeatures.wgs84,Omeka.NeatlineFeatures.spherical)});
+	Omeka.Neatline.jQuery(features).each(function(){this.geometry.transform(Omeka.NeatlineFeatures.wgs84,Omeka.NeatlineFeatures.spherical)});
 	featurelayer = new OpenLayers.Layer.Vector("feature", { styleMap: myStyles, projection: Omeka.NeatlineFeatures.wgs84 });
 	if (features) {
 		featurelayer.addFeatures(features);
@@ -56,7 +66,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 			featurelayer,inputNameStem, document.getElementById("mappanel"));
     map.addControl(panel);
     
-	var addlayerdialog = jQuery("#addlayerdialog").dialog( {
+	var addlayerdialog = Omeka.Neatline.jQuery("#addlayerdialog").dialog( {
 		"autoOpen": false,
 		"draggable": true,
 		"height": 'auto',
@@ -65,14 +75,14 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
 		"closeOnEscape": true,
 		"buttons": { "Add": 
 				function() { 
-					var id = jQuery("#layerselect")[0].value;
-					jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
-						jQuery.get("/maps/layername/" + id, function(layername) {
-							var label =jQuery("#layerselect option")[jQuery("#layerselect")[0].selectedIndex].label;
+					var id = Omeka.Neatline.jQuery("#layerselect")[0].value;
+					Omeka.Neatline.jQuery.get("/maps/serviceaddy/" + id, function(serviceaddy){ 
+						Omeka.Neatline.jQuery.get("/maps/layername/" + id, function(layername) {
+							var label =Omeka.Neatline.jQuery("#layerselect option")[Omeka.Neatline.jQuery("#layerselect")[0].selectedIndex].label;
 							map.addLayer(new OpenLayers.Layer.WMS( label, serviceaddy, {"layers": layername}));
 						});
 					});
-					jQuery(this).dialog("close"); } }
+					Omeka.Neatline.jQuery(this).dialog("close"); } }
 		});
 	
     panel.getControlsByName("selectCtrl")[0].activate();
@@ -80,7 +90,7 @@ Omeka.NeatlineFeatures.initializeWidget = function() {
     // we now try to zoom to an appropriate ROI
     if (features.length > 0) {  	
     		var coll = new OpenLayers.Geometry.Collection();
-        jQuery(features).each(function() {
+        Omeka.Neatline.jQuery(features).each(function() {
         		coll.addComponents([this.geometry]);
         });
     		coll.calculateBounds();

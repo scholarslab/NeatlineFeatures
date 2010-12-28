@@ -1,6 +1,16 @@
 if (typeof (Omeka) == 'undefined') {
 	Omeka = new Object();
 }
+
+if (Omeka.Neatline) { 
+	if (!Omeka.Neatline.jQuery) {
+		Omeka.Neatline.jQuery = jQuery.noConflict();
+}
+else {
+	Omeka.Neatline = new Object();
+	Omeka.Neatline.jQuery = jQuery.noConflict();
+}
+
 if (!Omeka.NeatlineFeatures) {
 	Omeka.NeatlineFeatures = new Array();
 }
@@ -17,11 +27,11 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	
 	// this is the form that will appear when the annotate tool is clicked on a feature
 	// it is hard-wired to the code that persists its input-fields into the GML ofthat feature
-	var annotatedialog = jQuery("<form id='annotatedialog'><span>Name:</span><input name='name' id='featurename'/><span>Text:</span><textarea id='featuredescription' name='description'/></form>");
+	var annotatedialog = Omeka.Neatline.Omeka.Neatline.jQuery("<form id='annotatedialog'><span>Name:</span><input name='name' id='featurename'/><span>Text:</span><textarea id='featuredescription' name='description'/></form>");
 	annotatedialog.appendTo(div);
 	
 	// we will use these references later to move data in and out of this form
-	var name = jQuery("#featurename"), description = jQuery("#featuredescription");
+	var name = Omeka.Neatline.jQuery("#featurename"), description = Omeka.Neatline.jQuery("#featuredescription");
 	
 	// these controls are the meat of the matter. they should be accessed via the 
 	// OpenLayers panel.get
@@ -72,9 +82,9 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        new OpenLayers.Control.Button( {
 	        			name: "save",
 	                trigger : function() {
-	        					jQuery(featurelayer.features).each(function(){this.geometry.transform(Omeka.NeatlineFeatures.spherical,Omeka.NeatlineFeatures.wgs84)});	
+	        					Omeka.Neatline.jQuery(featurelayer.features).each(function(){this.geometry.transform(Omeka.NeatlineFeatures.spherical,Omeka.NeatlineFeatures.wgs84)});	
 		                    var gml = new OpenLayers.Format.GML().write(featurelayer.features);
-		                    jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
+		                    Omeka.Neatline.jQuery("textarea[name='" + inputNameStem + "[text]']").html(gml);
 		                    },
 	                displayClass : "olControlSaveFeatures",
 	                title: "Save your changes"
@@ -96,9 +106,9 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
         			title: "Use this control to annotate features",
         			box: false,
         			onSelect: function(feature) {
-	        			jQuery("input",annotatedialog).val(feature.attributes.name);
-	        			jQuery("textarea",annotatedialog).val(feature.attributes.description);
-	        			jQuery(annotatedialog).dialog({
+	        			Omeka.Neatline.jQuery("input",annotatedialog).val(feature.attributes.name);
+	        			Omeka.Neatline.jQuery("textarea",annotatedialog).val(feature.attributes.description);
+	        			Omeka.Neatline.jQuery(annotatedialog).dialog({
 	        				"feature": feature,
 	        				"title":"Annotate this feature",
 	        				"closeOnEscape": true, 
@@ -109,7 +119,7 @@ Omeka.NeatlineFeatures.createDrawingControlPanel = function(featurelayer,inputNa
 	        						// save the annotations
 	        						feature.attributes.description = description.val();
 	        						feature.attributes.name = name.val();
-	        						jQuery(this).dialog("close"); 
+	        						Omeka.Neatline.jQuery(this).dialog("close"); 
 	        					} 
 	        				}
 	        			});
