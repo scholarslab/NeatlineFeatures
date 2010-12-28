@@ -45,9 +45,9 @@ function neatlinefeatures_header() {
 			<script type="text/javascript"
 				src="http://openlayers.org/api/OpenLayers.js">Ê</script>
 			<script type="text/javascript"
-				src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js">Ê</script>
+				src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js">Ê</script>
 			<script type="text/javascript"
-				src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7/jquery-ui.min.js">Ê</script>
+				src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.js">Ê</script>
 			<?php
 			echo js('proj4js/proj4js-compressed');
 			echo js("drawing-tools"); 
