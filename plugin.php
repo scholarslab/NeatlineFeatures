@@ -6,9 +6,17 @@
  * @package neatline
  **/
 
-define('NEATLINEFEATURES_PLUGIN_VERSION', get_plugin_ini('NeatlineFeatures', 'version'));
-define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
-define('NEATLINEFEATURES_LIB_DIR', NEATLINEFEATURES_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR);
+if (!defined('NEATLINEFEATURES_PLUGIN_VERSION')) {
+    define('NEATLINEFEATURES_PLUGIN_VERSION', get_plugin_ini('NeatlineFeatures', 'version'));
+}
+
+if (!defined('NEATLINEFEATURES_PLUGIN_DIR')) {
+    define('NEATLINEFEATURES_PLUGIN_DIR', dirname(__FILE__));
+}
+
+if (!defined('NEATLINEFEATURES_LIB_DIR')) {
+    define('NEATLINEFEATURES_LIB_DIR', NEATLINEFEATURES_PLUGIN_DIR . DIRECTORY_SEPARATOR . 'libraries' . DIRECTORY_SEPARATOR);
+}
 
 add_plugin_hook('install', 'neatlinefeatures_install');
 add_plugin_hook('uninstall', 'neatlinefeatures_uninstall');
