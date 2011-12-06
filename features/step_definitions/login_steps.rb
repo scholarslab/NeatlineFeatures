@@ -8,8 +8,8 @@ Given /^I enter "([^"]*)" for the "([^"]*)"$/ do |value, label|
   fill_in(label, :with => value)
 end
 
-When /^I press "([^"]*)"$/ do |button|
-  click_on(button)
+Given /^I am logged into the admin console$/ do
+  pending # express the regexp above with the code you wish you had
 end
 
 Then /^I should see a page title of "([^"]*)"$/ do |page_title|
