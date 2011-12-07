@@ -27,3 +27,15 @@ Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
 
+Then /^I should see "([^"]*)"$/ do |arg1|
+  pending
+end
+
+Then /^I should see a map$/ do |arg1|
+  pending
+end
+
+Then /^I should not see a map$/ do |arg1|
+  pending
+end
+
