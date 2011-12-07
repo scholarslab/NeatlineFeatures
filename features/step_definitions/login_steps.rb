@@ -4,10 +4,6 @@ Given /^I visit the admin page$/ do
   visit('/admin')
 end
 
-Given /^I enter "([^"]*)" for the "([^"]*)"$/ do |value, label|
-  fill_in(label, :with => value)
-end
-
 Given /^I am logged into the admin console$/ do
   visit '/admin/users/login'
   fill_in "Username", :with => "features"

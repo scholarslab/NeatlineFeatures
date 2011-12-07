@@ -1,4 +1,7 @@
 
+# Elements-50-0-text => Title
+# Elements-49-0-text => Subject
+
 Feature: Draw Features on a Map
   In order to add geospatial metadata to an item
   As an item editor
@@ -7,16 +10,16 @@ Feature: Draw Features on a Map
   Scenario: CoverageHasAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "CoverageHasAMap" for the "Title"
-    And I enter "Coverage has a map" for the "Subject"
+    And I enter "CoverageHasAMap" for the "Elements-50-0-text"      # Title
+    And I enter "Coverage has a map" for the "Elements-49-0-text"   # Subject
     When I click on the "Features" tab
     Then the "Coverage" field changes to an OpenLayers map
 
   Scenario: DrawPointOnAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "DrawPointOnAMap" for the "Title"
-    And I enter "DrawPointOnAMap" for the "Subject"
+    And I enter "DrawPointOnAMap" for the "Elements-50-0-text"      # Title
+    And I enter "DrawPointOnAMap" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     When I click on the "Coverages" map
     Then a point is added to the map
@@ -24,8 +27,8 @@ Feature: Draw Features on a Map
   Scenario: DrawLineOnAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "DrawLineOnAMap" for the "Title"
-    And I enter "DrawLineOnAMap" for the "Subject"
+    And I enter "DrawLineOnAMap" for the "Elements-50-0-text"     # Title
+    And I enter "DrawLineOnAMap" for the "Elements-49-0-text"     # Subject
     And I click on the "Features" tab
     When I click and drag on the "Coverages" map
     Then a line is added to the map
@@ -33,8 +36,8 @@ Feature: Draw Features on a Map
   Scenario: DrawOnCoverageMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "DrawOnCoverageMap" for the "Title"
-    And I enter "DrawOnCoverageMap" for the "Subject"
+    And I enter "DrawOnCoverageMap" for the "Elements-50-0-text"      # Title
+    And I enter "DrawOnCoverageMap" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     And I click on the "Coverages" map
     And I click and drag on the "Coverages" map
