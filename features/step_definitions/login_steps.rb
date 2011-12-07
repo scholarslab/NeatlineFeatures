@@ -9,7 +9,10 @@ Given /^I enter "([^"]*)" for the "([^"]*)"$/ do |value, label|
 end
 
 Given /^I am logged into the admin console$/ do
-  pending # express the regexp above with the code you wish you had
+  visit '/admin/users/login'
+  fill_in "Username", :with => "features"
+  fill_in "Password", :with => "features"
+  click_on "Log In"
 end
 
 Then /^I should see a page title of "([^"]*)"$/ do |page_title|
