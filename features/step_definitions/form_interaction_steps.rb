@@ -19,6 +19,10 @@ Given /^I insert data from "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
   pending
 end
 
+Given /^I upload "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
+  pending
+end
+
 When /^I press "([^"]*)"$/ do |button|
   click_on button
 end
