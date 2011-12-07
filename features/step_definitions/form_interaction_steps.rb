@@ -1,13 +1,9 @@
 
-Given /^I click "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Given /^I click on "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^I click(?: on)? "([^"]*)"$/ do |link_text|
+  click_on link_text
 end
 
 When /^I press "([^"]*)"$/ do |button|
-  click_on(button)
+  click_on button
 end
 
