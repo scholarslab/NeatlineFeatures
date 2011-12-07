@@ -1,5 +1,5 @@
 
-Given /^I click on the "([^"]*)" tab$/ do |arg1|
+Given /^I click(?: on)? the "([^"]*)" tab$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
@@ -23,7 +23,7 @@ Then /^the delete button is disabled on "([^"]*)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^I see "([^"]*)" in "([^"]*)"$/ do |arg1, arg2|
+Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
 
