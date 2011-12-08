@@ -26,3 +26,8 @@ namespace :php do
   end
 end
 
+desc 'This generates tags for Omeka and NeatlineFeatures.'
+task :tags do
+  sh %{ctags -R ../..}
+end
+
