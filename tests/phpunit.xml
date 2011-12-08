@@ -1,6 +1,9 @@
 <phpunit bootstrap="../../../application/tests/bootstrap.php"
          convertErrorsToExceptions="true"
          convertWarningsToExceptions="true">
+    <php>
+      <includePath>..</includePath>
+    </php>
     <testsuite name="NeatlineFeaturesTests">
       <directory>unit</directory>
     </testsuite>
