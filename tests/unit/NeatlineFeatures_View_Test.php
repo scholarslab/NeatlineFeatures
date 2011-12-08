@@ -25,39 +25,45 @@
 ?><?php
 
 require_once 'NeatlineFeatures_Test.php';
+require_once 'application/helpers/FormFunctions.php';
 
 /**
- * This tests the plugin manager class.
+ * This tests the view for the coverage field.
  **/
-class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
+class NeatlineFeatures_View_Test extends NeatlineFeatures_Test
 {
-
-    // Tests {{{
     /**
-     * This tests NeatlineFeaturesPlugin->install().
+     * The coverage element.
      *
-     * This method doesn't actually do anything right now, so there isn't much 
-     * to test.
+     * @var Element
+     **/
+    var $_coverage;
+
+    /**
+     * This performs a little set up for this set of tests.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testInstall()
+    public function setUp()
     {
-    }
+        parent::setUp();
 
+        $this->_coverage = $this
+            ->db
+            ->getTable('Element')
+            ->findBy(array('name' => 'Coverage'));
+    }
     /**
-     * This tests NeatlineFeaturesPlugin->uninstall().
-     *
-     * This method doesn't actually do anything right now, so there isn't much 
-     * to test.
+     * This tests that there is no "Use HTML" check for the coverage field.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testUninstall()
+    public function testUseHTML()
     {
+        $this->dispatch('/items/add');
+        $this->assertNotQuery("#element-38//label.use-html", "'Use HTML' found.");
     }
-    // }}}
 }
 

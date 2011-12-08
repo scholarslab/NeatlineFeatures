@@ -54,6 +54,10 @@ class NeatlineFeaturesPlugin
      * @var array
      **/
     private static $_filters = array(
+        // array('formItemDublinCoreCoverage',
+        //       array('Form', 'Item', 'Dublin Core', 'Coverage')),
+        array('elementFormDisplayHtmlFlag',
+              'element_form_display_html_flag')
     );
     // }}}
 
@@ -81,9 +85,9 @@ class NeatlineFeaturesPlugin
             );
         }
 
-        foreach (self::$_filters as $filter_name) {
-            $function_name = Inflector::variablize($filter_name);
-            add_filter($filter_name, array($this, $function_name));
+        foreach (self::$_filters as $filterInfo) {
+            $function_name = $filterInfo[0];
+            add_filter($filterInfo[1], array($this, $function_name));
         }
     }
     // }}}
@@ -107,6 +111,52 @@ class NeatlineFeaturesPlugin
      **/
     public function uninstall()
     {
+    }
+    // }}}
+
+    // Filters {{{
+    /**
+     * This overrides the definition for the coverage form input.
+     *
+     * @param string       $html          An empty string.
+     * @param string       $inputNameStem The stem of the input name.
+     * @param string       $value         The initial value for the input.
+     * @param array        $options       Additional options.
+     * @param Omeka_Record $record        The element's record.
+     * @param Element      $element       The Element.
+     *
+     * @return string The string containing the HTML for the customized element 
+     * form.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
+        $options, $record, $element)
+    {
+        ob_start();
+
+        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
+
+        return ob_get_clean();
+    }
+
+    /**
+     * This turns off displaying the element form for the DC:Coverage field.
+     *
+     * @param string  $html    An empty string.
+     * @param Element $element The Element.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function elementFormDisplayHtmlFlag($html, $element)
+    {
+        if ($element->name == 'Coverage' &&
+            $element->getElementSet()->name == 'Dublin Core')
+        {
+            return '<span>&nbsp;</span>';
+        } else {
+            return $html;
+        }
     }
     // }}}
 }

@@ -3,6 +3,7 @@
          convertWarningsToExceptions="true">
     <php>
       <includePath>..</includePath>
+      <includePath>../../..</includePath>
     </php>
     <testsuite name="NeatlineFeaturesTests">
       <directory>unit</directory>

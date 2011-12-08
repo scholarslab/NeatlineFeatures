@@ -24,40 +24,63 @@
  */
 ?><?php
 
-require_once 'NeatlineFeatures_Test.php';
+if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
+    define('NEATLINE_FEATURES_PLUGIN_DIR', dirname(__FILE__) . '/..');
+}
+require_once 'NeatlineFeaturesPlugin.php';
 
 /**
- * This tests the plugin manager class.
+ * This is a base class for all NeatlineFeatures unit tests.
  **/
-class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
+class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
 {
 
-    // Tests {{{
+    // Variables {{{
     /**
-     * This tests NeatlineFeaturesPlugin->install().
+     * The NeatlineFeaturesPlugin object.
      *
-     * This method doesn't actually do anything right now, so there isn't much 
-     * to test.
+     * @var NeatlineFeaturesPlugin
+     **/
+    public $nfPlugin;
+
+    /**
+     * The user we're logged in as.
+     *
+     * @var User
+     **/
+    public $user;
+    // }}}
+
+    // Test Infrastructure {{{
+    /**
+     * Set ups up for each test.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testInstall()
+    public function setUp()
     {
+        parent::setUp();
+
+        $this->user = $this->db->getTable('user')->find(1);
+        $this->_authenticateUser($this->user);
+
+        $this->nfPlugin = new NeatlineFeaturesPlugin();
+        $this->nfPlugin->install();
     }
 
     /**
-     * This tests NeatlineFeaturesPlugin->uninstall().
-     *
-     * This method doesn't actually do anything right now, so there isn't much 
-     * to test.
+     * Tears down after each test.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testUninstall()
+    public function tearDown()
     {
+        parent::tearDown();
+        $this->nfPlugin->uninstall();
     }
     // }}}
+
 }
 
