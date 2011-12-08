@@ -65,7 +65,6 @@ class NeatlineFeaturesPlugin_Test extends Omeka_Test_AppTestCase
     public function tearDown()
     {
         parent::tearDown();
-
         $this->_nf_plugin->uninstall();
     }
     // }}}
