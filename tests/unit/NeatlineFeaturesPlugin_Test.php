@@ -66,7 +66,7 @@ class NeatlineFeaturesPlugin_Test extends Omeka_Test_AppTestCase
     {
         parent::tearDown();
 
-        // $this->_nf_plugin->uninstall();
+        $this->_nf_plugin->uninstall();
     }
     // }}}
 
@@ -81,6 +81,19 @@ class NeatlineFeaturesPlugin_Test extends Omeka_Test_AppTestCase
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function testInstall()
+    {
+    }
+
+    /**
+     * This tests NeatlineFeaturesPlugin->uninstall().
+     *
+     * This method doesn't actually do anything right now, so there isn't much 
+     * to test.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testUninstall()
     {
     }
     // }}}

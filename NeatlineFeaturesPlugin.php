@@ -44,7 +44,8 @@ class NeatlineFeaturesPlugin
      * @var array
      **/
     private static $_hooks = array(
-        'install'
+        'install',
+        'uninstall'
     );
 
     /**
@@ -95,6 +96,16 @@ class NeatlineFeaturesPlugin
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function install()
+    {
+    }
+
+    /**
+     * This uninstalls the NeatlineFeatures plugin.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function uninstall()
     {
     }
     // }}}
