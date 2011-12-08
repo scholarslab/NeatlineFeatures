@@ -1,6 +1,12 @@
 
-Given /^I click(?: on)? the "([^"]*)" tab$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^I click(?: on)? the "([^"]*)" tab$/ do |tab_name|
+  pending # These should really be changed to use the next rule.
+end
+
+Given /^I click(?: on)? the "([^"]*)" field "([^"]*)" tab$/ do |field_name, tab_name|
+  within(field_name) do
+    click_on tab_name
+  end
 end
 
 Given /^I click(?: on)? the "([^"]*)" tab on "([^"]*)"$/ do |arg1, arg2|

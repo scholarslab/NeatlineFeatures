@@ -1,6 +1,7 @@
 
 # Elements-50-0-text => Title
 # Elements-49-0-text => Subject
+# Elements-38        => Coverage
 
 Feature: Draw Features on a Map
   In order to add geospatial metadata to an item
@@ -10,20 +11,20 @@ Feature: Draw Features on a Map
   Scenario: CoverageHasAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    When I click on the "Features" tab
+    When I click on the "#element-38" field "Features" tab
     Then the "Coverage" field changes to an OpenLayers map
 
   Scenario: DrawPointOnAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I click on the "Features" tab
+    And I click on the "#element-38" field "Features" tab
     When I click on the "Coverages" map
     Then a point is visible on the map
 
   Scenario: DrawLineOnAMap
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I click on the "Features" tab
+    And I click on the "#element-38" field "Features" tab
     When I click and drag on the "Coverages" map
     Then a line is visible on the map
 
@@ -32,7 +33,7 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     And I enter "DrawOnCoverageMap" for the "Elements-50-0-text"      # Title
     And I enter "DrawOnCoverageMap" for the "Elements-49-0-text"      # Subject
-    And I click on the "Features" tab
+    And I click on the "#element-38" field "Features" tab
     And I click on the "Coverages" map
     And I click and drag on the "Coverages" map
     And I click on "Add Item"
