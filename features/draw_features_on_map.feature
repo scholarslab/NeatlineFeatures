@@ -12,7 +12,7 @@ Feature: Draw Features on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     When I click on the "#element-38" field "NL Features" tab
-    Then I should see a map in "#element-38"
+    Then I should see "#Elements-38-0-map" in "#element-38"
 
   Scenario: Draw Point On A Map
     Given I am logged into the admin console

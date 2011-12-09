@@ -29,8 +29,10 @@ Then /^the delete button is disabled on "([^"]*)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
+  within(context) do
+    find(target).visible?
+  end
 end
 
 Then /^I should see "([^"]*)"$/ do |arg1|
