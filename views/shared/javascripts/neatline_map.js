@@ -309,7 +309,6 @@
                 $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
                     var geometry = OpenLayers.Geometry.fromWKT(wkt);
                     var feature = new OpenLayers.Feature.Vector(geometry);
-                    console.log(feature);
                     features.push(feature);
                 });
 
