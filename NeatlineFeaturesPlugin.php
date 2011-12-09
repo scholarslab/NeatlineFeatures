@@ -45,7 +45,8 @@ class NeatlineFeaturesPlugin
      **/
     private static $_hooks = array(
         'install',
-        'uninstall'
+        'uninstall',
+        'admin_theme_header'
     );
 
     /**
@@ -112,6 +113,20 @@ class NeatlineFeaturesPlugin
     public function uninstall()
     {
     }
+
+    /**
+     * This queues javascript and CSS for the admin header.
+     *
+     * @param Request $request The request for the header.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function adminThemeHeader()
+    {
+        queue_css('nlfeatures');
+    }
+
     // }}}
 
     // Filters {{{

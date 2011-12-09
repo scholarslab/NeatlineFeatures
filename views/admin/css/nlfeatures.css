@@ -1,0 +1,57 @@
+
+.nlfeatures-edit {
+    border: 1px solid silver;
+    background-color: #382E22;
+}
+.nlfeatures-edit-nav-menu {
+    background: transparent;
+}
+.nlfeatures-edit-nav-menu ul {
+    float: left;
+    margin-bottom: 0px;
+    background: transparent;
+}
+.nlfeatures-edit-nav-menu ul li {
+    list-style-type: none;
+    display: block;
+    float: left;
+
+    width: 75px;
+    padding: 1em;
+    margin: 0px;
+    border: 1px solid #DDD;
+
+    background-color: #2E261C;
+}
+.nlfeatures-edit-nav-menu ul li:hover {
+    background-color: #382E22;
+    cursor: pointer;
+}
+.nlfeatures-edit-nav-menu ul li.selected {
+    background-color: #EAE9DB;
+    border-bottom-color: #EAE9DB;
+}
+.nlfeatures-edit-nav-menu ul li a {
+    color: #FAFAFA;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+.nlfeatures-edit-nav-menu ul li.selected a {
+    color: #333;
+}
+.nlfeatures-edit-nav-tools {
+    float: right;
+}
+.nlfeatures-edit-nav-tools li {
+    width: 20px;
+}
+.nlfeatures-edit-body {
+    clear: both;
+    background-color: #EAE9DB;
+    padding: 1.5em;
+}
+.nlfeatures-edit-raw,
+.nlfeatures-edit-map {
+    background: transparent;
+}
+

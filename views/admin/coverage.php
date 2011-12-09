@@ -23,22 +23,24 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<? echo $inputNameStem ?>[widget]" class='nlfeature-edit'>
-  <div class='nlfeature-edit-nav'>
-    <div class='nlfeature-edit-nav-menu'>
+<div id="<? echo $inputNameStem ?>[widget]" class='nlfeatures-edit'>
+  <div class='nlfeatures-edit-nav'>
+    <div class='nlfeatures-edit-nav-menu'>
       <ul>
-        <li><a href="#">NL Features</a></li>
-        <li><a href="#">Raw</a></li>
+        <li class='selected'><a href="#">NL Features</a></li><li><a href="#">Raw</a></li>
       </ul>
     </div>
-    <div class='nlfeature-edit-nav-tools'>
+    <div class='nlfeatures-edit-nav-tools'>
+      <ul>
+        <!-- <li><input class='remove-element' type='submit' value='Remove' style='display: inline;'/></li> -->
+      </ul>
     </div>
   </div>
-  <div class='nlfeature-edit-body'>
-    <div class='nlfeature-edit-raw'>
+  <div class='nlfeatures-edit-body'>
+    <div class='nlfeatures-edit-raw'>
+      <em>This space intentionally left blank.</em>
     </div>
-    <div class='nlfeature-edit-map'>
+    <div class='nlfeatures-edit-map'>
     </div>
-    <em>This space intentionally left blank.</em>
   </div>
 </div>
