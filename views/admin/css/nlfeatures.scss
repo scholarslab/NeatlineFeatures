@@ -1,0 +1,82 @@
+
+$fg1: #000;
+$bg1: #EAE9DB;
+
+$fg2: #FAFAFA;
+$bg2: #382E22;
+
+$fghigh1: #000;
+$bghigh1: #EAE9DB;
+
+$fghigh2: #DDD;
+$bghigh2: #2E261C;
+
+$border1: silver;
+$border2: #FFF;
+
+@mixin tab-colors($color, $bgcolor) {
+    background-color: $bgcolor;
+    border-bottom-color: $bgcolor;
+    color: $color;
+}
+
+.nlfeatures-edit {
+    color: $fg2;
+    background-color: $bg2;
+}
+.nlfeatures-edit-nav-menu {
+    background: transparent;
+    border-left: 1px solid $border2;
+    ul {
+        margin-bottom: 0px;
+        border-left: 1px solid $border2;
+        background: transparent;
+        float: left;
+        margin-left: 1em;
+        li {
+            @include tab-colors($fghigh2, $bghigh2);
+
+            list-style-type: none;
+            display: block;
+            float: left;
+
+            width: 75px;
+            padding: 1em;
+            margin: 0px;
+            border-top: 1px solid $border2;
+            border-right: 1px solid $border2;
+            a {
+                color: $fghigh2;
+                text-decoration: none;
+                font-size: 0.9em;
+            }
+        }
+        li:hover {
+            background-color: $bg2;
+            cursor: pointer;
+        }
+        li.selected {
+            @include tab-colors($fghigh1, $bghigh1);
+            a {
+                color: $fghigh1;
+            }
+        }
+    }
+}
+.nlfeatures-edit-nav-tools {
+    float: right;
+    li {
+        width: 20px;
+    }
+}
+.nlfeatures-edit-body {
+    clear: both;
+    color: $fg1;
+    background-color: $bg1;
+    padding: 1.5em;
+}
+.nlfeatures-edit-raw,
+.nlfeatures-edit-map {
+    background: transparent;
+}
+

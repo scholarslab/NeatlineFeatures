@@ -1,57 +1,53 @@
-
 .nlfeatures-edit {
-    border: 1px solid silver;
-    background-color: #382E22;
-}
+  color: #fafafa;
+  background-color: #382e22; }
+
 .nlfeatures-edit-nav-menu {
-    background: transparent;
-}
-.nlfeatures-edit-nav-menu ul {
-    float: left;
+  background: transparent;
+  border-left: 1px solid white; }
+  .nlfeatures-edit-nav-menu ul {
     margin-bottom: 0px;
+    border-left: 1px solid white;
     background: transparent;
-}
-.nlfeatures-edit-nav-menu ul li {
-    list-style-type: none;
-    display: block;
     float: left;
+    margin-left: 1em; }
+    .nlfeatures-edit-nav-menu ul li {
+      background-color: #2e261c;
+      border-bottom-color: #2e261c;
+      color: #dddddd;
+      list-style-type: none;
+      display: block;
+      float: left;
+      width: 75px;
+      padding: 1em;
+      margin: 0px;
+      border-top: 1px solid white;
+      border-right: 1px solid white; }
+      .nlfeatures-edit-nav-menu ul li a {
+        color: #dddddd;
+        text-decoration: none;
+        font-size: 0.9em; }
+    .nlfeatures-edit-nav-menu ul li:hover {
+      background-color: #382e22;
+      cursor: pointer; }
+    .nlfeatures-edit-nav-menu ul li.selected {
+      background-color: #eae9db;
+      border-bottom-color: #eae9db;
+      color: black; }
+      .nlfeatures-edit-nav-menu ul li.selected a {
+        color: black; }
 
-    width: 75px;
-    padding: 1em;
-    margin: 0px;
-    border: 1px solid #DDD;
-
-    background-color: #2E261C;
-}
-.nlfeatures-edit-nav-menu ul li:hover {
-    background-color: #382E22;
-    cursor: pointer;
-}
-.nlfeatures-edit-nav-menu ul li.selected {
-    background-color: #EAE9DB;
-    border-bottom-color: #EAE9DB;
-}
-.nlfeatures-edit-nav-menu ul li a {
-    color: #FAFAFA;
-    text-decoration: none;
-    font-size: 0.9em;
-}
-.nlfeatures-edit-nav-menu ul li.selected a {
-    color: #333;
-}
 .nlfeatures-edit-nav-tools {
-    float: right;
-}
-.nlfeatures-edit-nav-tools li {
-    width: 20px;
-}
+  float: right; }
+  .nlfeatures-edit-nav-tools li {
+    width: 20px; }
+
 .nlfeatures-edit-body {
-    clear: both;
-    background-color: #EAE9DB;
-    padding: 1.5em;
-}
+  clear: both;
+  color: black;
+  background-color: #eae9db;
+  padding: 1.5em; }
+
 .nlfeatures-edit-raw,
 .nlfeatures-edit-map {
-    background: transparent;
-}
-
+  background: transparent; }
