@@ -232,7 +232,7 @@
                         // If a layer was being edited before the save,
                         // make that layer the active edit layer again.
                         if (self._currentEditItem != null) {
-                            self.edit(self._currentEditItem, true);
+                            self.editJson(self._currentEditItem, true);
                         }
 
                     }
@@ -407,6 +407,21 @@
         },
 
         edit: function(item, immediate) {
+            var js = {
+                id: item.attr('recordid'),
+                name: item.find('span.item-title-text').text()
+            };
+            this.editJson(js, immediate);
+        },
+
+        /*
+         * This actually sets up the editing function. It expects item to be a
+         * JS object with these parameters:
+         *
+         * * id
+         * * name
+         */
+        editJson: function(item, immediate) {
 
             var self = this;
 
@@ -415,7 +430,7 @@
             }
 
             // Get the id of the item and try to fetch the layer.
-            var itemId = item.attr('recordid');
+            var itemId = item.id;
             this._currentEditLayer = this.idToLayer[itemId];
             this._currentEditId = itemId;
 
@@ -426,7 +441,7 @@
             // If the item does not have an existing vector layer, create a new one.
             if (!this._currentEditLayer) {
 
-                var itemName = item.find('span.item-title-text').text();
+                var itemName = item.name;
                 this._currentEditLayer = new OpenLayers.Layer.Vector(itemName);
                 this.map.addLayer(this._currentEditLayer);
                 this._currentEditLayer.setMap(this.map);

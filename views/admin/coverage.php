@@ -54,11 +54,14 @@
             }
         })
         .data('neatlinemap');
-    m.loadLocalData([{
+    var item = {
         id: el.attr('id'),
         title: "Coverage",
+        name: 'Coverage',
         wkt: "POINT (-8738850.21367 4584105.47978)"
-        }]);
+        };
+    m.loadLocalData([item]);
+    m.editJson(item, true);
 })(jQuery);
 </script>
 <style type='text/css'>
