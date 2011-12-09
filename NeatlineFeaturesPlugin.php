@@ -54,8 +54,8 @@ class NeatlineFeaturesPlugin
      * @var array
      **/
     private static $_filters = array(
-        // array('formItemDublinCoreCoverage',
-        //       array('Form', 'Item', 'Dublin Core', 'Coverage')),
+        array('formItemDublinCoreCoverage',
+              array('Form', 'Item', 'Dublin Core', 'Coverage')),
         array('elementFormDisplayHtmlFlag',
               'element_form_display_html_flag')
     );

@@ -41,11 +41,3 @@ Then /^I should not see "([^"]*)"$/ do |arg1|
   pending
 end
 
-Then /^I should see a map$/ do |arg1|
-  pending
-end
-
-Then /^I should not see a map$/ do |arg1|
-  pending
-end
-

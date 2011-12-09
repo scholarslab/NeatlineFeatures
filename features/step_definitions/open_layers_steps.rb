@@ -7,8 +7,16 @@ Given /^I click and drag on the "([^"]*)" map$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^the "([^"]*)" field changes to an OpenLayers map$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Then /^I should see a map in "([^"]*)"$/ do |parent|
+  pending
+end
+
+Then /^I should see a map$/ do |arg1|
+  pending
+end
+
+Then /^I should not see a map$/ do |arg1|
+  pending
 end
 
 Then /^I should see an OpenLayers map$/ do
