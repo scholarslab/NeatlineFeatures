@@ -23,7 +23,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<? echo $inputNameStem ?>[widget]" class='nlfeatures-edit'>
+<div id="<? echo $id_prefix ?>widget" class='nlfeatures-edit'>
   <div class='nlfeatures-edit-nav'>
     <div class='nlfeatures-edit-nav-menu'>
       <ul>
@@ -38,6 +38,26 @@
       <em>This space intentionally left blank.</em>
     </div>
     <div class='nlfeatures-edit-map'>
+      <div id="<? echo $id_prefix ?>map"></div>
     </div>
   </div>
 </div>
+<script type='text/javascript'>
+(function($) {
+    var el = $('#<? echo $id_prefix ?>map');
+    var m = el.neatlinemap({
+        map: {
+            // Sri Lanka, just cause it's fun to say.
+            center: [8986896.64319, 866942.16213],
+            zoom: 3
+            }
+    });
+    })(jQuery);
+</script>
+<style type='text/css'>
+<? echo '#' . $id_prefix ?>map {
+    border: 2px solid red;
+    width: 100%;
+    height: 300px;
+}
+</style>

@@ -51,6 +51,16 @@
                 default_color: '#ffb80e',
                 select_point_radius: 10,
                 select_stroke_color: '#ea3a3a'
+            },
+
+            // These are added to document options that may be taken from a
+            // Neatline global or something.
+            map: {
+                boundingBox: '90,0,-90,360',
+                center: undefined,
+                zoom: undefined,
+                epsg: undefined,
+                wmsAddress: undefined
             }
 
         },
@@ -63,7 +73,11 @@
             var self = this;
 
             // Getters.
-            this.params = Neatline;
+            if (window.Neatline !== undefined) {
+                this.params = Neatline;
+            } else {
+                this.params = this.options;
+            }
 
             // Ignition.
             this._instantiateOpenLayers();
@@ -107,15 +121,22 @@
             }
 
             // Build the default bounds array.
-            var boundsArray = this.params.map.boundingBox.split(',');
-            var bounds = new OpenLayers.Bounds(
-                parseFloat(boundsArray[0]),
-                parseFloat(boundsArray[1]),
-                parseFloat(boundsArray[2]),
-                parseFloat(boundsArray[3])
-            );
+            if (this.params.map.boundingBox === undefined) {
+                var bounds = new OpenLayers.Bounds();
+            } else {
+                var boundsArray = this.params.map.boundingBox.split(',');
+                var bounds = new OpenLayers.Bounds(
+                    parseFloat(boundsArray[0]),
+                    parseFloat(boundsArray[1]),
+                    parseFloat(boundsArray[2]),
+                    parseFloat(boundsArray[3])
+                );
+            }
 
             // Starting options.
+            var proj = (this.params.map.epsg !== undefined) ?
+                       this.params.map.epsg[0] :
+                       'EPSG:4326';
             var options = {
                 controls: [
                   new OpenLayers.Control.PanZoomBar(),
@@ -127,30 +148,35 @@
                 ],
                 maxExtent: bounds,
                 maxResolution: 'auto',
-                projection: this.params.map.epsg[0],
+                projection: proj,
                 units: 'm'
             };
 
             // Instantiate the map.
-            this.map = new OpenLayers.Map('map', options);
+            this.map = new OpenLayers.Map(this.element.attr('id'), options);
 
-            this.baseLayer = new OpenLayers.Layer.WMS(
-                this.params.name, this.params.map.wmsAddress,
-                {
-                    LAYERS: this.params.map.layers,
-                    STYLES: '',
-                    format: 'image/jpeg',
-                    tiled: !pureCoverage,
-                    tilesOrigin : this.map.maxExtent.left + ',' + this.map.maxExtent.bottom
-                },
-                {
-                    buffer: 0,
-                    displayOutsideMaxExtent: true,
-                    isBaseLayer: true
-                }
-            );
+            if (this.params.map.wmsAddress !== undefined) {
+                this.baseLayer = new OpenLayers.Layer.WMS(
+                    this.params.name, this.params.map.wmsAddress,
+                    {
+                        LAYERS: this.params.map.layers,
+                        STYLES: '',
+                        format: 'image/jpeg',
+                        tiled: !pureCoverage,
+                        tilesOrigin : this.map.maxExtent.left + ',' + this.map.maxExtent.bottom
+                    },
+                    {
+                        buffer: 0,
+                        displayOutsideMaxExtent: true,
+                        isBaseLayer: true
+                    }
+                );
+            } else {
+                this.baseLayer = new OpenLayers.Layer.OSM();
+            }
 
             this.map.addLayers([this.baseLayer]);
+
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
@@ -164,8 +190,17 @@
                 );
             }
 
-            // Set starting zoom focus.
-            this.map.zoomToExtent(bounds);
+
+            if (this.params.map.center !== undefined) {
+                var z = (this.params.map.zoom === undefined) ? 3 : this.params.map.zoom;
+                var ll = new OpenLayers.LonLat(this.params.map.center[0],
+                                               this.params.map.center[1]);
+
+                this.map.setCenter(ll, z);
+            } else {
+                // Set starting zoom focus.
+                this.map.zoomToExtent(bounds);
+            }
 
         },
 
@@ -192,26 +227,29 @@
             }
 
             // Hit the json server.
-            this.requestData = $.ajax({
+            if (this.params.dataSources !== undefined &&
+                this.params.dataSources.maps !== undefined) {
+                this.requestData = $.ajax({
 
-                url: this.params.dataSources.map,
-                dataType: 'json',
+                    url: this.params.dataSources.map,
+                    dataType: 'json',
 
-                success: function(data) {
+                    success: function(data) {
 
-                    // Build the new layers and add default click controls.
-                    self._buildVectorLayers(data);
-                    self._addClickControls();
+                        // Build the new layers and add default click controls.
+                        self._buildVectorLayers(data);
+                        self._addClickControls();
 
-                    // If a layer was being edited before the save,
-                    // make that layer the active edit layer again.
-                    if (self._currentEditItem != null) {
-                        self.edit(self._currentEditItem, true);
+                        // If a layer was being edited before the save,
+                        // make that layer the active edit layer again.
+                        if (self._currentEditItem != null) {
+                            self.edit(self._currentEditItem, true);
+                        }
+
                     }
 
-                }
-
-            });
+                });
+            }
 
         },
 

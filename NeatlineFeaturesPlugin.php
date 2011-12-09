@@ -152,6 +152,8 @@ class NeatlineFeaturesPlugin
     public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
         $options, $record, $element)
     {
+        $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
+
         ob_start();
 
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
