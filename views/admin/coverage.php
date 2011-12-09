@@ -31,9 +31,6 @@
       </ul>
     </div>
     <div class='nlfeatures-edit-nav-tools'>
-      <ul>
-        <!-- <li><input class='remove-element' type='submit' value='Remove' style='display: inline;'/></li> -->
-      </ul>
     </div>
   </div>
   <div class='nlfeatures-edit-body'>
