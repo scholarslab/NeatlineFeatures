@@ -125,6 +125,11 @@ class NeatlineFeaturesPlugin
     public function adminThemeHeader()
     {
         queue_css('nlfeatures');
+
+        // We are also outputting the script tags to load OpenLayers here.
+        echo "<script type='text/javascript' src='http://openlayers.org/api/OpenLayers.js'></script>";
+
+        queue_js('neatline_map');
     }
 
     // }}}
