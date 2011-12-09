@@ -208,18 +208,7 @@
 
             var self = this;
 
-            // If there are existing click and highlight controls, destroy them.
-            this._removeControls();
-
-            // Clear existing vectors.
-            $.each(this._currentVectorLayers, function(i, layer) {
-                self.map.removeLayer(layer);
-                layer.destroy();
-            });
-
-            // Empty out the containers.
-            this._currentVectorLayers = [];
-            this.idToLayer = {};
+            this._resetData();
 
             // Abort the request if it is running.
             if (this.requestData != null) {
@@ -253,6 +242,42 @@
 
         },
 
+        /*
+         * data should be a list of objects with these fields:
+         * - id
+         * - title
+         * - color (optional)
+         * - wkt
+         */
+        loadLocalData: function(data) {
+
+            var self = this;
+
+            this._resetData();
+
+            this._buildVectorLayers(data);
+            this._addClickControls();
+        },
+
+        _resetData: function() {
+
+            var self = this;
+
+            // If there are existing click and highlight controls, destroy them.
+            this._removeControls();
+
+            // Clear existing vectors.
+            $.each(this._currentVectorLayers, function(i, layer) {
+                self.map.removeLayer(layer);
+                layer.destroy();
+            });
+
+            // Empty out the containers.
+            this._currentVectorLayers = [];
+            this.idToLayer = {};
+
+        },
+
         _buildVectorLayers: function(data) {
 
             var self = this;
@@ -282,8 +307,9 @@
 
                 // Build the features.
                 $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
-                    var geometry = new OpenLayers.Geometry.fromWKT(wkt);
+                    var geometry = OpenLayers.Geometry.fromWKT(wkt);
                     var feature = new OpenLayers.Feature.Vector(geometry);
+                    console.log(feature);
                     features.push(feature);
                 });
 

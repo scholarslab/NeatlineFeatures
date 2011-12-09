@@ -48,11 +48,18 @@
     var m = el.neatlinemap({
         map: {
             // Sri Lanka, just cause it's fun to say.
-            center: [8986896.64319, 866942.16213],
+            // center: [8986896.64319, 866942.16213],
+            center: [-8738850.21367, 4584105.47978],
             zoom: 3
             }
-    });
-    })(jQuery);
+        })
+        .data('neatlinemap');
+    m.loadLocalData([{
+        id: el.attr('id'),
+        title: "Coverage",
+        wkt: "POINT (-8738850.21367 4584105.47978)"
+        }]);
+})(jQuery);
 </script>
 <style type='text/css'>
 <? echo '#' . $id_prefix ?>map {
