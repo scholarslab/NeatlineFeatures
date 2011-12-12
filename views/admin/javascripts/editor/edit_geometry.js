@@ -21,12 +21,8 @@
  */
 
 (function($, undefined) {
-
-
     $.widget('neatline.editgeometry', {
-
         options: {
-
             // Markup hooks.
             markup: {
                 geo_edit_class: 'geo-edit'
@@ -36,11 +32,9 @@
             animation: {
                 fade_duration: 500
             }
-
         },
 
         _create: function() {
-
             var self = this;
 
             // Build the buttons, insert, and gloss.
@@ -69,29 +63,22 @@
 
             // Gloss the drag button.
             this.dragButton.bind({
-
                 'mousedown': function() {
-
                     // If not activated, activate.
                     if (!self.dragButton.data('activated')) {
-
                         // Do the color change.
                         self.dragButton.addClass('primary');
 
                         // Change the trackers.
                         self.dragButton.data('activated', true);
-
                     }
-
                     // If activated, deactivate.
                     else {
-
                         // Do the color change.
                         self.dragButton.removeClass('primary');
 
                         // Change the tracker.
                         self.dragButton.data('activated', false);
-
                     }
 
                     // Fire out the update event.
@@ -100,36 +87,28 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     });
-
                 }
 
             });
 
             // Gloss the scale button.
             this.scaleButton.bind({
-
                 'mousedown': function() {
-
                     // If not activated, activate.
                     if (!self.scaleButton.data('activated')) {
-
                         // Do the color change.
                         self.scaleButton.addClass('primary');
 
                         // Change the trackers.
                         self.scaleButton.data('activated', true);
-
                     }
-
                     // If activated, deactivate.
                     else {
-
                         // Do the color change.
                         self.scaleButton.removeClass('primary');
 
                         // Change the tracker.
                         self.scaleButton.data('activated', false);
-
                     }
 
                     // Fire out the update event.
@@ -138,36 +117,27 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     });
-
                 }
-
             });
 
             // Gloss the rotate button.
             this.rotateButton.bind({
-
                 'mousedown': function() {
-
                     // If not activated, activate.
                     if (!self.rotateButton.data('activated')) {
-
                         // Do the color change.
                         self.rotateButton.addClass('primary');
 
                         // Change the tracker.
                         self.rotateButton.data('activated', true);
-
                     }
-
                     // If activated, deactivate.
                     else {
-
                         // Do the color change.
                         self.rotateButton.removeClass('primary');
 
                         // Change the tracker.
                         self.rotateButton.data('activated', false);
-
                     }
 
                     // Fire out the update event.
@@ -176,25 +146,19 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     });
-
                 }
-
             });
 
             // Gloss the delete button.
             this.deleteButton.bind({
-
                 // Fire out the delete event.
                 'mousedown': function() {
                     self._trigger('delete');
                 }
-
             });
-
         },
 
         showButtons: function() {
-
             // Display:block the buttons.
             $('.' + this.options.markup.geo_edit_class).css({
                 'display': 'block !important',
@@ -203,11 +167,9 @@
 
             // By default, deactivate all buttons.
             this.deactivateAllButtons();
-
         },
 
         hideButtons: function() {
-
             // Get the buttons.
             var buttons = $('.' + this.options.markup.geo_edit_class);
 
@@ -217,11 +179,9 @@
             }, this.options.markup.fade_duration, function() {
                 buttons.css('display', 'none !important');
             });
-
         },
 
         deactivateAllButtons: function() {
-
             // Drag.
             this.dragButton.removeClass('primary');
             this.dragButton.data('activated', false);
@@ -233,11 +193,7 @@
             // Rotate.
             this.rotateButton.removeClass('primary');
             this.rotateButton.data('activated', false);
-
         }
-
     });
-
-
 })( jQuery );
 
