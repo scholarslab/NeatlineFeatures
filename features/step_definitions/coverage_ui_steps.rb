@@ -35,6 +35,12 @@ Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
   end
 end
 
+Then /^I should not see "([^"]*)" in "([^"]*)"$/ do |target, context|
+  within(context) do
+    find(target).should_not be_visible
+  end
+end
+
 Then /^I should see "([^"]*)"$/ do |arg1|
   pending
 end

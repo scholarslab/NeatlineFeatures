@@ -8,7 +8,9 @@ Given /^I click and drag on the "([^"]*)" map$/ do |arg1|
 end
 
 Then /^I should see a map in "([^"]*)"$/ do |parent|
-  pending
+  within(parent) do
+    find(".olMap").visible?
+  end
 end
 
 Then /^I should see a map$/ do |arg1|
