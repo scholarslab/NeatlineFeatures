@@ -27,6 +27,8 @@
 if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
     define('NEATLINE_FEATURES_PLUGIN_DIR', dirname(__FILE__) . '/..');
 }
+// For some reason, this isn't getting picked up when running tests.
+require_once 'application/models/Plugin.php';
 require_once 'NeatlineFeaturesPlugin.php';
 
 /**
@@ -65,8 +67,29 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->user = $this->db->getTable('user')->find(1);
         $this->_authenticateUser($this->user);
 
-        $this->nfPlugin = new NeatlineFeaturesPlugin();
-        $this->nfPlugin->install();
+        $plugin_broker = get_plugin_broker();
+        $this->nfPlugin = $this->_addHooksAndFilters(
+            $plugin_broker, 'NeatlineFeatures');
+        $helper = new Omeka_Test_Helper_Plugin();
+        $helper->setUp('NeatlineFeatures');
+
+        $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->core);
+    }
+
+    /**
+     * This creates the plugin and sets the current plugin directory.
+     *
+     * @param PluginBroker $plugin_broker The current plugin broker.
+     * @param string       $plugin_name   The name of the plugin to load.
+     *
+     * @return Instance of the plugin class.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function _addHooksAndFilters($plugin_broker, $plugin_name)
+    {
+        $class_name = $plugin_name . 'Plugin';
+        $plugin_broker->setCurrentPluginDirName($plugin_name);
+        return (new $class_name);
     }
 
     /**
