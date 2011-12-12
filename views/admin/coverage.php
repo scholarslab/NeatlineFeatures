@@ -63,6 +63,7 @@
         };
     m.loadLocalData([item]);
     m.editJson(item, true);
+    /* window._nlfeatureMap = m; */
 })(jQuery);
 </script>
 <style type='text/css'>
