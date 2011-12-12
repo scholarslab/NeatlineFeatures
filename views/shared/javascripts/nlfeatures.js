@@ -324,7 +324,7 @@
                     self._clickedFeature = feature;
 
                     // Trigger out to the deployment code.
-                    self._trigger('featureclick', {}, {
+                    self._trigger('featureclick.neatline', {}, {
                         'itemId': self.layerToId[feature.layer.id]
                     });
 
@@ -426,7 +426,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Path, {
                     displayClass: 'olControlDrawFeaturePath',
                     featureAdded: function() {
-                        self._trigger('featureadded');
+                        self._trigger('featureadded.neatline');
                     }
                 }),
 
@@ -434,7 +434,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Point, {
                     displayClass: 'olControlDrawFeaturePoint',
                     featureAdded: function() {
-                        self._trigger('featureadded');
+                        self._trigger('featureadded.neatline');
                     }
                 }),
 
@@ -442,7 +442,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Polygon, {
                     displayClass: 'olControlDrawFeaturePolygon',
                     featureAdded: function() {
-                        self._trigger('featureadded');
+                        self._trigger('featureadded.neatline');
                     }
                 })
             ];
@@ -452,7 +452,7 @@
                 // OL marks this callback as deprecated, but I can't find
                 // any alternative and kosher way of hooking on to this.
                 onModification: function() {
-                    self._trigger('featureadded');
+                    self._trigger('featureadded.neatline');
                 },
 
                 standalone: true
@@ -475,7 +475,7 @@
             // Instantiate the geometry editor.
             this.element.editgeometry({
                 // On update.
-                'update': function(event, obj) {
+                'update.neatline': function(event, obj) {
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
@@ -509,7 +509,7 @@
                     }
                 },
 
-                'delete': function() {
+                'delete.neatline': function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
                         self.modifyFeatures.unselectFeature(feature);

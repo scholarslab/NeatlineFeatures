@@ -83,7 +83,7 @@
                     }
 
                     // Fire out the update event.
-                    self._trigger('update', {}, {
+                    self._trigger('update.neatline', {}, {
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -113,7 +113,7 @@
                     }
 
                     // Fire out the update event.
-                    self._trigger('update', {}, {
+                    self._trigger('update.neatline', {}, {
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -142,7 +142,7 @@
                     }
 
                     // Fire out the update event.
-                    self._trigger('update', {}, {
+                    self._trigger('update.neatline', {}, {
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -154,7 +154,7 @@
             this.deleteButton.bind({
                 // Fire out the delete event.
                 'mousedown': function() {
-                    self._trigger('delete');
+                    self._trigger('delete.neatline');
                 }
             });
         },
