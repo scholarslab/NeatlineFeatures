@@ -9,7 +9,7 @@ end
 
 Then /^I should see a map in "([^"]*)"$/ do |parent|
   within(parent) do
-    find(".olMap").visible?
+    find(".olMap").should be_visible
   end
 end
 

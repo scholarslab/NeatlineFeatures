@@ -31,7 +31,7 @@ end
 
 Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
   within(context) do
-    find(target).visible?
+    find(target).should be_visible
   end
 end
 
