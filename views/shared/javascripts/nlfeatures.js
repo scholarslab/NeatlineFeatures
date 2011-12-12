@@ -98,6 +98,7 @@
             OpenLayers.ImgPath = 'http://js.mapbox.com/theme/dark/';
 
             var tiled;
+            var bounds, boundsArray;
             var pureCoverage = true;
 
             // Pink tile avoidance.
@@ -107,17 +108,14 @@
             OpenLayers.DOTS_PER_INCH = 25.4 / 0.28;
 
             // Set tile image format.
-            format = 'image/png';
-            if(pureCoverage) {
-                format = "image/png8";
-            }
+            format = pureCoverage ? 'image/png8' : 'image/png';
 
             // Build the default bounds array.
             if (this.params.map.boundingBox === undefined) {
-                var bounds = new OpenLayers.Bounds();
+                bounds = new OpenLayers.Bounds();
             } else {
-                var boundsArray = this.params.map.boundingBox.split(',');
-                var bounds = new OpenLayers.Bounds(
+                boundsArray = this.params.map.boundingBox.split(',');
+                bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
@@ -172,8 +170,8 @@
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
             if (this.params.default_map_bounds != null) {
-                var boundsArray = this.params.default_map_bounds.split(',');
-                var bounds = new OpenLayers.Bounds(
+                boundsArray = this.params.default_map_bounds.split(',');
+                bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
