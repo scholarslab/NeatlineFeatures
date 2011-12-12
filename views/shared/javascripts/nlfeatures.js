@@ -309,13 +309,6 @@
             // If there are existing click and highlight controls, destroy them.
             this._removeControls();
 
-            // Create the highlight and click control.
-            this.highlightControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-                hover: true,
-                highlightOnly: true,
-                renderIntent: 'temporary'
-            });
-
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
                 box: true,
 
@@ -341,8 +334,6 @@
             });
 
             // Add and activate.
-            this.map.addControl(this.highlightControl);
-            this.highlightControl.activate();
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
         },
