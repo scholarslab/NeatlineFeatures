@@ -39,6 +39,7 @@
     </div>
     <div class='nlfeatures-edit-map'>
       <div id="<? echo $id_prefix ?>map"></div>
+      <div class='nlfeatures-map-tools'></div>
     </div>
   </div>
 </div>
