@@ -49,7 +49,6 @@
 
             this.deleteButton =
                 $('<button id="delete-button" type="button" class="btn danger edit-geometry-small geo-edit">Delete</button>');
-            console.log(this.deleteButton);
 
             // Insert the buttons.
             this.element.append(this.dragButton);
