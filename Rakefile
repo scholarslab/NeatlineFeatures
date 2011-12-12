@@ -34,3 +34,8 @@ task :tags do
   sh %{ctags -R ../..}
 end
 
+desc 'This watches the CSS files.'
+task :watchsass do
+  sh %{sass --watch views/admin/css/nlfeatures.scss:views/admin/css/nlfeatures.css}
+end
+
