@@ -134,7 +134,7 @@
                   new OpenLayers.Control.MousePosition(),
                   new OpenLayers.Control.LayerSwitcher(),
                   new OpenLayers.Control.Navigation(),
-                  new OpenLayers.Control.ScaleLine(),
+                  new OpenLayers.Control.ScaleLine()
                 ],
                 maxExtent: bounds,
                 maxResolution: 'auto',
