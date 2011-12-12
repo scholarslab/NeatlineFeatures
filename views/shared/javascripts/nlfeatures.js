@@ -21,12 +21,8 @@
  */
 
 (function($, undefined) {
-
-
-    $.widget('neatline.neatlinemap', {
-
+    $.widget('neatline.nlfeatures', {
         options: {
-
             mode: 'edit',
             wkt_delimiter: '|',
 
@@ -62,7 +58,6 @@
                 epsg: undefined,
                 wmsAddress: undefined
             }
-
         },
 
         /*
@@ -718,7 +713,5 @@
             this._currentEditLayer.redraw();
 
         }
-
     });
-
 })( jQuery );

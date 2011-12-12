@@ -26,15 +26,15 @@
 
 /* Map editor controls */
 
-.olControlEditingToolbar {
+.nlfeatures .olControlEditingToolbar {
     opacity: 0;
 }
 
-#edit-geometry-button {
+.nlfeatures #edit-geometry-button {
     top: 37px;
 }
 
-.geo-edit {
+.nlfeatures .geo-edit {
     z-index: 999;
     position: absolute;
     padding: 4px 5px !important;
@@ -46,25 +46,25 @@
     -webkit-transition: 0.0s linear all !important;
 }
 
-#rotate-button {
+.nlfeatures #rotate-button {
     font-size: 0.85em;
     width: 52px;
     right: 124px;
 }
 
-#scale-button {
+.nlfeatures #scale-button {
     font-size: 0.85em;
     width: 47px;
     right: 182px;
 }
 
-#drag-button {
+.nlfeatures #drag-button {
     font-size: 0.85em;
     width: 45px;
     right: 235px;
 }
 
-#delete-button {
+.nlfeatures #delete-button {
     font-size: 0.85em;
     width: 45px;
     right: 286px;

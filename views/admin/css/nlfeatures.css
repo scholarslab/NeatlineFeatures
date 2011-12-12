@@ -1,17 +1,16 @@
-.nlfeatures-edit {
+.nlfeatures .nlfeatures-edit {
   color: #fafafa;
   background-color: #382e22; }
-
-.nlfeatures-edit-nav-menu {
+.nlfeatures .nlfeatures-edit-nav-menu {
   background: transparent;
   border-left: 1px solid white; }
-  .nlfeatures-edit-nav-menu ul {
+  .nlfeatures .nlfeatures-edit-nav-menu ul {
     margin-bottom: 0px;
     border-left: 1px solid white;
     background: transparent;
     float: left;
     margin-left: 1em; }
-    .nlfeatures-edit-nav-menu ul li {
+    .nlfeatures .nlfeatures-edit-nav-menu ul li {
       background-color: #2e261c;
       border-bottom-color: #2e261c;
       color: #dddddd;
@@ -23,31 +22,28 @@
       margin: 0px;
       border-top: 1px solid white;
       border-right: 1px solid white; }
-      .nlfeatures-edit-nav-menu ul li a {
+      .nlfeatures .nlfeatures-edit-nav-menu ul li a {
         color: #dddddd;
         text-decoration: none;
         font-size: 0.9em; }
-    .nlfeatures-edit-nav-menu ul li:hover {
+    .nlfeatures .nlfeatures-edit-nav-menu ul li:hover {
       background-color: #382e22;
       cursor: pointer; }
-    .nlfeatures-edit-nav-menu ul li.selected {
+    .nlfeatures .nlfeatures-edit-nav-menu ul li.selected {
       background-color: #eae9db;
       border-bottom-color: #eae9db;
       color: black; }
-      .nlfeatures-edit-nav-menu ul li.selected a {
+      .nlfeatures .nlfeatures-edit-nav-menu ul li.selected a {
         color: black; }
-
-.nlfeatures-edit-nav-tools {
+.nlfeatures .nlfeatures-edit-nav-tools {
   float: right; }
-  .nlfeatures-edit-nav-tools li {
+  .nlfeatures .nlfeatures-edit-nav-tools li {
     width: 20px; }
-
-.nlfeatures-edit-body {
+.nlfeatures .nlfeatures-edit-body {
   clear: both;
   color: black;
   background-color: #eae9db;
   padding: 1.5em; }
-
-.nlfeatures-edit-raw,
-.nlfeatures-edit-map {
+.nlfeatures .nlfeatures-edit-raw,
+.nlfeatures .nlfeatures-edit-map {
   background: transparent; }

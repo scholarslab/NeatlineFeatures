@@ -23,7 +23,7 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<? echo $id_prefix ?>widget" class='nlfeatures-edit'>
+<div id="<? echo $id_prefix ?>widget" class='nlfeatures nlfeatures-edit'>
   <div class='nlfeatures-edit-nav'>
     <div class='nlfeatures-edit-nav-menu'>
       <ul>
@@ -45,7 +45,7 @@
 <script type='text/javascript'>
 (function($) {
     var el = $('#<? echo $id_prefix ?>map');
-    var m = el.neatlinemap({
+    var m = el.nlfeatures({
         map: {
             // Sri Lanka, just cause it's fun to say.
             // center: [8986896.64319, 866942.16213],
@@ -53,7 +53,7 @@
             zoom: 3
             }
         })
-        .data('neatlinemap');
+        .data('nlfeatures');
     var item = {
         id: el.attr('id'),
         title: "Coverage",
