@@ -64,7 +64,6 @@
          * Grab the Neatline global, shell out trackers, startup.
          */
         _create: function() {
-
             var self = this;
 
             // Getters.
@@ -87,14 +86,12 @@
 
             // Load data.
             this.loadData();
-
         },
 
         /*
          * Grab the Neatline global, shell out trackers, startup.
          */
         _instantiateOpenLayers: function() {
-
             // Set OL global attributes.
             OpenLayers.IMAGE_RELOAD_ATTEMTPS = 3;
             OpenLayers.Util.onImageLoadErrorColor = "transparent";
@@ -172,7 +169,6 @@
 
             this.map.addLayers([this.baseLayer]);
 
-
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
             if (this.params.default_map_bounds != null) {
@@ -196,11 +192,9 @@
                 // Set starting zoom focus.
                 this.map.zoomToExtent(bounds);
             }
-
         },
 
         loadData: function() {
-
             var self = this;
 
             this._resetData();
@@ -214,12 +208,10 @@
             if (this.params.dataSources !== undefined &&
                 this.params.dataSources.maps !== undefined) {
                 this.requestData = $.ajax({
-
                     url: this.params.dataSources.map,
                     dataType: 'json',
 
                     success: function(data) {
-
                         // Build the new layers and add default click controls.
                         self._buildVectorLayers(data);
                         self._addClickControls();
@@ -229,12 +221,9 @@
                         if (self._currentEditItem != null) {
                             self.editJson(self._currentEditItem, true);
                         }
-
                     }
-
                 });
             }
-
         },
 
         /*
@@ -245,7 +234,6 @@
          * - wkt
          */
         loadLocalData: function(data) {
-
             var self = this;
 
             this._resetData();
@@ -255,7 +243,6 @@
         },
 
         _resetData: function() {
-
             var self = this;
 
             // If there are existing click and highlight controls, destroy them.
@@ -270,11 +257,9 @@
             // Empty out the containers.
             this._currentVectorLayers = [];
             this.idToLayer = {};
-
         },
 
         _buildVectorLayers: function(data) {
-
             var self = this;
 
             // Instantiate associations objects.
@@ -282,7 +267,6 @@
             this.layerToId = {};
 
             $.each(data, function(i, item) {
-
                 // Get the id of the item.
                 var itemId = item.id;
 
@@ -318,13 +302,10 @@
                 // Add to the layers array and add to map.
                 self._currentVectorLayers.push(vectorLayer);
                 self.map.addLayer(vectorLayer);
-
             });
-
         },
 
         _addClickControls: function() {
-
             var self = this;
 
             // If there are existing click and highlight controls, destroy them.
@@ -338,9 +319,7 @@
             });
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-
                 onSelect: function(feature) {
-
                     // Store the feature in the tracker.
                     self._clickedFeature = feature;
 
@@ -352,17 +331,13 @@
                     if (self.modifyFeatures != undefined) {
                         self.modifyFeatures.selectFeature(feature);
                     }
-
                 },
 
                 onUnselect: function(feature) {
-
                     if (self.modifyFeatures != undefined) {
                         self.modifyFeatures.unselectFeature(feature);
                     }
-
                 }
-
             });
 
             // Add and activate.
@@ -370,11 +345,9 @@
             this.highlightControl.activate();
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
-
         },
 
         _removeControls: function() {
-
             if (this.modifyFeatures !== undefined) {
                 this.map.removeControl(this.modifyFeatures);
                 this.modifyFeatures.destroy();
@@ -398,7 +371,6 @@
                 this.highlightControl.destroy();
                 delete this.highlightControl;
             }
-
         },
 
         edit: function(item, immediate) {
@@ -417,7 +389,6 @@
          * * name
          */
         editJson: function(item, immediate) {
-
             var self = this;
 
             if (this.highlightControl !== undefined) {
@@ -435,7 +406,6 @@
 
             // If the item does not have an existing vector layer, create a new one.
             if (!this._currentEditLayer) {
-
                 var itemName = item.name;
                 this._currentEditLayer = new OpenLayers.Layer.Vector(itemName);
                 this.map.addLayer(this._currentEditLayer);
@@ -445,12 +415,10 @@
                 this._currentVectorLayers.push(this._currentEditLayer);
                 this.idToLayer[itemId] = this._currentEditLayer;
                 this.layerToId[this._currentEditLayer.id] = itemId;
-
             }
 
             // Create the controls and toolbar.
             var panelControls = [
-
                 // Panning.
                 new OpenLayers.Control.Navigation(),
 
@@ -477,12 +445,10 @@
                         self._trigger('featureadded');
                     }
                 })
-
             ];
 
             // Instantiate the modify feature control.
             this.modifyFeatures = new OpenLayers.Control.ModifyFeature(this._currentEditLayer, {
-
                 // OL marks this callback as deprecated, but I can't find
                 // any alternative and kosher way of hooking on to this.
                 onModification: function() {
@@ -490,7 +456,6 @@
                 },
 
                 standalone: true
-
             });
 
             // Instantiate the edit toolbar.
@@ -509,10 +474,8 @@
 
             // Instantiate the geometry editor.
             this.element.editgeometry({
-
                 // On update.
                 'update': function(event, obj) {
-
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
@@ -544,27 +507,20 @@
                         self.modifyFeatures.unselectFeature(feature);
                         self.modifyFeatures.selectFeature(feature);
                     }
-
                 },
 
                 'delete': function() {
-
                     if (self.modifyFeatures.feature) {
-
                         var feature = self.modifyFeatures.feature;
                         self.modifyFeatures.unselectFeature(feature);
                         self._currentEditLayer.destroyFeatures([ feature ]);
-
                     }
-
                 }
-
             });
 
             // Only do the fade if the form open does not coincide with
             // another form close.
             if (!immediate) {
-
                 // Insert the edit geometry button.
                 this.element.editgeometry('showButtons', immediate);
 
@@ -572,14 +528,9 @@
                 $('.' + this.options.markup.toolbar_class).animate({
                     'opacity': 1
                 }, this.options.animation.fade_duration);
-
-            }
-
-            else {
-
+            } else {
                 // Pop up the toolbar.
                 $('.' + this.options.markup.toolbar_class).css('opacity', 1);
-
             }
 
             // If the last selected features is among the features in the
@@ -596,11 +547,9 @@
             if (inLayer) {
                 this.modifyFeatures.selectFeature(this._clickedFeature);
             }
-
         },
 
         endEditWithoutSave: function(id, immediate) {
-
             // Before OpenLayers axes the toolbar controls, clone the div so
             // that it can be faded down in unison with the buttons.
             var toolbarClone = $('.' + this.options.markup.toolbar_class).clone();
@@ -614,7 +563,6 @@
             // the fade down, as as to avoid a little opacity dip in the buttons
             // when the form switches.
             if (!immediate) {
-
                 this.element.editgeometry('hideButtons');
 
                 // Reinsert the dummy toolbar and fade it down.
@@ -624,30 +572,25 @@
                 }, this.options.animation.fade_duration, function() {
                     toolbarClone.remove();
                 });
-
             }
 
             // Reactivate the default selection controls.
             this._addClickControls();
 
             if (this._currentEditLayer.features.length == 0) {
-
                 // Pop off the layer, remove the id-layer association.
                 this.map.removeLayer(this._currentEditLayer);
                 this._currentVectorLayers.remove(this._currentEditLayer);
                 delete this.idToLayer[id];
                 delete this.layerToId[this._currentEditLayer.id];
                 this._currentEditLayer = null;
-
             }
 
             // Clear the item tracker.
             this._currentEditItem = null;
-
         },
 
         getWktForSave: function() {
-
             var wkts = [];
 
             this.modifyFeatures.unselectFeature(this._clickedFeature);
@@ -658,33 +601,25 @@
             });
 
             return wkts.join(this.options.wkt_delimiter);
-
         },
 
         getExtentForSave: function() {
-
             return this.map.getExtent().toString();
-
         },
 
         getZoomForSave: function() {
-
             return this.map.getZoom();
-
         },
 
         zoomToItemVectors: function(id) {
-
             var layer = this.idToLayer[id];
 
             if (layer != null && layer.features.length > 0) {
                 this.map.zoomToExtent(layer.getDataExtent());
             }
-
         },
 
         _getStyleMap: function(fillColor) {
-
             return new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
                     fillColor: fillColor,
@@ -701,17 +636,14 @@
                     strokeWidth: 2
                 }),
             });
-
         },
 
         setItemColor: function(color) {
-
             // Rebuild the style map.
             this._currentEditLayer.styleMap = this._getStyleMap(color);
 
             // Rerender the layer to manifest the change.
             this._currentEditLayer.redraw();
-
         }
     });
 })( jQuery );
