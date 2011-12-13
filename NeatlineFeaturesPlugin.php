@@ -166,7 +166,6 @@ class NeatlineFeaturesPlugin
         // There's probably a better way than this sledgehammer, but it's not 
         // obvious.
         $isHtml = false;
-        $v->_displayHtmlFlag($fieldStem, $i);
         /*
         if ($v->_isPosted()) {
             $isHtml = (boolean) 

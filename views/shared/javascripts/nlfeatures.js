@@ -56,7 +56,8 @@
                 center: undefined,
                 zoom: undefined,
                 epsg: undefined,
-                wmsAddress: undefined
+                wmsAddress: undefined,
+                raw_update: undefined
             }
         },
 
@@ -317,7 +318,7 @@
                     self._clickedFeature = feature;
 
                     // Trigger out to the deployment code.
-                    self._trigger('featureclick.neatline', {}, {
+                    self.element.trigger('featureclick.neatline', {}, {
                         'itemId': self.layerToId[feature.layer.id]
                     });
 
@@ -417,7 +418,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Path, {
                     displayClass: 'olControlDrawFeaturePath',
                     featureAdded: function() {
-                        self._trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.neatline');
                     }
                 }),
 
@@ -425,7 +426,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Point, {
                     displayClass: 'olControlDrawFeaturePoint',
                     featureAdded: function() {
-                        self._trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.neatline');
                     }
                 }),
 
@@ -433,7 +434,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Polygon, {
                     displayClass: 'olControlDrawFeaturePolygon',
                     featureAdded: function() {
-                        self._trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.neatline');
                     }
                 })
             ];
@@ -443,7 +444,7 @@
                 // OL marks this callback as deprecated, but I can't find
                 // any alternative and kosher way of hooking on to this.
                 onModification: function() {
-                    self._trigger('featureadded.neatline');
+                    self.element.trigger('featureadded.neatline');
                 },
 
                 standalone: true
@@ -524,6 +525,23 @@
                 $('.' + this.options.markup.toolbar_class).css('opacity', 1);
             }
 
+            // If there is an update target for raw edits, wire up the handlers
+            // here.
+            if (this.params.map.raw_update !== undefined) {
+                var update_target = this.params.map.raw_update;
+                this.element.bind({
+                    'featureadded.neatline': function() {
+                        self.updateRaw();
+                    },
+                    'update.neatline': function() {
+                        self.updateRaw();
+                    },
+                    'delete.neatline': function() {
+                        self.updateRaw();
+                    }
+                });
+            }
+
             // If the last selected features is among the features in the
             // new currentEditLayer, mark it as selected by default. Notably,
             // this would be the case of the edit flow was triggered by a
@@ -538,6 +556,17 @@
             if (inLayer) {
                 this.modifyFeatures.selectFeature(this._clickedFeature);
             }
+        },
+
+        /*
+         * This updates the raw target element's value. Newlines are added to
+         * WKTs to make them more readable.
+         */
+        updateRaw: function() {
+            var updateEl = this.params.map.raw_update;
+            var text = this.getWktForSave();
+            text = text.replace(/\|/g, "|\n");
+            updateEl.val(text);
         },
 
         endEditWithoutSave: function(id, immediate) {

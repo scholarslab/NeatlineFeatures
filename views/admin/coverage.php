@@ -54,7 +54,8 @@
             // Sri Lanka, just cause it's fun to say.
             // center: [8986896.64319, 866942.16213],
             center: [-8738850.21367, 4584105.47978],
-            zoom: 3
+            zoom: 3,
+            raw_update: $('#<? echo $id_prefix ?>text')
             }
         })
         .data('nlfeatures');
