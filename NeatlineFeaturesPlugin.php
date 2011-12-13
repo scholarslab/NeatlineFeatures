@@ -154,7 +154,36 @@ class NeatlineFeaturesPlugin
     public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
         $options, $record, $element)
     {
+        $v = __v();
         $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
+
+        $rawField = $v->formTextarea(
+                    $inputNameStem . '[text]', 
+                    $value, 
+                    array('class'=>'textinput', 'rows'=>2, 'cols'=>50));
+
+        // Had to copy this from ElementForm because of access restrictions. 
+        // There's probably a better way than this sledgehammer, but it's not 
+        // obvious.
+        $isHtml = false;
+        $v->_displayHtmlFlag($fieldStem, $i);
+        /*
+        if ($v->_isPosted()) {
+            $isHtml = (boolean) 
+                @$_POST['Elements'][$this->_element['id']][$index]['html'];
+        } else {
+            $elementText = $v->getElementTexts($index);
+            
+            if (isset($elementText)) {
+                $isHtml = (boolean) $elementText->html;
+            }
+        }
+         */
+
+        $useHtml  = '';
+        $useHtml .= '<label class="use-html">Use HTML ';
+        $useHtml .= __v()->formCheckbox($inputNameStem . '[html]', 1, array('checked'=>$isHtml));
+        $useHtml .= '</label>';
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';

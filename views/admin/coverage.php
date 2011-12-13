@@ -35,7 +35,10 @@
   </div>
   <div class='nlfeatures-edit-body'>
     <div class='nlfeatures-edit-raw'>
-      <em>This space intentionally left blank.</em>
+      <div><em><? echo $inputNameStem ?></em></div>
+      <? echo $rawField ?>
+      <? echo $useHtml ?>
+      &nbsp;
     </div>
     <div class='nlfeatures-edit-map'>
       <div id="<? echo $id_prefix ?>map"></div>
@@ -70,10 +73,3 @@
     window._nlfeatureMap = m;
 })(jQuery);
 </script>
-<style type='text/css'>
-<? echo '#' . $id_prefix ?>map {
-    border: 2px solid red;
-    width: 100%;
-    height: 360px;
-}
-</style>
