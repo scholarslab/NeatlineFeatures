@@ -37,7 +37,7 @@ end
 
 Then /^I should not see "([^"]*)" in "([^"]*)"$/ do |target, context|
   within(context) do
-    find(target).should_not be_visible
+    (page.has_no_selector?(target)) || (find(target).should_not be_visible)
   end
 end
 

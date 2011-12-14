@@ -8,5 +8,5 @@ Feature: Bug Fix Tests
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
     Then I should not see ".mceEditor" in "#element-38"
-    But I should see ".Element-38-0-text" in "#element-38"
+    But I should see "textarea#Elements-38-0-text" in "#element-38"
 
