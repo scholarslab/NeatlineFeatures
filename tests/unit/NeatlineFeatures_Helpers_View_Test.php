@@ -100,5 +100,29 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
                                                 array(), null, null);
         $this->assertEquals(3, $util->getIndex());
     }
+
+    /**
+     * This tests the TEXTAREA returned by getRawField.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetRawField()
+    {
+        $expected = new DOMDocument;
+        $expected->loadXML(
+            '<textarea id="Elements-38-1-text" name="Elements[38][0][text]" ' .
+            'class="textinput" rows="5" cols="50"></textarea>'
+        );
+
+        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
+                                                array(), null, $this->_coverage);
+        $actual = new DOMDocument;
+        $actual->loadXML($util->getRawField());
+
+        $this->assertEqualXMLStructure(
+            $expected->firstChild, $actual->firstChild, TRUE
+        );
+    }
 }
 

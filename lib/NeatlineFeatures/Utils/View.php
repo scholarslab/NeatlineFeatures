@@ -21,6 +21,8 @@
  */
 ?><?php
 
+require_once 'application/helpers/Functions.php';
+
 /**
  * This contructs the view and holds a bunch of utility methods.
  **/
@@ -93,6 +95,21 @@ class NeatlineFeatures_Utils_View
         $count = preg_match('/^Elements\[\d+\]\[(\d+)\]/',
                             $this->inputNameStem, $matches);
         return ($count != 0 ? $matches[1] : null);
+    }
+
+    /**
+     * This constructs the TEXTAREA for the raw coverage data and returns it as 
+     * a string.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getRawField()
+    {
+        return __v()->formTextarea(
+                    $this->inputNameStem . '[text]', 
+                    $this->value, 
+                    array('class'=>'textinput', 'rows'=>5, 'cols'=>50));
     }
 }
 
