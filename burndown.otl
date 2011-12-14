@@ -38,10 +38,23 @@
 		[ ] (1hr) steps
 	[ ] (1hr) Remove Second Coverage
 		[ ] (1hr) steps
+[ ] (8hr) Test Coverage Data
+	[ ] (6hr) Test All Non-Feature Coverages
+		[ ] (1hr) steps
+		[ ] (2hr) WKT detection
+		[ ] (3hr) predicate
+	[ ] (1hr) All Feature Coverages
+		[ ] (1hr) steps
+	[ ] (1hr) Mixed Feature Coverages
+		[ ] (1hr) steps
 [ ] (3hr) Display Feature Maps on Item Pages
 	[ ] (3hr) Display Feature Maps on Item Page
 		[ ] (1hr) steps
 		[ ] (2hr) item element display filter
+[ ] (2hr) Display Non-Feature Coverage Data
+	[ ] (2hr) Display Non-Feature Coverage Data on Item Page
+		[ ] (1hr) steps
+		[ ] (1hr) default handler
 [ ] (5hr) Display Multiple Coverages
 	[ ] (3hr) All Non-Feature Coverages
 		[ ] (1hr) steps
@@ -58,21 +71,8 @@
 		[ ] (1hr) steps
 	[ ] (1hr) Mixed Feature Coverages
 		[ ] (1hr) steps
-[ ] (4hr) Display Non-Feature Coverage Data
-	[ ] (4hr) Display Non-Feature Coverage Data on Item Page
-		[ ] (1hr) steps
-		[ ] (2hr) WKT detection
-		[ ] (1hr) default handler
 [ ] (1hr) Non-Feature Coverages
 	[ ] (1hr) Add Non-Feature Coverage Data
-		[ ] (1hr) steps
-[ ] (6hr) Test Coverage Data
-	[ ] (4hr) Test All Non-Feature Coverages
-		[ ] (1hr) steps
-		[ ] (3hr) predicate
-	[ ] (1hr) All Feature Coverages
-		[ ] (1hr) steps
-	[ ] (1hr) Mixed Feature Coverages
 		[ ] (1hr) steps
 [ ] (6hr) Revert Button
 	[ ] (1hr) user story
