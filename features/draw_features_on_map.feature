@@ -8,28 +8,28 @@ Feature: Draw Features on a Map
   As an item editor
   I want to be able to annotate an item by drawing features on a map.
 
-  Scenario: Coverage Has A Map
+  Scenario: Coverage Has a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     When I click on the "#element-38" field "NL Features" tab
     Then I should see a map in "#element-38"
     But I should not see ".nlfeatures-edit-raw" in "#element-38"
 
-  Scenario: Draw Point On A Map
+  Scenario: Draw Point on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click on the "#element-38" field "NL Features" tab
     When I click on the "Coverages" map
     Then a point is visible on the map
 
-  Scenario: Draw Line On A Map
+  Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click on the "#element-38" field "NL Features" tab
     When I click and drag on the "Coverages" map
     Then a line is visible on the map
 
-  Scenario: Draw On Coverage Map
+  Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I enter "Draw On Coverage Map" for the "Elements-50-0-text"      # Title
