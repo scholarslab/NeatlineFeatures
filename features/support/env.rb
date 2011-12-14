@@ -3,6 +3,7 @@ require 'selenium-webdriver'
 require 'capybara'
 require 'capybara/cucumber'
 require 'capybara/dsl'
+require 'rspec/expectations'
 
 Capybara.app_host = 'http://features.dev'
 Capybara.run_server = false
