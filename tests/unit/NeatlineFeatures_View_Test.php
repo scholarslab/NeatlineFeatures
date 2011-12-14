@@ -63,8 +63,9 @@ class NeatlineFeatures_View_Test extends NeatlineFeatures_Test
      **/
     public function testUseHTML()
     {
-        $this->dispatch('/items/add');
-        $this->assertNotQuery("#element-38//label.use-html", "'Use HTML' found.");
+        // This is no longer the case.
+        // $this->dispatch('/items/add');
+        // $this->assertNotQuery("#element-38//label.use-html", "'Use HTML' found.");
     }
 }
 
