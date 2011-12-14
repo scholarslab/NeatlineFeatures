@@ -101,22 +101,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->_item = new Item;
         $this->_item->save();
 
-        $etext = new ElementText;
-        $etext->setText('<b>A Title</b>');
-        $etext->html = TRUE;
-        $etext->record_id = $this->_item->id;
-        $etext->element_id = $this->_title->id;
-        $etext->record_type_id = 2;
-        $etext->save();
-        $this->_item['title'] = $etext;
-
-        $etext = new ElementText;
-        $etext->setText('Subject');
-        $etext->record_id = $this->_item->id;
-        $etext->element_id = $this->_subject->id;
-        $etext->record_type_id = 2;
-        $etext->save();
-        $this->_item['subject'] = $etext;
+        $this->addElementText($this->_item, $this->_title, '<b>A Title</b>',
+            TRUE);
+        $this->addElementText($this->_item, $this->_subject, 'Subject');
 
         $this->_item->save();
     }

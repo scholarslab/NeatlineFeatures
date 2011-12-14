@@ -105,5 +105,35 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     }
     // }}}
 
+    // Utility Methods {{{
+    /**
+     * This cereates and element text and adds it to an item.
+     *
+     * @param Item    $item    The item to add the data to.
+     * @param Element $element The element to add the text to.
+     * @param string  $text    The text data.
+     * @param bool    $html    Is the text really HTML? (Default is FALSE.)
+     *
+     * @return ElementText
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function addElementText($item, $element, $text, $html=FALSE)
+    {
+        $etext = new ElementText;
+
+        $etext->setText($text);
+        $etext->html = $html;
+        $etext->element_id = $element->id;
+        $etext->record_id = $item->id;
+        $etext->record_type_id = 2;
+        $etext->save();
+
+        $item[$element->name] = $etext;
+
+        return $etext;
+    }
+
+    // }}}
+
 }
 
