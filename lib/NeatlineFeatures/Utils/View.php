@@ -141,5 +141,26 @@ class NeatlineFeatures_Utils_View
 
         return $value;
     }
+
+    /**
+     * This returns the ElementText for the current element and index or null.
+     *
+     * @return ElementText|null
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getElementText()
+    {
+        $index = $this->getIndex();
+        $texts = $this->record->getTextsByElement($this->element);
+        $text = null;
+
+        if ($index !== null) {
+            if (array_key_exists($index, $texts)) {
+                $text = $texts[$index];
+            }
+        }
+
+        return $text;
+    }
 }
 

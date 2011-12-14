@@ -224,6 +224,19 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testGetElementText()
     {
+        $tutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
+            $this->_item, $this->_title);
+        $etext = $tutil->getElementText();
+        $this->assertEquals('<b>A Title</b>', $etext->text);
+        $this->assertTrue((bool)$etext->html);
+
+        $sutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_subject->id}][0]", 'Subject', array(),
+            $this->_item, $this->_subject);
+        $etext = $sutil->getElementText();
+        $this->assertEquals('Subject', $etext->text);
+        $this->assertFalse((bool)$etext->html);
     }
 }
 
