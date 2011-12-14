@@ -296,5 +296,86 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             $this->_item, $this->_subject);
         $this->assertFalse($sutil->isHtml());
     }
+
+    /**
+     * This tests the getUserHtml method, which returns the HTML string for the 
+     * "Use HTML" control.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetUseHtmlChecked()
+    {
+        $tid = $this->_title->id;
+        $expected = new DOMDocument;
+        $expected->loadXML(
+            '<label class="use-html">Use HTML' .
+            "<input type='hidden' value='1' name='Elements[{$tid}][0][html]' />" .
+            "<input name='Elements[{$tid}][0][html]' id='Elements-{$tid}-0-html' " .
+            'type="checkbox" value="1" checked="checked" />' .
+            '</label>'
+        );
+
+        $tutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
+            $this->_item, $this->_title);
+        $actual = new DOMDocument;
+        $actual->loadHTML($tutil->getUseHtml());
+        $label = $actual->getElementsByTagName('label');
+
+        $this->assertEqualXMLStructure(
+            $expected->firstChild, $label->item(0), TRUE
+        );
+    }
+
+    /**
+     * This tests the getUserHtml method, which returns the HTML string for the 
+     * "Use HTML" control.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetUseHtmlUnchecked()
+    {
+        $sid = $this->_subject->id;
+        $expected = new DOMDocument;
+        $expected->loadXML(
+            '<label class="use-html">Use HTML' .
+            "<input type='hidden' value='1' name='Elements[{$sid}][0][html]' />" .
+            "<input name='Elements[{$sid}][0][html]' id='Elements-{$sid}-0-html' " .
+            'type="checkbox" value="1" />' .
+            '</label>'
+        );
+
+        $sutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_subject->id}][0]", 'Subject', array(),
+            $this->_item, $this->_subject);
+        $actual = new DOMDocument;
+        $actual->loadHTML($sutil->getUseHtml());
+        $label = $actual->getElementsByTagName('label');
+
+        $this->assertEqualXMLStructure(
+            $expected->firstChild, $label->item(0), TRUE
+        );
+    }
+
+    /**
+     * This gets the first element child of a node.
+     *
+     * @param DOMNode $node This is the parent node.
+     *
+     * @return DOMNode
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function getFirstElementChild($node)
+    {
+        $child = $node->firstChild;
+
+        while ($child !== NULL && $child->nodeType !== XML_ELEMENT_NODE) {
+            $child = $child->nextSibling;
+        }
+
+        return $child;
+    }
 }
 

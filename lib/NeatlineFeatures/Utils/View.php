@@ -190,5 +190,25 @@ class NeatlineFeatures_Utils_View
 
         return $is_html;
     }
+
+    /**
+     * This returns the HTML for the "Use HTML" widget.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getUseHtml()
+    {
+        $use_html  = '';
+
+        $use_html .= '<label class="use-html">Use HTML ';
+        $use_html .= __v()->formCheckbox(
+            $this->inputNameStem . '[html]', 1,
+            array('checked'=>$this->isHtml())
+        );
+        $use_html .= '</label>';
+
+        return $use_html;
+    }
 }
 
