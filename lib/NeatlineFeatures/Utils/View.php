@@ -162,5 +162,33 @@ class NeatlineFeatures_Utils_View
 
         return $text;
     }
+
+    /**
+     * This predicate tests whether this element currently is marked to have 
+     * HTML data.
+     *
+     * @return bool
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function isHtml()
+    {
+        $is_html = FALSE;
+
+        if ($this->isPosted()) {
+            try {
+                $is_html = (bool)$_POST['Elements'][$this->getElementId()]
+                    [$this->getIndex()]['html'];
+            } catch (Exception $e) {
+                $is_html = FALSE;
+            }
+        } else {
+            $etext = $this->getElementText();
+            if (isset($etext)) {
+                $is_html = (bool)$etext->html;
+            }
+        }
+
+        return $is_html;
+    }
 }
 

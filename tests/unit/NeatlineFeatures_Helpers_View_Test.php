@@ -238,5 +238,63 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->assertEquals('Subject', $etext->text);
         $this->assertFalse((bool)$etext->html);
     }
+
+    /**
+     * This tests the isHtml predicate in a POST request, when it is true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsHtmlInPostTrue()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array('html' => '1')
+        );
+        $this->assertTrue($this->_cutil->isHtml());
+    }
+
+    /**
+     * This tests the isHtml predicate in a POST request, when it is false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsHtmlInPostFalse()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array()
+        );
+        $this->assertFalse($this->_cutil->isHtml());
+    }
+
+    /**
+     * This tests the isHtml predicate outside of a POST request, when it is 
+     * true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsHtmlNoPostTrue()
+    {
+        $tutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
+            $this->_item, $this->_title);
+        $this->assertTrue($tutil->isHtml());
+    }
+
+    /**
+     * This tests the isHtml predicate outside of a POST request, when it is 
+     * false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsHtmlNoPostFalse()
+    {
+        $sutil = new NeatlineFeatures_Utils_View(
+            "Elements[{$this->_subject->id}][0]", 'Subject', array(),
+            $this->_item, $this->_subject);
+        $this->assertFalse($sutil->isHtml());
+    }
 }
 
