@@ -124,5 +124,23 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             $expected->firstChild, $actual->firstChild, TRUE
         );
     }
+
+    /**
+     * This tests the predicate for whether this is submitted using POST or 
+     * not.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsPosted()
+    {
+        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
+                                                array(), null, $this->_coverage);
+        
+
+        $this->assertFalse($util->isPosted());
+        $_POST['Elements'][(string)$util->getElementId()] = array('1' => 'oops');
+        $this->assertTrue($util->isPosted());
+    }
 }
 

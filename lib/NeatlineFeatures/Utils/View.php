@@ -111,5 +111,21 @@ class NeatlineFeatures_Utils_View
                     $this->value, 
                     array('class'=>'textinput', 'rows'=>5, 'cols'=>50));
     }
+
+    /**
+     * This predicate tests whether data for the element is in the POST 
+     * request.
+     *
+     * @return bool
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function isPosted()
+    {
+        $posted = FALSE;
+        if (array_key_exists('Elements', $_POST)) {
+            $posted = !empty($_POST['Elements'][$this->element->id]);
+        }    
+        return $posted;
+    }
 }
 
