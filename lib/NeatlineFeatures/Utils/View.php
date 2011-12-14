@@ -127,5 +127,23 @@ class NeatlineFeatures_Utils_View
         }    
         return $posted;
     }
+
+    /**
+     * This returns the value of the 'html' field from the POST request.
+     *
+     * @return string|null
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getHtmlValue()
+    {
+        $value = null;
+
+        if ($this->isPosted()) {
+            $edata = $_POST['Elements'][$this->element->id];
+            $value = $edata[$this->getIndex()]['html'];
+        }
+
+        return $value;
+    }
 }
 

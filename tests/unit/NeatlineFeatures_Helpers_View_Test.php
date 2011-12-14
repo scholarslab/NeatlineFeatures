@@ -135,12 +135,37 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function testIsPosted()
     {
         $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
-                                                array(), null, $this->_coverage);
+                                                array(), null, 
+                                                $this->_coverage);
         
 
         $this->assertFalse($util->isPosted());
         $_POST['Elements'][(string)$util->getElementId()] = array('1' => 'oops');
         $this->assertTrue($util->isPosted());
+    }
+
+    /**
+     * This tests getHtmlValue, which returns the Elements[id][n][html] field 
+     * from the POST request.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetHtmlValue()
+    {
+        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
+                                                array(), null, 
+                                                $this->_coverage);
+
+        $_POST['Elements'][(string)$util->getElementId()] = array(
+            '0' => array('html' => '1')
+        );
+        $this->assertEquals('1', $util->getHtmlValue());
+
+        $_POST['Elements'][(string)$util->getElementId()] = array(
+            '0' => array('html' => '3')
+        );
+        $this->assertEquals('3', $util->getHtmlValue());
     }
 }
 
