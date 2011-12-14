@@ -1,0 +1,97 @@
+[ ] (16hr) Bugs
+	[ ] (3hr) Tiny MCE pay attention to [html] on page load
+		[ ] (1hr) feature tests
+		[ ] (2hr)
+	[ ] (3hr) "Use HTML" set correctly
+		[ ] (1hr) feature tests
+		[ ] (2hr)
+	[ ] (10hr) click-off deselect bug
+		[ ] (2hr) feature tests
+		[ ] (8hr)
+[ ] (17hr) Draw Features on a Map
+	[ ] (8hr) Coverage Has a Map
+		[ ] (1hr) steps
+		[ ] (3hr) tabs
+			[ ] (1hr) http://pivotal.github.com/jasmine/
+			[ ] (2hr)
+		[ ] (1hr) primary handling for editing buttons
+		[ ] (3hr) view class
+			[ ] (1hr) tests
+			[ ] (2hr)
+	[ ] (1hr) Draw Point on a Map
+		[ ] (1hr) steps
+	[ ] (1hr) Draw Line on a Map
+		[ ] (1hr) steps
+	[ ] (4hr) Default Location is the User's
+		[ ] (1hr) feature
+		[ ] (1hr) steps
+		[ ] (2hr) implement
+	[ ] (3hr) Save Data Drawn on Coverage Map
+		[ ] (1hr) steps
+		[ ] (2hr) automatically clear out data after tests
+[ ] (4hr) Delete Features from an Item
+	[ ] (1hr) Cannot Remove Only Coverage
+		[ ] (1hr) steps
+	[ ] (1hr) Add Coverage
+		[ ] (1hr) steps
+	[ ] (1hr) Remove First Coverage
+		[ ] (1hr) steps
+	[ ] (1hr) Remove Second Coverage
+		[ ] (1hr) steps
+[ ] (3hr) Display Feature Maps on Item Pages
+	[ ] (3hr) Display Feature Maps on Item Page
+		[ ] (1hr) steps
+		[ ] (2hr) item element display filter
+[ ] (5hr) Display Multiple Coverages
+	[ ] (3hr) All Non-Feature Coverages
+		[ ] (1hr) steps
+		[ ] (2hr)
+	[ ] (1hr) All Feature Coverages
+		[ ] (1hr) steps
+	[ ] (1hr) Mixed Feature Coverages
+		[ ] (1hr) steps
+[ ] (5hr) Display Multiple Individual Coverages
+	[ ] (3hr) All Non-Feature Coverages
+		[ ] (1hr) steps
+		[ ] (2hr) display function
+	[ ] (1hr) All Feature Coverages
+		[ ] (1hr) steps
+	[ ] (1hr) Mixed Feature Coverages
+		[ ] (1hr) steps
+[ ] (4hr) Display Non-Feature Coverage Data
+	[ ] (4hr) Display Non-Feature Coverage Data on Item Page
+		[ ] (1hr) steps
+		[ ] (2hr) WKT detection
+		[ ] (1hr) default handler
+[ ] (1hr) Non-Feature Coverages
+	[ ] (1hr) Add Non-Feature Coverage Data
+		[ ] (1hr) steps
+[ ] (6hr) Test Coverage Data
+	[ ] (4hr) Test All Non-Feature Coverages
+		[ ] (1hr) steps
+		[ ] (3hr) predicate
+	[ ] (1hr) All Feature Coverages
+		[ ] (1hr) steps
+	[ ] (1hr) Mixed Feature Coverages
+		[ ] (1hr) steps
+[ ] (6hr) Revert Button
+	[ ] (1hr) user story
+	[ ] (1hr) features
+	[ ] (1hr) steps
+	[ ] (3hr) implementation
+[ ] (16hr) Fill in Tests
+[ ] (1hr) Fill in README
+[ ] (5hr) Raw Feature Data
+	[ ] (5hr) Enter Raw WKT
+		[ ] (1hr) steps
+		[ ] (1hr) jasmine tests
+		[ ] (3hr) data type sniffer
+	[ ] Enter Raw KML
+		[ ] steps
+[ ] Upload Raw Feature Data
+	[ ] Upload WKT
+		[ ] steps
+	[ ] Upload KML
+		[ ] steps
+Summary
+	89 hrs
