@@ -136,12 +136,8 @@ class NeatlineFeatures_Utils_View
      **/
     public function getHtmlValue()
     {
-        $value = null;
-
-        if ($this->isPosted()) {
-            $edata = $_POST['Elements'][$this->element->id];
-            $value = $edata[$this->getIndex()]['html'];
-        }
+        $edata = $_POST['Elements'][$this->element->id];
+        $value = $edata[$this->getIndex()]['html'];
 
         return $value;
     }
