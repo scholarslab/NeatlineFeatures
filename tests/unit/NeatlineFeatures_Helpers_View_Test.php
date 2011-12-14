@@ -39,11 +39,32 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     var $_title;
 
     /**
+     * The subject element.
+     *
+     * @var Element
+     **/
+    var $_subject;
+
+    /**
      * The coverage element.
      *
      * @var Element
      **/
     var $_coverage;
+
+    /**
+     * The NeatlineFeatures_Utils_View for the coverage element.
+     *
+     * @var NeatlineFeatures_Utils_View
+     **/
+    var $_cutil;
+
+    /**
+     * This is an item to play with.
+     *
+     * @var Item
+     **/
+    var $_item;
 
     /**
      * This performs a little set up for this set of tests.
@@ -61,12 +82,62 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             ->findBy(array('name' => 'Coverage'));
 
         foreach ($rows as $row) {
-            if ($row->name == 'Coverage') {
+            switch ($row->name) {
+            case 'Coverage':
                 $this->_coverage = $row;
-            } else if ($row->name == 'Title') {
+                $this->_cutil = new NeatlineFeatures_Utils_View(
+                    'Elements[38][0]', null, array(), null, $row
+                );
+                break;
+            case 'Title':
                 $this->_title = $row;
+                break;
+            case 'Subject':
+                $this->_subject = $row;
+                break;
             }
         }
+
+        $this->_item = new Item;
+        $this->_item->save();
+
+        $etext = new ElementText;
+        $etext->setText('<b>A Title</b>');
+        $etext->html = TRUE;
+        $etext->record_id = $this->_item->id;
+        $etext->element_id = $this->_title->id;
+        $etext->record_type_id = 2;
+        $etext->save();
+        $this->_item['title'] = $etext;
+
+        $etext = new ElementText;
+        $etext->setText('Subject');
+        $etext->record_id = $this->_item->id;
+        $etext->element_id = $this->_subject->id;
+        $etext->record_type_id = 2;
+        $etext->save();
+        $this->_item['subject'] = $etext;
+
+        $this->_item->save();
+    }
+
+    /**
+     * Tear everything back down.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function tearDown()
+    {
+        parent::tearDown();
+        if (isset($this->_item['title'])) {
+            $this->_item['title']->delete();
+        }
+        if (isset($this->_item['subject'])) {
+            $this->_item['subject']->delete();
+        }
+        $this->_item->delete();
+        $this->_item = null;
     }
 
     /**
@@ -77,9 +148,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testElementId()
     {
-        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
-                                                array(), null, $this->_coverage);
-        $this->assertEquals(38, $util->getElementId());
+        $this->assertEquals(38, $this->_cutil->getElementId());
         $util = new NeatlineFeatures_Utils_View("Elements[50][0]", null,
                                                 array(), null, $this->_title);
         $this->assertEquals(50, $util->getElementId());
@@ -111,14 +180,12 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     {
         $expected = new DOMDocument;
         $expected->loadXML(
-            '<textarea id="Elements-38-1-text" name="Elements[38][0][text]" ' .
+            '<textarea id="Elements-38-0-text" name="Elements[38][0][text]" ' .
             'class="textinput" rows="5" cols="50"></textarea>'
         );
 
-        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
-                                                array(), null, $this->_coverage);
         $actual = new DOMDocument;
-        $actual->loadXML($util->getRawField());
+        $actual->loadXML($this->_cutil->getRawField());
 
         $this->assertEqualXMLStructure(
             $expected->firstChild, $actual->firstChild, TRUE
@@ -134,14 +201,11 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testIsPosted()
     {
-        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
-                                                array(), null, 
-                                                $this->_coverage);
-        
-
-        $this->assertFalse($util->isPosted());
-        $_POST['Elements'][(string)$util->getElementId()] = array('1' => 'oops');
-        $this->assertTrue($util->isPosted());
+        $this->assertFalse($this->_cutil->isPosted());
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            'o' => 'oops'
+        );
+        $this->assertTrue($this->_cutil->isPosted());
     }
 
     /**
@@ -153,19 +217,26 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testGetHtmlValue()
     {
-        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
-                                                array(), null, 
-                                                $this->_coverage);
-
-        $_POST['Elements'][(string)$util->getElementId()] = array(
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('html' => '1')
         );
-        $this->assertEquals('1', $util->getHtmlValue());
+        $this->assertEquals('1', $this->_cutil->getHtmlValue());
 
-        $_POST['Elements'][(string)$util->getElementId()] = array(
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('html' => '3')
         );
-        $this->assertEquals('3', $util->getHtmlValue());
+        $this->assertEquals('3', $this->_cutil->getHtmlValue());
+    }
+
+    /**
+     * This tests the getElementText function, which is a wrapper around the 
+     * same function from the view helper.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetElementText()
+    {
     }
 }
 
