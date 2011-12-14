@@ -11,8 +11,8 @@ Given /^I enter "([^"]*)" into the "([^"]*)" field$/ do |value, label|
   fill_in(label, :with => value)
 end
 
-Given /^I enter "([^"]*)" into "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+Given /^I enter "([^"]*)" into "([^"]*)"$/ do |value, field|
+  fill_in field, :with => value
 end
 
 Given /^I insert data from "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
@@ -23,11 +23,25 @@ Given /^I upload "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
   pending
 end
 
+Given /^I click "([^"]*)" checkbox in "([^"]*)"$/ do |checkbox, parent|
+  within(parent) do
+    check checkbox
+  end
+end
+
 When /^I press "([^"]*)"$/ do |button|
   click_on button
 end
 
 When /^I click "([^"]*)" on the "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
+end
+
+Then /^"([^"]*)" should be checked$/ do |checkbox|
+  page.has_checked_field?(checkbox).should == true
+end
+
+Then /^"([^"]*)" should not be checked$/ do |checkbox|
+  page.has_checked_field?(checkbox).should == false
 end
 

@@ -1,9 +1,9 @@
-[ ] (15hr) Bugs
+[ ] (14hr) Bugs
 	[x] Tiny MCE pay attention to [html] on page load
 		[x] (1hr) feature tests
 		[x] (2hr)
-	[ ] (3hr) "Use HTML" set correctly
-		[ ] (1hr) feature tests
+	[ ] (2hr) "Use HTML" set correctly
+		[x] (1hr) feature tests
 		[ ] (2hr)
 	[ ] (2hr) null wkt
 		[ ] (1hr) tests

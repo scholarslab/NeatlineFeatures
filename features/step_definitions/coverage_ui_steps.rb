@@ -9,8 +9,10 @@ Given /^I click(?: on)? the "([^"]*)" field "([^"]*)" tab$/ do |field_name, tab_
   end
 end
 
-Given /^I click(?: on)? the "([^"]*)" tab on "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+Given /^I click(?: on)? the "([^"]*)" tab (?:in|on) "([^"]*)"$/ do |tab_name, field_name|
+  within(field_name) do
+    click_on tab_name
+  end
 end
 
 Then /^I see (\d+) "([^"]*)" fields?$/ do |arg1, arg2|
