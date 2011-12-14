@@ -32,6 +32,13 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 {
 
     /**
+     * The title element.
+     *
+     * @var Element
+     **/
+    var $_title;
+
+    /**
      * The coverage element.
      *
      * @var Element
@@ -56,6 +63,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         foreach ($rows as $row) {
             if ($row->name == 'Coverage') {
                 $this->_coverage = $row;
+            } else if ($row->name == 'Title') {
+                $this->_title = $row;
             }
         }
     }
@@ -71,6 +80,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
                                                 array(), null, $this->_coverage);
         $this->assertEquals(38, $util->getElementId());
+        $util = new NeatlineFeatures_Utils_View("Elements[50][0]", null,
+                                                array(), null, $this->_title);
+        $this->assertEquals(50, $util->getElementId());
     }
 
     /**
@@ -81,9 +93,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testGetIndex()
     {
-        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
+        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
                                                 array(), null, null);
-        $this->assertEquals(0, $util->getIndex());
+        $this->assertEquals(1, $util->getIndex());
         $util = new NeatlineFeatures_Utils_View("Elements[38][3]", null,
                                                 array(), null, null);
         $this->assertEquals(3, $util->getIndex());

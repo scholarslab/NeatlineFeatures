@@ -84,12 +84,15 @@ class NeatlineFeatures_Utils_View
     /**
      * This returns the element data's index as parsed from $inputNameStem.
      *
-     * @return int
+     * @return int|null
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getIndex()
     {
-        return -1;
+        $matches = array();
+        $count = preg_match('/^Elements\[\d+\]\[(\d+)\]/',
+                            $this->inputNameStem, $matches);
+        return ($count != 0 ? $matches[1] : null);
     }
 }
 
