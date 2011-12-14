@@ -177,6 +177,8 @@ class NeatlineFeaturesPlugin
         // fwrite($log, print_r($ef, true));
         fwrite($log, "\n");
         fclose($log);
+         */
+        /*
         if ($v->_isPosted()) {
             $isHtml = (boolean) 
                 @$_POST['Elements'][$this->_element['id']][$index]['html'];
@@ -197,6 +199,17 @@ class NeatlineFeaturesPlugin
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
         return ob_get_clean();
+    }
+
+    /**
+     * This is taken from Omeka_View_Helper_ElementForm.
+     *
+     * Yeah, this obviously wouldn't be at all useful anywhere else.
+     */
+    protected function _isPosted()
+    {
+        $postArray = $this->_getPostArray();
+        return !empty($postArray);
     }
 
     /**

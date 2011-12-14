@@ -15,9 +15,6 @@
  * @package     omeka
  * @subpackage  neatline
  * @author      Scholars' Lab <>
- * @author      Bethany Nowviskie <bethany@virginia.edu>
- * @author      Adam Soroka <ajs6f@virginia.edu>
- * @author      David McClure <david.mcclure@virginia.edu>
  * @author      Eric Rochester <erochest@virginia.edu>
  * @copyright   2011 The Board and Visitors of the University of Virginia
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
@@ -26,12 +23,14 @@
 
 require_once 'NeatlineFeatures_Test.php';
 require_once 'application/helpers/FormFunctions.php';
+require_once 'lib/NeatlineFeatures/Utils/View.php';
 
 /**
- * This tests the view for the coverage field.
+ * This tests the utility class for views.
  **/
-class NeatlineFeatures_View_Test extends NeatlineFeatures_Test
+class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 {
+
     /**
      * The coverage element.
      *
@@ -49,22 +48,45 @@ class NeatlineFeatures_View_Test extends NeatlineFeatures_Test
     {
         parent::setUp();
 
-        $this->_coverage = $this
+        $rows = $this
             ->db
             ->getTable('Element')
             ->findBy(array('name' => 'Coverage'));
+
+        foreach ($rows as $row) {
+            if ($row->name == 'Coverage') {
+                $this->_coverage = $row;
+            }
+        }
     }
 
     /**
-     * This tests that there is no "Use HTML" check for the coverage field.
+     * This tests pulling the element ID from $inputNameStem
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testUseHTML()
+    public function testElementId()
     {
-        $this->dispatch('/items/add');
-        $this->assertNotQuery("#element-38//label.use-html", "'Use HTML' found.");
+        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
+                                                array(), null, $this->_coverage);
+        $this->assertEquals(38, $util->getElementId());
+    }
+
+    /**
+     * This tests pulling the index from $inputNameStem.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetIndex()
+    {
+        $util = new NeatlineFeatures_Utils_View("Elements[38][0]", null,
+                                                array(), null, null);
+        $this->assertEquals(0, $util->getIndex());
+        $util = new NeatlineFeatures_Utils_View("Elements[38][3]", null,
+                                                array(), null, null);
+        $this->assertEquals(3, $util->getIndex());
     }
 }
 
