@@ -11,7 +11,8 @@
 #   - dist/**/*.js
 #
 src_files:
-    - spec/lib/**/*.js
+    - spec/lib/jquery.js
+    - spec/lib/jquery-ui.js
     - views/admin/javascripts/**/*.js
     - views/shared/javascripts/**/*.js
 
