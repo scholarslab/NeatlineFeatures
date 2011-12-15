@@ -12,12 +12,12 @@
 		[ ] (2hr) feature tests
 		[ ] (8hr)
 [ ] (10hr) Draw Features on a Map
-	[ ] (3hr) Coverage Has a Map
+	[ ] (2hr) Coverage Has a Map
 		[ ] (1hr) steps
-		[ ] (1hr) tabs
+		[x] tabs
 			[x] http://pivotal.github.com/jasmine/
 			[x] (2hr)
-			[ ] (1hr) events
+			[x] (1hr) events
 			[x] (1hr) add to coverage
 		[ ] (1hr) primary handling for editing buttons
 		[x] view class
@@ -52,6 +52,12 @@
 		[ ] (1hr) steps
 	[ ] (1hr) Mixed Feature Coverages
 		[ ] (1hr) steps
+[ ] (4hr) Non-Feature Coverages
+	[ ] (1hr) Add Non-Feature Coverage Data
+		[ ] (1hr) steps
+	[ ] (3hr) If the data is non-feature, default to the raw tab
+		[ ] (1hr) steps
+		[ ] (2hr)
 [ ] (3hr) Display Feature Maps on Item Pages
 	[ ] (3hr) Display Feature Maps on Item Page
 		[ ] (1hr) steps
@@ -75,9 +81,6 @@
 	[ ] (1hr) All Feature Coverages
 		[ ] (1hr) steps
 	[ ] (1hr) Mixed Feature Coverages
-		[ ] (1hr) steps
-[ ] (1hr) Non-Feature Coverages
-	[ ] (1hr) Add Non-Feature Coverage Data
 		[ ] (1hr) steps
 [ ] (6hr) Revert Button
 	[ ] (1hr) user story
