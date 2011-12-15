@@ -27,5 +27,5 @@ Feature: Bug Fix Tests
     And I click "'Use HTML' is Checked When Editing Items"
     And I click on "Edit this Item"
     When I click the "Raw" tab in "#element-38"
-    Then "Element-38-0-html" should be checked
+    Then "Elements-38-0-html" should be checked
 
