@@ -27,20 +27,20 @@
   <div class='nlfeatures-edit-nav'>
     <div class='nlfeatures-edit-nav-menu'>
       <ul>
-        <li class='selected'><a href=".nlfeatures-edit-map">NL Features</a></li><li><a href=".nlfeatures-edit-raw">Raw</a></li>
+        <li class='selected'><a href="#<? echo $id_prefix ?>maptab">NL Features</a></li><li><a href="#<?echo $id_prefix ?>rawtab">Raw</a></li>
       </ul>
     </div>
     <div class='nlfeatures-edit-nav-tools'>
     </div>
   </div>
   <div class='nlfeatures-edit-body'>
-    <div class='nlfeatures-edit-raw'>
+    <div id="<? echo $id_prefix ?>rawtab" class='nlfeatures-edit-raw'>
       <div><em><? echo $inputNameStem ?></em></div>
       <? echo $raw_field ?>
       <? echo $use_html ?>
       &nbsp;
     </div>
-    <div class='nlfeatures-edit-map'>
+    <div id="<? echo $id_prefix ?>maptab" class='nlfeatures-edit-map'>
       <div id="<? echo $id_prefix ?>map"></div>
       <div class='nlfeatures-map-tools'></div>
     </div>
@@ -72,7 +72,14 @@
 
     var w = $("#<? echo $id_prefix ?>widget");
     var t = w.simpletab({
-        nav_list: ".nlfeatures-edit-nav-menu ul"
+        nav_list: ".nlfeatures-edit-nav-menu ul",
+        tabchange: function(event, data) {
+                data.tab.anchors.each(function() {
+                        $(this.parentNode).removeClass('selected');
+                    });
+                data.a.parent().addClass('selected');
+                event.preventDefault();
+            }
     });
 })(jQuery);
 </script>

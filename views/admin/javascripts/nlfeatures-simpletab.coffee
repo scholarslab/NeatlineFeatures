@@ -40,10 +40,12 @@
           tab.current = target
           target.show()
 
-          jel.trigger('tabchange', {
-            index : index
-            tab   : target
-          })
+          jel.trigger('tabchange', [{
+            a      : jel
+            tab    : tab
+            index  : index
+            target : target
+          }])
 
           event.preventDefault()
 
