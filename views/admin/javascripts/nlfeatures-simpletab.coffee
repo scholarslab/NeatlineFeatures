@@ -20,12 +20,41 @@
 # @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
 #
 
-$.widget('neatline.simpletab',
-  options: {}
+(($) ->
+  $.widget('neatline.simpletab',
+    options: {
+      nav_list: 'ul:first'
+    }
 
-  _create: ->
-    # 1. Find the first ul li a selectors
-    # 2. For each, hook up a handler that suppresses the default and displays the tab pointed to by @href.
-    false
-)
-  
+    _create: ->
+      tab = this
+      this.anchors = this.element.find("#{this.options.nav_list} li a")
+      this.anchors.each ->
+        jel = $ this
+        target = $(jel.attr('href'))
+        jel.data('neatline.simpletab.target', target)
+        target.hide()
+
+        jel.click (event) ->
+          tab.current.hide() if tab.current?
+          tab.current = target
+          target.show()
+
+          event.preventDefault()
+
+      this.anchors.first().each ->
+        jel = $ this
+        target = jel.data('neatline.simpletab.target')
+        target.show()
+        tab.current = target
+
+      this
+
+    destroy: ->
+      this.anchors.each ->
+        $(this).unbind('click')
+
+    _setOption: (key, value) ->
+      $.Widget.prototype._setOption.apply(this, arguments)
+  )
+)(jQuery)

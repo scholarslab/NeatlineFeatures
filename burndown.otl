@@ -11,12 +11,14 @@
 	[ ] (10hr) click-off deselect bug
 		[ ] (2hr) feature tests
 		[ ] (8hr)
-[ ] (12hr) Draw Features on a Map
-	[ ] (5hr) Coverage Has a Map
+[ ] (11hr) Draw Features on a Map
+	[ ] (4hr) Coverage Has a Map
 		[ ] (1hr) steps
-		[ ] (3hr) tabs
-			[ ] (1hr) http://pivotal.github.com/jasmine/
-			[ ] (2hr)
+		[ ] (2hr) tabs
+			[x] http://pivotal.github.com/jasmine/
+			[x] (2hr)
+			[ ] (1hr) events
+			[ ] (1hr) add to coverage
 		[ ] (1hr) primary handling for editing buttons
 		[x] view class
 			[x] (1hr) tests

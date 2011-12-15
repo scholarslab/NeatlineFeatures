@@ -8,7 +8,7 @@ describe 'simpletab', ->
     counter++
     $('body').append """
       <div id="simpletab-eg-#{counter}">
-        <div>
+        <div class='tabnav'>
           <ul>
             <li><a href="#simpletab-tab-#{counter}-0">Tab 0</a></li>
             <li><a href="#simpletab-tab-#{counter}-1">Tab 1</a></li>
@@ -19,7 +19,9 @@ describe 'simpletab', ->
       </div>
     """
     el = $("#simpletab-eg-#{counter}")
-    el.simpletab()
+    el.simpletab(
+      nav_list: '.tabnav ul'
+    )
     tab = el.data 'simpletab'
 
   afterEach ->
@@ -32,13 +34,13 @@ describe 'simpletab', ->
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeFalsy()
 
   it 'should show the second tab when you click the second list item', ->
-    $("#simpletab-tab-#{counter} li:nth-child(2) a").trigger('click')
+    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
     expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeFalsy()
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeTruthy()
 
   it 'should show the first tab when you click the second item, then the first item', ->
-    $("#simpletab-tab-#{counter} li:nth-child(2) a").trigger('click')
-    $("#simpletab-tab-#{counter} li:first a").trigger('click')
+    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
+    $("#simpletab-eg-#{counter} li:first a").click()
     expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeTruthy()
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeFalsy()
 
