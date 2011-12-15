@@ -63,7 +63,7 @@
         id: el.attr('id'),
         title: 'Coverage',
         name: 'Coverage',
-        wkt: <? echo json_encode($value) ?>
+        wkt: <? echo json_encode(is_null($value) ? '' : $value) ?>
     };
     m.loadLocalData([item]);
     m.editJson(item, true);

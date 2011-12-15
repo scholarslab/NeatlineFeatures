@@ -219,7 +219,13 @@ class NeatlineFeatures_Utils_View
      **/
     public function getEditControl()
     {
-        $id_prefix = preg_replace('/\W+/', '-', $this->inputNameStem);
+        $inputNameStem = $this->inputNameStem;
+        $value         = $this->value;
+        $options       = $this->options;
+        $record        = $this->record;
+        $element       = $this->element;
+
+        $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
         $raw_field = $this->getRawField();
         $use_html  = $this->getUseHtml();
 
