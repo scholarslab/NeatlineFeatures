@@ -227,6 +227,7 @@ class NeatlineFeatures_Utils_View
 
         $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
         $raw_field = $this->getRawField();
+        $is_html   = $this->isHtml();
         $use_html  = $this->getUseHtml();
 
         ob_start();

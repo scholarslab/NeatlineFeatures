@@ -27,7 +27,8 @@
   <div class='nlfeatures-edit-nav'>
     <div class='nlfeatures-edit-nav-menu'>
       <ul>
-        <li class='selected'><a href="#<? echo $id_prefix ?>maptab">NL Features</a></li><li><a href="#<?echo $id_prefix ?>rawtab">Raw</a></li>
+        <li class='selected'><a href="#<? echo $id_prefix ?>maptab">NL Features</a></li>
+        <li><a href="#<?echo $id_prefix ?>rawtab">Raw</a></li>
       </ul>
     </div>
     <div class='nlfeatures-edit-nav-tools'>
@@ -48,8 +49,32 @@
 </div>
 <script type='text/javascript'>
 (function($) {
-    var el = $('#<? echo $id_prefix ?>map');
-    var m = el.nlfeatures({
+    var el, m, item, w, t;
+
+<? if (! $is_html) { ?>
+    // This is a sledgehammer, but the response is proportional. Basically, if
+    // there are any checked checkboxes in an field, Omeka turns all on
+    // TinyMCE for all textareas in the field.  In this case, it's picking up
+    // an OpenLayers checkbox.
+    //
+    // TODO: Bring this up on #omeka and file a bug report.  
+    // admin/themes/default/javascripts/items.js, around line 410, should be 
+    // more specific.
+    $(function() {
+            // For some reason, $() isn't working for this.
+            var cb = $(document.getElementById('<? echo $id_prefix ?>html'));
+            if (!cb.checked) {
+                setTimeout(function() {
+                    tinyMCE.execCommand('mceRemoveControl', false,
+                        '<? echo $id_prefix ?>text');
+                    },
+                    400);
+            }
+        });
+<? } ?>
+
+    el = $('#<? echo $id_prefix ?>map');
+    m = el.nlfeatures({
         map: {
             // Sri Lanka, just cause it's fun to say.
             // center: [8986896.64319, 866942.16213],
@@ -59,7 +84,7 @@
             }
         })
         .data('nlfeatures');
-    var item = {
+    item = {
         id: el.attr('id'),
         title: 'Coverage',
         name: 'Coverage',
@@ -70,8 +95,8 @@
     // TODO: Delete this line.
     window._nlfeatureMap = m;
 
-    var w = $("#<? echo $id_prefix ?>widget");
-    var t = w.simpletab({
+    w = $("#<? echo $id_prefix ?>widget");
+    t = w.simpletab({
         nav_list: ".nlfeatures-edit-nav-menu ul",
         tabchange: function(event, data) {
                 data.tab.anchors.each(function() {

@@ -7,6 +7,7 @@ Feature: Bug Fix Tests
   Scenario: New Items Coverage should not use TinyMCE
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
+    And I click the "Raw" tab in "#element-38"
     Then I should not see ".mceEditor" in "#element-38"
     But I should see "textarea#Elements-38-0-text" in "#element-38"
 
