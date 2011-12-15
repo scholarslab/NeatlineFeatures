@@ -8,7 +8,7 @@
         var tab;
         tab = this;
         this.anchors = this.element.find("" + this.options.nav_list + " li a");
-        this.anchors.each(function() {
+        this.anchors.each(function(index) {
           var jel, target;
           jel = $(this);
           target = $(jel.attr('href'));
@@ -20,6 +20,10 @@
             }
             tab.current = target;
             target.show();
+            jel.trigger('tabchange', {
+              index: index,
+              tab: target
+            });
             return event.preventDefault();
           });
         });
@@ -30,6 +34,9 @@
           target.show();
           return tab.current = target;
         });
+        if (this.options.tabchange != null) {
+          this.element.bind('tabchange', this.options.tabchange);
+        }
         return this;
       },
       destroy: function() {

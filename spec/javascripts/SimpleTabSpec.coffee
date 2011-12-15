@@ -44,3 +44,10 @@ describe 'simpletab', ->
     expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeTruthy()
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeFalsy()
 
+  it 'should fire a tabchange event when a tab is clicked on', ->
+    clicked = 0
+    el.bind('tabchange', (event) -> clicked++)
+    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
+    $("#simpletab-eg-#{counter} li:first a").click()
+    expect(clicked).toBe(2)
+

@@ -29,7 +29,7 @@
     _create: ->
       tab = this
       this.anchors = this.element.find("#{this.options.nav_list} li a")
-      this.anchors.each ->
+      this.anchors.each (index) ->
         jel = $ this
         target = $(jel.attr('href'))
         jel.data('neatline.simpletab.target', target)
@@ -40,6 +40,11 @@
           tab.current = target
           target.show()
 
+          jel.trigger('tabchange', {
+            index : index
+            tab   : target
+          })
+
           event.preventDefault()
 
       this.anchors.first().each ->
@@ -47,6 +52,9 @@
         target = jel.data('neatline.simpletab.target')
         target.show()
         tab.current = target
+
+      if this.options.tabchange?
+        this.element.bind('tabchange', this.options.tabchange)
 
       this
 
