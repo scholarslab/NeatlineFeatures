@@ -35,9 +35,21 @@ task :tags do
   sh %{ctags -R ../..}
 end
 
-desc 'This watches the CSS files.'
-task :watchsass do
-  sh %{sass --watch views/admin/css/nlfeatures.scss:views/admin/css/nlfeatures.css}
+namespace :watch do
+  desc 'This watches the CSS files.'
+  task :sass do
+    sh %{sass --watch views/admin/css/nlfeatures.scss:views/admin/css/nlfeatures.css}
+  end
+
+  desc 'This watches coffee script files.'
+  task :coffee do
+    sh %{coffee --watch --compile views/admin/javascripts/}
+  end
+
+  desc 'This watches the Jasmine spec Coffee Script files.'
+  task :jasmine do
+    sh %{coffee --watch --compile spec/javascripts/}
+  end
 end
 
 
