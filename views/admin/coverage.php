@@ -27,7 +27,7 @@
   <div class='nlfeatures-edit-nav'>
     <div class='nlfeatures-edit-nav-menu'>
       <ul>
-        <li class='selected'><a href="#">NL Features</a></li><li><a href="#">Raw</a></li>
+        <li class='selected'><a href=".nlfeatures-edit-map">NL Features</a></li><li><a href=".nlfeatures-edit-raw">Raw</a></li>
       </ul>
     </div>
     <div class='nlfeatures-edit-nav-tools'>
@@ -69,5 +69,10 @@
     m.editJson(item, true);
     // TODO: Delete this line.
     window._nlfeatureMap = m;
+
+    var w = $("#<? echo $id_prefix ?>widget");
+    var t = w.simpletab({
+        nav_list: ".nlfeatures-edit-nav-menu ul"
+    });
 })(jQuery);
 </script>
