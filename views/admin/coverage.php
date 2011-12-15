@@ -67,6 +67,7 @@
     };
     m.loadLocalData([item]);
     m.editJson(item, true);
+    // TODO: Delete this line.
     window._nlfeatureMap = m;
 })(jQuery);
 </script>
