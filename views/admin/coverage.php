@@ -36,8 +36,8 @@
   <div class='nlfeatures-edit-body'>
     <div class='nlfeatures-edit-raw'>
       <div><em><? echo $inputNameStem ?></em></div>
-      <? echo $rawField ?>
-      <? echo $useHtml ?>
+      <? echo $raw_field ?>
+      <? echo $use_html ?>
       &nbsp;
     </div>
     <div class='nlfeatures-edit-map'>

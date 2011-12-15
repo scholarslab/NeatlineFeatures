@@ -24,6 +24,8 @@
  */
 ?><?php
 
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures/Utils/View.php';
+
 /**
  * This class manages the plugin itself. It defines controllers for all the 
  * hooks and filters.
@@ -154,51 +156,9 @@ class NeatlineFeaturesPlugin
     public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
         $options, $record, $element)
     {
-        $v = __v();
-        $ef = $v->getHelper('ElementForm');
-        $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
-
-        // Create the default textarea field.
-        $rawField = $v->formTextarea(
-                    $inputNameStem . '[text]', 
-                    $value, 
-                    array('class'=>'textinput', 'rows'=>5, 'cols'=>50));
-
-        // Create the default "Use HTML" field.
-        //
-        // I had to copy this from ElementForm because of access restrictions.  
-        // There's probably a better way than this sledgehammer, but it's not 
-        // obvious.
-        $isHtml = false;
-        /*
-        $log = fopen('/vagrant/features.log', 'w');
-        fwrite($log, date('c') . "\n");
-        fwrite($log, print_r($v, true));
-        // fwrite($log, print_r($ef, true));
-        fwrite($log, "\n");
-        fclose($log);
-         */
-        /*
-        if ($v->_isPosted()) {
-            $isHtml = (boolean) 
-                @$_POST['Elements'][$this->_element['id']][$index]['html'];
-        } else {
-            $elementText = $v->getElementTexts($index);
-            
-            if (isset($elementText)) {
-                $isHtml = (boolean) $elementText->html;
-            }
-        }
-         */
-
-        $useHtml  = '';
-        $useHtml .= '<label class="use-html">Use HTML ';
-        $useHtml .= $v->formCheckbox($inputNameStem . '[html]', 1, array('checked'=>$isHtml));
-        $useHtml .= '</label>';
-
-        ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
-        return ob_get_clean();
+        $util = new NeatlineFeatures_Utils_View($inputNameStem, $value, 
+            $options, $record, $element);
+        return $util->getEditControl();
     }
 
     /**

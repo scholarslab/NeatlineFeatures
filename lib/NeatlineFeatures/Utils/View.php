@@ -21,7 +21,7 @@
  */
 ?><?php
 
-require_once 'application/helpers/Functions.php';
+require_once dirname(__FILE__) . '/../../../../../application/helpers/Functions.php';
 
 /**
  * This contructs the view and holds a bunch of utility methods.
@@ -209,6 +209,23 @@ class NeatlineFeatures_Utils_View
         $use_html .= '</label>';
 
         return $use_html;
+    }
+
+    /**
+     * This returns the HTML for the edit control.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getEditControl()
+    {
+        $id_prefix = preg_replace('/\W+/', '-', $this->inputNameStem);
+        $raw_field = $this->getRawField();
+        $use_html  = $this->getUseHtml();
+
+        ob_start();
+        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
+        return ob_get_clean();
     }
 }
 
