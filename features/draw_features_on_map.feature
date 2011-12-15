@@ -32,7 +32,7 @@ Feature: Draw Features on a Map
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Draw On Coverage Map" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"      # Title
     And I enter "Draw On Coverage Map" for the "Elements-49-0-text"      # Subject
     And I click on the "#element-38" field "NL Features" tab
     And I click on the "Coverages" map

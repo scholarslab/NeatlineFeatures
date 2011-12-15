@@ -7,7 +7,7 @@ Feature: Non-Feature Coverages
   Scenario: AddNonFeatureCoverageData
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "AddNonFeatureCoverageData" for the "Elements-50-0-text"  # Title
+    And I enter "Cucumber: AddNonFeatureCoverageData" for the "Elements-50-0-text"  # Title
     And I enter "AddNonFeatureCoverageData" for the "Elements-49-0-text"  # Subject
     And I click the "Raw" tab
     And I enter "Charlottesville, VA" into "Coverage"

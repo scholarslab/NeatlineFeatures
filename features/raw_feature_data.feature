@@ -8,7 +8,7 @@ Feature: Raw Feature Data
   Scenario: Enter Raw WKT
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Enter Raw WKT" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Enter Raw WKT" for the "Elements-50-0-text"      # Title
     And I enter "Enter Raw WKT" for the "Elements-49-0-text"      # Subject
     And I click on the "Raw" tab
     And I enter "POINT (38.03 -78.478889)" into the "Coverage" field
@@ -18,7 +18,7 @@ Feature: Raw Feature Data
   Scenario: Enter Raw KML
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Enter Raw KML" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Enter Raw KML" for the "Elements-50-0-text"      # Title
     And I enter "Enter Raw KML" for the "Elements-49-0-text"      # Subject
     And I click on the "Raw" tab
     And I insert data from "features/data/charlottesville.kml" into the "Coverage" field

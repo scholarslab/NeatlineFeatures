@@ -8,7 +8,7 @@ Feature: Upload Raw Feature Data
   Scenario: Upload WKT
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Upload WKT" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Upload WKT" for the "Elements-50-0-text"      # Title
     And I enter "Upload WKT" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     When I upload "features/data/charlottesville.wkt" into the "Coverage File" field
@@ -17,7 +17,7 @@ Feature: Upload Raw Feature Data
   Scenario: Upload KML
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Upload KML" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Upload KML" for the "Elements-50-0-text"      # Title
     And I enter "Upload KML" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     When I upload "features/data/charlottesville.kml" into the "Coverage File" field

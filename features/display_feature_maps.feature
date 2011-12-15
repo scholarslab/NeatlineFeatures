@@ -7,7 +7,7 @@ Feature: Display Feature Maps on Item Pages
   Scenario: Display Feature Maps on Item Page
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage.php"
-    And I enter "Display Feature Maps" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Display Feature Maps" for the "Elements-50-0-text"      # Title
     And I enter "Display Feature Maps" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     And I click on the "Coverages" map

@@ -13,3 +13,8 @@ Capybara.default_driver = :selenium
 
 # browser = Selenium::WebDriver.for :firefox
 
+at_exit do
+  mysql = ENV['OMEKA_MYSQL'] || 'mysql -hfeatures.dev -uomeka -pomeka omeka'
+  system %{#{mysql} < features/support/clean_db.sql}
+end
+

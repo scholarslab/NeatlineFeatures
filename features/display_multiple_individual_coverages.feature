@@ -7,7 +7,7 @@ Feature: Display Multiple Individual Coverages
   Scenario: All Non-Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-indiv.php"
-    And I enter "Iterate All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Iterate All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I click on the "Raw" tab
     And I enter "Charlottesville, VA" into "First Coverage"
@@ -23,7 +23,7 @@ Feature: Display Multiple Individual Coverages
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-indiv.php"
-    And I enter "Iterate All Feature Coverages" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Iterate All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     And I click on the "First Coverages" map
@@ -39,7 +39,7 @@ Feature: Display Multiple Individual Coverages
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-indiv.php"
-    And I enter "Iterate Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Iterate Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I click on the "Features" tab
     And I click on the "First Coverages" map

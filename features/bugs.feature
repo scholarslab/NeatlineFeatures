@@ -19,7 +19,7 @@ Feature: Bug Fix Tests
   Scenario: "Use HTML" is Checked When Editing Items with It Previously Set
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "'Use HTML' is Checked When Editing Items" into "Elements-50-0-text"
+    And I enter "Cucumber: 'Use HTML' is Checked When Editing Items" into "Elements-50-0-text"
     And I click the "Raw" tab in "#element-38"
     And I enter "hi" into "Elements-38-0-text"
     And I click "Use HTML" checkbox in "#element-38"
