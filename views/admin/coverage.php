@@ -52,10 +52,15 @@
     var el, m, item, w, t;
 
 <? if (! $is_html) { ?>
+
     // This is a sledgehammer, but the response is proportional. Basically, if
-    // there are any checked checkboxes in an field, Omeka turns all on
-    // TinyMCE for all textareas in the field.  In this case, it's picking up
-    // an OpenLayers checkbox.
+    // there are any checked checkboxes in a field, Omeka turns on TinyMCE for 
+    // all textareas in the field.  In this case, it's picking up
+    // an OpenLayers checkbox and setting the raw textarea up incorrectly.
+    //
+    // Also, because of the way TinyMCE is handled, we have to use setTimeout 
+    // to make sure it gets set back *after* it's incorrectly enabled. Double 
+    // ugh.
     //
     // TODO: Bring this up on #omeka and file a bug report.  
     // admin/themes/default/javascripts/items.js, around line 410, should be 
