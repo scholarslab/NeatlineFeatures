@@ -49,7 +49,21 @@
 </div>
 <script type='text/javascript'>
 (function($) {
-    var w, t;
+
+    function initTabs() {
+        var w, t;
+        w = $("#<? echo $id_prefix ?>widget");
+        t = w.simpletab({
+            nav_list: ".nlfeatures-edit-nav-menu ul",
+            tabchange: function(event, data) {
+                data.tab.anchors.each(function() {
+                    $(this.parentNode).removeClass('selected');
+                });
+                data.a.parent().addClass('selected');
+                event.preventDefault();
+            }
+        });
+    }
 
     function initOpenLayerMap() {
         var el, m, item;
@@ -89,6 +103,7 @@
     // admin/themes/default/javascripts/items.js, around line 410, should be 
     // more specific.
     $(function() {
+        initTabs();
         initOpenLayerMap();
 <? if (!$is_html) { ?>
         // For some reason, $() isn't working for this.
@@ -109,16 +124,5 @@
 <? } ?>
     });
 
-    w = $("#<? echo $id_prefix ?>widget");
-    t = w.simpletab({
-        nav_list: ".nlfeatures-edit-nav-menu ul",
-        tabchange: function(event, data) {
-                data.tab.anchors.each(function() {
-                        $(this.parentNode).removeClass('selected');
-                    });
-                data.a.parent().addClass('selected');
-                event.preventDefault();
-            }
-    });
 })(jQuery);
 </script>
