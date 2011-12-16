@@ -12,7 +12,9 @@ Given /^I enter "([^"]*)" into the "([^"]*)" field$/ do |value, label|
 end
 
 Given /^I enter "([^"]*)" into "([^"]*)"$/ do |value, field|
-  fill_in field, :with => value
+  wait_until do
+    fill_in field, :with => value
+  end
 end
 
 Given /^I insert data from "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|

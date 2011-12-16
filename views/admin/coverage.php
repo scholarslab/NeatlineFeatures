@@ -69,11 +69,16 @@
             // For some reason, $() isn't working for this.
             var cb = $(document.getElementById('<? echo $id_prefix ?>html'));
             if (!cb.checked) {
-                setTimeout(function() {
-                    tinyMCE.execCommand('mceRemoveControl', false,
-                        '<? echo $id_prefix ?>text');
-                    },
-                    400);
+                var pollTinyMCE = function() {
+                    var eds = $("#<? echo $id_prefix ?>rawtab .mceEditor");
+                    if (eds.length == 0) {
+                        setTimeout(function() { pollTinyMCE(); }, 100);
+                    } else {
+                        tinyMCE.execCommand('mceRemoveControl', false,
+                            '<? echo $id_prefix ?>text');
+                    }
+                }
+                setTimeout(function() { pollTinyMCE(); }, 100);
             }
         });
 <? } ?>

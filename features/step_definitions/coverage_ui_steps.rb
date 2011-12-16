@@ -32,8 +32,10 @@ Then /^the delete button is disabled on "([^"]*)"$/ do |arg1|
 end
 
 Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
-  within(context) do
-    find(target).should be_visible
+  wait_until(30) do
+    within(context) do
+      find(target).should be_visible
+    end
   end
 end
 
