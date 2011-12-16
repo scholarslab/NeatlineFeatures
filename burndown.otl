@@ -11,9 +11,9 @@
 	[ ] (10hr) click-off deselect bug
 		[ ] (2hr) feature tests
 		[ ] (8hr)
-[ ] (8hr) Draw Features on a Map
-	[ ] (1hr) Coverage Has a Map
-		[ ] (1hr) steps
+[ ] (7hr) Draw Features on a Map
+	[x] Coverage Has a Map
+		[x] steps
 		[x] tabs
 			[x] http://pivotal.github.com/jasmine/
 			[x] (2hr)
