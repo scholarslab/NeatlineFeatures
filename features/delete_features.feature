@@ -4,11 +4,11 @@ Feature: Delete Features from an Item
   As an item editor
   I want to be able to remove feature annotations from an item.
 
-  Scenario: CannotRemoveOnlyCoverage
+  Scenario: Cannot Remove Only Coverage
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
-    Then I see 1 "Coverage" field
-    But the delete button is disabled
+    Then I see 1 ".input" in "#element-38"
+    But I should not see "#remove_element_38" in "#element-38"
 
   Scenario: AddCoverage
     Given I am logged into the admin console

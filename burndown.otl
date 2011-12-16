@@ -11,7 +11,7 @@
 	[ ] (10hr) click-off deselect bug
 		[ ] (2hr) feature tests
 		[ ] (8hr)
-[ ] (5hr) Draw Features on a Map
+[ ] (4hr) Draw Features on a Map
 	[x] Coverage Has a Map
 		[x] steps
 		[x] tabs
@@ -31,12 +31,12 @@
 		[ ] (1hr) feature
 		[ ] (1hr) steps
 		[ ] (2hr) implement
-	[ ] (1hr) Save Data Drawn on Coverage Map
-		[ ] (1hr) steps
+	[x] Save Data Drawn on Coverage Map
+		[x] steps
 		[x] automatically clear out data after tests
-[ ] (4hr) Delete Features from an Item
-	[ ] (1hr) Cannot Remove Only Coverage
-		[ ] (1hr) steps
+[ ] (3hr) Delete Features from an Item
+	[x] Cannot Remove Only Coverage
+		[x] steps
 	[ ] (1hr) Add Coverage
 		[ ] (1hr) steps
 	[ ] (1hr) Remove First Coverage
