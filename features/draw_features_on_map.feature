@@ -24,9 +24,8 @@ Feature: Draw Features on a Map
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I click on the "#element-38" field "NL Features" tab
-    When I click and drag on the "Coverages" map
-    Then a line is visible on the map
+    When I draw a line on "div.olMap"
+    Then a line is defined in "#Elements-38-0-text"
 
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console

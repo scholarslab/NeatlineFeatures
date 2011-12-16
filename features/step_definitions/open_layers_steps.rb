@@ -11,8 +11,18 @@ Given /^I draw a point on "([^"]*)"$/ do |map|
                  perform
 end
 
-Given /^I click and drag on the "([^"]*)" map$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^I draw a line on "([^"]*)"$/ do |map|
+  find('.olControlDrawFeaturePathItemInactive').click
+
+  browser = page.driver.browser
+  map_el = browser.find_element(:css, map).
+                   find_element(:css, 'div.olMapViewport').
+                   find_element(:tag_name, 'div')
+  browser.action.move_to(map_el, 50, 50).
+                 click.
+                 move_to(map_el, 100, 150).
+                 double_click.
+                 perform
 end
 
 Then /^I should see a map in "([^"]*)"$/ do |parent|
@@ -43,8 +53,8 @@ Then /^a point is defined in "([^"]*)"$/ do |textarea|
   find(textarea).value.should match(/POINT/)
 end
 
-Then /^a line is visible on a map$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^a line is defined in "([^"]*)"$/ do |textarea|
+  find(textarea).value.should match(/LINESTRING/)
 end
 
 Then /^a line is visible on the map$/ do
