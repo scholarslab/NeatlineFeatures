@@ -285,9 +285,11 @@
 
                 // Build the features.
                 $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
-                    var geometry = OpenLayers.Geometry.fromWKT(wkt);
-                    var feature = new OpenLayers.Feature.Vector(geometry);
-                    features.push(feature);
+                    if (wkt !== "") {
+                        var geometry = OpenLayers.Geometry.fromWKT(wkt);
+                        var feature = new OpenLayers.Feature.Vector(geometry);
+                        features.push(feature);
+                    }
                 });
 
                 // Add the vectors to the layer.
