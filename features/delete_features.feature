@@ -7,16 +7,16 @@ Feature: Delete Features from an Item
   Scenario: Cannot Remove Only Coverage
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
-    Then I see 1 ".input" in "#element-38"
+    Then I see 1 ".input-block" in "#element-38"
     But I should not see "#remove_element_38" in "#element-38"
 
-  Scenario: AddCoverage
+  Scenario: Add Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    When I click "Add Coverage"
-    Then I see 2 "Coverage" fields
-    And the delete button is enabled on "First Coverage"
-    And the delete button is enabled on "Second Coverage"
+    When I click "add_element_38"
+    Then I should see "#Elements-38-1-widget" in "#element-38"
+    And I see 2 ".input-block" in "#element-38"
+    And I see 2 "input.remove-element" in "#element-38"
 
   Scenario: RemoveFirstCoverage
     Given I am logged into the admin console
