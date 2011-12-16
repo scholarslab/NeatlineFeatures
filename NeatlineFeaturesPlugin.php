@@ -166,17 +166,6 @@ class NeatlineFeaturesPlugin
     }
 
     /**
-     * This is taken from Omeka_View_Helper_ElementForm.
-     *
-     * Yeah, this obviously wouldn't be at all useful anywhere else.
-     */
-    protected function _isPosted()
-    {
-        $postArray = $this->_getPostArray();
-        return !empty($postArray);
-    }
-
-    /**
      * This turns off displaying the element form for the DC:Coverage field.
      *
      * @param string  $html    An empty string.
