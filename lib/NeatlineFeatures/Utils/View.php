@@ -63,7 +63,18 @@ class NeatlineFeatures_Utils_View
      **/
     private $element;
     
-    function __construct($inputNameStem, $value, $options, $record, $element)
+    function __construct()
+    {
+    }
+
+    /**
+     * This sets the options necessary to create the edit view.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setEditOptions($inputNameStem, $value, $options, $record,
+        $element)
     {
         $this->inputNameStem = $inputNameStem;
         $this->value = $value;

@@ -85,7 +85,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             switch ($row->name) {
             case 'Coverage':
                 $this->_coverage = $row;
-                $this->_cutil = new NeatlineFeatures_Utils_View(
+                $this->_cutil = new NeatlineFeatures_Utils_View();
+                $this->_cutil->setEditOptions(
                     'Elements[38][0]', null, array(), null, $row
                 );
                 break;
@@ -136,8 +137,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function testElementId()
     {
         $this->assertEquals(38, $this->_cutil->getElementId());
-        $util = new NeatlineFeatures_Utils_View("Elements[50][0]", null,
-                                                array(), null, $this->_title);
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setEditOptions("Elements[50][0]", null,
+                              array(), null, $this->_title);
         $this->assertEquals(50, $util->getElementId());
     }
 
@@ -149,11 +151,11 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testGetIndex()
     {
-        $util = new NeatlineFeatures_Utils_View("Elements[38][1]", null,
-                                                array(), null, null);
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setEditOptions("Elements[38][1]", null, array(), null, null);
         $this->assertEquals(1, $util->getIndex());
-        $util = new NeatlineFeatures_Utils_View("Elements[38][3]", null,
-                                                array(), null, null);
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setEditOptions("Elements[38][3]", null, array(), null, null);
         $this->assertEquals(3, $util->getIndex());
     }
 
@@ -224,14 +226,16 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testGetElementText()
     {
-        $tutil = new NeatlineFeatures_Utils_View(
+        $tutil = new NeatlineFeatures_Utils_View();
+        $tutil->setEditOptions(
             "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
             $this->_item, $this->_title);
         $etext = $tutil->getElementText();
         $this->assertEquals('<b>A Title</b>', $etext->text);
         $this->assertTrue((bool)$etext->html);
 
-        $sutil = new NeatlineFeatures_Utils_View(
+        $sutil = new NeatlineFeatures_Utils_View();
+        $sutil->setEditOptions(
             "Elements[{$this->_subject->id}][0]", 'Subject', array(),
             $this->_item, $this->_subject);
         $etext = $sutil->getElementText();
@@ -276,7 +280,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testIsHtmlNoPostTrue()
     {
-        $tutil = new NeatlineFeatures_Utils_View(
+        $tutil = new NeatlineFeatures_Utils_View();
+        $tutil->setEditOptions(
             "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
             $this->_item, $this->_title);
         $this->assertTrue($tutil->isHtml());
@@ -291,7 +296,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
      **/
     public function testIsHtmlNoPostFalse()
     {
-        $sutil = new NeatlineFeatures_Utils_View(
+        $sutil = new NeatlineFeatures_Utils_View();
+        $sutil->setEditOptions(
             "Elements[{$this->_subject->id}][0]", 'Subject', array(),
             $this->_item, $this->_subject);
         $this->assertFalse($sutil->isHtml());
@@ -316,7 +322,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             '</label>'
         );
 
-        $tutil = new NeatlineFeatures_Utils_View(
+        $tutil = new NeatlineFeatures_Utils_View();
+        $tutil->setEditOptions(
             "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
             $this->_item, $this->_title);
         $actual = new DOMDocument;
@@ -347,7 +354,8 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             '</label>'
         );
 
-        $sutil = new NeatlineFeatures_Utils_View(
+        $sutil = new NeatlineFeatures_Utils_View();
+        $sutil->setEditOptions(
             "Elements[{$this->_subject->id}][0]", 'Subject', array(),
             $this->_item, $this->_subject);
         $actual = new DOMDocument;

@@ -60,7 +60,9 @@ class NeatlineFeaturesPlugin
         array('formItemDublinCoreCoverage',
               array('Form', 'Item', 'Dublin Core', 'Coverage')),
         array('elementFormDisplayHtmlFlag',
-              'element_form_display_html_flag')
+              'element_form_display_html_flag'),
+        array('displayItemDublinCoreCoverage',
+              array('Display', 'Item', 'Dublin Core', 'Coverage'))
     );
     // }}}
 
@@ -157,7 +159,8 @@ class NeatlineFeaturesPlugin
     public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
         $options, $record, $element)
     {
-        $util = new NeatlineFeatures_Utils_View($inputNameStem, $value, 
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setEditOptions($inputNameStem, $value, 
             $options, $record, $element);
         return $util->getEditControl();
     }
@@ -191,6 +194,27 @@ class NeatlineFeaturesPlugin
         } else {
             return $html;
         }
+    }
+
+    /**
+     * This displays the coverage data as a map, if applicable.
+     *
+     * @param string       $text        The original text for the element.
+     * @param Omeka_Record $record      The record that this text applies to.
+     * @param ElementText  $elementText The ElementText record that stores this 
+     * text.
+     *
+     * @return The HTML to generate the map.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function displayItemDublinCoreCoverage($text, $record, $elementText)
+    {
+        $output = $text;
+
+        if ($text != "") {
+        }
+
+        return $output;
     }
     // }}}
 }
