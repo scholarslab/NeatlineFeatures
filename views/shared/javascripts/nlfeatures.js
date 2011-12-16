@@ -339,7 +339,6 @@
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
-            console.log('clickControl', this.clickControl);
         },
 
         _removeControls: function() {
@@ -509,6 +508,7 @@
                 function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
+                        self._clickedFeature = null;
                         self.modifyFeatures.unselectFeature(feature);
                         self._currentEditLayer.destroyFeatures([ feature ]);
                     }
@@ -617,12 +617,18 @@
         getWktForSave: function() {
             var wkts = [];
 
-            this.modifyFeatures.unselectFeature(this._clickedFeature);
+            if (this._clickedFeature !== null) {
+                this.modifyFeatures.unselectFeature(this._clickedFeature);
+            }
 
             // Push the wkt's onto the array.
             $.each(this._currentEditLayer.features, function(i, feature) {
                 wkts.push(feature.geometry.toString());
             });
+
+            if (this._clickedFeature !== null) {
+                this.modifyFeatures.selectFeature(this._clickedFeature);
+            }
 
             return wkts.join(this.options.wkt_delimiter);
         },
