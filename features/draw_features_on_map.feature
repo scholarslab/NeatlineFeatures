@@ -33,11 +33,11 @@ Feature: Draw Features on a Map
     And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"     # Title
     And I enter "Draw On Coverage Map" for the "Elements-49-0-text"               # Subject
     And I click on the "#element-38" field "NL Features" tab
-    And I click on the "Coverages" map
-    And I click and drag on the "Coverages" map
+    And I draw a point on "div.olMap"
+    And I draw a line on "div.olMap"
     And I click on "Add Item"
     When I click on "Draw On Coverage Map"
-    Then I should see a map
+    Then I should see a map in "#dublin-core-coverage"
     And the map should have a point feature
     And the map should have a line feature
 
