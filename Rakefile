@@ -36,6 +36,9 @@ task :tags do
 end
 
 namespace :watch do
+  desc 'This runs watch:sass, watch:coffee, and watch:jasmine in parallel.'
+  multitask :all => ['watch:sass', 'watch:coffee', 'watch:jasmine']
+
   desc 'This watches the CSS files.'
   task :sass do
     sh %{sass --watch views/admin/css/nlfeatures.scss:views/admin/css/nlfeatures.css}
