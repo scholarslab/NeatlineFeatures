@@ -201,6 +201,9 @@ class NeatlineFeaturesPlugin
         $output = $text;
 
         if ($text != "") {
+            $util = new NeatlineFeatures_Utils_View();
+            $util->setViewOptions($text, $record, $elementText);
+            $output = $util->getView();
         }
 
         return $output;

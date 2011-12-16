@@ -62,6 +62,20 @@ class NeatlineFeatures_Utils_View
      * @var Element
      **/
     private $element;
+
+    /**
+     * The text of a field value.
+     *
+     * @var string
+     **/
+    private $text;
+
+    /**
+     * The ElementText representing that the text was taken from.
+     *
+     * @var ElementText
+     **/
+    private $elementText;
     
     function __construct()
     {
@@ -77,10 +91,23 @@ class NeatlineFeatures_Utils_View
         $element)
     {
         $this->inputNameStem = $inputNameStem;
-        $this->value = $value;
-        $this->options = $options;
-        $this->record = $record;
-        $this->element = $element;
+        $this->value         = $value;
+        $this->options       = $options;
+        $this->record        = $record;
+        $this->element       = $element;
+    }
+
+    /**
+     * This sets the options necessary to create the view.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setViewOptions($text, $record, $elementText)
+    {
+        $this->text        = $text;
+        $this->record      = $record;
+        $this->elementText = $elementText;
     }
 
     /**
@@ -243,6 +270,24 @@ class NeatlineFeatures_Utils_View
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
+        return ob_get_clean();
+    }
+
+    /**
+     * This returns the HTML to view a coverage features map.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getView()
+    {
+        $text        = strip_tags($this->text);
+        $record      = $this->record;
+        $elementText = $this->elementText;
+        $id_prefix   = uniqid("nlfeatures-") . '-';
+
+        ob_start();
+        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
         return ob_get_clean();
     }
 }

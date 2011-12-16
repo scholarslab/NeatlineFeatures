@@ -50,7 +50,7 @@
 .nlfeatures .nlfeatures-edit-raw,
 .nlfeatures .nlfeatures-edit-map {
   background: transparent; }
-.nlfeatures .nlfeatures-edit-map .olMap {
+.nlfeatures .olMap {
   border: 1px solid white;
   width: 100%;
   height: 360px; }
