@@ -48,7 +48,8 @@ class NeatlineFeaturesPlugin
     private static $_hooks = array(
         'install',
         'uninstall',
-        'admin_theme_header'
+        'admin_theme_header',
+        'public_theme_header'
     );
 
     /**
@@ -137,6 +138,22 @@ class NeatlineFeaturesPlugin
         queue_js('nlfeatures');
         queue_js('editor/edit_geometry');
         queue_js('nlfeatures-simpletab');
+    }
+
+    /**
+     * This queues javascript and CSS for the public header.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function publicThemeHeader()
+    {
+        queue_css('nlfeatures');
+
+        // We are also outputting the script tags to load OpenLayers here.
+        echo "<script type='text/javascript' src='http://openlayers.org/api/OpenLayers.js'></script>";
+
+        queue_js('nlfeatures');
     }
 
     // }}}
