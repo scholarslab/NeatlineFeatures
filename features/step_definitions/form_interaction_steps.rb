@@ -3,6 +3,10 @@ Given /^I click(?: on)? "([^"]*)"$/ do |link_text|
   click_on link_text
 end
 
+Given /^I click(?: on)? XPath "([^"]*)"$/ do |xpath|
+  find(:xpath, xpath).click
+end
+
 Given /^I enter "([^"]*)" for the "([^"]*)"(?:\s+\#.*)?$/ do |value, label|
   fill_in(label, :with => value)
 end
@@ -39,11 +43,19 @@ When /^I click "([^"]*)" on the "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
 
+When /^I click "OK" in the alert$/ do
+  page.driver.browser.switch_to.alert.accept
+end
+
 Then /^"([^"]*)" should be checked$/ do |checkbox|
   page.has_checked_field?(checkbox).should == true
 end
 
 Then /^"([^"]*)" should not be checked$/ do |checkbox|
   page.has_checked_field?(checkbox).should == false
+end
+
+Then /^I see "([^"]*)" contains "([^"]*)"$/ do |input, content|
+  find(input).value.should have_content(content)
 end
 

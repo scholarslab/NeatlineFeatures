@@ -18,18 +18,19 @@ Feature: Delete Features from an Item
     And I see 2 ".input-block" in "#element-38"
     And I see 2 "input.remove-element" in "#element-38"
 
-  Scenario: RemoveFirstCoverage
+  Scenario: Remove First Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I click the "Raw" tab on "First Coverage"
-    And I enter "1" into "First Coverage"
-    And I click "Add Coverage"
-    And I click the "Raw" tab on "Second Coverage"
-    And I enter "2" into "Second Coverage"
-    When I click "Delete" on the "First Coverage"
-    Then I see 1 "Coverage" field
-    And I see "2" in "Second Coverage"
-    And the delete button is disabled on "Second Coverage"
+    And I click the "Raw" tab on "#Elements-38-0-widget"
+    And I enter "1" into "Elements-38-0-text"
+    And I click "add_element_38"
+    And I click the "Raw" tab on "#Elements-38-1-widget"
+    And I enter "2" into "Elements-38-1-text"
+    When I click on XPath ".//div[@class='input-block'][1]//input[@id='remove_element_38']"
+    And I click "OK" in the alert
+    Then I see 1 ".input-block" in "#element-38"
+    And I see "#Elements-38-1-text" contains "2"
+    But I should not see "#remove_element_38" in "#element-38"
 
   Scenario: RemoveSecondCoverage
     Given I am logged into the admin console

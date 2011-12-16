@@ -16,7 +16,9 @@ Given /^I click(?: on)? the "([^"]*)" tab (?:in|on) "([^"]*)"$/ do |tab_name, fi
 end
 
 Then /^I see (\d+) "([^"]*)" in "([^"]*)"?$/ do |n, thing, parent|
-  find(parent).all(thing).length.should == n.to_i
+  wait_until do
+    find(parent).all(thing).length.should == n.to_i
+  end
 end
 
 Then /^the delete button is enabled on "([^"]*)"$/ do |arg1|
