@@ -563,6 +563,32 @@
         },
 
         /*
+         * This sets the viewport to either the user's current location or to
+         * the a view of the features added to the map.
+         */
+        setViewport: function() {
+            var featureCount, i, vlen, vlayer, j, flen, geometry, bounds;
+
+            bounds = new OpenLayers.Bounds();
+            featureCount = 0;
+            vlen = this._currentVectorLayers.length;
+            for (i=0; i<vlen; i++) {
+                vlayer = this._currentVectorLayers[i];
+                flen = vlayer.features.length;
+                for (j=0; j<flen; j++) {
+                    featureCount++;
+                    geometry = vlayer.features[j].geometry;
+                    bounds.extend(geometry.getBounds());
+                }
+            }
+
+            if (featureCount == 0) {
+            } else {
+                this.map.zoomToExtent(bounds, false);
+            }
+        },
+
+        /*
          * This updates the raw target element's value. Newlines are added to
          * WKTs to make them more readable.
          */

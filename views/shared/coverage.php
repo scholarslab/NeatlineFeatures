@@ -42,6 +42,7 @@
             wkt: <? echo json_encode($text) ?>
         };
         m.loadLocalData([item]);
+        m.setViewport();
     }
     $(function() {
         viewOpenLayerMap();

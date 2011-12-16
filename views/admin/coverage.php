@@ -71,10 +71,6 @@
         el = $(document.getElementById('<? echo $id_prefix ?>map'));
         m = el.nlfeatures({
             map: {
-                // Sri Lanka, just cause it's fun to say.
-                // center: [8986896.64319, 866942.16213],
-                center: [-8738850.21367, 4584105.47978],
-                zoom: 3,
                 raw_update: $('#<? echo $id_prefix ?>text')
             }
         })
@@ -86,6 +82,7 @@
             wkt: <? echo json_encode(is_null($value) ? '' : $value) ?>
         };
         m.loadLocalData([item]);
+        m.setViewport();
         m.editJson(item, true);
         // TODO: Delete this line.
         window._nlfeatureMap = m;
