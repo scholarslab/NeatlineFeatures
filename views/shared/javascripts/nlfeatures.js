@@ -567,7 +567,9 @@
          * the a view of the features added to the map.
          */
         setViewport: function() {
-            var featureCount, i, vlen, vlayer, j, flen, geometry, bounds, geolocate;
+            var self, featureCount, i, vlen, vlayer, j, flen, geometry, bounds, geolocate;
+
+            self = this;
 
             bounds = new OpenLayers.Bounds();
             featureCount = 0;
@@ -587,7 +589,16 @@
                     bind: true,
                     watch: false
                 });
-                console.log("geolocate", geolocate);
+                geolocate.events.on({
+                    locationfailed: function() {
+                          self.map.setCenter(
+                              new OpenLayers.LonLat(-8738850.21367, 4584105.47978),
+                              3,
+                              false,
+                              false
+                          );
+                      }
+                });
                 this.map.addControl(geolocate);
                 this.map.zoomTo(3);
                 geolocate.activate();
