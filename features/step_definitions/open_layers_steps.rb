@@ -1,6 +1,14 @@
 
-Given /^I click on the "([^"]*)" map$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+Given /^I draw a point on "([^"]*)"$/ do |map|
+  find('.olControlDrawFeaturePointItemInactive').click
+
+  browser = page.driver.browser
+  map_el = browser.find_element(:css, map).
+                   find_element(:css, 'div.olMapViewport').
+                   find_element(:tag_name, 'div')
+  browser.action.move_to(map_el, 50, 50).
+                 click.
+                 perform
 end
 
 Given /^I click and drag on the "([^"]*)" map$/ do |arg1|
@@ -31,12 +39,8 @@ Then /^I should see an OpenLayers map in the "([^"]*)" field$/ do |parent|
   end
 end
 
-Then /^a point is visible on a map$/ do
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^a point is visible on the map$/ do
-  pending # express the regexp above with the code you wish you had
+Then /^a point is defined in "([^"]*)"$/ do |textarea|
+  find(textarea).value.should match(/POINT/)
 end
 
 Then /^a line is visible on a map$/ do

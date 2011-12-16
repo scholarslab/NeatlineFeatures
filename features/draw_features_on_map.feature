@@ -18,9 +18,8 @@ Feature: Draw Features on a Map
   Scenario: Draw Point on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I click on the "#element-38" field "NL Features" tab
-    When I click on the "Coverages" map
-    Then a point is visible on the map
+    When I draw a point on "div.olMap"
+    Then a point is defined in "#Elements-38-0-text"
 
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
@@ -32,8 +31,8 @@ Feature: Draw Features on a Map
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"      # Title
-    And I enter "Draw On Coverage Map" for the "Elements-49-0-text"      # Subject
+    And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"     # Title
+    And I enter "Draw On Coverage Map" for the "Elements-49-0-text"               # Subject
     And I click on the "#element-38" field "NL Features" tab
     And I click on the "Coverages" map
     And I click and drag on the "Coverages" map
