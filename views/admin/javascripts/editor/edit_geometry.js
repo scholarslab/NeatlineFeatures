@@ -82,11 +82,11 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', {}, {
+                    self.element.trigger('update.neatline', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
-                    });
+                    }]);
                 }
 
             });
@@ -112,11 +112,11 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', {}, {
+                    self.element.trigger('update.neatline', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
-                    });
+                    }]);
                 }
             });
 
@@ -141,11 +141,11 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', {}, {
+                    self.element.trigger('update.neatline', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
-                    });
+                    }]);
                 }
             });
 

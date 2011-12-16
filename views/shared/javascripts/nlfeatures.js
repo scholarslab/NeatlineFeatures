@@ -339,6 +339,7 @@
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
+            console.log('clickControl', this.clickControl);
         },
 
         _removeControls: function() {
@@ -467,9 +468,10 @@
             this.modifyFeatures.activate();
 
             // Instantiate the geometry editor.
-            this.element.editgeometry({
-                // On update.
-                'update.neatline': function(event, obj) {
+            this.element.editgeometry();
+            // On update.
+            this.element.bind('update.neatline',
+                function(event, obj) {
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
@@ -497,20 +499,20 @@
 
                     // If there is a selected feature, unselect and reselect it to apply
                     // the new configuration.
-                    if (feature != null) {
+                    if (feature !== null) {
                         self.modifyFeatures.unselectFeature(feature);
                         self.modifyFeatures.selectFeature(feature);
                     }
-                },
+                });
 
-                'delete.neatline': function() {
+            this.element.bind('delete.neatline',
+                function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
                         self.modifyFeatures.unselectFeature(feature);
                         self._currentEditLayer.destroyFeatures([ feature ]);
                     }
-                }
-            });
+                });
 
             // Only do the fade if the form open does not coincide with
             // another form close.
