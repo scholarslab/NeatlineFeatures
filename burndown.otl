@@ -34,11 +34,11 @@
 	[x] Save Data Drawn on Coverage Map
 		[x] steps
 		[x] automatically clear out data after tests
-[ ] (3hr) Delete Features from an Item
+[ ] (2hr) Delete Features from an Item
 	[x] Cannot Remove Only Coverage
 		[x] steps
-	[ ] (1hr) Add Coverage
-		[ ] (1hr) steps
+	[x] Add Coverage
+		[x] steps
 	[ ] (1hr) Remove First Coverage
 		[ ] (1hr) steps
 	[ ] (1hr) Remove Second Coverage
