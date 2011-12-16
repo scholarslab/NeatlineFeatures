@@ -36,6 +36,7 @@
   </div>
   <div class='nlfeatures-edit-body'>
     <div id="<? echo $id_prefix ?>rawtab" class='nlfeatures-edit-raw'>
+      <!-- TODO: remove the next line -->
       <div><em><? echo $inputNameStem ?></em></div>
       <? echo $raw_field ?>
       <? echo $use_html ?>
