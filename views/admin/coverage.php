@@ -49,9 +49,32 @@
 </div>
 <script type='text/javascript'>
 (function($) {
-    var el, m, item, w, t;
+    var w, t;
 
-<? if (! $is_html) { ?>
+    function initOpenLayerMap() {
+        var el, m, item;
+        el = $(document.getElementById('<? echo $id_prefix ?>map'));
+        m = el.nlfeatures({
+            map: {
+                // Sri Lanka, just cause it's fun to say.
+                // center: [8986896.64319, 866942.16213],
+                center: [-8738850.21367, 4584105.47978],
+                    zoom: 3,
+                    raw_update: $('#<? echo $id_prefix ?>text')
+            }
+        })
+            .data('nlfeatures');
+        item = {
+            id: el.attr('id'),
+                title: 'Coverage',
+                name: 'Coverage',
+                wkt: <? echo json_encode(is_null($value) ? '' : $value) ?>
+        };
+        m.loadLocalData([item]);
+        m.editJson(item, true);
+        // TODO: Delete this line.
+        window._nlfeatureMap = m;
+    }
 
     // This is a sledgehammer, but the response is proportional. Basically, if
     // there are any checked checkboxes in a field, Omeka turns on TinyMCE for 
@@ -66,44 +89,25 @@
     // admin/themes/default/javascripts/items.js, around line 410, should be 
     // more specific.
     $(function() {
-            // For some reason, $() isn't working for this.
-            var cb = $(document.getElementById('<? echo $id_prefix ?>html'));
-            if (!cb.checked) {
-                var pollTinyMCE = function() {
-                    var eds = $("#<? echo $id_prefix ?>rawtab .mceEditor");
-                    if (eds.length == 0) {
-                        setTimeout(function() { pollTinyMCE(); }, 100);
-                    } else {
-                        tinyMCE.execCommand('mceRemoveControl', false,
-                            '<? echo $id_prefix ?>text');
-                    }
+        initOpenLayerMap();
+<? if (!$is_html) { ?>
+        // For some reason, $() isn't working for this.
+        var cb = $(document.getElementById('<? echo $id_prefix ?>html'));
+        if (!cb.checked) {
+            var pollTinyMCE = function() {
+                var rawtab = document.getElementById('<? echo $id_prefix ?>rawtab');
+                var eds = document.getElementsByClassName('mceEditor');
+                if (eds.length == 0) {
+                    setTimeout(function() { pollTinyMCE(); }, 100);
+                } else {
+                    tinyMCE.execCommand('mceRemoveControl', false,
+                        '<? echo $id_prefix ?>text');
                 }
-                setTimeout(function() { pollTinyMCE(); }, 100);
             }
-        });
+            setTimeout(function() { pollTinyMCE(); }, 100);
+        }
 <? } ?>
-
-    el = $('#<? echo $id_prefix ?>map');
-    m = el.nlfeatures({
-        map: {
-            // Sri Lanka, just cause it's fun to say.
-            // center: [8986896.64319, 866942.16213],
-            center: [-8738850.21367, 4584105.47978],
-            zoom: 3,
-            raw_update: $('#<? echo $id_prefix ?>text')
-            }
-        })
-        .data('nlfeatures');
-    item = {
-        id: el.attr('id'),
-        title: 'Coverage',
-        name: 'Coverage',
-        wkt: <? echo json_encode(is_null($value) ? '' : $value) ?>
-    };
-    m.loadLocalData([item]);
-    m.editJson(item, true);
-    // TODO: Delete this line.
-    window._nlfeatureMap = m;
+    });
 
     w = $("#<? echo $id_prefix ?>widget");
     t = w.simpletab({
