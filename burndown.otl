@@ -11,7 +11,7 @@
 	[ ] (10hr) click-off deselect bug
 		[ ] (2hr) feature tests
 		[ ] (8hr)
-[ ] (7hr) Draw Features on a Map
+[ ] (5hr) Draw Features on a Map
 	[x] Coverage Has a Map
 		[x] steps
 		[x] tabs
@@ -23,10 +23,10 @@
 		[x] view class
 			[x] (1hr) tests
 			[x] (2hr)
-	[ ] (1hr) Draw Point on a Map
-		[ ] (1hr) steps
-	[ ] (1hr) Draw Line on a Map
-		[ ] (1hr) steps
+	[x] Draw Point on a Map
+		[x] (1hr) steps
+	[x] Draw Line on a Map
+		[x] (1hr) steps
 	[ ] (4hr) Default Location is the User's
 		[ ] (1hr) feature
 		[ ] (1hr) steps
