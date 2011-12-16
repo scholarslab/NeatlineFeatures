@@ -38,6 +38,6 @@ Feature: Draw Features on a Map
     And I click on "Add Item"
     When I click on "Draw On Coverage Map"
     Then I should see a map in "#dublin-core-coverage"
-    And the map should have a point feature
-    And the map should have a line feature
+    And the map in "#dublin-core-coverage" should have a point feature
+    And the map in "#dublin-core-coverage" should have a line feature
 
