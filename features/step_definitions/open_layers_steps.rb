@@ -1,5 +1,6 @@
 
 Given /^I draw a point on "([^"]*)"$/ do |map|
+  find(map).find('div.olMapViewport')
   find('.olControlDrawFeaturePointItemInactive').click
 
   browser = page.driver.browser
@@ -12,6 +13,7 @@ Given /^I draw a point on "([^"]*)"$/ do |map|
 end
 
 Given /^I draw a line on "([^"]*)"$/ do |map|
+  find(map).find('div.olMapViewport')
   find('.olControlDrawFeaturePathItemInactive').click
 
   browser = page.driver.browser

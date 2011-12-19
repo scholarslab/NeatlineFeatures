@@ -15,6 +15,10 @@ Given /^I click(?: on)? the "([^"]*)" tab (?:in|on) "([^"]*)"$/ do |tab_name, fi
   end
 end
 
+Given /^I see text "([^"]*)" in input "([^"]*)"$/ do |text, el|
+  find(el).value.should match("/#{text}/")
+end
+
 Then /^I see (\d+) "([^"]*)" in "([^"]*)"?$/ do |n, thing, parent|
   wait_until do
     find(parent).all(thing).length.should == n.to_i

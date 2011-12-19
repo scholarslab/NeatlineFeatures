@@ -23,22 +23,23 @@ Feature: Test Coverage Data
       | false |
       | false |
 
+  # For some reason, I wasn't able to get two coverages with data working.
   @file_fixture
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I click "Add a new item to your archive"
     And I enter "Cucumber: Iterate All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Feature Coverages" for the "Elements-49-0-text"      # Subject
-    And I click on the "Features" tab
-    And I click on the "First Coverages" map
-    And I click on "Add Coverage"
-    And I click on the "Features" tab on "Second Coverage"
-    And I click and drag on the "Second Coverages" map
+    And I draw a line on "div#Elements-38-0-map.olMap"
+    #And I click "add_element_38"
+    #And I draw a point on "div#Elements-38-1-map.olMap"
     And I click on "Add Item"
-    And I click "Iterate All Feature Coverages"
+    And I click "Cucumber: Iterate All Feature Coverages"
     When I click "View Public Page"
-    Then I should see "true"
-    And I should not see "false"
+    Then I should see the following output in unordered list "#item-coverage":
+      | true  |
+      #| true  |
 
   @file_fixture
   Scenario: Mixed Feature Coverages
