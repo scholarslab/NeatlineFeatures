@@ -11,7 +11,7 @@
 	[ ] (10hr) click-off deselect bug
 		[ ] (2hr) feature tests
 		[ ] (8hr)
-[ ] (4hr) Draw Features on a Map
+[ ] (2hr) Draw Features on a Map
 	[x] Coverage Has a Map
 		[x] steps
 		[x] tabs
@@ -27,10 +27,10 @@
 		[x] (1hr) steps
 	[x] Draw Line on a Map
 		[x] (1hr) steps
-	[ ] (4hr) Default Location is the User's
+	[ ] (2hr) Default Location is the User's
 		[ ] (1hr) feature
 		[ ] (1hr) steps
-		[ ] (2hr) implement
+		[x] implement
 	[x] Save Data Drawn on Coverage Map
 		[x] steps
 		[x] automatically clear out data after tests
