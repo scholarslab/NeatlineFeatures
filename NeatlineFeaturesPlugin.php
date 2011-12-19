@@ -218,7 +218,7 @@ class NeatlineFeaturesPlugin
     {
         $output = $text;
 
-        if ($text != "") {
+        if ($text != "" && nlfeatures_is_wkt($text)) {
             $util = new NeatlineFeatures_Utils_View();
             $util->setViewOptions($text, $record, $elementText);
             $output = $util->getView();

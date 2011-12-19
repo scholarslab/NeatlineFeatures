@@ -52,9 +52,9 @@
 		[x] (1hr) steps
 	[x] Mixed Feature Coverages
 		[x] (1hr) steps
-[ ] (4hr) Non-Feature Coverages
-	[ ] (1hr) Add Non-Feature Coverage Data
-		[ ] (1hr) steps
+[ ] (3hr) Non-Feature Coverages
+	[x] Add Non-Feature Coverage Data
+		[x] (1hr) steps
 	[ ] (3hr) If the data is non-feature, default to the raw tab
 		[ ] (1hr) steps
 		[ ] (2hr)

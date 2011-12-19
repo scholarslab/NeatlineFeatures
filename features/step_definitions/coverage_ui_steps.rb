@@ -51,6 +51,10 @@ Then /^I should not see "([^"]*)" in "([^"]*)"$/ do |target, context|
   end
 end
 
+Then /^I(?: should)? see text "([^"]*)" in "([^"]*)"$/ do |text, context|
+  find(context).should have_content(text)
+end
+
 Then /^I should see "([^"]*)"$/ do |arg1|
   pending
 end
