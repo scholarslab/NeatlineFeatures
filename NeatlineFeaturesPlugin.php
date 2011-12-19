@@ -25,6 +25,7 @@
 ?><?php
 
 require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures/Utils/View.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures_Functions.php';
 
 /**
  * This class manages the plugin itself. It defines controllers for all the 
