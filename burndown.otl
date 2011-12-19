@@ -43,11 +43,11 @@
 		[x] (1hr) steps
 	[x] Remove Second Coverage
 		[x] (1hr) steps
-[ ] (8hr) Test Coverage Data
-	[ ] (6hr) Test All Non-Feature Coverages
-		[ ] (1hr) steps
-		[ ] (2hr) WKT detection
-		[ ] (3hr) predicate
+[ ] (6hr) Test Coverage Data
+	[x] Test All Non-Feature Coverages
+		[x] (1hr) steps
+		[x] (2hr) WKT detection
+		[x] (3hr) predicate
 	[ ] (1hr) All Feature Coverages
 		[ ] (1hr) steps
 	[ ] (1hr) Mixed Feature Coverages
