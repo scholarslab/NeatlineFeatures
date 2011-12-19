@@ -1,6 +1,16 @@
 
-# TODO: Add after hook to remove ../../themes/default/items/show.php, if it
-# exists.
-
-# TODO: Add after hook to remove test items from the database.
+Around('@file_fixture') do |scenario, block|
+  NeatlineFeatures.file_fixtures = []
+  begin
+    block.call
+  ensure
+    NeatlineFeatures.file_fixtures.each do |filename|
+      if File::exists?(filename)
+        puts "rm #{filename}"
+        File::delete(filename)
+      end
+    end
+    NeatlineFeatures.file_fixtures = []
+  end
+end
 

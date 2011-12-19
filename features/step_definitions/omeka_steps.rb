@@ -1,5 +1,8 @@
 
-Given /^I replace "([^"]*)" with "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
+Given /^I replace "([^"]*)" with "([^"]*)"$/ do |dest, src|
+  NeatlineFeatures.file_fixtures << dest
+  dirname = File.dirname(dest)
+  FileUtils.mkdir_p(dirname) if !Dir.exists?(dirname)
+  FileUtils.cp(src, dest)
 end
 

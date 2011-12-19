@@ -1,4 +1,5 @@
 
+require 'fileutils'
 require 'selenium-webdriver'
 require 'capybara'
 require 'capybara/cucumber'
@@ -13,6 +14,15 @@ Capybara.default_wait_time = 15
 Capybara.default_driver = :selenium
 
 # browser = Selenium::WebDriver.for :firefox
+
+
+# A bad, bad place to put this. But breaking it out into it's own file seems
+# premature.
+module NeatlineFeatures
+  class << self
+    attr_accessor :file_fixtures
+  end
+end
 
 at_exit do
   mysql = ENV['OMEKA_MYSQL'] || 'mysql -hfeatures.dev -uomeka -pomeka omeka'
