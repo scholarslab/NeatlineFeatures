@@ -64,6 +64,7 @@
                 event.preventDefault();
             }
         });
+        return t;
     }
 
     function initOpenLayerMap() {
@@ -101,7 +102,7 @@
     // admin/themes/default/javascripts/items.js, around line 410, should be 
     // more specific.
     $(function() {
-        initTabs();
+        var tabs = initTabs();
         initOpenLayerMap();
 <? if (!$is_html) { ?>
         // For some reason, $() isn't working for this.
@@ -119,6 +120,9 @@
             }
             setTimeout(function() { pollTinyMCE(); }, 100);
         }
+<? } ?>
+<? if (!nlfeatures_is_wkt($value)) { ?>
+        jQuery(tabs.data('simpletab').element.find('li a')[1]).trigger('click');
 <? } ?>
     });
 

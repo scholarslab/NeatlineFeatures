@@ -52,12 +52,12 @@
 		[x] (1hr) steps
 	[x] Mixed Feature Coverages
 		[x] (1hr) steps
-[ ] (3hr) Non-Feature Coverages
+[x] Non-Feature Coverages
 	[x] Add Non-Feature Coverage Data
 		[x] (1hr) steps
-	[ ] (3hr) If the data is non-feature, default to the raw tab
-		[ ] (1hr) steps
-		[ ] (2hr)
+	[x] If the data is non-feature, default to the raw tab
+		[x] (1hr) steps
+		[x] (2hr)
 [ ] (3hr) Display Feature Maps on Item Pages
 	[ ] (3hr) Display Feature Maps on Item Page
 		[ ] (1hr) steps
