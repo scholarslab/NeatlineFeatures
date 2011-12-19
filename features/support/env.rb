@@ -4,6 +4,7 @@ require 'capybara'
 require 'capybara/cucumber'
 require 'capybara/dsl'
 require 'rspec/expectations'
+require 'geo_magic/remote'
 
 Capybara.app_host = 'http://features.dev'
 Capybara.run_server = false

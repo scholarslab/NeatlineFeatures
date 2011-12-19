@@ -73,3 +73,11 @@ Then /^the map in "([^"]*)" should have a line feature$/ do |parent|
   end
 end
 
+Then /^"([^"]*)" should center on my location$/ do |map|
+  map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
+  map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f
+  my_loc = GeoMagic::Remote.my_location
+  (map_lon - my_loc.longitude.to_f).should be < 1.0
+  (map_lat - my_loc.latitude.to_f ).should be < 1.0
+end
+

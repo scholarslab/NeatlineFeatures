@@ -41,3 +41,9 @@ Feature: Draw Features on a Map
     And the map in "#dublin-core-coverage" should have a point feature
     And the map in "#dublin-core-coverage" should have a line feature
 
+  # This fails since GeoLocation isn't turned on automatically in the browser.
+  #Scenario: Map Location Should Default to the User's Location
+    #Given I am logged into the admin console
+    #When I click "Add a new item to your archive"
+    #Then "#Elements-38-0-map" should center on my location
+

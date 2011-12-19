@@ -723,6 +723,12 @@
 
             // Rerender the layer to manifest the change.
             this._currentEditLayer.redraw();
+        },
+
+        getCenterLonLat: function() {
+            var wsg  = new OpenLayers.Projection('EPSG:4326'),
+                proj = this.map.getProjectionObject();
+            return this.map.getCenter().transform(proj, wsg);
         }
     });
 })( jQuery );
