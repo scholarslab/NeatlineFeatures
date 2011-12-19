@@ -287,13 +287,17 @@
                 $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
                     if (wkt !== "") {
                         var geometry = OpenLayers.Geometry.fromWKT(wkt);
-                        var feature = new OpenLayers.Feature.Vector(geometry);
-                        features.push(feature);
+                        if (geometry !== undefined) {
+                            var feature = new OpenLayers.Feature.Vector(geometry);
+                            features.push(feature);
+                        }
                     }
                 });
 
                 // Add the vectors to the layer.
-                vectorLayer.addFeatures(features);
+                if (features.length > 0) {
+                    vectorLayer.addFeatures(features);
+                }
                 vectorLayer.setMap(self.map);
 
                 // Add to associations.
