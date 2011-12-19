@@ -45,17 +45,18 @@ Feature: Test Coverage Data
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I click "Add a new item to your archive"
     And I enter "Cucumber: Iterate Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject
-    And I click on the "Features" tab
-    And I click on the "First Coverages" map
-    And I click on "Add Coverage"
-    And I click on the "Raw" tab on "Second Coverage"
-    And I enter "UVa" into "Second Coverage"
+    And I draw a line on "div#Elements-38-0-map.olMap"
+    And I click "add_element_38"
+    And I click the "Raw" tab on "#Elements-38-1-widget"
+    And I enter "UVa" into "Elements-38-1-text"
     And I click on "Add Item"
     And I click "Iterate Mixed Feature Coverages"
     When I click "View Public Page"
-    Then I should see "true"
-    And I should see "false"
+    Then I should see the following output in unordered list "#item-coverage":
+      | true  |
+      | false |
 
 
