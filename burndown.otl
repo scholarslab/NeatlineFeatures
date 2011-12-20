@@ -66,14 +66,14 @@
 	[x] Display Non-Feature Coverage Data on Item Page
 		[x] (1hr) steps
 		[x] (1hr) default handler
-[x] (1hr) Display Multiple Coverages
+[x] Display Multiple Coverages
 	[x] All Non-Feature Coverages
 		[x] (1hr) steps
 		[x] (2hr)
 	[x] All Feature Coverages
 		[x] (1hr) steps
-	[ ] (1hr) Mixed Feature Coverages
-		[ ] (1hr) steps
+	[x] Mixed Feature Coverages
+		[x] (1hr) steps
 [ ] (5hr) Display Multiple Individual Coverages
 	[ ] (3hr) All Non-Feature Coverages
 		[ ] (1hr) steps
