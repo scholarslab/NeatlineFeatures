@@ -55,6 +55,14 @@ namespace :php do
       File.join(VM_BASEDIR, 'depend')
     )
   end
+
+  desc 'This runs PHP Documentor on NeatlineFeatures.'
+  task :doc do
+    Rake::Task['vagrant:php:doc'].invoke(
+      VM_BASEDIR,
+      File.join(VM_BASEDIR, 'doc')
+    )
+  end
 end
 
 desc 'This generates tags for Omeka and NeatlineFeatures.'
