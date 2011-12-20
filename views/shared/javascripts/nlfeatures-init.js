@@ -86,12 +86,12 @@
     switchToTab: function(tabs, n) {
       return jQuery(tabs.element.find('li a')[n]).trigger('click');
     },
-    editCoverageMap: function(widget, tabs, map, text, html, value, formats) {
+    editCoverageMap: function(parent, tabs, widgets, value, formats) {
       var m, tabWidget;
-      tabWidget = NLFeatures.initTabs(widget);
-      m = NLFeatures.initEditMap(widget, map, text, value);
+      tabWidget = NLFeatures.initTabs(parent);
+      m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value);
       if (!formats.is_html) {
-        NLFeatures.destroyTinyMCE(tabs.raw, text, html);
+        NLFeatures.destroyTinyMCE(tabs.raw, widgets.text, widgets.html);
       }
       if (!(value === '' || formats.is_wkt)) {
         NLFeatures.switchToTab(tabWidget, 1);

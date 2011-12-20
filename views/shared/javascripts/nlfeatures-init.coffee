@@ -80,11 +80,11 @@ window.NLFeatures =
   switchToTab: (tabs, n) ->
     jQuery(tabs.element.find('li a')[n]).trigger('click')
 
-  editCoverageMap: (widget, tabs, map, text, html, value, formats) ->
-    tabWidget = NLFeatures.initTabs(widget)
-    m = NLFeatures.initEditMap(widget, map, text, value)
+  editCoverageMap: (parent, tabs, widgets, value, formats) ->
+    tabWidget = NLFeatures.initTabs(parent)
+    m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value)
 
-    NLFeatures.destroyTinyMCE(tabs.raw, text, html) unless formats.is_html
+    NLFeatures.destroyTinyMCE(tabs.raw, widgets.text, widgets.html) unless formats.is_html
     NLFeatures.switchToTab(tabWidget, 1) unless value == '' or formats.is_wkt
 
     m

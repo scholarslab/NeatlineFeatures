@@ -60,12 +60,15 @@
             is_html: <? echo json_encode($is_html) ?>,
             is_wkt: <? echo json_encode(nlfeatures_is_wkt($value)) ?>
         };
+        var widgets = {
+            map: '#<? echo $id_prefix ?>map',
+            text: '#<? echo $id_prefix ?>text',
+            html: '#<? echo $id_prefix ?>html'
+        };
         NLFeatures.editCoverageMap(
             '#<? echo $id_prefix ?>widget',
             tabs,
-            '#<? echo $id_prefix ?>map',
-            '#<? echo $id_prefix ?>text',
-            '#<? echo $id_prefix ?>html',
+            widgets,
             <? echo json_encode(is_null($value) ? '' : $value) ?>,
             formats
         );
