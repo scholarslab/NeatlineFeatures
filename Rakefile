@@ -11,7 +11,8 @@ Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = %w{--format pretty}
 end
 
-require 'zayin/rake/vagrant/php'
+# require 'zayin/rake/vagrant/php'
+require '/Users/err8n/projects/zayin/lib/zayin/rake/vagrant/php'
 Zayin::Rake::Vagrant::PhpTasks.new
 
 namespace :php do
@@ -26,6 +27,14 @@ namespace :php do
       File.join(VM_BASEDIR, 'tests', 'phpunit.xml'),
       'unit'
       # File.join(VM_BASEDIR, 'coverage')
+    )
+  end
+
+  desc 'This runs PHP Copy/Paste Detection report on NeatlineFeatures.'
+  task :cpd do
+    Rake::Task['vagrant:php:cpd'].invoke(
+      VM_BASEDIR,
+      File.join(VM_BASEDIR, 'cpd')
     )
   end
 end
