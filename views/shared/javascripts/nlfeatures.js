@@ -170,7 +170,7 @@
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
-            if (this.params.default_map_bounds != null) {
+            if (this.params.default_map_bounds !== null) {
                 boundsArray = this.params.default_map_bounds.split(',');
                 bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
@@ -199,7 +199,7 @@
             this._resetData();
 
             // Abort the request if it is running.
-            if (this.requestData != null) {
+            if (this.requestData !== null) {
                 this.requestData.abort();
             }
 
@@ -217,7 +217,7 @@
 
                         // If a layer was being edited before the save,
                         // make that layer the active edit layer again.
-                        if (self._currentEditItem != null) {
+                        if (self._currentEditItem !== null) {
                             self.editJson(self._currentEditItem, true);
                         }
                     }
@@ -270,7 +270,7 @@
                 var itemId = item.id;
 
                 // Try to get a color from the JSON, revert to default if no color is set..
-                var color = (item.color != '') ? item.color : self.options.styles.default_color;
+                var color = (item.color !== '') ? item.color : self.options.styles.default_color;
 
                 // Build the layer styles.
                 var style = self._getStyleMap(color);
@@ -328,13 +328,13 @@
                         'itemId': self.layerToId[feature.layer.id]
                     });
 
-                    if (self.modifyFeatures != undefined) {
+                    if (self.modifyFeatures !== undefined) {
                         self.modifyFeatures.selectFeature(feature);
                     }
                 },
 
                 onUnselect: function(feature) {
-                    if (self.modifyFeatures != undefined) {
+                    if (self.modifyFeatures !== undefined) {
                         self.modifyFeatures.unselectFeature(feature);
                     }
                 }
@@ -588,7 +588,7 @@
                 }
             }
 
-            if (featureCount == 0) {
+            if (featureCount === 0) {
                 geolocate = new OpenLayers.Control.Geolocate({
                     bind: true,
                     watch: false
@@ -653,7 +653,7 @@
             // Reactivate the default selection controls.
             this._addClickControls();
 
-            if (this._currentEditLayer.features.length == 0) {
+            if (this._currentEditLayer.features.length === 0) {
                 // Pop off the layer, remove the id-layer association.
                 this.map.removeLayer(this._currentEditLayer);
                 this._currentVectorLayers.remove(this._currentEditLayer);
@@ -696,7 +696,7 @@
         zoomToItemVectors: function(id) {
             var layer = this.idToLayer[id];
 
-            if (layer != null && layer.features.length > 0) {
+            if (layer !== null && layer.features.length > 0) {
                 this.map.zoomToExtent(layer.getDataExtent());
             }
         },
@@ -716,7 +716,7 @@
                     strokeColor: this.options.styles.select_stroke_color,
                     pointRadius: this.options.styles.select_point_radius,
                     strokeWidth: 2
-                }),
+                })
             });
         },
 
