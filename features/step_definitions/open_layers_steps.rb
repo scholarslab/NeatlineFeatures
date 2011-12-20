@@ -51,6 +51,10 @@ Then /^I should see an OpenLayers map in the "([^"]*)" field$/ do |parent|
   end
 end
 
+Then /^I should not see an OpenLayers map in the "([^"]*)" field$/ do |parent|
+  find(parent).should have_no_css(".olMap")
+end
+
 Then /^a point is defined in "([^"]*)"$/ do |textarea|
   find(textarea).value.should match(/POINT/)
 end

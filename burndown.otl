@@ -62,10 +62,10 @@
 	[x] Display Feature Maps on Item Page
 		[x] (1hr) steps
 		[x] (2hr) item element display filter
-[ ] (2hr) Display Non-Feature Coverage Data
-	[ ] (2hr) Display Non-Feature Coverage Data on Item Page
-		[ ] (1hr) steps
-		[ ] (1hr) default handler
+[x] Display Non-Feature Coverage Data
+	[x] Display Non-Feature Coverage Data on Item Page
+		[x] (1hr) steps
+		[x] (1hr) default handler
 [ ] (5hr) Display Multiple Coverages
 	[ ] (3hr) All Non-Feature Coverages
 		[ ] (1hr) steps

@@ -6,14 +6,14 @@ Feature: Display Non-Feature Coverage Data
 
   Scenario: Display Non-Feature Coverage Data on Item Page
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage.php"
+    And I click "Add a new item to your archive"
     And I enter "Cucumber: Display Non-Feature Coverage" for the "Elements-50-0-text"      # Title
     And I enter "Display Non-Feature Coverage" for the "Elements-49-0-text"      # Subject
-    And I click on the "Raw" tab
-    And I enter "Charlottesville, VA" into "Coverage"
+    And I click the "Raw" tab on "#element-38"
+    And I enter "Charlottesville, VA" into "Elements-38-0-text"
     And I click on "Add Item"
     And I click "Display Non-Feature Coverage"
     When I click "View Public Page"
-    Then I should see "Charlottesville, VA"
-    But I should not see a map
+    Then I should see text "Charlottesville, VA" in "#dublin-core-coverage"
+    But I should not see an OpenLayers map in the "#dublin-core-coverage" field
 
