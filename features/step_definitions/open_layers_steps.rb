@@ -1,7 +1,7 @@
 
 Given /^I draw a point on "([^"]*)"$/ do |map|
   find(map).find('div.olMapViewport')
-  find('.olControlDrawFeaturePointItemInactive').click
+  find(map).find('.olControlDrawFeaturePointItemInactive').click
 
   browser = page.driver.browser
   map_el = browser.find_element(:css, map).
@@ -14,7 +14,7 @@ end
 
 Given /^I draw a line on "([^"]*)"$/ do |map|
   find(map).find('div.olMapViewport')
-  find('.olControlDrawFeaturePathItemInactive').click
+  find(map).find('.olControlDrawFeaturePathItemInactive').click
 
   browser = page.driver.browser
   map_el = browser.find_element(:css, map).
@@ -77,6 +77,18 @@ Then /^the map in "([^"]*)" should have a line feature$/ do |parent|
   within(parent) do
     find('script').should have_content('LINESTRING')
   end
+end
+
+Then /^the map at "([^"]*)" should have a point feature$/ do |xpath|
+  parent = find(:xpath, xpath)
+  script = parent.find(:xpath, 'following-sibling::script')
+  script.should have_content('POINT')
+end
+
+Then /^the map at "([^"]*)" should have a line feature$/ do |xpath|
+  parent = find(:xpath, xpath)
+  script = parent.find(:xpath, 'following-sibling::script')
+  script.should have_content('LINESTRING')
 end
 
 Then /^"([^"]*)" should center on my location$/ do |map|
