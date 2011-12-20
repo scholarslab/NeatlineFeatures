@@ -51,92 +51,24 @@
 <script type='text/javascript'>
 (function($) {
 
-    function initTabs() {
-        var w, t;
-        w = $("#<? echo $id_prefix ?>widget");
-        t = w.simpletab({
-            nav_list: ".nlfeatures-edit-nav-menu ul",
-            tabchange: function(event, data) {
-                data.tab.anchors.each(function() {
-                    $(this.parentNode).removeClass('selected');
-                });
-                data.a.parent().addClass('selected');
-                event.preventDefault();
-            }
-        });
-        return t;
-    }
-
-    function initOpenLayerMap() {
-        var el, m, item;
-        el = $(document.getElementById('<? echo $id_prefix ?>map'));
-        m = el.nlfeatures({
-            map: {
-                raw_update: $('#<? echo $id_prefix ?>text')
-            }
-        })
-            .data('nlfeatures');
-        item = {
-            id: el.attr('id'),
-            title: 'Coverage',
-            name: 'Coverage',
-            wkt: <? echo json_encode(is_null($value) ? '' : $value) ?>
-        };
-        m.loadLocalData([item]);
-        m.setViewport();
-        m.editJson(item, true);
-        // TODO: Delete this line.
-        window._nlfeatureMap = m;
-        $("#<? echo $id_prefix ?>widget").bind('tabchange', function(event, data) {
-                if (data.index == 0) {
-                    var item = {
-                        id: el.attr('id'),
-                        title: 'Coverage',
-                        name: 'Coverage',
-                        wkt: jQuery('#<? echo $id_prefix ?>text').val()
-                    };
-                    m.loadLocalData([item]);
-                    m.setViewport();
-                    m.editJson(item, true);
-                }
-            });
-    }
-
-    // This is a sledgehammer, but the response is proportional. Basically, if
-    // there are any checked checkboxes in a field, Omeka turns on TinyMCE for 
-    // all textareas in the field.  In this case, it's picking up
-    // an OpenLayers checkbox and setting the raw textarea up incorrectly.
-    //
-    // Also, because of the way TinyMCE is handled, we have to use setTimeout 
-    // to make sure it gets set back *after* it's incorrectly enabled. Double 
-    // ugh.
-    //
-    // TODO: Bring this up on #omeka and file a bug report.  
-    // admin/themes/default/javascripts/items.js, around line 410, should be 
-    // more specific.
     $(function() {
-        var tabs = initTabs();
-        initOpenLayerMap();
-<? if (!$is_html) { ?>
-        // For some reason, $() isn't working for this.
-        var cb = $(document.getElementById('<? echo $id_prefix ?>html'));
-        if (!cb.checked) {
-            var pollTinyMCE = function() {
-                var rawtab = document.getElementById('<? echo $id_prefix ?>rawtab');
-                var eds = document.getElementsByClassName('mceEditor');
-                if (eds.length == 0) {
-                    setTimeout(function() { pollTinyMCE(); }, 100);
-                } else {
-                    tinyMCE.execCommand('mceRemoveControl', false,
-                        '<? echo $id_prefix ?>text');
-                }
-            }
-            setTimeout(function() { pollTinyMCE(); }, 100);
-        }
-<? } ?>
-<? if ($value != '' && !nlfeatures_is_wkt($value)) { ?>
-        jQuery(tabs.data('simpletab').element.find('li a')[1]).trigger('click');
-<? } ?>
+        var tabs = {
+            raw: '#<? echo $id_prefix ?>rawtab',
+            map: '#<? echo $id_prefix ?>maptab'
+        };
+        var formats = {
+            is_html: <? echo json_encode($is_html) ?>,
+            is_wkt: <? echo json_encode(nlfeatures_is_wkt($value)) ?>
+        };
+        NLFeatures.editCoverageMap(
+            '#<? echo $id_prefix ?>widget',
+            tabs,
+            '#<? echo $id_prefix ?>map',
+            '#<? echo $id_prefix ?>text',
+            '#<? echo $id_prefix ?>html',
+            <? echo json_encode(is_null($value) ? '' : $value) ?>,
+            formats
+        );
     });
 
 })(jQuery);
