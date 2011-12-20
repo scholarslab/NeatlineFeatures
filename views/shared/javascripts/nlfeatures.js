@@ -170,7 +170,8 @@
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
-            if (this.params.default_map_bounds !== null) {
+            if (this.params.default_map_bounds !== null &&
+                this.params.default_map_bounds !== undefined) {
                 boundsArray = this.params.default_map_bounds.split(',');
                 bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
