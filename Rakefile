@@ -47,6 +47,14 @@ namespace :php do
       %{--ignore=*/features/*,*/tests/*}
     )
   end
+
+  desc 'This runs PHP Depend on NeatlineFeatures.'
+  task :depend do
+    Rake::Task['vagrant:php:depend'].invoke(
+      VM_BASEDIR,
+      File.join(VM_BASEDIR, 'depend')
+    )
+  end
 end
 
 desc 'This generates tags for Omeka and NeatlineFeatures.'
