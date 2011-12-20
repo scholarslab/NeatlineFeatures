@@ -4,21 +4,22 @@ Feature: Display Multiple Coverages
   I want to be able to display coverage data from a mixed collection of fields
   So that visitors can see all coverage data.
 
+  @file_fixture
   Scenario: All Non-Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"
+    And I click "Add a new item to your archive"
     And I enter "Cucumber: Display All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
-    And I click on the "Raw" tab
-    And I enter "Charlottesville, VA" into "First Coverage"
-    And I click on "Add Coverage"
-    And I click on the "Raw" tab on "Second Coverage"
-    And I enter "UVa" into "Second Coverage"
+    And I click the "Raw" tab in "#Elements-38-0-widget"
+    And I enter "Charlottesville, VA" into "Elements-38-0-text"
+    And I click "add_element_38"
+    And I click the "Raw" tab in "#Elements-38-1-widget"
+    And I enter "UVa" into "Elements-38-1-text"
     And I click on "Add Item"
     And I click "Display All Non-Feature Coverages"
     When I click "View Public Page"
-    Then I should see "Charlottesville, VA"
-    And I should see "UVa"
+    Then I should see text "Charlottesville, VA; UVa" in "#dublin-core-coverage"
 
   Scenario: All Feature Coverages
     Given I am logged into the admin console
