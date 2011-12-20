@@ -74,10 +74,10 @@
 		[x] (1hr) steps
 	[x] Mixed Feature Coverages
 		[x] (1hr) steps
-[ ] (5hr) Display Multiple Individual Coverages
-	[ ] (3hr) All Non-Feature Coverages
-		[ ] (1hr) steps
-		[ ] (2hr) display function
+[ ] (2hr) Display Multiple Individual Coverages
+	[x] All Non-Feature Coverages
+		[x] (1hr) steps
+		[x] (2hr) display function
 	[ ] (1hr) All Feature Coverages
 		[ ] (1hr) steps
 	[ ] (1hr) Mixed Feature Coverages

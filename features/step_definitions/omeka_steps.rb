@@ -10,6 +10,7 @@ Then /^I should see the following output in unordered list "([^"]*)":$/ do |list
   rows = find("ul#{list_id}").all('li')
   output = rows.map { |li| [li.text.strip] }
 
+  # puts output
   table.diff!(output)
 end
 

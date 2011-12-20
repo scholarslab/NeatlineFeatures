@@ -206,25 +206,18 @@ class NeatlineFeaturesPlugin
     /**
      * This displays the coverage data as a map, if applicable.
      *
-     * @param string       $text        The original text for the element.
-     * @param Omeka_Record $record      The record that this text applies to.
-     * @param ElementText  $elementText The ElementText record that stores this 
-     * text.
+     * @param string           $text        The original text for the element.
+     * @param Omeka_Record     $record      The record that this text applies 
+     * to.
+     * @param ElementText|null $elementText The ElementText record that stores 
+     * this text. (This is optional and defaults to null.)
      *
      * @return The HTML to generate the map.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function displayItemDublinCoreCoverage($text, $record, $elementText)
     {
-        $output = $text;
-
-        if ($text != "" && nlfeatures_is_wkt($text)) {
-            $util = new NeatlineFeatures_Utils_View();
-            $util->setViewOptions($text, $record, $elementText);
-            $output = $util->getView();
-        }
-
-        return $output;
+        return nlfeatures_display_coverage($text, $record, $elementText);
     }
     // }}}
 }

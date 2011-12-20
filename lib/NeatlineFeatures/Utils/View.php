@@ -100,6 +100,9 @@ class NeatlineFeatures_Utils_View
     /**
      * This sets the options necessary to create the view.
      *
+     * The $elementText isn't currently used, and null can be passed in in its 
+     * place.
+     *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
