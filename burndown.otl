@@ -89,17 +89,15 @@
 	[ ] (3hr) implementation
 [ ] (16hr) Fill in Tests
 [ ] (1hr) Fill in README
-[ ] (5hr) Raw Feature Data
-	[ ] (5hr) Enter Raw WKT
-		[ ] (1hr) steps
-		[ ] (1hr) jasmine tests
-		[ ] (3hr) data type sniffer
-	[ ] Enter Raw KML
-		[ ] steps
-[ ] Upload Raw Feature Data
-	[ ] Upload WKT
-		[ ] steps
-	[ ] Upload KML
-		[ ] steps
+[x] Raw Feature Data
+	[x] Enter Raw WKT
+		[x] (1hr) steps
+	[0] Enter Raw KML
+		[0] steps
+[0] Upload Raw Feature Data
+	[0] Upload WKT
+		[0] steps
+	[0] Upload KML
+		[0] steps
 Summary
 	89 hrs

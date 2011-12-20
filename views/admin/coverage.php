@@ -87,6 +87,19 @@
         m.editJson(item, true);
         // TODO: Delete this line.
         window._nlfeatureMap = m;
+        $("#<? echo $id_prefix ?>widget").bind('tabchange', function(event, data) {
+                if (data.index == 0) {
+                    var item = {
+                        id: el.attr('id'),
+                        title: 'Coverage',
+                        name: 'Coverage',
+                        wkt: jQuery('#<? echo $id_prefix ?>text').val()
+                    };
+                    m.loadLocalData([item]);
+                    m.setViewport();
+                    m.editJson(item, true);
+                }
+            });
     }
 
     // This is a sledgehammer, but the response is proportional. Basically, if

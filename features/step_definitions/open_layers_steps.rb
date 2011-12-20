@@ -87,6 +87,16 @@ Then /^the map at "([^"]*)" should have a line feature$/ do |xpath|
   script.should have_content('LINESTRING')
 end
 
+Then /^the map at "([^"]*)" should display a point feature$/ do |map|
+  result = evaluate_script("jQuery('#{map}').data('nlfeatures').hasPoint()")
+  result.should be_true
+end
+
+Then /^the map at "([^"]*)" should display a line feature$/ do |xpath|
+  result = (evaluate_script("jQuery('#{map}').data('nlfeatures').hasLine()") == 'true')
+  result.should be_true
+end
+
 Then /^"([^"]*)" should center on my location$/ do |map|
   map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
   map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f

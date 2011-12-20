@@ -725,10 +725,38 @@
             this._currentEditLayer.redraw();
         },
 
+        /*
+         * These are some query functions to call during testing.
+         */
+
         getCenterLonLat: function() {
             var wsg  = new OpenLayers.Projection('EPSG:4326'),
                 proj = this.map.getProjectionObject();
             return this.map.getCenter().transform(proj, wsg);
+        },
+
+        hasPoint: function() {
+            return this.hasFeature('OpenLayers.Geometry.Point');
+        },
+
+        hasLine: function() {
+            return this.hasFeature('OpenLayers.Geometry.LineString');
+        },
+
+        hasPolygon: function() {
+            return this.hasFeature('OpenLayers.Geometry.Polygon');
+        },
+
+        hasFeature: function(className) {
+            result = false;
+
+            $.each(this._currentVectorLayers, function(i, layer) {
+                $.each(layer.features, function(j, feature) {
+                    result = result || (feature.geometry.CLASS_NAME == className);
+                });
+            });
+
+            return result;
         }
     });
 })( jQuery );
