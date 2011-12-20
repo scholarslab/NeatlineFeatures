@@ -36,7 +36,7 @@
       el = jQuery(map);
       m = el.nlfeatures({
         map: {
-          raw_update: $(text)
+          raw_update: jQuery(text)
         }
       }).data('nlfeatures');
       item = {
@@ -66,7 +66,7 @@
     destroyTinyMCE: function(rawTab, text, html) {
       var cb, poll, raw;
       cb = jQuery(html);
-      raw = $(rawTab);
+      raw = jQuery(rawTab);
       if (text.charAt(0) === '#') {
         text = text.substr(1);
       }

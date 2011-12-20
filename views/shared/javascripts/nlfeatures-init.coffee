@@ -26,7 +26,7 @@ window.NLFeatures =
     el = jQuery(map)
     m = el.nlfeatures(
       map:
-        raw_update: $(text)
+        raw_update: jQuery(text)
     )
       .data('nlfeatures')
     item =
@@ -66,7 +66,7 @@ window.NLFeatures =
   # specific.
   destroyTinyMCE: (rawTab, text, html) ->
     cb = jQuery(html)
-    raw = $(rawTab)
+    raw = jQuery(rawTab)
     text = text.substr(1) if text.charAt(0) == '#'
     poll = ->
       eds = document.getElementsByClassName('mceEditor')
