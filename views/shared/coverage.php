@@ -28,24 +28,8 @@
   </div>
 </div>
 <script type='text/javascript'>
-(function($) {
-    function viewOpenLayerMap() {
-        var el, m, item;
-        el = $(document.getElementById('<? echo $id_prefix ?>map'));
-        m = el.nlfeatures({
-        })
-            .data('nlfeatures');
-        item = {
-            id: el.attr('id'),
-            title: 'Coverage',
-            name: 'Coverage',
-            wkt: <? echo json_encode($text) ?>
-        };
-        m.loadLocalData([item]);
-        m.setViewport();
-    }
-    $(function() {
-        viewOpenLayerMap();
-    });
-})(jQuery);
+jQuery(function() {
+    NLFeatures.viewCoverageMap('#<? echo $id_prefix ?>map',
+                               <? echo json_encode($text) ?>);
+});
 </script>

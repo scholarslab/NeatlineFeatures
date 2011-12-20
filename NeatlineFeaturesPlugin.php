@@ -139,6 +139,7 @@ class NeatlineFeaturesPlugin
         queue_js('nlfeatures');
         queue_js('editor/edit_geometry');
         queue_js('nlfeatures-simpletab');
+        queue_js('nlfeatures-init');
     }
 
     /**
@@ -155,6 +156,7 @@ class NeatlineFeaturesPlugin
         echo "<script type='text/javascript' src='http://openlayers.org/api/OpenLayers.js'></script>";
 
         queue_js('nlfeatures');
+        queue_js('nlfeatures-init');
     }
 
     // }}}
