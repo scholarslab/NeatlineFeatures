@@ -63,6 +63,14 @@ namespace :php do
       File.join(VM_BASEDIR, 'doc')
     )
   end
+
+  desc 'This run PHP Mess Detector on NeatlineFeatures.'
+  task :md do
+    Rake::Task['vagrant:php:md'].invoke(
+      VM_BASEDIR,
+      File.join(VM_BASEDIR, 'md')
+    )
+  end
 end
 
 desc 'This generates tags for Omeka and NeatlineFeatures.'
