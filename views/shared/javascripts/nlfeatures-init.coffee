@@ -66,8 +66,9 @@ window.NLFeatures =
   # specific.
   destroyTinyMCE: (rawTab, text, html) ->
     cb = jQuery(html)
+    raw = $(rawTab)
+    text = text.substr(1) if text.charAt(0) == '#'
     poll = ->
-      raw = $(rawTab)
       eds = document.getElementsByClassName('mceEditor')
       if eds.length is 0
         setTimeout(poll, 100)
@@ -80,11 +81,11 @@ window.NLFeatures =
     jQuery(tabs.element.find('li a')[n]).trigger('click')
 
   editCoverageMap: (widget, tabs, map, text, html, value, formats) ->
-    NLFeatures.initTabs(widget)
+    tabWidget = NLFeatures.initTabs(widget)
     m = NLFeatures.initEditMap(widget, map, text, value)
 
     NLFeatures.destroyTinyMCE(tabs.raw, text, html) unless formats.is_html
-    NLFeatures.switchToTab(tabs, 1) unless value == '' or formats.is_wkt
+    NLFeatures.switchToTab(tabWidget, 1) unless value == '' or formats.is_wkt
 
     m
 

@@ -64,11 +64,14 @@
       return m;
     },
     destroyTinyMCE: function(rawTab, text, html) {
-      var cb, poll;
+      var cb, poll, raw;
       cb = jQuery(html);
+      raw = $(rawTab);
+      if (text.charAt(0) === '#') {
+        text = text.substr(1);
+      }
       poll = function() {
-        var eds, raw;
-        raw = $(rawTab);
+        var eds;
         eds = document.getElementsByClassName('mceEditor');
         if (eds.length === 0) {
           return setTimeout(poll, 100);
@@ -84,14 +87,14 @@
       return jQuery(tabs.element.find('li a')[n]).trigger('click');
     },
     editCoverageMap: function(widget, tabs, map, text, html, value, formats) {
-      var m;
-      NLFeatures.initTabs(widget);
+      var m, tabWidget;
+      tabWidget = NLFeatures.initTabs(widget);
       m = NLFeatures.initEditMap(widget, map, text, value);
       if (!formats.is_html) {
         NLFeatures.destroyTinyMCE(tabs.raw, text, html);
       }
       if (!(value === '' || formats.is_wkt)) {
-        NLFeatures.switchToTab(tabs, 1);
+        NLFeatures.switchToTab(tabWidget, 1);
       }
       return m;
     }
