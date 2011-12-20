@@ -21,14 +21,6 @@ Given /^I enter "([^"]*)" into "([^"]*)"$/ do |value, field|
   end
 end
 
-Given /^I insert data from "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
-  pending
-end
-
-Given /^I upload "([^"]*)" into the "([^"]*)" field$/ do |arg1, arg2|
-  pending
-end
-
 Given /^I click "([^"]*)" checkbox in "([^"]*)"$/ do |checkbox, parent|
   within(parent) do
     check checkbox
@@ -37,10 +29,6 @@ end
 
 When /^I press "([^"]*)"$/ do |button|
   click_on button
-end
-
-When /^I click "([^"]*)" on the "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
 end
 
 When /^I click "OK" in the alert$/ do

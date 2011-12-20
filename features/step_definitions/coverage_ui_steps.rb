@@ -1,8 +1,4 @@
 
-Given /^I click(?: on)? the "([^"]*)" tab$/ do |tab_name|
-  pending # These should really be changed to use the next rule.
-end
-
 Given /^I click(?: on)? the "([^"]*)" field "([^"]*)" tab$/ do |field_name, tab_name|
   within(field_name) do
     click_on tab_name
@@ -25,18 +21,6 @@ Then /^I see (\d+) "([^"]*)" in "([^"]*)"?$/ do |n, thing, parent|
   end
 end
 
-Then /^the delete button is enabled on "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^the delete button is disabled$/ do
-  pending # express the regexp above with the code you wish you had
-end
-
-Then /^the delete button is disabled on "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
   wait_until(30) do
     within(context) do
@@ -57,9 +41,5 @@ end
 
 Then /^I should see "([^"]*)"$/ do |target|
   find(target).should be_visible
-end
-
-Then /^I should not see "([^"]*)"$/ do |arg1|
-  pending
 end
 

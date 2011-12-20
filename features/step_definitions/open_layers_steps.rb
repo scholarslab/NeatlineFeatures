@@ -63,10 +63,6 @@ Then /^a line is defined in "([^"]*)"$/ do |textarea|
   find(textarea).value.should match(/LINESTRING/)
 end
 
-Then /^a line is visible on the map$/ do
-  pending # express the regexp above with the code you wish you had
-end
-
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
   within(parent) do
     find('script').should have_content('POINT')
