@@ -44,8 +44,8 @@ Feature: Display Multiple Individual Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-indiv.php"
     And I click "Add a new item to your archive"
-    And I enter "Cucumber: Iterate Mixed Feature Coverages" for the "Elements-50-0-text"       Title
-    And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"       Subject
+    And I enter "Cucumber: Iterate Mixed Feature Coverages" for the "Elements-50-0-text"       # Title
+    And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"       # Subject
     And I draw a point on "div#Elements-38-0-map.olMap"
     And I click on "add_element_38"
     And I click the "Raw" tab in "#Elements-38-1-widget"
