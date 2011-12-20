@@ -37,6 +37,15 @@ namespace :php do
       File.join(VM_BASEDIR, 'cpd')
     )
   end
+
+  desc 'This runs PHP CodeSniffer on NeatlineFeatures.'
+  task :cs do
+    Rake::Task['vagrant:php:cs'].invoke(
+      VM_BASEDIR,
+      File.join(VM_BASEDIR, 'cs'),
+      'Zend'
+    )
+  end
 end
 
 desc 'This generates tags for Omeka and NeatlineFeatures.'
