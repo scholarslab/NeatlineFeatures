@@ -46,7 +46,7 @@ namespace :watch do
 
   desc 'This watches coffee script files.'
   task :coffee do
-    sh %{coffee --watch --compile views/admin/javascripts/}
+    sh %{coffee --watch --compile views/admin/javascripts/ views/shared/javascripts/}
   end
 
   desc 'This watches the Jasmine spec Coffee Script files.'
