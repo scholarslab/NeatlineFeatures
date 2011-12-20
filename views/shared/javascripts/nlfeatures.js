@@ -617,9 +617,12 @@
          */
         updateRaw: function() {
             var updateEl = this.params.map.raw_update;
-            var text = this.getWktForSave();
-            text = text.replace(/\|/g, "|\n");
-            updateEl.val(text);
+            if (updateEl !== null) {
+                var text = this.getWktForSave();
+                text = text.replace(/\|/g, "|\n");
+                console.log(updateEl);
+                updateEl.val(text);
+            }
         },
 
         endEditWithoutSave: function(id, immediate) {
