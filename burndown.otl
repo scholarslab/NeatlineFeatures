@@ -58,10 +58,10 @@
 	[x] If the data is non-feature, default to the raw tab
 		[x] (1hr) steps
 		[x] (2hr)
-[ ] (3hr) Display Feature Maps on Item Pages
-	[ ] (3hr) Display Feature Maps on Item Page
-		[ ] (1hr) steps
-		[ ] (2hr) item element display filter
+[x] Display Feature Maps on Item Pages
+	[x] Display Feature Maps on Item Page
+		[x] (1hr) steps
+		[x] (2hr) item element display filter
 [ ] (2hr) Display Non-Feature Coverage Data
 	[ ] (2hr) Display Non-Feature Coverage Data on Item Page
 		[ ] (1hr) steps

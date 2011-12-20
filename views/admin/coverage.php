@@ -121,7 +121,7 @@
             setTimeout(function() { pollTinyMCE(); }, 100);
         }
 <? } ?>
-<? if (!nlfeatures_is_wkt($value)) { ?>
+<? if ($value != '' && !nlfeatures_is_wkt($value)) { ?>
         jQuery(tabs.data('simpletab').element.find('li a')[1]).trigger('click');
 <? } ?>
     });
