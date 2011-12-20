@@ -73,6 +73,13 @@ namespace :php do
   end
 end
 
+namespace :js do
+  desc 'This runs JSHint on the JavaScript files (CoffeeScript are assume to be OK).'
+  task :hint do
+    sh %{jshint views/admin/javascripts/editor/edit_geometry.js views/shared/javascripts/nlfeatures.js}
+  end
+end
+
 desc 'This generates tags for Omeka and NeatlineFeatures.'
 task :tags do
   sh %{ctags -R ../..}
