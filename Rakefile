@@ -43,7 +43,8 @@ namespace :php do
     Rake::Task['vagrant:php:cs'].invoke(
       VM_BASEDIR,
       File.join(VM_BASEDIR, 'cs'),
-      'Zend'
+      'Zend',
+      %{--ignore=*/features/*,*/tests/*}
     )
   end
 end

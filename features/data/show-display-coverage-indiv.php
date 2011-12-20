@@ -11,7 +11,7 @@ $coverages = item('Dublin Core', 'Coverage', array('all' => true));
 ?>
 
     <ul id='item-coverage'><? foreach ($coverages as $coverage) { ?>
-        <li><div><? echo nlfeatures_display_coverage($coverage, $item); ?></div></li><? } ?>
+        <li><div><? echo NeatlineFeatures_Functions::displayCoverage($coverage, $item); ?></div></li><? } ?>
     </ul>
 </div>
 

@@ -26,11 +26,16 @@
 
 // constants {{{
 if (!defined('NEATLINE_FEATURES_PLUGIN_VERSION')) {
-    define('NEATLINE_FEATURES_PLUGIN_VERSION',
-           get_plugin_ini('NeatlineFeatures', 'version'));
+    define(
+        'NEATLINE_FEATURES_PLUGIN_VERSION',
+        get_plugin_ini('NeatlineFeatures', 'version')
+    );
 }
 if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
-    define('NEATLINE_FEATURES_PLUGIN_DIR', dirname(__FILE__));
+    define(
+        'NEATLINE_FEATURES_PLUGIN_DIR',
+        dirname(__FILE__)
+    );
 }
 // }}}
 

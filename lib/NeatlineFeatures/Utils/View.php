@@ -21,7 +21,8 @@
  */
 ?><?php
 
-require_once dirname(__FILE__) . '/../../../../../application/helpers/Functions.php';
+require_once dirname(__FILE__) .
+    '/../../../../../application/helpers/Functions.php';
 
 /**
  * This contructs the view and holds a bunch of utility methods.
@@ -33,49 +34,49 @@ class NeatlineFeatures_Utils_View
      *
      * @var string
      **/
-    private $inputNameStem;
+    private $_inputNameStem;
 
     /**
      * This is the value of the Coverage element.
      *
      * @var string
      **/
-    private $value;
+    private $_value;
 
     /**
      * These are options to use in creating the element.
      *
      * @var array
      **/
-    private $options;
+    private $_options;
 
     /**
      * The record being displayed.
      *
      * @var Omeka_Record
      **/
-    private $record;
+    private $_record;
 
     /**
      * The element object of the Coverage field.
      *
      * @var Element
      **/
-    private $element;
+    private $_element;
 
     /**
      * The text of a field value.
      *
      * @var string
      **/
-    private $text;
+    private $_text;
 
     /**
      * The ElementText representing that the text was taken from.
      *
      * @var ElementText
      **/
-    private $elementText;
+    private $_elementText;
     
     function __construct()
     {
@@ -90,11 +91,11 @@ class NeatlineFeatures_Utils_View
     public function setEditOptions($inputNameStem, $value, $options, $record,
         $element)
     {
-        $this->inputNameStem = $inputNameStem;
-        $this->value         = $value;
-        $this->options       = $options;
-        $this->record        = $record;
-        $this->element       = $element;
+        $this->_inputNameStem = $inputNameStem;
+        $this->_value         = $value;
+        $this->_options       = $options;
+        $this->_record        = $record;
+        $this->_element       = $element;
     }
 
     /**
@@ -108,9 +109,9 @@ class NeatlineFeatures_Utils_View
      **/
     public function setViewOptions($text, $record, $elementText)
     {
-        $this->text        = $text;
-        $this->record      = $record;
-        $this->elementText = $elementText;
+        $this->_text        = $text;
+        $this->_record      = $record;
+        $this->_elementText = $elementText;
     }
 
     /**
@@ -121,7 +122,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getElementId()
     {
-        return $this->element->id;
+        return $this->_element->id;
     }
 
     /**
@@ -133,8 +134,11 @@ class NeatlineFeatures_Utils_View
     public function getIndex()
     {
         $matches = array();
-        $count = preg_match('/^Elements\[\d+\]\[(\d+)\]/',
-                            $this->inputNameStem, $matches);
+        $count = preg_match(
+            '/^Elements\[\d+\]\[(\d+)\]/',
+            $this->_inputNameStem,
+            $matches
+        );
         return ($count != 0 ? $matches[1] : null);
     }
 
@@ -148,9 +152,10 @@ class NeatlineFeatures_Utils_View
     public function getRawField()
     {
         return __v()->formTextarea(
-                    $this->inputNameStem . '[text]', 
-                    $this->value, 
-                    array('class'=>'textinput', 'rows'=>5, 'cols'=>50));
+            $this->_inputNameStem . '[text]', 
+            $this->_value, 
+            array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
+        );
     }
 
     /**
@@ -164,7 +169,7 @@ class NeatlineFeatures_Utils_View
     {
         $posted = FALSE;
         if (array_key_exists('Elements', $_POST)) {
-            $posted = !empty($_POST['Elements'][$this->element->id]);
+            $posted = !empty($_POST['Elements'][$this->_element->id]);
         }    
         return $posted;
     }
@@ -177,7 +182,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getHtmlValue()
     {
-        $edata = $_POST['Elements'][$this->element->id];
+        $edata = $_POST['Elements'][$this->_element->id];
         $value = $edata[$this->getIndex()]['html'];
 
         return $value;
@@ -192,8 +197,8 @@ class NeatlineFeatures_Utils_View
     public function getElementText()
     {
         $index = $this->getIndex();
-        $texts = $this->record->getTextsByElement($this->element);
-        $text = null;
+        $texts = $this->_record->getTextsByElement($this->_element);
+        $text  = null;
 
         if ($index !== null) {
             if (array_key_exists($index, $texts)) {
@@ -213,23 +218,23 @@ class NeatlineFeatures_Utils_View
      **/
     public function isHtml()
     {
-        $is_html = FALSE;
+        $isHtml = FALSE;
 
         if ($this->isPosted()) {
             try {
-                $is_html = (bool)$_POST['Elements'][$this->getElementId()]
+                $isHtml = (bool)$_POST['Elements'][$this->getElementId()]
                     [$this->getIndex()]['html'];
             } catch (Exception $e) {
-                $is_html = FALSE;
+                $isHtml = FALSE;
             }
         } else {
             $etext = $this->getElementText();
             if (isset($etext)) {
-                $is_html = (bool)$etext->html;
+                $isHtml = (bool)$etext->html;
             }
         }
 
-        return $is_html;
+        return $isHtml;
     }
 
     /**
@@ -240,16 +245,16 @@ class NeatlineFeatures_Utils_View
      **/
     public function getUseHtml()
     {
-        $use_html  = '';
+        $useHtml  = '';
 
-        $use_html .= '<label class="use-html">Use HTML ';
-        $use_html .= __v()->formCheckbox(
-            $this->inputNameStem . '[html]', 1,
+        $useHtml .= '<label class="use-html">Use HTML ';
+        $useHtml .= __v()->formCheckbox(
+            $this->_inputNameStem . '[html]', 1,
             array('checked'=>$this->isHtml())
         );
-        $use_html .= '</label>';
+        $useHtml .= '</label>';
 
-        return $use_html;
+        return $useHtml;
     }
 
     /**
@@ -260,16 +265,16 @@ class NeatlineFeatures_Utils_View
      **/
     public function getEditControl()
     {
-        $inputNameStem = $this->inputNameStem;
-        $value         = $this->value;
-        $options       = $this->options;
-        $record        = $this->record;
-        $element       = $this->element;
+        $inputNameStem = $this->_inputNameStem;
+        $value         = $this->_value;
+        $options       = $this->_options;
+        $record        = $this->_record;
+        $element       = $this->_element;
 
-        $id_prefix = preg_replace('/\W+/', '-', $inputNameStem);
-        $raw_field = $this->getRawField();
-        $is_html   = $this->isHtml();
-        $use_html  = $this->getUseHtml();
+        $idPrefix = preg_replace('/\W+/', '-', $inputNameStem);
+        $rawField = $this->getRawField();
+        $isHtml   = $this->isHtml();
+        $useHtml  = $this->getUseHtml();
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
@@ -284,10 +289,10 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $text        = strip_tags($this->text);
-        $record      = $this->record;
-        $elementText = $this->elementText;
-        $id_prefix   = uniqid("nlfeatures-") . '-';
+        $text        = strip_tags($this->_text);
+        $record      = $this->_record;
+        $elementText = $this->_elementText;
+        $idPrefix    = uniqid("nlfeatures-") . '-';
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';

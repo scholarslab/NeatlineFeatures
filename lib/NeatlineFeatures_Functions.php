@@ -21,61 +21,72 @@
  */
 ?><?php
 
-require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures/Utils/View.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR .
+    '/lib/NeatlineFeatures/Utils/View.php';
 
 /**
- * This makes a best guess at whether a string contains WKT data.
- *
- * This test is pretty lame. Currently, it just looks for some feature types.
- *
- * @param string $maybe_wkt This is the string to test.
- *
- * @return bool
- * @author Eric Rochester <erochest@virginia.edu>
+ * This is a container class for a bunch of static method.
  **/
-function nlfeatures_is_wkt($maybe_wkt)
+class NeatlineFeatures_Functions
 {
-    $is_wkt = false;
-    $wkt_features = array(
-        'POINT',
-        'LINESTRING',
-        'POLYGON',
-        'MULTIPOINT',
-        'MULTILINESTRING',
-        'MULTIPOLYGON'
-    );
 
-    foreach ($wkt_features as $feature) {
-        $is_wkt = $is_wkt || (preg_match("/\\b$feature\\b/", $maybe_wkt) > 0);
-        if ($is_wkt) {
-            break;
+    /**
+     * This makes a best guess at whether a string contains WKT data.
+     *
+     * This test is pretty lame. Currently, it just looks for some feature 
+     * types.
+     *
+     * @param string $maybeWkt This is the string to test.
+     *
+     * @return bool
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public static function isWkt($maybeWkt)
+    {
+        $isWkt = false;
+        $wktFeatures = array(
+            'POINT',
+            'LINESTRING',
+            'POLYGON',
+            'MULTIPOINT',
+            'MULTILINESTRING',
+            'MULTIPOLYGON'
+        );
+
+        foreach ($wktFeatures as $feature) {
+            $isWkt = $isWkt || (preg_match("/\\b$feature\\b/", $maybeWkt) > 0);
+            if ($isWkt) {
+                break;
+            }
         }
+
+        return $isWkt;
     }
 
-    return $is_wkt;
-}
+    /**
+     * This returns the string to display a coverage field, whether a map or 
+     * not.
+     *
+     * @param string           $text        The original text for the element.
+     * @param Omeka_Record     $record      The record that this text applies 
+     * to.
+     * @param ElementText|null $elementText The ElementText record that stores 
+     * this text. (This is optional and defaults to null.)
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public static function displayCoverage($text, $record, $elementText=null)
+    {
+        $output = $text;
 
-/**
- * This returns the string to display a coverage field, whether a map or not.
- *
- * @param string           $text        The original text for the element.
- * @param Omeka_Record     $record      The record that this text applies to.
- * @param ElementText|null $elementText The ElementText record that stores this 
- * text. (This is optional and defaults to null.)
- *
- * @return string
- * @author Eric Rochester <erochest@virginia.edu>
- **/
-function nlfeatures_display_coverage($text, $record, $elementText=null)
-{
-    $output = $text;
+        if ($text != "" && NeatlineFeatures_Functions::isWkt($text)) {
+            $util = new NeatlineFeatures_Utils_View();
+            $util->setViewOptions($text, $record, $elementText);
+            $output = $util->getView();
+        }
 
-    if ($text != "" && nlfeatures_is_wkt($text)) {
-        $util = new NeatlineFeatures_Utils_View();
-        $util->setViewOptions($text, $record, $elementText);
-        $output = $util->getView();
+        return $output;
     }
 
-    return $output;
 }
-

@@ -8,7 +8,7 @@
 $coverages = item('Dublin Core', 'Coverage', array('all' => true));
 ?>
     <ul id='item-coverage'><?foreach ($coverages as $coverage) { ?>
-        <li><? if (nlfeatures_is_wkt($coverage)) { echo "true"; } else { echo "false"; } ?></li><? } ?>
+        <li><? if (NeatlineFeatures_Functions::isWkt($coverage)) { echo "true"; } else { echo "false"; } ?></li><? } ?>
     </ul>
 
 </div><!-- end primary -->

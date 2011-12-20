@@ -38,7 +38,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
      **/
     public function testIsWktPoint()
     {
-        $this->assertTrue(nlfeatures_is_wkt("SOMETHING|POINT (1 2)|ELSE"));
+        $this->assertTrue(NeatlineFeatures_Functions::isWkt("SOMETHING|POINT (1 2)|ELSE"));
     }
 
     /**
@@ -49,7 +49,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
      **/
     public function testIsWktLineString()
     {
-        $this->assertTrue(nlfeatures_is_wkt("AAA|LINESTRING (1 2,3 4)|BBB"));
+        $this->assertTrue(NeatlineFeatures_Functions::isWkt("AAA|LINESTRING (1 2,3 4)|BBB"));
     }
 
     /**
@@ -61,7 +61,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
     public function testIsWktPolygon()
     {
         $this->assertTrue(
-            nlfeatures_is_wkt("111|POLYGON ((1 2,3 4),(5 6,7 8))|222")
+            NeatlineFeatures_Functions::isWkt("111|POLYGON ((1 2,3 4),(5 6,7 8))|222")
         );
     }
 
@@ -74,7 +74,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
     public function testIsWktMultPoint()
     {
         $this->assertTrue(
-            nlfeatures_is_wkt("AD|MULTIPOINT (1 2,3 4)|HOC")
+            NeatlineFeatures_Functions::isWkt("AD|MULTIPOINT (1 2,3 4)|HOC")
         );
     }
 
@@ -87,7 +87,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
     public function testIsWktMultiLineString()
     {
         $this->assertTrue(
-            nlfeatures_is_wkt("ET|MULTILINESTRING (1 2,3 4,5 6)|CETERA")
+            NeatlineFeatures_Functions::isWkt("ET|MULTILINESTRING (1 2,3 4,5 6)|CETERA")
         );
     }
 
@@ -100,7 +100,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
     public function testIsWktMultiPolygon()
     {
         $this->assertTrue(
-            nlfeatures_is_wkt("BEGIN|MULTIPOLYGON (1 2,3 4,5 6)|END")
+            NeatlineFeatures_Functions::isWkt("BEGIN|MULTIPOLYGON (1 2,3 4,5 6)|END")
         );
     }
 
@@ -117,7 +117,7 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
     public function testIsWktTrash()
     {
         $this->assertFalse(
-            nlfeatures_is_wkt("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+            NeatlineFeatures_Functions::isWkt("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         );
     }
 

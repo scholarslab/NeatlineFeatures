@@ -23,13 +23,13 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<? echo $id_prefix ?>nlf" class='nlfeatures'>
-  <div id="<? echo $id_prefix ?>map">
+<div id="<?php echo $idPrefix ?>nlf" class='nlfeatures'>
+  <div id="<?php echo $idPrefix ?>map">
   </div>
 </div>
 <script type='text/javascript'>
 jQuery(function() {
-    NLFeatures.viewCoverageMap('#<? echo $id_prefix ?>map',
-                               <? echo json_encode($text) ?>);
+    NLFeatures.viewCoverageMap('#<?php echo $idPrefix ?>map',
+                               <?php echo json_encode($text) ?>);
 });
 </script>

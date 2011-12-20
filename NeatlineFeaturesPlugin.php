@@ -24,8 +24,10 @@
  */
 ?><?php
 
-require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures/Utils/View.php';
-require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures_Functions.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR .
+    '/lib/NeatlineFeatures/Utils/View.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR .
+    '/lib/NeatlineFeatures_Functions.php';
 
 /**
  * This class manages the plugin itself. It defines controllers for all the 
@@ -83,18 +85,18 @@ class NeatlineFeaturesPlugin
      **/
     public function addHooksAndFilters()
     {
-        foreach (self::$_hooks as $hook_name) {
-            $function_name = Inflector::variablize($hook_name);
+        foreach (self::$_hooks as $hookName) {
+            $functionName = Inflector::variablize($hookName);
             get_plugin_broker()->addHook(
-                $hook_name,
-                array($this, $function_name),
+                $hookName,
+                array($this, $functionName),
                 'NeatlineFeatures'
             );
         }
 
         foreach (self::$_filters as $filterInfo) {
-            $function_name = $filterInfo[0];
-            add_filter($filterInfo[1], array($this, $function_name));
+            $functionName = $filterInfo[0];
+            add_filter($filterInfo[1], array($this, $functionName));
         }
     }
     // }}}
@@ -134,7 +136,8 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeature-editor');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' src='http://openlayers.org/api/OpenLayers.js'></script>";
+        echo "<script type='text/javascript' " .
+            "src='http://openlayers.org/api/OpenLayers.js'></script>";
 
         queue_js('nlfeatures');
         queue_js('editor/edit_geometry');
@@ -153,7 +156,8 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' src='http://openlayers.org/api/OpenLayers.js'></script>";
+        echo "<script type='text/javascript' " .
+            "src='http://openlayers.org/api/OpenLayers.js'></script>";
 
         queue_js('nlfeatures');
         queue_js('nlfeatures-init');
@@ -180,8 +184,9 @@ class NeatlineFeaturesPlugin
         $options, $record, $element)
     {
         $util = new NeatlineFeatures_Utils_View();
-        $util->setEditOptions($inputNameStem, $value, 
-            $options, $record, $element);
+        $util->setEditOptions(
+            $inputNameStem, $value, $options, $record, $element
+        );
         return $util->getEditControl();
     }
 
@@ -197,8 +202,7 @@ class NeatlineFeaturesPlugin
     public function elementFormDisplayHtmlFlag($html, $element)
     {
         if ($element->name == 'Coverage' &&
-            $element->getElementSet()->name == 'Dublin Core')
-        {
+            $element->getElementSet()->name == 'Dublin Core') {
             return '<span>&nbsp;</span>';
         } else {
             return $html;
@@ -219,7 +223,9 @@ class NeatlineFeaturesPlugin
      **/
     public function displayItemDublinCoreCoverage($text, $record, $elementText)
     {
-        return nlfeatures_display_coverage($text, $record, $elementText);
+        return NeatlineFeatures_Functions::displayCoverage(
+            $text, $record, $elementText
+        );
     }
     // }}}
 }
