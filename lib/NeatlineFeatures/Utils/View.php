@@ -18,6 +18,9 @@ require_once dirname(__FILE__) .
 
 /**
  * This contructs the view and holds a bunch of utility methods.
+ *
+ * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base. Surely there must be a better way. 
+ * Bring this up on #slab.
  **/
 class NeatlineFeatures_Utils_View
 {
@@ -77,6 +80,12 @@ class NeatlineFeatures_Utils_View
     /**
      * This sets the options necessary to create the edit view.
      *
+     * @param string       $inputNameStem The stem of the input name.
+     * @param string       $value         The initial value for the input.
+     * @param array        $options       Additional options.
+     * @param Omeka_Record $record        The element's record.
+     * @param Element      $element       The Element.
+     *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
@@ -93,13 +102,16 @@ class NeatlineFeatures_Utils_View
     /**
      * This sets the options necessary to create the view.
      *
-     * The $elementText isn't currently used, and null can be passed in in its 
-     * place.
+     * @param string           $text        The original text for the element.
+     * @param Omeka_Record     $record      The record that this text applies 
+     * to.
+     * @param ElementText|null $elementText The ElementText record that stores 
+     * this text. (This is optional and defaults to null.)
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function setViewOptions($text, $record, $elementText)
+    public function setViewOptions($text, $record, $elementText=null)
     {
         $this->_text        = $text;
         $this->_record      = $record;
@@ -107,7 +119,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This returns the element ID as parsed from $inputNameStem.
+     * This returns the element ID.
      *
      * @return int
      * @author Eric Rochester <erochest@virginia.edu>

@@ -1,6 +1,34 @@
 /*
+ * # Geometry Editor
+ *
  * Geometry editor widget that appears at the top right corner of the
  * map during an item edit in the Neatline editor.
+ *
+ * This creates these buttons:
+ *
+ * + Scale;
+ * + Rotate;
+ * + Drag; and
+ * + Delete.
+ *
+ * ## Toggle Buttons
+ *
+ * Scale, Rotate, and Drag are all toggle buttons. When toggled on, these
+ * properties hold:
+ *
+ * + the data key 'activated' is set to true; and
+ * + CSS class '.primary' is added to the list of classes.
+ *
+ * Of course, when toggled off, the inverse of these properties is true.
+ *
+ * When clicked, these buttons trigger an 'update.neatline' event. The first
+ * argument is an object with the keys `drag`, `rotate`, and `scale`, whose
+ * values are the value of the activated flags for those buttons.
+ *
+ * ## Delete Button
+ *
+ * The Delete button is not a toggle button. When clicked, it triggers a
+ * 'delete.neatline' event.
  *
  * @package     omeka
  * @subpackage  neatline
@@ -26,6 +54,9 @@
             }
         },
 
+        /*
+         * Create the buttons to edit features, hook up events, etc.
+         */
         _create: function() {
             var self = this;
 
@@ -150,6 +181,9 @@
             });
         },
 
+        /*
+         * Display the buttons.
+         */
         showButtons: function() {
             // Display:block the buttons.
             $('.' + this.options.markup.geo_edit_class).css({
@@ -161,6 +195,9 @@
             this.deactivateAllButtons();
         },
 
+        /*
+         * Hide the buttons.
+         */
         hideButtons: function() {
             // Get the buttons.
             var buttons = $('.' + this.options.markup.geo_edit_class);
@@ -173,6 +210,11 @@
             });
         },
 
+        /*
+         * This deactivates all three toggle buttons in one action.
+         *
+         * This does *not* trigger the 'update.neatline' event.
+         */
         deactivateAllButtons: function() {
             // Drag.
             this.dragButton.removeClass('primary');

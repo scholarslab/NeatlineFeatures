@@ -63,10 +63,9 @@
       });
       return m;
     },
-    destroyTinyMCE: function(rawTab, text, html) {
-      var cb, poll, raw;
+    destroyTinyMCE: function(text, html) {
+      var cb, poll;
       cb = jQuery(html);
-      raw = jQuery(rawTab);
       if (text.charAt(0) === '#') {
         text = text.substr(1);
       }
@@ -91,7 +90,7 @@
       tabWidget = NLFeatures.initTabs(parent);
       m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value);
       if (!formats.is_html) {
-        NLFeatures.destroyTinyMCE(tabs.raw, widgets.text, widgets.html);
+        NLFeatures.destroyTinyMCE(widgets.text, widgets.html);
       }
       if (!(value === '' || formats.is_wkt)) {
         NLFeatures.switchToTab(tabWidget, 1);

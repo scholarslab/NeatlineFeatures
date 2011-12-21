@@ -4,6 +4,9 @@
 /**
  * PHP version 5
  *
+ * This is the Plugin object that sets up and contains the hooks and filters 
+ * for the plugins.
+ *
  * @package     omeka
  * @subpackage  neatline
  * @author      Scholars' Lab <>
@@ -117,8 +120,6 @@ class NeatlineFeaturesPlugin
     /**
      * This queues javascript and CSS for the admin header.
      *
-     * @param Request $request The request for the header.
-     *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
@@ -188,7 +189,8 @@ class NeatlineFeaturesPlugin
      * @param string  $html    An empty string.
      * @param Element $element The Element.
      *
-     * @return string
+     * @return string The string containing the HTML for the "Use HTML" 
+     * element.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function elementFormDisplayHtmlFlag($html, $element)

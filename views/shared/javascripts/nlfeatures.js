@@ -1,6 +1,51 @@
 /*
- * Component widget that controls the map. Instantiated by the parent Neatline
- * widget.
+ * # Neatline Features
+ *
+ * Component widget that controls the map.
+ *
+ * This handles interfacing with OpenLayers, handling editing (if requested),
+ * and serializing the data.
+ *
+ * This widget supports two use cases.
+ *
+ * ## WMS Service
+ *
+ * Using a WMS backend implies that there the rest of Neatline is also
+ * available. To work this way, do these things:
+ *
+ * + set `options.map.wmsAddress` in the configuration;
+ * + call `loadData()` to pull data into the map;
+ * + call `edit()` to enter edit mode (optional, see the documentation for this
+ * method).
+ *
+ * ## Stand-alone
+ *
+ * This can also be used without the rest of Neatline and without a WMS
+ * service. To do this, you'll need to do these things:
+ *
+ * + leave `options.map.wmsAddress` out of the config, set to `null`, or set to
+ * `undefined`;
+ * + call `loadLocalData()` to populate the map (see the documentation for that
+ * method for details on how to use it); and
+ * + call `editJson()` to enter editing mode (optional, see the documentation
+ * for this method).
+ *
+ * ## Editing
+ *
+ * Turning on editing mode differs, depending on the context. In a Neatline/WMS
+ * context, use the `edit()` method; in a stand-alone context, use
+ * `editJson()`.
+ *
+ * ## Configuration
+ *
+ * There are a lot of configuration options. See the code below for information
+ * about them.
+ *
+ * ## Builder
+ *
+ * `window.NLFeatures` module/static class has some functions that make setting
+ * up the features control and the rest of the stuff around it easier. See the
+ * documentation in `nlfeatures-init.coffee` for more information.
  *
  * @package     omeka
  * @subpackage  neatline
@@ -15,11 +60,19 @@
 (function($, undefined) {
     $.widget('neatline.nlfeatures', {
         options: {
+            // Is this editing or viewing mode. Currently, this isn't by the
+            // nlfeatures widget, so I'm not entirely sure what the available
+            // options are.
             mode: 'edit',
+
+            // `loadData()` and `loadLocalData()` can parse out multiple WKT
+            // features from their inputs' `wkt` fields. This is the string to
+            // use to separate out the WKT features.
             wkt_delimiter: '|',
 
             // Markup hooks.
             markup: {
+                // The CSS class for the editing toolbar.
                 toolbar_class: 'olControlEditingToolbar'
             },
 
@@ -28,12 +81,13 @@
                 fade_duration: 500
             },
 
-            // Hexes.
+            // Hexes. Not used, AFAICT.
             colors: {
                 neatline_purple: '#724E85',
                 highlight_red: '#d04545'
             },
 
+            // These are options for the `OpenLayers.StyleMap`.
             styles: {
                 default_opacity: 0.4,
                 default_color: '#ffb80e',
@@ -41,8 +95,11 @@
                 select_stroke_color: '#ea3a3a'
             },
 
-            // These are added to document options that may be taken from a
-            // Neatline global or something.
+            // These are added to document options for the map. If
+            // `window.Neatline` is set those values are used, and these are
+            // ignored. Otherwise, normal widget option-handling is used
+            // (defaults here, overridden in the config object passed into the
+            // initializer).
             map: {
                 boundingBox: '90,0,-90,360',
                 center: undefined,
@@ -54,7 +111,7 @@
         },
 
         /*
-         * Grab the Neatline global, shell out trackers, startup.
+         * Grab the Neatline global, instantiate OpenLayers, load data.
          */
         _create: function() {
             var self = this;
@@ -82,7 +139,16 @@
         },
 
         /*
-         * Grab the Neatline global, shell out trackers, startup.
+         * Instantiate OpenLayers.
+         *
+         * This does these things:
+         *
+         * 1. Instantiate OpenLayers with the current configuration;
+         * 2. Set the bounds;
+         * 3. Set the projection;
+         * 4. Create controls for viewing the map;
+         * 5. Attach the WMS service; and
+         * 6. Set the center and zoom.
          */
         _instantiateOpenLayers: function() {
             // Set OL global attributes.
@@ -172,7 +238,6 @@
                 );
             }
 
-
             if (this.params.map.center !== undefined) {
                 var z = (this.params.map.zoom === undefined) ? 3 : this.params.map.zoom;
                 var ll = new OpenLayers.LonLat(this.params.map.center[0],
@@ -185,6 +250,9 @@
             }
         },
 
+        /*
+         * This loads data from the AJAX data sources.
+         */
         loadData: function() {
             var self = this;
 
@@ -218,11 +286,13 @@
         },
 
         /*
-         * data should be a list of objects with these fields:
-         * - id
-         * - title
-         * - color (optional)
-         * - wkt
+         * This loads raw data directly.
+         *
+         * `data` should be a list of objects with these fields:
+         * - `id`
+         * - `title`
+         * - `color` (optional)
+         * - `wkt`
          */
         loadLocalData: function(data) {
             var self = this;
@@ -233,6 +303,10 @@
             this._addClickControls();
         },
 
+        /*
+         * This clears the current features from the map and removes the
+         * controls.
+         */
         _resetData: function() {
             var self = this;
 
@@ -250,6 +324,19 @@
             this.idToLayer = {};
         },
 
+        /*
+         * This takes the input data and actually builds the vector layers,
+         * features, and geometries.
+         *
+         * Invalid WKT geometries are skipped, and empty features aren't added,
+         * either.
+         *
+         * `data` should be a list of objects with these fields:
+         * - `id`
+         * - `title`
+         * - `color` (optional)
+         * - `wkt`
+         */
         _buildVectorLayers: function(data) {
             var self = this;
 
@@ -302,6 +389,10 @@
             });
         },
 
+        /*
+         * This adds the click control (`OpenLayers.Control.SelectFeature`) and
+         * handlers for them.
+         */
         _addClickControls: function() {
             var self = this;
 
@@ -337,6 +428,9 @@
             this.clickControl.activate();
         },
 
+        /*
+         * This removes all defined controls.
+         */
         _removeControls: function() {
             if (this.modifyFeatures !== undefined) {
                 this.map.removeControl(this.modifyFeatures);
@@ -363,6 +457,19 @@
             }
         },
 
+        /*
+         * This triggers edit mode.
+         *
+         * `item` is a jQuery DOM element containing the information about the
+         * element to be edited.
+         *
+         * `immediate` is a boolean indicating whether to fade the controls in
+         * or not.
+         *
+         * This version of the function is only useful within the context of
+         * the full Neatline plugin. Other use cases should use `editJson()`
+         * (which this method calls).
+         */
         edit: function(item, immediate) {
             var js = {
                 id: item.attr('recordid'),
@@ -372,11 +479,21 @@
         },
 
         /*
-         * This actually sets up the editing function. It expects item to be a
-         * JS object with these parameters:
+         * This actually sets up the editing function.
          *
-         * * id
-         * * name
+         * `item` is a JS object with these parameters:
+         *
+         * + `id` + `name`
+         *
+         * `immediate` is a boolean indicating whether to fade the controls in
+         * or not.
+         *
+         * This sets the current editing layer and sets up the panel of
+         * controls for drawing new features or editing existing ones. It also
+         * sets up an `editgeometry` widget and handlers for its events.
+         *
+         * If `options.map.raw_update` is set, this sets up event handlers to
+         * propagate changes to it.
          */
         editJson: function(item, immediate) {
             var self = this;
@@ -616,6 +733,9 @@
             }
         },
 
+        /*
+         * This turns off editing without saving anything.
+         */
         endEditWithoutSave: function(id, immediate) {
             // Before OpenLayers axes the toolbar controls, clone the div so
             // that it can be faded down in unison with the buttons.
@@ -657,6 +777,12 @@
             this._currentEditItem = null;
         },
 
+        /*
+         * This returns the WKT for the current edit layer.
+         *
+         * The current feature is temporarily unselected because otherwise the
+         * WKT contains points for the selection handles.
+         */
         getWktForSave: function() {
             var wkts = [];
 
@@ -676,14 +802,26 @@
             return wkts.join(this.options.wkt_delimiter);
         },
 
+        /*
+         * This gets the current extent of the map as a string.
+         */
         getExtentForSave: function() {
             return this.map.getExtent().toString();
         },
 
+        /*
+         * This gets the current zoom for the map.
+         */
         getZoomForSave: function() {
             return this.map.getZoom();
         },
 
+        /*
+         * This zooms to one item's features.
+         *
+         * `id` the ID of the item (from the `loadData()` or `loadLocalData()`
+         * input parameter) to zoom to.
+         */
         zoomToItemVectors: function(id) {
             var layer = this.idToLayer[id];
 
@@ -692,6 +830,10 @@
             }
         },
 
+        /*
+         * This builds and returns a new `OpenLayers.StyleMap` based on the
+         * options.
+         */
         _getStyleMap: function(fillColor) {
             return new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
@@ -711,6 +853,9 @@
             });
         },
 
+        /*
+         * This sets the color for an item.
+         */
         setItemColor: function(color) {
             // Rebuild the style map.
             this._currentEditLayer.styleMap = this._getStyleMap(color);
@@ -723,24 +868,44 @@
          * These are some query functions to call during testing.
          */
 
+         /*
+          * This gets the current center of the map reprojected into EPSG:4326
+          * and returned as an object with `lat` and `lon` properties.
+          */
+
         getCenterLonLat: function() {
             var wsg  = new OpenLayers.Projection('EPSG:4326'),
                 proj = this.map.getProjectionObject();
             return this.map.getCenter().transform(proj, wsg);
         },
 
+        /*
+         * This tests whether the map has any layer with a point feature.
+         */
         hasPoint: function() {
             return this.hasFeature('OpenLayers.Geometry.Point');
         },
 
+        /*
+         * This tests whether the map has any layer with a line feature.
+         */
         hasLine: function() {
             return this.hasFeature('OpenLayers.Geometry.LineString');
         },
 
+        /*
+         * This tests whether the map has any layer with a polygon feature.
+         */
         hasPolygon: function() {
             return this.hasFeature('OpenLayers.Geometry.Polygon');
         },
 
+        /*
+         * This tests whether any layer has a given feature type.
+         *
+         * `className` is the name of the class of the feature (taken from the
+         * `CLASS_NAME` property.
+         */
         hasFeature: function(className) {
             result = false;
 
@@ -753,6 +918,11 @@
             return result;
         },
 
+        /*
+         * This method provides a more reliable way to test whether a value is not undefined and not null.
+         *
+         * This duplicates the CoffeeScript `?` operator.
+         */
         exists: function(slot) {
             return (typeof slot !== 'undefined' && slot !== null);
         }
