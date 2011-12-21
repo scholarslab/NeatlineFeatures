@@ -612,7 +612,6 @@
             if (this.exists(updateEl)) {
                 var text = this.getWktForSave();
                 text = text.replace(/\|/g, "|\n");
-                console.log(updateEl);
                 updateEl.val(text);
             }
         },
