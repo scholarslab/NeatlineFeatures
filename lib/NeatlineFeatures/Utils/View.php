@@ -19,8 +19,8 @@ require_once dirname(__FILE__) .
 /**
  * This contructs the view and holds a bunch of utility methods.
  *
- * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base. Surely there must be a better way. 
- * Bring this up on #slab.
+ * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base. 
+ * Surely there must be a better way.  Bring this up on #slab.
  **/
 class NeatlineFeatures_Utils_View
 {

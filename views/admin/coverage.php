@@ -30,8 +30,6 @@
   </div>
   <div class='nlfeatures-edit-body'>
     <div id="<?php echo $idPrefix ?>rawtab" class='nlfeatures-edit-raw'>
-      <!-- TODO: remove the next line -->
-      <div><em><?php echo $inputNameStem ?></em></div>
       <?php echo $rawField ?>
       <?php echo $useHtml ?>
       &nbsp;
