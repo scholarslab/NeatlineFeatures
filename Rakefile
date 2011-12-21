@@ -42,7 +42,7 @@ namespace :php do
     Rake::Task['vagrant:php:cs'].invoke(
       VM_BASEDIR,
       File.join(VM_BASEDIR, 'cs'),
-      'Zend',
+      File.join(VM_BASEDIR, 'php-testing-rules', 'phpcs.xml'),
       %{--ignore=*/features/*,*/tests/*}
     )
   end
@@ -67,7 +67,8 @@ namespace :php do
   task :md do
     Rake::Task['vagrant:php:md'].invoke(
       VM_BASEDIR,
-      File.join(VM_BASEDIR, 'md')
+      File.join(VM_BASEDIR, 'md'),
+      File.join(VM_BASEDIR, 'php-testing-rules', 'phpmd.xml')
     )
   end
 end
