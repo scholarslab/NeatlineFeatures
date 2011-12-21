@@ -71,6 +71,11 @@ namespace :php do
       File.join(VM_BASEDIR, 'php-testing-rules', 'phpmd.xml')
     )
   end
+
+  desc 'This downloads the PHP style guides.'
+  task :getstyle do
+    sh %{git clone https://github.com/waynegraham/php-testing-rules}
+  end
 end
 
 namespace :js do
