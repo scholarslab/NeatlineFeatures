@@ -19,7 +19,7 @@ require_once dirname(__FILE__) .
 /**
  * This contructs the view and holds a bunch of utility methods.
  *
- * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base. 
+ * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base.
  * Surely there must be a better way.  Bring this up on #slab.
  **/
 class NeatlineFeatures_Utils_View
@@ -72,7 +72,7 @@ class NeatlineFeatures_Utils_View
      * @var ElementText
      **/
     private $_elementText;
-    
+
     function __construct()
     {
     }
@@ -103,15 +103,15 @@ class NeatlineFeatures_Utils_View
      * This sets the options necessary to create the view.
      *
      * @param string           $text        The original text for the element.
-     * @param Omeka_Record     $record      The record that this text applies 
+     * @param Omeka_Record     $record      The record that this text applies
      * to.
-     * @param ElementText|null $elementText The ElementText record that stores 
-     * this text. (This is optional and defaults to null.)
+     * @param ElementText|NULL $elementText The ElementText record that stores
+     * this text. (This is optional and defaults to NULL.)
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function setViewOptions($text, $record, $elementText=null)
+    public function setViewOptions($text, $record, $elementText=NULL)
     {
         $this->_text        = $text;
         $this->_record      = $record;
@@ -132,22 +132,22 @@ class NeatlineFeatures_Utils_View
     /**
      * This returns the element data's index as parsed from $inputNameStem.
      *
-     * @return int|null
+     * @return int|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getIndex()
     {
         $matches = array();
-        $count = preg_match(
+        $count   = preg_match(
             '/^Elements\[\d+\]\[(\d+)\]/',
             $this->_inputNameStem,
             $matches
         );
-        return ($count != 0 ? $matches[1] : null);
+        return ($count != 0 ? $matches[1] : NULL);
     }
 
     /**
-     * This constructs the TEXTAREA for the raw coverage data and returns it as 
+     * This constructs the TEXTAREA for the raw coverage data and returns it as
      * a string.
      *
      * @return string
@@ -156,14 +156,14 @@ class NeatlineFeatures_Utils_View
     public function getRawField()
     {
         return __v()->formTextarea(
-            $this->_inputNameStem . '[text]', 
-            $this->_value, 
+            $this->_inputNameStem . '[text]',
+            $this->_value,
             array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
         );
     }
 
     /**
-     * This predicate tests whether data for the element is in the POST 
+     * This predicate tests whether data for the element is in the POST
      * request.
      *
      * @return bool
@@ -174,14 +174,14 @@ class NeatlineFeatures_Utils_View
         $posted = FALSE;
         if (array_key_exists('Elements', $_POST)) {
             $posted = !empty($_POST['Elements'][$this->_element->id]);
-        }    
+        }
         return $posted;
     }
 
     /**
      * This returns the value of the 'html' field from the POST request.
      *
-     * @return string|null
+     * @return string|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getHtmlValue()
@@ -193,18 +193,18 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This returns the ElementText for the current element and index or null.
+     * This returns the ElementText for the current element and index or NULL.
      *
-     * @return ElementText|null
+     * @return ElementText|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getElementText()
     {
         $index = $this->getIndex();
         $texts = $this->_record->getTextsByElement($this->_element);
-        $text  = null;
+        $text  = NULL;
 
-        if ($index !== null) {
+        if ($index !== NULL) {
             if (array_key_exists($index, $texts)) {
                 $text = $texts[$index];
             }
@@ -214,7 +214,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This predicate tests whether this element currently is marked to have 
+     * This predicate tests whether this element currently is marked to have
      * HTML data.
      *
      * @return bool
@@ -249,7 +249,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getUseHtml()
     {
-        $useHtml  = '';
+        $useHtml = '';
 
         $useHtml .= '<label class="use-html">Use HTML ';
         $useHtml .= __v()->formCheckbox(

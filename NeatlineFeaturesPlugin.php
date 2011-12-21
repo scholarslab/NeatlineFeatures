@@ -4,7 +4,7 @@
 /**
  * PHP version 5
  *
- * This is the Plugin object that sets up and contains the hooks and filters 
+ * This is the Plugin object that sets up and contains the hooks and filters
  * for the plugins.
  *
  * @package     omeka
@@ -25,7 +25,7 @@ require_once NEATLINE_FEATURES_PLUGIN_DIR .
     '/lib/NeatlineFeatures_Functions.php';
 
 /**
- * This class manages the plugin itself. It defines controllers for all the 
+ * This class manages the plugin itself. It defines controllers for all the
  * hooks and filters.
  **/
 class NeatlineFeaturesPlugin
@@ -169,11 +169,11 @@ class NeatlineFeaturesPlugin
      * @param Omeka_Record $record        The element's record.
      * @param Element      $element       The Element.
      *
-     * @return string The string containing the HTML for the customized element 
+     * @return string The string containing the HTML for the customized element
      * form.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function formItemDublinCoreCoverage($html, $inputNameStem, $value, 
+    public function formItemDublinCoreCoverage($html, $inputNameStem, $value,
         $options, $record, $element)
     {
         $util = new NeatlineFeatures_Utils_View();
@@ -189,7 +189,7 @@ class NeatlineFeaturesPlugin
      * @param string  $html    An empty string.
      * @param Element $element The Element.
      *
-     * @return string The string containing the HTML for the "Use HTML" 
+     * @return string The string containing the HTML for the "Use HTML"
      * element.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
@@ -207,9 +207,9 @@ class NeatlineFeaturesPlugin
      * This displays the coverage data as a map, if applicable.
      *
      * @param string           $text        The original text for the element.
-     * @param Omeka_Record     $record      The record that this text applies 
+     * @param Omeka_Record     $record      The record that this text applies
      * to.
-     * @param ElementText|null $elementText The ElementText record that stores 
+     * @param ElementText|null $elementText The ElementText record that stores
      * this text. (This is optional and defaults to null.)
      *
      * @return The HTML to generate the map.

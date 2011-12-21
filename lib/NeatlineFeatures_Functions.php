@@ -35,7 +35,7 @@ class NeatlineFeatures_Functions
      **/
     public static function isWkt($maybeWkt)
     {
-        $isWkt = false;
+        $isWkt       = FALSE;
         $wktFeatures = array(
             'POINT',
             'LINESTRING',
@@ -62,13 +62,13 @@ class NeatlineFeatures_Functions
      * @param string           $text        The original text for the element.
      * @param Omeka_Record     $record      The record that this text applies 
      * to.
-     * @param ElementText|null $elementText The ElementText record that stores 
-     * this text. (This is optional and defaults to null.)
+     * @param ElementText|NULL $elementText The ElementText record that stores 
+     * this text. (This is optional and defaults to NULL.)
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public static function displayCoverage($text, $record, $elementText=null)
+    public static function displayCoverage($text, $record, $elementText=NULL)
     {
         $output = $text;
 
