@@ -11,8 +11,7 @@ Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = %w{--format pretty}
 end
 
-# require 'zayin/rake/vagrant/php'
-require '/Users/err8n/projects/zayin/lib/zayin/rake/vagrant/php'
+require 'zayin/rake/vagrant/php'
 Zayin::Rake::Vagrant::PhpTasks.new
 
 namespace :php do
