@@ -170,8 +170,7 @@
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
-            if (this.params.default_map_bounds !== null &&
-                this.params.default_map_bounds !== undefined) {
+            if (this.exists(this.params.default_map_bounds)) {
                 boundsArray = this.params.default_map_bounds.split(',');
                 bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
@@ -200,7 +199,7 @@
             this._resetData();
 
             // Abort the request if it is running.
-            if (this.requestData !== null) {
+            if (this.exists(this.requestData)) {
                 this.requestData.abort();
             }
 
@@ -218,7 +217,7 @@
 
                         // If a layer was being edited before the save,
                         // make that layer the active edit layer again.
-                        if (self._currentEditItem !== null) {
+                        if (self.exists(self._currentEditItem)) {
                             self.editJson(self._currentEditItem, true);
                         }
                     }
@@ -503,7 +502,7 @@
 
                     // If there is a selected feature, unselect and reselect it to apply
                     // the new configuration.
-                    if (feature !== null) {
+                    if (self.exists(feature)) {
                         self.modifyFeatures.unselectFeature(feature);
                         self.modifyFeatures.selectFeature(feature);
                     }
@@ -618,7 +617,7 @@
          */
         updateRaw: function() {
             var updateEl = this.params.map.raw_update;
-            if (updateEl !== null) {
+            if (this.exists(updateEl)) {
                 var text = this.getWktForSave();
                 text = text.replace(/\|/g, "|\n");
                 console.log(updateEl);
@@ -670,7 +669,7 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this._clickedFeature !== null) {
+            if (this.exists(this._clickedFeature)) {
                 this.modifyFeatures.unselectFeature(this._clickedFeature);
             }
 
@@ -679,7 +678,7 @@
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this._clickedFeature !== null) {
+            if (this.exists(this._clickedFeature)) {
                 this.modifyFeatures.selectFeature(this._clickedFeature);
             }
 
@@ -697,7 +696,7 @@
         zoomToItemVectors: function(id) {
             var layer = this.idToLayer[id];
 
-            if (layer !== null && layer.features.length > 0) {
+            if (this.exists(layer) && layer.features.length > 0) {
                 this.map.zoomToExtent(layer.getDataExtent());
             }
         },
@@ -761,6 +760,10 @@
             });
 
             return result;
+        },
+
+        exists: function(slot) {
+            return (typeof slot !== 'undefined' && slot !== null);
         }
     });
 })( jQuery );
