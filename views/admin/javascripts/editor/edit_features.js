@@ -87,6 +87,7 @@
             // Gloss the drag button.
             this.dragButton.bind({
                 'mousedown': function() {
+
                     // If not activated, activate.
                     if (!self.dragButton.data('activated')) {
                         // Do the color change.
@@ -110,6 +111,11 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     }]);
+                },
+
+                // Suppress the default submit behavior on the button.
+                'click': function(e) {
+                    e.preventDefault();
                 }
 
             });
@@ -140,7 +146,13 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     }]);
+                },
+
+                // Suppress the default submit behavior on the button.
+                'click': function(e) {
+                    e.preventDefault();
                 }
+
             });
 
             // Gloss the rotate button.
@@ -169,7 +181,13 @@
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
                     }]);
+                },
+
+                // Suppress the default submit behavior on the button.
+                'click': function(e) {
+                    e.preventDefault();
                 }
+
             });
 
             // Gloss the delete button.
@@ -177,7 +195,13 @@
                 // Fire out the delete event.
                 'mousedown': function() {
                     self.element.trigger('delete.neatline');
+                },
+
+                // Suppress the default submit behavior on the button.
+                'click': function(e) {
+                    e.preventDefault();
                 }
+
             });
         },
 

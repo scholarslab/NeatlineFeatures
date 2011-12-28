@@ -133,7 +133,7 @@ class NeatlineFeaturesPlugin
             "src='http://openlayers.org/api/OpenLayers.js'></script>";
 
         queue_js('nlfeatures');
-        queue_js('editor/edit_geometry');
+        queue_js('editor/edit_features');
         queue_js('nlfeatures-simpletab');
         queue_js('nlfeatures-init');
     }

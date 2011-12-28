@@ -60,10 +60,6 @@
 (function($, undefined) {
     $.widget('neatline.nlfeatures', {
         options: {
-            // Is this editing or viewing mode. Currently, this isn't by the
-            // nlfeatures widget, so I'm not entirely sure what the available
-            // options are.
-            mode: 'edit',
 
             // `loadData()` and `loadLocalData()` can parse out multiple WKT
             // features from their inputs' `wkt` fields. This is the string to
@@ -79,12 +75,6 @@
             // Animation constants.
             animation: {
                 fade_duration: 500
-            },
-
-            // Hexes. Not used, AFAICT.
-            colors: {
-                neatline_purple: '#724E85',
-                highlight_red: '#d04545'
             },
 
             // These are options for the `OpenLayers.StyleMap`.
