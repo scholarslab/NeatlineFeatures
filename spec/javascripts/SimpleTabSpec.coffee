@@ -51,3 +51,9 @@ describe 'simpletab', ->
     $("#simpletab-eg-#{counter} li:first").click()
     expect(clicked).toBe(2)
 
+  it 'should be able to switch to tabs programmatically', ->
+    stab = $("#simpletab-eg-#{counter}").data('simpletab')
+    stab.switchToTab(1)
+    expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeFalsy()
+    expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeTruthy()
+

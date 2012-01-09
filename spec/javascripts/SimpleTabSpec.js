@@ -34,7 +34,7 @@
       expect($("#simpletab-tab-" + counter + "-0").is(':visible')).toBeTruthy();
       return expect($("#simpletab-tab-" + counter + "-1").is(':visible')).toBeFalsy();
     });
-    return it('should fire a tabchange event when a tab is clicked on', function() {
+    it('should fire a tabchange event when a tab is clicked on', function() {
       var clicked;
       clicked = 0;
       el.bind('tabchange', function(event) {
@@ -43,6 +43,13 @@
       $("#simpletab-eg-" + counter + " li:nth-child(2)").click();
       $("#simpletab-eg-" + counter + " li:first").click();
       return expect(clicked).toBe(2);
+    });
+    return it('should be able to switch to tabs programmatically', function() {
+      var stab;
+      stab = $("#simpletab-eg-" + counter).data('simpletab');
+      stab.switchToTab(1);
+      expect($("#simpletab-tab-" + counter + "-0").is(':visible')).toBeFalsy();
+      return expect($("#simpletab-tab-" + counter + "-1").is(':visible')).toBeTruthy();
     });
   });
 

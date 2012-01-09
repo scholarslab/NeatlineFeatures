@@ -131,5 +131,9 @@
     # Set an option. This just passes it on up to the parents.
     _setOption: (key, value) ->
       $.Widget.prototype._setOption.apply(this, arguments)
+
+    # This sets the tab. The tab parameter is the 0-indexed tab number.
+    switchToTab: (tab) ->
+      $(this.anchors[tab]).click()
   )
 )(jQuery)

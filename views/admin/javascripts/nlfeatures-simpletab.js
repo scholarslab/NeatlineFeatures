@@ -49,6 +49,9 @@
       },
       _setOption: function(key, value) {
         return $.Widget.prototype._setOption.apply(this, arguments);
+      },
+      switchToTab: function(tab) {
+        return $(this.anchors[tab]).click();
       }
     });
   })(jQuery);
