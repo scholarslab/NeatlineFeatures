@@ -1,4 +1,5 @@
 (function() {
+
   describe('simpletab', function() {
     var counter, el, tab;
     counter = 0;
@@ -44,4 +45,5 @@
       return expect(clicked).toBe(2);
     });
   });
+
 }).call(this);

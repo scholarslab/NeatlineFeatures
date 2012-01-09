@@ -1,4 +1,5 @@
 (function() {
+
   (function($) {
     return $.widget('neatline.simpletab', {
       options: {
@@ -15,9 +16,7 @@
           jel.data('neatline.simpletab.target', target);
           target.hide();
           return jel.click(function(event) {
-            if (tab.current != null) {
-              tab.current.hide();
-            }
+            if (tab.current != null) tab.current.hide();
             tab.current = target;
             target.show();
             jel.trigger('tabchange', [
@@ -53,4 +52,5 @@
       }
     });
   })(jQuery);
+
 }).call(this);
