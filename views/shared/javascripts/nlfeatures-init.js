@@ -1,4 +1,5 @@
 (function() {
+
   window.NLFeatures = {
     viewCoverageMap: function(mapEl, wkt) {
       var el, item, m;
@@ -66,9 +67,7 @@
     destroyTinyMCE: function(text, html) {
       var cb, poll;
       cb = jQuery(html);
-      if (text.charAt(0) === '#') {
-        text = text.substr(1);
-      }
+      if (text.charAt(0) === '#') text = text.substr(1);
       poll = function() {
         var eds;
         eds = document.getElementsByClassName('mceEditor');
@@ -78,9 +77,7 @@
           return tinyMCE.execCommand('mceRemoveControl', false, text);
         }
       };
-      if (!cb.checked) {
-        return setTimeout(poll, 100);
-      }
+      if (!cb.checked) return setTimeout(poll, 100);
     },
     switchToTab: function(tabs, n) {
       return jQuery(tabs.element.find('li a')[n]).trigger('click');
@@ -89,13 +86,10 @@
       var m, tabWidget;
       tabWidget = NLFeatures.initTabs(parent);
       m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value);
-      if (!formats.is_html) {
-        NLFeatures.destroyTinyMCE(widgets.text, widgets.html);
-      }
-      if (!(value === '' || formats.is_wkt)) {
-        NLFeatures.switchToTab(tabWidget, 1);
-      }
+      if (!formats.is_html) NLFeatures.destroyTinyMCE(widgets.text, widgets.html);
+      if (!(value === '' || formats.is_wkt)) tabWidget.switchToTab(1);
       return m;
     }
   };
+
 }).call(this);

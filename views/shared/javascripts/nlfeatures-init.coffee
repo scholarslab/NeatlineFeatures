@@ -140,7 +140,7 @@ window.NLFeatures =
     m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value)
 
     NLFeatures.destroyTinyMCE(widgets.text, widgets.html) unless formats.is_html
-    NLFeatures.switchToTab(tabWidget, 1) unless value == '' or formats.is_wkt
+    tabWidget.switchToTab(1) unless value == '' or formats.is_wkt
 
     m
 
