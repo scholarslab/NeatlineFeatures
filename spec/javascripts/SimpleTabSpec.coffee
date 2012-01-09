@@ -34,20 +34,20 @@ describe 'simpletab', ->
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeFalsy()
 
   it 'should show the second tab when you click the second list item', ->
-    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
+    $("#simpletab-eg-#{counter} li:nth-child(2)").click()
     expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeFalsy()
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeTruthy()
 
   it 'should show the first tab when you click the second item, then the first item', ->
-    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
-    $("#simpletab-eg-#{counter} li:first a").click()
+    $("#simpletab-eg-#{counter} li:nth-child(2)").click()
+    $("#simpletab-eg-#{counter} li:first").click()
     expect($("#simpletab-tab-#{counter}-0").is(':visible')).toBeTruthy()
     expect($("#simpletab-tab-#{counter}-1").is(':visible')).toBeFalsy()
 
   it 'should fire a tabchange event when a tab is clicked on', ->
     clicked = 0
     el.bind('tabchange', (event) -> clicked++)
-    $("#simpletab-eg-#{counter} li:nth-child(2) a").click()
-    $("#simpletab-eg-#{counter} li:first a").click()
+    $("#simpletab-eg-#{counter} li:nth-child(2)").click()
+    $("#simpletab-eg-#{counter} li:first").click()
     expect(clicked).toBe(2)
 

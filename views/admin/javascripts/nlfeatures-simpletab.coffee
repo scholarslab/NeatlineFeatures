@@ -98,7 +98,7 @@
         jel.data('neatline.simpletab.target', target)
         target.hide()
 
-        jel.click (event) ->
+        jel.parent().click (event) ->
           tab.current.hide() if tab.current?
           tab.current = target
           target.show()

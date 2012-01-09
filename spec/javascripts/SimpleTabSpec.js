@@ -24,13 +24,13 @@
       return expect($("#simpletab-tab-" + counter + "-1").is(':visible')).toBeFalsy();
     });
     it('should show the second tab when you click the second list item', function() {
-      $("#simpletab-eg-" + counter + " li:nth-child(2) a").click();
+      $("#simpletab-eg-" + counter + " li:nth-child(2)").click();
       expect($("#simpletab-tab-" + counter + "-0").is(':visible')).toBeFalsy();
       return expect($("#simpletab-tab-" + counter + "-1").is(':visible')).toBeTruthy();
     });
     it('should show the first tab when you click the second item, then the first item', function() {
-      $("#simpletab-eg-" + counter + " li:nth-child(2) a").click();
-      $("#simpletab-eg-" + counter + " li:first a").click();
+      $("#simpletab-eg-" + counter + " li:nth-child(2)").click();
+      $("#simpletab-eg-" + counter + " li:first").click();
       expect($("#simpletab-tab-" + counter + "-0").is(':visible')).toBeTruthy();
       return expect($("#simpletab-tab-" + counter + "-1").is(':visible')).toBeFalsy();
     });
@@ -40,8 +40,8 @@
       el.bind('tabchange', function(event) {
         return clicked++;
       });
-      $("#simpletab-eg-" + counter + " li:nth-child(2) a").click();
-      $("#simpletab-eg-" + counter + " li:first a").click();
+      $("#simpletab-eg-" + counter + " li:nth-child(2)").click();
+      $("#simpletab-eg-" + counter + " li:first").click();
       return expect(clicked).toBe(2);
     });
   });
