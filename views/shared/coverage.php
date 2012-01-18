@@ -21,7 +21,13 @@
 </div>
 <script type='text/javascript'>
 jQuery(function() {
+    var options = {
+        styles: {
+            point_graphic: '<?php echo img('pushpin-1.png'); ?>'
+        }
+    };
     NLFeatures.viewCoverageMap('#<?php echo $idPrefix ?>map',
-                               <?php echo json_encode($text) ?>);
+                               <?php echo json_encode($text) ?>,
+                               options);
 });
 </script>

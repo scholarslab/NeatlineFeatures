@@ -59,12 +59,18 @@ echo json_encode(NeatlineFeatures_Functions::isWkt($value))
             text: '#<?php echo $idPrefix ?>text',
             html: '#<?php echo $idPrefix ?>html'
         };
+        var options = {
+            styles: {
+                point_graphic: '<?php echo img('pushpin-1.png'); ?>'
+            }
+        };
         NLFeatures.editCoverageMap(
             '#<?php echo $idPrefix ?>widget',
             tabs,
             widgets,
             <?php echo json_encode(is_null($value) ? '' : $value) ?>,
-            formats
+            formats,
+            options
         );
     });
 
