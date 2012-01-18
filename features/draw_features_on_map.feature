@@ -8,22 +8,36 @@ Feature: Draw Features on a Map
   As an item editor
   I want to be able to annotate an item by drawing features on a map.
 
+  Scenario: Coverage has no map displayed by default
+    Given I am logged into the admin console
+    When I click "Add a new item to your archive"
+    Then I should not see a map in "#element-38" 
+
+  Scenario: Coverage has a "Use Map" checkbox
+    Given I am logged into the admin console
+    And I click "Add a new item to your archive"
+    When I click "Use Map" checkbox in "#element-38"
+    Then I should see a map in "#element-38"
+
   Scenario: Coverage Has a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    When I click on the "#element-38" field "NL Features" tab
+    When I click "Use Map" checkbox in "#element-38"
     Then I should see a map in "#element-38"
-    But I should not see ".nlfeatures-edit-raw" in "#element-38"
+    And I should see "#Elements-38-0-free"
+    But I should not see "#Elements-38-0-text"
 
   Scenario: Draw Point on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
+    And I click "Use Map" checkbox in "#element-38"
     When I draw a point on "div.olMap"
     Then a point is defined in "#Elements-38-0-text"
 
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
+    And I click "Use Map" checkbox in "#element-38"
     When I draw a line on "div.olMap"
     Then a line is defined in "#Elements-38-0-text"
 
@@ -32,7 +46,7 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"     # Title
     And I enter "Draw On Coverage Map" for the "Elements-49-0-text"               # Subject
-    And I click on the "#element-38" field "NL Features" tab
+    And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div.olMap"
     And I draw a line on "div.olMap"
     And I click on "Add Item"

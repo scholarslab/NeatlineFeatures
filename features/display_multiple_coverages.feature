@@ -11,11 +11,9 @@ Feature: Display Multiple Coverages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
-    And I click the "Raw" tab in "#Elements-38-0-widget"
-    And I enter "Charlottesville, VA" into "Elements-38-0-text"
+    And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click "add_element_38"
-    And I click the "Raw" tab in "#Elements-38-1-widget"
-    And I enter "UVa" into "Elements-38-1-text"
+    And I enter "UVa" into "Elements-38-1-free"
     And I click on "Add Item"
     And I click "Display All Non-Feature Coverages"
     When I click "View Public Page"
@@ -28,8 +26,10 @@ Feature: Display Multiple Coverages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Feature Coverages" for the "Elements-49-0-text"      # Subject
+    And I click "Use Map" checkbox in "#Elements-38-0-widget"
     And I draw a point on "div#Elements-38-0-map.olMap"
     And I click on "add_element_38"
+    And I click "Use Map" checkbox in "#Elements-38-1-widget"
     And I draw a line on "div#Elements-38-1-map.olMap"
     And I click on "Add Item"
     And I click "Display All Feature Coverages"
@@ -44,10 +44,10 @@ Feature: Display Multiple Coverages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject
+    And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div#Elements-38-0-map.olMap"
     And I click on "add_element_38"
-    And I click the "Raw" tab in "#Elements-38-1-widget"
-    And I enter "UVa" into "Elements-38-1-text"
+    And I enter "UVa" into "Elements-38-1-free"
     And I click on "Add Item"
     And I click "Display Mixed Feature Coverages"
     When I click "View Public Page"

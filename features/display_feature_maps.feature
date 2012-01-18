@@ -9,6 +9,7 @@ Feature: Display Feature Maps on Item Pages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display Feature Maps" for the "Elements-50-0-text"      # Title
     And I enter "Display Feature Maps" for the "Elements-49-0-text"      # Subject
+    And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div.olMap"
     And I draw a line on "div.olMap"
     And I click on "Add Item"
