@@ -53,20 +53,19 @@ window.NLFeatures =
   # This returns the nlfeatures data instance.
   initEditMap: (widget, map, text, value) ->
     el = jQuery(map)
-    m = el.nlfeatures(
-      map:
-        raw_update: jQuery(text)
-    )
-      .data('nlfeatures')
     item =
       id: el.attr('id')
       title: 'Coverage'
       name: 'Coverage'
       wkt: value
 
-    m.loadLocalData([item])
-    m.setViewport()
-    m.editJson(item, true)
+    m = el.nlfeatures(
+      map:
+        raw_update: jQuery(text)
+      edit_json: item
+
+    )
+      .data('nlfeatures')
 
     jQuery(widget).bind('tabchange', (event, data) ->
       if (data.index == 0)
@@ -75,9 +74,7 @@ window.NLFeatures =
           title: 'Coverage'
           name: 'Coverage'
           wkt: jQuery(text).val()
-        m.loadLocalData([item])
-        m.setViewport()
-        m.editJson(item, true)
+        m.editJsonItem(item)
     )
 
     m

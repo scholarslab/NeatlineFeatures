@@ -35,20 +35,18 @@
     initEditMap: function(widget, map, text, value) {
       var el, item, m;
       el = jQuery(map);
-      m = el.nlfeatures({
-        map: {
-          raw_update: jQuery(text)
-        }
-      }).data('nlfeatures');
       item = {
         id: el.attr('id'),
         title: 'Coverage',
         name: 'Coverage',
         wkt: value
       };
-      m.loadLocalData([item]);
-      m.setViewport();
-      m.editJson(item, true);
+      m = el.nlfeatures({
+        map: {
+          raw_update: jQuery(text)
+        },
+        edit_json: item
+      }).data('nlfeatures');
       jQuery(widget).bind('tabchange', function(event, data) {
         if (data.index === 0) {
           item = {
@@ -57,9 +55,7 @@
             name: 'Coverage',
             wkt: jQuery(text).val()
           };
-          m.loadLocalData([item]);
-          m.setViewport();
-          return m.editJson(item, true);
+          return m.editJsonItem(item);
         }
       });
       return m;
