@@ -571,7 +571,7 @@
             // Instantiate the edit toolbar.
             this.editToolbar = new OpenLayers.Control.Panel({
                 defaultControl: panelControls[0],
-                displayClass: 'olControlEditingToolbar'
+                displayClass: this.options.markup.toolbar_class
             });
 
             // Add the controls.
