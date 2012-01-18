@@ -97,7 +97,12 @@
                 epsg: undefined,
                 wmsAddress: undefined,
                 raw_update: undefined
-            }
+            },
+
+            // If given, this loads this item and sets up the widget to edit
+            // it. If given, it should be a JavaScript object like the
+            // `.editJson` method expects.
+            edit_json: null
         },
 
         /*
@@ -124,8 +129,15 @@
             this.idToLayer = {};
             this.requestData = null;
 
-            // Load data.
-            this.loadData();
+            // Load data. Maybe set edit mode.
+            if (typeof this.options.edit_json !== 'undefined' &&
+                this.options.edit_json !== null) {
+                this.loadLocalData([this.options.edit_json]);
+                this.setViewport();
+                this.editJson(this.options.edit_json, true);
+            } else {
+                this.loadData();
+            }
         },
 
         /*
@@ -473,7 +485,8 @@
          *
          * `item` is a JS object with these parameters:
          *
-         * + `id` + `name`
+         * + `id`
+         * + `name`
          *
          * `immediate` is a boolean indicating whether to fade the controls in
          * or not.
@@ -664,6 +677,18 @@
                 this.modifyFeatures.selectFeature(this._clickedFeature);
             }
         },
+
+        /*
+         * This sets up the control to edit a JSON object, taking care of some
+         * of the other tasks like loading the data and setting the viewport.
+         *
+         * `item` is a JS object such as what `.editJson` expected.
+         */
+         editJsonItem: function(item) {
+             this.loadLocalData([item]);
+             this.setViewport();
+             this.editJson(item, true);
+         },
 
         /*
          * This sets the viewport to either the user's current location or to
