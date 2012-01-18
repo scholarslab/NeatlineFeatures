@@ -8,9 +8,9 @@ window.NLFeatures =
   #
   # + `mapEl` is a jQuery selector for the element to turn into a map.
   # + `wkt` is the WKT data to display on it.
-  viewCoverageMap: (mapEl, wkt) ->
+  viewCoverageMap: (mapEl, wkt, options={}) ->
     el = jQuery(mapEl)
-    m = el.nlfeatures().data('nlfeatures')
+    m = el.nlfeatures(options).data('nlfeatures')
     item = 
       id: el.attr('id')
       title: 'Coverage'
@@ -49,9 +49,10 @@ window.NLFeatures =
   # + `text` is the jQuery selector for the TEXTAREA to update with the raw
   # feature data; and
   # + `value` is the initial WKT (or not) value for the Coverage field.
+  # + `options` are the options to the nlfeatures widget.
   #
   # This returns the nlfeatures data instance.
-  initEditMap: (widget, map, text, value) ->
+  initEditMap: (widget, map, text, value, options) ->
     el = jQuery(map)
     item =
       id: el.attr('id')
@@ -59,13 +60,18 @@ window.NLFeatures =
       name: 'Coverage'
       wkt: value
 
-    m = el.nlfeatures(
-      map:
-        raw_update: jQuery(text)
-      edit_json: item
-
+    all_options = jQuery.extend(
+      true,
+      {},
+      options, 
+      {
+        map:
+          raw_update: jQuery(text)
+        edit_json: item
+      }
     )
-      .data('nlfeatures')
+
+    m = el.nlfeatures(all_options).data('nlfeatures')
 
     jQuery(widget).bind('tabchange', (event, data) ->
       if (data.index == 0)
@@ -132,9 +138,10 @@ window.NLFeatures =
   #   should be enabled;
   #   - `is_wkt` is true if the data appears to be WKT, so the OpenLayers map
   #   should be enabled.
-  editCoverageMap: (parent, tabs, widgets, value, formats) ->
+  # + `options` are options to pass to the nlfeatures widget.
+  editCoverageMap: (parent, tabs, widgets, value, formats, options={}) ->
     tabWidget = NLFeatures.initTabs(parent)
-    m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value)
+    m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value, options)
 
     NLFeatures.destroyTinyMCE(widgets.text, widgets.html) unless formats.is_html
     tabWidget.switchToTab(1) unless value == '' or formats.is_wkt

@@ -1,10 +1,11 @@
 (function() {
 
   window.NLFeatures = {
-    viewCoverageMap: function(mapEl, wkt) {
+    viewCoverageMap: function(mapEl, wkt, options) {
       var el, item, m;
+      if (options == null) options = {};
       el = jQuery(mapEl);
-      m = el.nlfeatures().data('nlfeatures');
+      m = el.nlfeatures(options).data('nlfeatures');
       item = {
         id: el.attr('id'),
         title: 'Coverage',
@@ -32,8 +33,8 @@
       });
       return w.data('simpletab');
     },
-    initEditMap: function(widget, map, text, value) {
-      var el, item, m;
+    initEditMap: function(widget, map, text, value, options) {
+      var all_options, el, item, m;
       el = jQuery(map);
       item = {
         id: el.attr('id'),
@@ -41,12 +42,13 @@
         name: 'Coverage',
         wkt: value
       };
-      m = el.nlfeatures({
+      all_options = jQuery.extend(true, {}, options, {
         map: {
           raw_update: jQuery(text)
         },
         edit_json: item
-      }).data('nlfeatures');
+      });
+      m = el.nlfeatures(all_options).data('nlfeatures');
       jQuery(widget).bind('tabchange', function(event, data) {
         if (data.index === 0) {
           item = {
@@ -78,10 +80,11 @@
     switchToTab: function(tabs, n) {
       return jQuery(tabs.element.find('li a')[n]).trigger('click');
     },
-    editCoverageMap: function(parent, tabs, widgets, value, formats) {
+    editCoverageMap: function(parent, tabs, widgets, value, formats, options) {
       var m, tabWidget;
+      if (options == null) options = {};
       tabWidget = NLFeatures.initTabs(parent);
-      m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value);
+      m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value, options);
       if (!formats.is_html) NLFeatures.destroyTinyMCE(widgets.text, widgets.html);
       if (!(value === '' || formats.is_wkt)) tabWidget.switchToTab(1);
       return m;
