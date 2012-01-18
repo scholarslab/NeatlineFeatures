@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @package     omeka
- * @subpackage  neatline
+ * @subpackage  nlfeatures
  * @author      Scholars' Lab <>
  * @author      Eric Rochester <erochest@virginia.edu>
  * @copyright   2011 The Board and Visitors of the University of Virginia

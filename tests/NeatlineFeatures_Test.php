@@ -5,7 +5,7 @@
  * PHP version 5
  *
  * @package     omeka
- * @subpackage  neatline
+ * @subpackage  nlfeatures
  * @author      Scholars' Lab <>
  * @author      Bethany Nowviskie <bethany@virginia.edu>
  * @author      Adam Soroka <ajs6f@virginia.edu>

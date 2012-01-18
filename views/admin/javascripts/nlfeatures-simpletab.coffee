@@ -68,7 +68,7 @@
 #
 #
 # @package     omeka
-# @subpackage  neatline
+# @subpackage  nlfeatures
 # @author      Scholars' Lab <>
 # @author      Bethany Nowviskie <bethany@virginia.edu>
 # @author      Adam Soroka <ajs6f@virginia.edu>
@@ -78,7 +78,7 @@
 #
 
 (($) ->
-  $.widget('neatline.simpletab',
+  $.widget('nlfeatures.simpletab',
     options: {
       # This is the jQuery selector to the list containing the tabs.
       nav_list: 'ul:first'
@@ -95,7 +95,7 @@
       this.anchors.each (index) ->
         jel = $ this
         target = $(jel.attr('href'))
-        jel.data('neatline.simpletab.target', target)
+        jel.data('nlfeatures.simpletab.target', target)
         target.hide()
 
         jel.parent().click (event) ->
@@ -114,7 +114,7 @@
 
       this.anchors.first().each ->
         jel = $ this
-        target = jel.data('neatline.simpletab.target')
+        target = jel.data('nlfeatures.simpletab.target')
         target.show()
         tab.current = target
 

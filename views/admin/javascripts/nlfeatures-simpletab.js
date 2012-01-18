@@ -1,7 +1,7 @@
 (function() {
 
   (function($) {
-    return $.widget('neatline.simpletab', {
+    return $.widget('nlfeatures.simpletab', {
       options: {
         nav_list: 'ul:first'
       },
@@ -13,7 +13,7 @@
           var jel, target;
           jel = $(this);
           target = $(jel.attr('href'));
-          jel.data('neatline.simpletab.target', target);
+          jel.data('nlfeatures.simpletab.target', target);
           target.hide();
           return jel.parent().click(function(event) {
             if (tab.current != null) tab.current.hide();
@@ -33,7 +33,7 @@
         this.anchors.first().each(function() {
           var jel, target;
           jel = $(this);
-          target = jel.data('neatline.simpletab.target');
+          target = jel.data('nlfeatures.simpletab.target');
           target.show();
           return tab.current = target;
         });

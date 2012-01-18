@@ -21,17 +21,17 @@
  *
  * Of course, when toggled off, the inverse of these properties is true.
  *
- * When clicked, these buttons trigger an 'update.neatline' event. The first
+ * When clicked, these buttons trigger an 'update.nlfeatures' event. The first
  * argument is an object with the keys `drag`, `rotate`, and `scale`, whose
  * values are the value of the activated flags for those buttons.
  *
  * ## Delete Button
  *
  * The Delete button is not a toggle button. When clicked, it triggers a
- * 'delete.neatline' event.
+ * 'delete.nlfeatures' event.
  *
  * @package     omeka
- * @subpackage  neatline
+ * @subpackage  nlfeatures
  * @author      Scholars' Lab <>
  * @author      Bethany Nowviskie <bethany@virginia.edu>
  * @author      Adam Soroka <ajs6f@virginia.edu>
@@ -41,7 +41,7 @@
  */
 
 (function($, undefined) {
-    $.widget('neatline.editgeometry', {
+    $.widget('nlfeatures.editfeatures', {
         options: {
             // Markup hooks.
             markup: {
@@ -106,7 +106,7 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', [{
+                    self.element.trigger('update.nlfeatures', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -141,7 +141,7 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', [{
+                    self.element.trigger('update.nlfeatures', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -176,7 +176,7 @@
                     }
 
                     // Fire out the update event.
-                    self.element.trigger('update.neatline', [{
+                    self.element.trigger('update.nlfeatures', [{
                         'drag': self.dragButton.data('activated'),
                         'rotate': self.rotateButton.data('activated'),
                         'scale': self.scaleButton.data('activated')
@@ -194,7 +194,7 @@
             this.deleteButton.bind({
                 // Fire out the delete event.
                 'mousedown': function() {
-                    self.element.trigger('delete.neatline');
+                    self.element.trigger('delete.nlfeatures');
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -237,7 +237,7 @@
         /*
          * This deactivates all three toggle buttons in one action.
          *
-         * This does *not* trigger the 'update.neatline' event.
+         * This does *not* trigger the 'update.nlfeatures' event.
          */
         deactivateAllButtons: function() {
             // Drag.

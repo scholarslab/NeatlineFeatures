@@ -48,7 +48,7 @@
  * documentation in `nlfeatures-init.coffee` for more information.
  *
  * @package     omeka
- * @subpackage  neatline
+ * @subpackage  nlfeatures
  * @author      Scholars' Lab <>
  * @author      Bethany Nowviskie <bethany@virginia.edu>
  * @author      Adam Soroka <ajs6f@virginia.edu>
@@ -58,7 +58,7 @@
  */
 
 (function($, undefined) {
-    $.widget('neatline.nlfeatures', {
+    $.widget('nlfeatures.nlfeatures', {
         options: {
 
             // `loadData()` and `loadLocalData()` can parse out multiple WKT
@@ -398,7 +398,7 @@
                     self._clickedFeature = feature;
 
                     // Trigger out to the deployment code.
-                    self.element.trigger('featureclick.neatline', {}, {
+                    self.element.trigger('featureclick.nlfeatures', {}, {
                         'itemId': self.layerToId[feature.layer.id]
                     });
 
@@ -525,7 +525,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Path, {
                     displayClass: 'olControlDrawFeaturePath',
                     featureAdded: function() {
-                        self.element.trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.nlfeatures');
                     }
                 }),
 
@@ -533,7 +533,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Point, {
                     displayClass: 'olControlDrawFeaturePoint',
                     featureAdded: function() {
-                        self.element.trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.nlfeatures');
                     }
                 }),
 
@@ -541,7 +541,7 @@
                 new OpenLayers.Control.DrawFeature(this._currentEditLayer, OpenLayers.Handler.Polygon, {
                     displayClass: 'olControlDrawFeaturePolygon',
                     featureAdded: function() {
-                        self.element.trigger('featureadded.neatline');
+                        self.element.trigger('featureadded.nlfeatures');
                     }
                 })
             ];
@@ -551,7 +551,7 @@
                 // OL marks this callback as deprecated, but I can't find
                 // any alternative and kosher way of hooking on to this.
                 onModification: function() {
-                    self.element.trigger('featureadded.neatline');
+                    self.element.trigger('featureadded.nlfeatures');
                 },
 
                 standalone: true
@@ -572,9 +572,9 @@
             this.modifyFeatures.activate();
 
             // Instantiate the geometry editor.
-            this.element.editgeometry();
+            this.element.editfeatures();
             // On update.
-            this.element.bind('update.neatline',
+            this.element.bind('update.nlfeatures',
                 function(event, obj) {
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
@@ -609,7 +609,7 @@
                     }
                 });
 
-            this.element.bind('delete.neatline',
+            this.element.bind('delete.nlfeatures',
                 function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
@@ -623,7 +623,7 @@
             // another form close.
             if (!immediate) {
                 // Insert the edit geometry button.
-                this.element.editgeometry('showButtons', immediate);
+                this.element.editfeatures('showButtons', immediate);
 
                 // Fade up the toolbar.
                 $('.' + this.options.markup.toolbar_class).animate({
@@ -639,13 +639,13 @@
             if (this.options.map.raw_update !== undefined) {
                 var update_target = this.options.map.raw_update;
                 this.element.bind({
-                    'featureadded.neatline': function() {
+                    'featureadded.nlfeatures': function() {
                         self.updateRaw();
                     },
-                    'update.neatline': function() {
+                    'update.nlfeatures': function() {
                         self.updateRaw();
                     },
-                    'delete.neatline': function() {
+                    'delete.nlfeatures': function() {
                         self.updateRaw();
                     }
                 });
@@ -754,7 +754,7 @@
             // the fade down, as as to avoid a little opacity dip in the buttons
             // when the form switches.
             if (!immediate) {
-                this.element.editgeometry('hideButtons');
+                this.element.editfeatures('hideButtons');
 
                 // Reinsert the dummy toolbar and fade it down.
                 this.element.append(toolbarClone);
