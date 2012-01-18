@@ -82,7 +82,8 @@
                 default_opacity: 0.4,
                 default_color: '#ffb80e',
                 select_point_radius: 10,
-                select_stroke_color: '#ea3a3a'
+                select_stroke_color: '#ea3a3a',
+                point_graphic: undefined
             },
 
             // These are added to document options for the map.
@@ -845,6 +846,7 @@
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: fillColor,
                     pointRadius: this.options.styles.select_point_radius,
+                    externalGraphic: this.options.styles.point_graphic,
                     strokeWidth: 1
                 }),
                 'select': new OpenLayers.Style({
