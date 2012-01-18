@@ -85,11 +85,7 @@
                 select_stroke_color: '#ea3a3a'
             },
 
-            // These are added to document options for the map. If
-            // `window.Neatline` is set those values are used, and these are
-            // ignored. Otherwise, normal widget option-handling is used
-            // (defaults here, overridden in the config object passed into the
-            // initializer).
+            // These are added to document options for the map.
             map: {
                 boundingBox: '90,0,-90,360',
                 center: undefined,
@@ -106,17 +102,10 @@
         },
 
         /*
-         * Grab the Neatline global, instantiate OpenLayers, load data.
+         * Grab the instantiate OpenLayers and load data.
          */
         _create: function() {
             var self = this;
-
-            // Getters.
-            if (window.Neatline !== undefined) {
-                this.params = Neatline;
-            } else {
-                this.params = this.options;
-            }
 
             // Ignition.
             this._instantiateOpenLayers();
@@ -172,10 +161,10 @@
             format = pureCoverage ? 'image/png8' : 'image/png';
 
             // Build the default bounds array.
-            if (this.params.map.boundingBox === undefined) {
+            if (this.options.map.boundingBox === undefined) {
                 bounds = new OpenLayers.Bounds();
             } else {
-                boundsArray = this.params.map.boundingBox.split(',');
+                boundsArray = this.options.map.boundingBox.split(',');
                 bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
@@ -185,8 +174,8 @@
             }
 
             // Starting options.
-            var proj = (this.params.map.epsg !== undefined) ?
-                       this.params.map.epsg[0] :
+            var proj = (this.options.map.epsg !== undefined) ?
+                       this.options.map.epsg[0] :
                        'EPSG:4326';
             var options = {
                 controls: [
@@ -206,11 +195,11 @@
             // Instantiate the map.
             this.map = new OpenLayers.Map(this.element.attr('id'), options);
 
-            if (this.params.map.wmsAddress !== undefined) {
+            if (this.options.map.wmsAddress !== undefined) {
                 this.baseLayer = new OpenLayers.Layer.WMS(
-                    this.params.name, this.params.map.wmsAddress,
+                    this.options.name, this.options.map.wmsAddress,
                     {
-                        LAYERS: this.params.map.layers,
+                        LAYERS: this.options.map.layers,
                         STYLES: '',
                         format: 'image/jpeg',
                         tiled: !pureCoverage,
@@ -230,8 +219,8 @@
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
-            if (this.exists(this.params.default_map_bounds)) {
-                boundsArray = this.params.default_map_bounds.split(',');
+            if (this.exists(this.options.default_map_bounds)) {
+                boundsArray = this.options.default_map_bounds.split(',');
                 bounds = new OpenLayers.Bounds(
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
@@ -240,10 +229,10 @@
                 );
             }
 
-            if (this.params.map.center !== undefined) {
-                var z = (this.params.map.zoom === undefined) ? 3 : this.params.map.zoom;
-                var ll = new OpenLayers.LonLat(this.params.map.center[0],
-                                               this.params.map.center[1]);
+            if (this.options.map.center !== undefined) {
+                var z = (this.options.map.zoom === undefined) ? 3 : this.options.map.zoom;
+                var ll = new OpenLayers.LonLat(this.options.map.center[0],
+                                               this.options.map.center[1]);
 
                 this.map.setCenter(ll, z);
             } else {
@@ -266,10 +255,10 @@
             }
 
             // Hit the json server.
-            if (this.params.dataSources !== undefined &&
-                this.params.dataSources.maps !== undefined) {
+            if (this.options.dataSources !== undefined &&
+                this.options.dataSources.maps !== undefined) {
                 this.requestData = $.ajax({
-                    url: this.params.dataSources.map,
+                    url: this.options.dataSources.map,
                     dataType: 'json',
 
                     success: function(data) {
@@ -647,8 +636,8 @@
 
             // If there is an update target for raw edits, wire up the handlers
             // here.
-            if (this.params.map.raw_update !== undefined) {
-                var update_target = this.params.map.raw_update;
+            if (this.options.map.raw_update !== undefined) {
+                var update_target = this.options.map.raw_update;
                 this.element.bind({
                     'featureadded.neatline': function() {
                         self.updateRaw();
@@ -740,7 +729,7 @@
          * WKTs to make them more readable.
          */
         updateRaw: function() {
-            var updateEl = this.params.map.raw_update;
+            var updateEl = this.options.map.raw_update;
             if (this.exists(updateEl)) {
                 var text = this.getWktForSave();
                 text = text.replace(/\|/g, "|\n");
