@@ -29,34 +29,22 @@
 </div>
 <script type='text/javascript'>
 (function($) {
-
     $(function() {
-        var formats = {
-            is_html: <?php echo json_encode($isHtml) ?>,
-            is_wkt: <?php
-echo json_encode(NeatlineFeatures_Functions::isWkt($value))
-                ?>
-        };
-        var widgets = {
-            map   : '#<?php echo $idPrefix ?>map',
-            text  : '#<?php echo $idPrefix ?>text',
-            free  : '#<?php echo $idPrefix ?>free',
-            html  : '#<?php echo $idPrefix ?>html',
-            mapon : '#<?php echo $idPrefix ?>mapon'
-        };
         var options = {
-            styles: {
-                point_graphic: '<?php echo img('pushpin-1.png'); ?>'
-            }
-        };
-        NLFeatures.editCoverageMap(
-            '#<?php echo $idPrefix ?>widget',
-            widgets,
-            <?php echo json_encode(is_null($value) ? '' : $value) ?>,
-            formats,
-            options
-        );
+            map_options: {
+                styles: {
+                    point_graphic: '<?php echo img('pushpin-1.png'); ?>'
+                    }
+                },
+            value: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
+            formats: {
+                is_html: <?php echo json_encode($isHtml) ?>,
+                is_wkt: <?php
+    echo json_encode(NeatlineFeatures_Functions::isWkt($value))
+                    ?>
+                }
+            };
+        $("#<?php echo $idPrefix ?>widget").featurewidget(options);
     });
-
 })(jQuery);
 </script>
