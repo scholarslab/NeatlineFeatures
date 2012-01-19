@@ -56,34 +56,24 @@ window.NLFeatures =
       .hide()
       .data('nlfeatures')
 
-  # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
-  # initialized, and then it turns off the TEXTAREA specified.
+  # This polls until either the predicate returns true or until the maximum
+  # number of polls is reached. When it's done polling, then it calls the
+  # callback.
   #
-  # This is a sledgehammer, but the response is proportional. Basically, if
-  # there are any checked checkboxes in a field, Omeka turns on TinyMCE for all
-  # textareas in the field.  In this case, it's picking up an OpenLayers
-  # checkbox and setting the raw textarea up incorrectly.
-  #
-  # Also, because of the way TinyMCE is handled, we have to poll to make sure
-  # it gets set back *after* it's incorrectly enabled. Double ugh.
-  #
-  # TODO: Bring this up on #omeka and file a bug report.
-  # admin/themes/default/javascripts/items.js, around line 410, should be more
-  # specific.
-  #
-  # + `text` is the jQuery selector for the TEXTAREA to remove TinyMCE from.
-  # + `html` is the jQuery selector for the "Use HTML" control.
-  destroyTinyMCE: (text, html) ->
-    cb = jQuery(html)
-    text = text.substr(1) if text.charAt(0) == '#'
-    poll = ->
-      eds = document.getElementsByClassName('mceEditor')
-      if eds.length is 0
-        setTimeout(poll, 100)
+  # + `predicate` is the function to call to see if it needs to keep polling.
+  # + `callback` is the function to call once it's done polling.
+  # + 'maxPoll` is the maximum number of times to poll. This is optional and
+  #   defaults to polling forever (0, null, or undefined).
+  # + `timeout` is the timeout period. This defaults to 100.
+  poll: (predicate, callback, maxPoll=null, timeout=100) ->
+    n = 0
+    _poll = ->
+      if predicate() || (maxPoll? && maxPoll != 0 && n >= maxPoll)
+        callback()
       else
-        tinyMCE.execCommand('mceRemoveControl', false, text)
-    unless cb.checked
-      setTimeout(poll, 100)
+        n++
+        setTimeout(_poll, timeout)
+    setTimeout(_poll, timeout)
 
   # This sets up a control for editing a coverage field.
   #
@@ -94,7 +84,8 @@ window.NLFeatures =
   #   - `map` is the jQuery selector for the OpenLayers/nlfeatures map DIV;
   #   - `text` is the jQuery selector for the hidden input for the raw data;
   #   - `free` is the jQuery selector for the TEXTAREA for the free-form text;
-  #   - `html` is the jQuery selector for the "Use HTML" checkbox.
+  #   - `html` is the jQuery selector for the "Use HTML" checkbox;
+  #   - `mapon` is the jQuery selector for the "Use Map" checkbox.
   # + `value` is the current value of coverage field as a string.
   # + `formats` is an object containing predicates about data formats are
   # enabled for the data.
@@ -105,6 +96,36 @@ window.NLFeatures =
   # + `options` are options to pass to the nlfeatures widget.
   editCoverageMap: (parent, widgets, value, formats, options={}) ->
     m = NLFeatures.initEditMap(widgets.map, widgets.text, value, options)
-    NLFeatures.destroyTinyMCE(widgets.free, widgets.html) unless formats.is_html
+
+    # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
+    # initialized, and then it turns off the TEXTAREA specified.
+    #
+    # This is a sledgehammer, but the response is proportional. Basically, if
+    # there are any checked checkboxes in a field, Omeka turns on TinyMCE for
+    # all textareas in the field.  In this case, it's picking up an OpenLayers
+    # checkbox and setting the raw textarea up incorrectly.
+    #
+    # Also, because of the way TinyMCE is handled, we have to poll to make sure
+    # it gets set back *after* it's incorrectly enabled. Double ugh.
+    #
+    # Finally, any checkboxes get bound to turn on TinyMCE. So I have to remove
+    # that binding on "Use Map" before adding my own.
+    #
+    # TODO: Bring this up on #omeka and file a bug report.
+    # admin/themes/default/javascripts/items.js, around line 410, should be
+    # more specific.
+    NLFeatures.poll(
+      -> document.getElementsByClassName('mceEditor').length > 0,
+      ->
+        if not jQuery(widgets.html).checked
+          free = if widgets.free.charAt(0) == '#'
+            widgets.free.substr(1)
+          else
+            widgets.free
+          tinyMCE.execCommand('mceRemoveControl', false, free)
+        jQuery(widgets.mapon).unbind('click')
+    )
+
+    NLFeatures.destroyTinyMCE(widgets.free, widgets.html, widgets.mapon)
     m
 

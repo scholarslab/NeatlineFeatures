@@ -38,10 +38,11 @@ echo json_encode(NeatlineFeatures_Functions::isWkt($value))
                 ?>
         };
         var widgets = {
-            map  : '#<?php echo $idPrefix ?>map',
-            text : '#<?php echo $idPrefix ?>text',
-            free : '#<?php echo $idPrefix ?>free',
-            html : '#<?php echo $idPrefix ?>html'
+            map   : '#<?php echo $idPrefix ?>map',
+            text  : '#<?php echo $idPrefix ?>text',
+            free  : '#<?php echo $idPrefix ?>free',
+            html  : '#<?php echo $idPrefix ?>html',
+            mapon : '#<?php echo $idPrefix ?>mapon'
         };
         var options = {
             styles: {

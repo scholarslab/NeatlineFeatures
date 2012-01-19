@@ -32,26 +32,36 @@
       });
       return el.nlfeatures(all_options).hide().data('nlfeatures');
     },
-    destroyTinyMCE: function(text, html) {
-      var cb, poll;
-      cb = jQuery(html);
-      if (text.charAt(0) === '#') text = text.substr(1);
-      poll = function() {
-        var eds;
-        eds = document.getElementsByClassName('mceEditor');
-        if (eds.length === 0) {
-          return setTimeout(poll, 100);
+    poll: function(predicate, callback, maxPoll, timeout) {
+      var n, _poll;
+      if (maxPoll == null) maxPoll = null;
+      if (timeout == null) timeout = 100;
+      n = 0;
+      _poll = function() {
+        if (predicate() || ((maxPoll != null) && maxPoll !== 0 && n >= maxPoll)) {
+          return callback();
         } else {
-          return tinyMCE.execCommand('mceRemoveControl', false, text);
+          n++;
+          return setTimeout(_poll, timeout);
         }
       };
-      if (!cb.checked) return setTimeout(poll, 100);
+      return setTimeout(_poll, timeout);
     },
     editCoverageMap: function(parent, widgets, value, formats, options) {
       var m;
       if (options == null) options = {};
       m = NLFeatures.initEditMap(widgets.map, widgets.text, value, options);
-      if (!formats.is_html) NLFeatures.destroyTinyMCE(widgets.free, widgets.html);
+      NLFeatures.poll(function() {
+        return document.getElementsByClassName('mceEditor').length > 0;
+      }, function() {
+        var free;
+        if (!jQuery(widgets.html).checked) {
+          free = widgets.free.charAt(0) === '#' ? widgets.free.substr(1) : widgets.free;
+          tinyMCE.execCommand('mceRemoveControl', false, free);
+        }
+        return jQuery(widgets.mapon).unbind('click');
+      });
+      NLFeatures.destroyTinyMCE(widgets.free, widgets.html, widgets.mapon);
       return m;
     }
   };
