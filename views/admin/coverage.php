@@ -16,13 +16,13 @@
  */
 ?>
 <div id="<?php echo $idPrefix ?>widget" class='nlfeatures nlfeatures-edit'>
-  <div>
+  <div class='nlfeatures text-container'>
     <?php echo $textField ?>
     <?php echo $freeField ?>
     <?php echo $useHtml   ?>
     <?php echo $useMap    ?>
   </div>
-  <div>
+  <div class='nlfeatures map-container'>
     <div id="<?php echo $idPrefix ?>map"></div>
     <div class='nlfeatures-map-tools'></div>
   </div>

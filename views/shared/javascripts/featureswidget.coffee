@@ -52,6 +52,7 @@
       @options.map   ?= "#{@options.id_prefix}map"
 
       this._initMap()
+      this.hideMap()
       this._recaptureEditor()
 
       # console.log this
@@ -79,7 +80,6 @@
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)
         .nlfeatures(all_options)
-        .hide()
         .data('nlfeatures')
 
     # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
@@ -104,11 +104,12 @@
       this._poll(
         -> $('.mceEditor').length > 0,
         =>
-          if not html.checked
+          if not html.is ':checked'
             free = @options.free.substr 1
             tinyMCE.execCommand 'mceRemoveControl', false, free
-          $(@options.mapon).unbind 'click'
-          # TODO: add my click event here
+          $(@options.mapon)
+            .unbind('click')
+            .change => this._onUseMap()
       )
 
     # This polls until either the predicate returns true or until the maximum
@@ -129,6 +130,16 @@
           setTimeout _poll, timeout
 
       setTimeout _poll, timeout
+
+    # This handles when the Use Map checkbox is clicked.
+    _onUseMap: ->
+      if $(@options.mapon).is ':checked'
+        this.showMap()
+      else
+        this.hideMap()
+
+    showMap: -> $(@element).find('.map-container').show()
+    hideMap: -> $(@element).find('.map-container').hide()
 
   ))(jQuery)
 

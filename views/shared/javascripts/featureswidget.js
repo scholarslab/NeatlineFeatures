@@ -38,6 +38,7 @@
           _base6.map = "" + this.options.id_prefix + "map";
         }
         this._initMap();
+        this.hideMap();
         return this._recaptureEditor();
       },
       destroy: function() {
@@ -62,7 +63,7 @@
           edit_json: item
         };
         all_options = $.extend(true, {}, this.options.map_options, local_options);
-        return $(this.options.map).nlfeatures(all_options).hide().data('nlfeatures');
+        return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
       },
       _recaptureEditor: function() {
         var html,
@@ -72,11 +73,13 @@
           return $('.mceEditor').length > 0;
         }, function() {
           var free;
-          if (!html.checked) {
+          if (!html.is(':checked')) {
             free = _this.options.free.substr(1);
             tinyMCE.execCommand('mceRemoveControl', false, free);
           }
-          return $(_this.options.mapon).unbind('click');
+          return $(_this.options.mapon).unbind('click').change(function() {
+            return _this._onUseMap();
+          });
         });
       },
       _poll: function(predicate, callback, maxPoll, timeout) {
@@ -96,6 +99,19 @@
           }
         };
         return setTimeout(_poll, timeout);
+      },
+      _onUseMap: function() {
+        if ($(this.options.mapon).is(':checked')) {
+          return this.showMap();
+        } else {
+          return this.hideMap();
+        }
+      },
+      showMap: function() {
+        return $(this.element).find('.map-container').show();
+      },
+      hideMap: function() {
+        return $(this.element).find('.map-container').hide();
       }
     });
   })(jQuery);

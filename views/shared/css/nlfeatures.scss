@@ -20,6 +20,17 @@ $border2: #FFF;
     color: $color;
 }
 
+@mixin clearfix {
+    &:after {
+        content: ".";
+        display: block;
+        clear: both;
+        visibility: hidden;
+        line-height: 0;
+        height: 0;
+    }
+}
+
 .nlfeatures {
     .nlfeatures-edit {
         color: $fg2;
@@ -79,6 +90,12 @@ $border2: #FFF;
     .nlfeatures-map-tools {
         width: 100%;
         height: 42px;
+    }
+    .text-container {
+        @include clearfix;
+    }
+    .map-container {
+        margin-top: 10px;
     }
     .nlfeatures-edit-raw,
     .nlfeatures-edit-map {
