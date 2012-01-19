@@ -54,7 +54,7 @@
       this._initMap()
       this._recaptureEditor()
 
-      console.log this
+      # console.log this
 
     destroy: ->
       $.Widget.prototype.destroy.call this
@@ -116,14 +116,19 @@
     # callback.
     _poll: (predicate, callback, maxPoll=null, timeout=100) ->
       n = 0
+      pred = if maxPoll? && maxPoll != 0
+        -> (predicate() || n >= maxPoll)
+      else
+        predicate
 
       _poll = ->
-        if predicate() || (maxPoll? && maxPoll != 0 && n >= maxPoll)
+        if pred()
           callback()
         else
           n++
           setTimeout _poll, timeout
 
       setTimeout _poll, timeout
+
   ))(jQuery)
 

@@ -38,8 +38,7 @@
           _base6.map = "" + this.options.id_prefix + "map";
         }
         this._initMap();
-        this._recaptureEditor();
-        return console.log(this);
+        return this._recaptureEditor();
       },
       destroy: function() {
         return $.Widget.prototype.destroy.call(this);
@@ -81,12 +80,15 @@
         });
       },
       _poll: function(predicate, callback, maxPoll, timeout) {
-        var n, _poll;
+        var n, pred, _poll;
         if (maxPoll == null) maxPoll = null;
         if (timeout == null) timeout = 100;
         n = 0;
+        pred = (maxPoll != null) && maxPoll !== 0 ? function() {
+          return predicate() || n >= maxPoll;
+        } : predicate;
         _poll = function() {
-          if (predicate() || ((maxPoll != null) && maxPoll !== 0 && n >= maxPoll)) {
+          if (pred()) {
             return callback();
           } else {
             n++;
