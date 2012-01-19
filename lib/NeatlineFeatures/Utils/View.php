@@ -257,6 +257,31 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This returns the string for a "Use X" widget.
+     *
+     * @param $key   string The key for the widget's name.
+     * @param $label string The label (X above).
+     * @param $value bool   Is it checked or not?
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _getUseWidget($key, $label, $value)
+    {
+        $use = '';
+
+        $use .= "<label class='use-$key'>Use $label ";
+        $use .= __v()->formCheckbox(
+            "{$this->_inputNameStem}[$key]",
+            1,
+            array( 'checked' => $value )
+        );
+        $use .= '</label>';
+
+        return $use;
+    }
+
+    /**
      * This returns the HTML for the "Use HTML" widget.
      *
      * @return string
@@ -264,16 +289,18 @@ class NeatlineFeatures_Utils_View
      **/
     public function getUseHtml()
     {
-        $useHtml = '';
+        return $this->_getUseWidget('html', 'HTML', $this->isHtml());
+    }
 
-        $useHtml .= '<label class="use-html">Use HTML ';
-        $useHtml .= __v()->formCheckbox(
-            $this->_inputNameStem . '[html]', 1,
-            array('checked'=>$this->isHtml())
-        );
-        $useHtml .= '</label>';
-
-        return $useHtml;
+    /**
+     * This returns the HTML for the "Use Map" widget.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getUseMap()
+    {
+        return $this->_getUseWidget('mapon', 'Map', false);
     }
 
     /**
@@ -295,6 +322,7 @@ class NeatlineFeatures_Utils_View
         $textField = $this->getTextField();
         $isHtml    = $this->isHtml();
         $useHtml   = $this->getUseHtml();
+        $useMap    = $this->getUseMap();
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';

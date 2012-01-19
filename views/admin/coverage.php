@@ -20,6 +20,7 @@
     <?php echo $textField ?>
     <?php echo $freeField ?>
     <?php echo $useHtml   ?>
+    <?php echo $useMap    ?>
   </div>
   <div>
     <div id="<?php echo $idPrefix ?>map"></div>

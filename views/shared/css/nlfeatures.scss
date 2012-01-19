@@ -107,5 +107,23 @@ $border2: #FFF;
     .primary:hover {
         color: #fff;
     }
+    label.use-mapon {
+        position: relative;
+        float: left;
+        padding-left: 16px;
+        width: 8em;
+        text-align: left;
+        font-size: 1.1em;
+        margin: 0;
+
+        input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            float: none;
+            padding: 0;
+        }
+    }
 }
 
