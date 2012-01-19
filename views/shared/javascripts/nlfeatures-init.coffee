@@ -19,24 +19,6 @@ window.NLFeatures =
     m.loadLocalData([item])
     m.setViewport()
 
-  # This initializes the tabs for the editing interface.
-  #
-  # + `widget` is a jQuery selector for the parent element for the entire
-  # control. This will be turned into a simpletab, which assumes that there the
-  # tab list is at '.nlfeatures-edit-nav-menu ul'.
-  #
-  # This returns the simpletabs data instance.
-  initTabs: (widget) ->
-    w = jQuery(widget)
-    w.simpletab(
-      nav_list: '.nlfeatures-edit-nav-menu ul'
-      tabchange: (event, data) ->
-        jQuery(a.parentNode).removeClass('selected') for a in data.tab.anchors
-        data.a.parent().addClass('selected')
-        event.preventDefault
-    )
-    w.data('simpletab')
-
   # This initializes an nlfeatures map for editing.
   #
   # This initializes the nlfeatures map, hooks it to the raw TEXTAREA,
@@ -44,7 +26,6 @@ window.NLFeatures =
   # for tabchange to update the map again whenever the tab is changed back to
   # the map tab.
   #
-  # + `widget` is the jQuery selector for the parent control/simpletabs;
   # + `map` is the jQuery selector for the DIV to turn into the nlfeatures map;
   # + `text` is the jQuery selector for the TEXTAREA to update with the raw
   # feature data; and
@@ -52,7 +33,7 @@ window.NLFeatures =
   # + `options` are the options to the nlfeatures widget.
   #
   # This returns the nlfeatures data instance.
-  initEditMap: (widget, map, text, value, options) ->
+  initEditMap: (map, text, value, options) ->
     el = jQuery(map)
     item =
       id: el.attr('id')
@@ -71,19 +52,9 @@ window.NLFeatures =
       }
     )
 
-    m = el.nlfeatures(all_options).data('nlfeatures')
-
-    jQuery(widget).bind('tabchange', (event, data) ->
-      if (data.index == 0)
-        item =
-          id: el.attr('id')
-          title: 'Coverage'
-          name: 'Coverage'
-          wkt: jQuery(text).val()
-        m.editJsonItem(item)
-    )
-
-    m
+    el.nlfeatures(all_options)
+      .hide()
+      .data('nlfeatures')
 
   # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
   # initialized, and then it turns off the TEXTAREA specified.
@@ -114,22 +85,15 @@ window.NLFeatures =
     unless cb.checked
       setTimeout(poll, 100)
 
-  # This is a utility function to facilitate switching to a given tab by
-  # issuing a click event on the appropriate A tab.
-  switchToTab: (tabs, n) ->
-    jQuery(tabs.element.find('li a')[n]).trigger('click')
-
   # This sets up a control for editing a coverage field.
   #
   # It returns the nlfeatures data instance.
   #
   # + `parent` is the jQuery selector for the parent DIV on the control.
-  # + `tabs` is an object containing the information about the tabs:
-  #   - `raw` is the jQuery selector for the raw tab;
-  #   - `map` is the jQuery selector for the map tab.
   # + `widgets` is an object containing information about the input widgets:
   #   - `map` is the jQuery selector for the OpenLayers/nlfeatures map DIV;
-  #   - `text` is the jQuery selector for the TEXTAREA for the raw text;
+  #   - `text` is the jQuery selector for the hidden input for the raw data;
+  #   - `free` is the jQuery selector for the TEXTAREA for the free-form text;
   #   - `html` is the jQuery selector for the "Use HTML" checkbox.
   # + `value` is the current value of coverage field as a string.
   # + `formats` is an object containing predicates about data formats are
@@ -139,12 +103,8 @@ window.NLFeatures =
   #   - `is_wkt` is true if the data appears to be WKT, so the OpenLayers map
   #   should be enabled.
   # + `options` are options to pass to the nlfeatures widget.
-  editCoverageMap: (parent, tabs, widgets, value, formats, options={}) ->
-    tabWidget = NLFeatures.initTabs(parent)
-    m = NLFeatures.initEditMap(parent, widgets.map, widgets.text, value, options)
-
-    NLFeatures.destroyTinyMCE(widgets.text, widgets.html) unless formats.is_html
-    tabWidget.switchToTab(1) unless value == '' or formats.is_wkt
-
+  editCoverageMap: (parent, widgets, value, formats, options={}) ->
+    m = NLFeatures.initEditMap(widgets.map, widgets.text, value, options)
+    NLFeatures.destroyTinyMCE(widgets.free, widgets.html) unless formats.is_html
     m
 

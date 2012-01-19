@@ -20,7 +20,7 @@ require_once dirname(__FILE__) .
  * This contructs the view and holds a bunch of utility methods.
  *
  * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base.
- * Surely there must be a better way.  Bring this up on #slab.
+ * Surely there must be a better way.  Bring this up on #omeka.
  **/
 class NeatlineFeatures_Utils_View
 {
@@ -147,18 +147,33 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This constructs the TEXTAREA for the raw coverage data and returns it as
-     * a string.
+     * This constructs the TEXTAREA for the free-form coverage data and returns 
+     * it as a string.
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getRawField()
+    public function getFreeField()
     {
         return __v()->formTextarea(
-            $this->_inputNameStem . '[text]',
+            $this->_inputNameStem . '[free]',
             $this->_value,
             array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
+        );
+    }
+
+    /**
+     * This constructs a hidden field for the WKT and free-form coverage data 
+     * and returns it as a string.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getTextField()
+    {
+        return __v()->formHidden(
+            $this->_inputNameStem . '[text]',
+            $this->_value
         );
     }
 
@@ -275,10 +290,11 @@ class NeatlineFeatures_Utils_View
         $record        = $this->_record;
         $element       = $this->_element;
 
-        $idPrefix = preg_replace('/\W+/', '-', $inputNameStem);
-        $rawField = $this->getRawField();
-        $isHtml   = $this->isHtml();
-        $useHtml  = $this->getUseHtml();
+        $idPrefix  = preg_replace('/\W+/', '-', $inputNameStem);
+        $freeField = $this->getFreeField();
+        $textField = $this->getTextField();
+        $isHtml    = $this->isHtml();
+        $useHtml   = $this->getUseHtml();
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';

@@ -16,48 +16,31 @@
  */
 ?>
 <div id="<?php echo $idPrefix ?>widget" class='nlfeatures nlfeatures-edit'>
-  <div class='nlfeatures-edit-nav'>
-    <div class='nlfeatures-edit-nav-menu'>
-      <ul>
-        <li class='selected'>
-            <a href="#<?php echo $idPrefix ?>maptab">NL Features</a>
-        </li>
-        <li><a href="#<?php echo $idPrefix ?>rawtab">Raw</a></li>
-      </ul>
-    </div>
-    <div class='nlfeatures-edit-nav-tools'>
-    </div>
+  <div>
+    <?php echo $textField ?>
+    <?php echo $freeField ?>
+    <?php echo $useHtml   ?>
   </div>
-  <div class='nlfeatures-edit-body'>
-    <div id="<?php echo $idPrefix ?>rawtab" class='nlfeatures-edit-raw'>
-      <?php echo $rawField ?>
-      <?php echo $useHtml ?>
-      &nbsp;
-    </div>
-    <div id="<?php echo $idPrefix ?>maptab" class='nlfeatures-edit-map'>
-      <div id="<?php echo $idPrefix ?>map"></div>
-      <div class='nlfeatures-map-tools'></div>
-    </div>
+  <div>
+    <div id="<?php echo $idPrefix ?>map"></div>
+    <div class='nlfeatures-map-tools'></div>
   </div>
 </div>
 <script type='text/javascript'>
 (function($) {
 
     $(function() {
-        var tabs = {
-            raw: '#<?php echo $idPrefix ?>rawtab',
-            map: '#<?php echo $idPrefix ?>maptab'
-        };
         var formats = {
             is_html: <?php echo json_encode($isHtml) ?>,
-                is_wkt: <?php
+            is_wkt: <?php
 echo json_encode(NeatlineFeatures_Functions::isWkt($value))
                 ?>
         };
         var widgets = {
-            map: '#<?php echo $idPrefix ?>map',
-            text: '#<?php echo $idPrefix ?>text',
-            html: '#<?php echo $idPrefix ?>html'
+            map  : '#<?php echo $idPrefix ?>map',
+            text : '#<?php echo $idPrefix ?>text',
+            free : '#<?php echo $idPrefix ?>free',
+            html : '#<?php echo $idPrefix ?>html'
         };
         var options = {
             styles: {
@@ -66,7 +49,6 @@ echo json_encode(NeatlineFeatures_Functions::isWkt($value))
         };
         NLFeatures.editCoverageMap(
             '#<?php echo $idPrefix ?>widget',
-            tabs,
             widgets,
             <?php echo json_encode(is_null($value) ? '' : $value) ?>,
             formats,
