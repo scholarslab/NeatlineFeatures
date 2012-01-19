@@ -37,9 +37,10 @@
         if ((_base6 = this.options).map == null) {
           _base6.map = "" + this.options.id_prefix + "map";
         }
-        this._initMap();
+        this.map = this._initMap();
         this.hideMap();
-        return this._recaptureEditor();
+        this._recaptureEditor();
+        return this._addUpdateEvents();
       },
       destroy: function() {
         return $.Widget.prototype.destroy.call(this);
@@ -57,28 +58,26 @@
           wkt: this.options.value
         };
         local_options = {
-          map: {
-            raw_update: $(this.options.text)
-          },
           edit_json: item
         };
         all_options = $.extend(true, {}, this.options.map_options, local_options);
         return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
       },
       _recaptureEditor: function() {
-        var html,
-          _this = this;
-        html = $(this.options.html);
+        var _this = this;
         return this._poll(function() {
           return $('.mceEditor').length > 0;
         }, function() {
           var free;
-          if (!html.is(':checked')) {
+          if (!_this.usesHtml()) {
             free = _this.options.free.substr(1);
             tinyMCE.execCommand('mceRemoveControl', false, free);
           }
-          return $(_this.options.mapon).unbind('click').change(function() {
+          $(_this.options.mapon).unbind('click').change(function() {
             return _this._onUseMap();
+          });
+          return $(_this.options.html).change(function() {
+            return _this._updateTinyEvents();
           });
         });
       },
@@ -100,18 +99,66 @@
         };
         return setTimeout(_poll, timeout);
       },
+      usesHtml: function() {
+        return $(this.options.html).is(':checked');
+      },
+      usesMap: function() {
+        return $(this.options.mapon).is(':checked');
+      },
       _onUseMap: function() {
-        if ($(this.options.mapon).is(':checked')) {
-          return this.showMap();
+        if (this.usesMap()) {
+          this.showMap();
         } else {
-          return this.hideMap();
+          this.hideMap();
         }
+        return this.updateTextInput();
       },
       showMap: function() {
         return $(this.element).find('.map-container').show();
       },
       hideMap: function() {
         return $(this.element).find('.map-container').hide();
+      },
+      _updateTinyEvents: function() {
+        var free,
+          _this = this;
+        if (this.usesHtml()) {
+          free = this.options.free.substr(1);
+          return this._poll(function() {
+            return tinyMCE.get(free) != null;
+          }, function() {
+            $(_this.options.free).unbind('change');
+            return tinyMCE.get(free).onChange.add(function() {
+              return _this.updateTextInput();
+            });
+          });
+        } else {
+          return $(this.options.free).change(function() {
+            return _this.updateTextInput();
+          });
+        }
+      },
+      _addUpdateEvents: function() {
+        var handler,
+          _this = this;
+        handler = function() {
+          return _this.updateTextInput();
+        };
+        $(this.options.free).change(handler);
+        return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler);
+      },
+      updateTextInput: function() {
+        var buffer;
+        buffer = [];
+        if (this.usesMap()) {
+          buffer.push("WKT: " + (this.map.getWktForSave()) + "\n\n");
+        }
+        if (this.usesHtml()) {
+          buffer.push(tinyMCE.get(this.options.free.substr(1)).getContent());
+        } else {
+          buffer.push($(this.options.free).val());
+        }
+        return $(this.options.text).val(buffer.join(''));
       }
     });
   })(jQuery);

@@ -51,9 +51,10 @@
       @options.mapon ?= "#{@options.id_prefix}mapon"
       @options.map   ?= "#{@options.id_prefix}map"
 
-      this._initMap()
+      @map = this._initMap()
       this.hideMap()
       this._recaptureEditor()
+      this._addUpdateEvents()
 
       # console.log this
 
@@ -73,8 +74,6 @@
         id    : @element.attr 'id'
         wkt   : @options.value
       local_options =
-        map:
-          raw_update: $ @options.text
         edit_json: item
 
       all_options = $.extend true, {}, @options.map_options, local_options
@@ -100,16 +99,17 @@
     # admin/themes/default/javascripts/items.js, around line 410, should be
     # more specific.
     _recaptureEditor: ->
-      html = $ @options.html
       this._poll(
         -> $('.mceEditor').length > 0,
         =>
-          if not html.is ':checked'
+          if not this.usesHtml()
             free = @options.free.substr 1
             tinyMCE.execCommand 'mceRemoveControl', false, free
           $(@options.mapon)
             .unbind('click')
             .change => this._onUseMap()
+          $(@options.html)
+            .change => this._updateTinyEvents()
       )
 
     # This polls until either the predicate returns true or until the maximum
@@ -131,15 +131,58 @@
 
       setTimeout _poll, timeout
 
+    # Tests for the content types active. These look at the states of the
+    # checkboxes.
+    usesHtml: -> $(@options.html ).is ':checked'
+    usesMap : -> $(@options.mapon).is ':checked'
+
     # This handles when the Use Map checkbox is clicked.
     _onUseMap: ->
-      if $(@options.mapon).is ':checked'
+      if this.usesMap()
         this.showMap()
       else
         this.hideMap()
+      this.updateTextInput()
 
     showMap: -> $(@element).find('.map-container').show()
     hideMap: -> $(@element).find('.map-container').hide()
+
+    _updateTinyEvents: ->
+      if this.usesHtml()
+        free = @options.free.substr 1
+        this._poll(
+          -> tinyMCE.get(free)?,
+          =>
+            $(@options.free).unbind('change')
+            tinyMCE.get(free).onChange.add =>
+              this.updateTextInput()
+        )
+      else
+        $(@options.free).change => this.updateTextInput()
+
+    _addUpdateEvents: ->
+      handler = => this.updateTextInput()
+      $(@options.free).change handler
+      $(@map.element)
+        .bind('featureadded.nlfeatures', handler)
+        .bind('update.nlfeatures'      , handler)
+        .bind('delete.nlfeatures'      , handler)
+
+    # This handles passing the content from the visible inputs to the hidden
+    # field that Omeka actually uses.
+    updateTextInput: ->
+      buffer = []
+
+      if this.usesMap()
+        buffer.push "WKT: #{@map.getWktForSave()}\n\n"
+
+      if this.usesHtml()
+        buffer.push tinyMCE.get(@options.free.substr 1).getContent()
+      else
+        buffer.push $(@options.free).val()
+
+      # console.log 'updating', buffer
+      $(@options.text).val(buffer.join '')
 
   ))(jQuery)
 
