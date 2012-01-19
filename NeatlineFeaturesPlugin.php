@@ -152,7 +152,6 @@ class NeatlineFeaturesPlugin
 
         queue_js('nlfeatures');
         queue_js('editor/edit_features');
-        queue_js('nlfeatures-simpletab');
         queue_js('nlfeatures-init');
     }
 
