@@ -118,6 +118,25 @@ class NeatlineFeaturesPlugin
     }
 
     /**
+     * This is a utility function that appends a javascript URL.
+     *
+     * @param $uri string This is the URI to queue.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _queueJsUri($uri)
+    {
+        // We are also outputting the script tags to load OpenLayers here.
+        $head = __v()->headScript();
+        $head->appendScript(
+            '',
+            'text/javascript',
+            array('src' => 'http://openlayers.org/api/OpenLayers.js')
+        );
+    }
+
+    /**
      * This queues javascript and CSS for the admin header.
      *
      * @return void
@@ -129,8 +148,7 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeature-editor');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' " .
-            "src='http://openlayers.org/api/OpenLayers.js'></script>";
+        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
         queue_js('editor/edit_features');
@@ -149,8 +167,7 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' " .
-            "src='http://openlayers.org/api/OpenLayers.js'></script>";
+        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
         queue_js('nlfeatures-init');
