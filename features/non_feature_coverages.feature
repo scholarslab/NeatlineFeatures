@@ -19,7 +19,6 @@ Feature: Non-Feature Coverages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Default Raw Tab" for the "Elements-50-0-text"  # Title
     And I enter "Default Raw Tab" for the "Elements-49-0-text"  # Subject
-    And I click the "Raw" tab on "#Elements-38-0-widget"
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "Add Item"
     And I click on "Cucumber: Default Raw Tab"
