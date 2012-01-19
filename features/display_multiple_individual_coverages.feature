@@ -13,14 +13,14 @@ Feature: Display Multiple Individual Coverages
     And I enter "Iterate All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "add_element_38"
-    And I click the "Raw" tab in "#Elements-38-1-widget"
-    And I enter "UVa" into "Elements-38-1-text"
+    And I enter "UVa" into "Elements-38-1-free"
     And I click on "Add Item"
     And I click "Iterate All Non-Feature Coverages"
     When I click "View Public Page"
     Then I should see the following output in unordered list "#item-coverage":
       | Charlottesville, VA |
       | UVa                 |
+    But I should not see text "WKT" in "#dublin-core-coverage"
 
   @file_fixture
   Scenario: All Feature Coverages
@@ -39,6 +39,7 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
+    But I should not see text "WKT" in "#dublin-core-coverage"
 
   @file_fixture
   Scenario: Mixed Feature Coverages
@@ -56,4 +57,5 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And I should see text "UVa" in "#dublin-core-coverage"
+    But I should not see text "WKT" in "#dublin-core-coverage"
 

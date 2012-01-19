@@ -39,6 +39,10 @@ Then /^I(?: should)? see text "([^"]*)" in "([^"]*)"$/ do |text, context|
   find(context).should have_content(text)
 end
 
+Then /^I should not see text "([^"]*)" in "([^"]*)"$/ do |text, context|
+  find(context).should_not have_content(text)
+end
+
 Then /^I should see "([^"]*)"$/ do |target|
   find(target).should be_visible
 end
