@@ -152,25 +152,46 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     }
 
     /**
-     * This tests the TEXTAREA returned by getRawField.
+     * This tests the TEXTAREA returned by getFreeField.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testGetRawField()
+    public function testGetFreeField()
     {
         $expected = new DOMDocument;
         $expected->loadXML(
-            '<textarea id="Elements-38-0-text" name="Elements[38][0][text]" ' .
+            '<textarea id="Elements-38-0-free" name="Elements[38][0][free]" ' .
             'class="textinput" rows="5" cols="50"></textarea>'
         );
 
         $actual = new DOMDocument;
-        $actual->loadXML($this->_cutil->getRawField());
+        $actual->loadXML($this->_cutil->getFreeField());
 
         $this->assertEqualXMLStructure(
             $expected->firstChild, $actual->firstChild, TRUE
         );
+    }
+
+    /**
+     * This tests whether the text field is created as a hidden field.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetTextField()
+    {
+        $expected = new DOMDocument;
+        $expected->loadXML(
+            '<input type="hidden" id="Elements-38-0-text" name="Elements[38][0][text]" ' .
+            'value="" />'
+        );
+
+        $actual = new DOMDocument;
+        $actual->loadHTML($this->_cutil->getTextField());
+        $input = $actual->getElementsByTagName('input')->item(0);
+
+        $this->assertEqualXMLStructure($expected->firstChild, $input, TRUE);
     }
 
     /**
