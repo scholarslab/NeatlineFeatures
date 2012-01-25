@@ -43,6 +43,50 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
      * @var User
      **/
     public $user;
+
+    /**
+     * The title element.
+     *
+     * @var Element
+     **/
+    var $_title;
+
+    /**
+     * The subject element.
+     *
+     * @var Element
+     **/
+    var $_subject;
+
+    /**
+     * The coverage element.
+     *
+     * @var Element
+     **/
+    var $_coverage;
+
+    /**
+     * The NeatlineFeatures_Utils_View for the coverage element.
+     *
+     * @var NeatlineFeatures_Utils_View
+     **/
+    var $_cutil;
+
+    /**
+     * This is an item to play with.
+     *
+     * @var Item
+     **/
+    var $_item;
+
+    /**
+     * This is a list of objects created during a test, which will need to be 
+     * deleted.
+     *
+     * @var string
+     **/
+    var $_todel;
+
     // }}}
 
     // Test Infrastructure {{{
@@ -56,6 +100,8 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     {
         parent::setUp();
 
+        $this->_todel = array();
+
         $this->user = $this->db->getTable('user')->find(1);
         $this->_authenticateUser($this->user);
 
@@ -66,6 +112,41 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $helper->setUp('NeatlineFeatures');
 
         $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->core);
+
+        $rows = $this
+            ->db
+            ->getTable('Element')
+            ->findBy(array('name' => 'Coverage'));
+
+        foreach ($rows as $row) {
+            switch ($row->name) {
+            case 'Coverage':
+                $this->_coverage = $row;
+                $this->_cutil = new NeatlineFeatures_Utils_View();
+                $this->_cutil->setEditOptions(
+                    'Elements[38][0]', null, array(), null, $row
+                );
+                break;
+            case 'Title':
+                $this->_title = $row;
+                break;
+            case 'Subject':
+                $this->_subject = $row;
+                break;
+            }
+        }
+
+        $this->_item = new Item;
+        $this->_item->save();
+        $this->toDelete($this->_item);
+
+        $t1 = $this->addElementText($this->_item, $this->_title, '<b>A Title</b>',
+            TRUE);
+        $t2 = $this->addElementText($this->_item, $this->_subject, 'Subject');
+        $this->toDelete($t1);
+        $this->toDelete($t2);
+
+        $this->_item->save();
     }
 
     /**
@@ -94,6 +175,13 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     {
         parent::tearDown();
         $this->nfPlugin->uninstall();
+
+        foreach ($this->_todel as $todel) {
+            $todel->delete();
+        }
+        $this->_todel = array();
+
+        $this->_item = null;
     }
     // }}}
 
@@ -123,6 +211,21 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $item[$element->name] = $etext;
 
         return $etext;
+    }
+
+    /**
+     * This pushes an item onto the queue of items to delete when the step's 
+     * over.
+     *
+     * @param $obj Object This needs to define a ->delete() method, to be 
+     * called later.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function toDelete($obj)
+    {
+        array_push($this->_todel, $obj);
     }
 
     // }}}
