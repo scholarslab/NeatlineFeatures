@@ -47,7 +47,9 @@ class NeatlineFeaturesPlugin
         'install',
         'uninstall',
         'admin_theme_header',
-        'public_theme_header'
+        'public_theme_header',
+        'after_save_item',
+        'after_delete_item'
     );
 
     /**
@@ -184,6 +186,31 @@ class NeatlineFeaturesPlugin
 
         queue_js('nlfeatures');
         queue_js('nlfeatures-init');
+    }
+
+    /**
+     * This saves the is_map field, whenever the item is saved in a POST 
+     * request.
+     *
+     * @param $record Omeka_Record The record that was just saved.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function afterSaveItem()
+    {
+    }
+
+    /**
+     * This deletes the NL Features data for this item.
+     *
+     * @param $record Omeka_Record The record that was just deleted.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function afterDeleteItem()
+    {
     }
 
     // }}}
