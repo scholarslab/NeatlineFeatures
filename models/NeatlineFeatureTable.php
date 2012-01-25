@@ -67,5 +67,96 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         );
     }
 
+    /**
+     * This returns the features associated with an item.
+     *
+     * @param $item Omeka_Record The Omeka item associated with the features.
+     *
+     * @return array of NeatlineFeature
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getItemFeatures($item)
+    {
+        return $this->fetchObjects(
+            $this->getSelect()->where('item_id=?', $item->id)
+        );
+    }
+
+    /**
+     * This clears out all records for the given item.
+     *
+     * @param $item Omeka_Record The item to delete features from.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function removeItemFeatures($item)
+    {
+        $where = $this->getAdapter()->quoteInto('item_id=?', $item->id);
+        $this->delete($this->getTableName(), $where);
+    }
+
+    /**
+     * This populates features for an item from an associative array, such as 
+     * might be found in $_POST.
+     *
+     * @param $item   Omeka_Record The item to populate items for.
+     * @param $params array        The array to pull data from. This will 
+     * ususally be $_POST['Elements'][$id].
+     *
+     * @return array of NeatlineFeature The features created.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function createFeatures($item, $params)
+    {
+        $name     = $this->getTableName();
+        $item_id  = $item->id;
+        $db       = $this->getDb();
+        $coverage = $db
+            ->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
+        $cid      = $coverage->id;
+
+        $sql     = $db->prepare(
+            "INSERT INTO {$db->prefix}neatline_features
+                (added, item_id, element_text_id, is_map)
+                SELECT NOW(), ?, et.id, ?
+                FROM {$db->prefix}element_texts et
+                WHERE et.record_id=? AND et.text=? AND et.element_id=?;
+            "
+        );
+
+        foreach ($params as $field) {
+            $isMap = FALSE;
+            try {
+                $isMap = (bool)$field['mapon'];
+            } catch (Exception $e) {
+            }
+
+            $data = array(
+                $item_id, (int)$isMap, $item_id, $field['text'], $cid
+            );
+            $sql->execute($data);
+        }
+
+        return $this->getItemFeatures($item);
+    }
+
+    /**
+     * This removes the current features for an item and re-creates them from the parameters.
+     *
+     * @param $item   Omeka_Record The item to populate items for.
+     * @param $params array        The array to pull data from. This will 
+     * ususally be $_POST['Elements'][$id].
+     *
+     * @return array of NeatlineFeature The features created.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function updateFeatures($item, $params)
+    {
+        $this->removeItemFeatures($item);
+        return $this->createFeatures($item, $params);
+    }
+
 }
 

@@ -119,6 +119,34 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This sets the element to the dc:coverage field.
+     *
+     * @return Element The Element for the dc:coverage field.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setCoverageElement()
+    {
+        $coverage = get_db()
+            ->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
+        $this->setElement($coverage);
+        return $coverage;
+    }
+
+    /**
+     * This sets the Element that this will use.
+     *
+     * @param $element Element The element to use.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setElement($element)
+    {
+        $this->_element = $element;
+    }
+
+    /**
      * This returns the element ID.
      *
      * @return int
@@ -186,11 +214,22 @@ class NeatlineFeatures_Utils_View
      **/
     public function isPosted()
     {
-        $posted = FALSE;
+        return (! is_null($this->getPost()));
+    }
+
+    /**
+     * This returns the POST data for this, if it's available.
+     *
+     * @return array|null
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getPost()
+    {
+        $post = null;
         if (array_key_exists('Elements', $_POST)) {
-            $posted = !empty($_POST['Elements'][$this->_element->id]);
+            $post = $_POST['Elements'][$this->_element->id];
         }
-        return $posted;
+        return $post;
     }
 
     /**

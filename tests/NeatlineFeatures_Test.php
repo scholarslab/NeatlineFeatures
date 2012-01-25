@@ -113,28 +113,20 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
 
         $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->core);
 
-        $rows = $this
-            ->db
-            ->getTable('Element')
-            ->findBy(array('name' => 'Coverage'));
+        // Retrieve the element for some DC fields.
+        $el_table = get_db()->getTable('Element');
+        $this->_title = $el_table
+            ->findByElementSetNameAndElementName('Dublin Core', 'Title');
 
-        foreach ($rows as $row) {
-            switch ($row->name) {
-            case 'Coverage':
-                $this->_coverage = $row;
-                $this->_cutil = new NeatlineFeatures_Utils_View();
-                $this->_cutil->setEditOptions(
-                    'Elements[38][0]', null, array(), null, $row
-                );
-                break;
-            case 'Title':
-                $this->_title = $row;
-                break;
-            case 'Subject':
-                $this->_subject = $row;
-                break;
-            }
-        }
+        $this->_subject = $el_table
+            ->findByElementSetNameAndElementName('Dublin Core', 'Subject');
+
+        $this->_coverage = $el_table
+            ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
+        $this->_cutil = new NeatlineFeatures_Utils_View();
+        $this->_cutil->setEditOptions(
+            'Elements[38][0]', null, array(), null, $this->_coverage
+        );
 
         $this->_item = new Item;
         $this->_item->save();
@@ -174,7 +166,6 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     public function tearDown()
     {
         parent::tearDown();
-        $this->nfPlugin->uninstall();
 
         foreach ($this->_todel as $todel) {
             $todel->delete();
@@ -182,6 +173,8 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_todel = array();
 
         $this->_item = null;
+
+        $this->nfPlugin->uninstall();
     }
     // }}}
 

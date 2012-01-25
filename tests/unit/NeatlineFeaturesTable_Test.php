@@ -90,12 +90,16 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $item->save();
         $this->toDelete($item);
 
+        $raw  = "WKT: POINT(123, 456)\n\nSomthing";
         $text = $this->addElementText($item, $this->_coverage,
-            "WKT: POINT(123, 456)\n\nSomthing", FALSE);
+            $raw, FALSE);
         $this->toDelete($text);
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array('mapon' => '1')
+            '0' => array(
+                'mapon' => '1',
+                'text'  => $raw
+            )
         );
         $item->save();
 
@@ -111,7 +115,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->assertInternalType('array', $results);
         $this->assertGreaterThan(0, count($results));
 
-        $this->assertTrue($features->isMap());
+        $this->assertTrue($features->is_map);
     }
 
 }

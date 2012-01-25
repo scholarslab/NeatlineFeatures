@@ -30,11 +30,15 @@ class NeatlineFeature_Test extends NeatlineFeatures_Test
     {
         parent::setUp();
 
+        $text = "WKT: POINT(1, 2)\n\nnothing";
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array( 'mapon' => '1' )
+            '0' => array(
+                'mapon' => '1',
+                'text'  => $text
+            )
         );
         $this->_coverage_text = $this->addElementText(
-            $this->_item, $this->_coverage, "WKT: POINT(1, 2)\n\nnothing", FALSE
+            $this->_item, $this->_coverage, $text, FALSE
         );
         $this->toDelete($this->_coverage_text);
 
@@ -65,8 +69,12 @@ class NeatlineFeature_Test extends NeatlineFeatures_Test
      **/
     public function testIsMapFalse()
     {
+        $text = "Nothing here.";
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array('mapon' => '0')
+            '0' => array(
+                'mapon' => '0',
+                'text'  => $text
+            )
         );
         $this->_item->save();
 

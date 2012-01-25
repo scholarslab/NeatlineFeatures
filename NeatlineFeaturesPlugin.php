@@ -199,8 +199,18 @@ class NeatlineFeaturesPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function afterSaveItem()
+    public function afterSaveItem($record)
     {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        $post = $utils->getPost();
+        if (!is_null($post)) {
+            $this
+                ->_db
+                ->getTable('NeatlineFeature')
+                ->updateFeatures($record, $utils->getPost());
+        }
     }
 
     /**
@@ -211,8 +221,12 @@ class NeatlineFeaturesPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function afterDeleteItem()
+    public function afterDeleteItem($record)
     {
+        $this
+            ->_db
+            ->getTable('NeatlineFeature')
+            ->removeItemFeatures($record);
     }
 
     // }}}
