@@ -243,6 +243,68 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     }
 
     /**
+     * This tests the isMap predicate in a POST request, when it is true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapInPostTrue()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array('mapon' => '1')
+        );
+        $this->assertTrue($this->_cutil->isMap());
+    }
+
+    /**
+     * This tests the isMap predicate in a POST request, when it is false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapInPostFalse()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array()
+        );
+        $this->assertFalse($this->_cutil->isMap());
+    }
+
+    /**
+      * This tests the isMap predicate outside of a POST request, when it is
+      * true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapNoPostTrue()
+    {
+        $tutil = new NeatlineFeatures_Utils_View();
+        $tutil->setEditOptions(
+            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
+            $this->_item, $this->_title
+        );
+        $this->assertTrue($tutil->isMap());
+    }
+
+    /**
+     * This tests the isMap predicate outside of a POST request, when it is
+     * false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapNoPostFalse()
+    {
+        $sutil = new NeatlineFeatures_Utils_View();
+        $sutil->setEditOptions(
+            "Elements[{$this->_subject->id}[0]", 'Subject', array(),
+            $this->_item, $this->_subject
+        );
+        $this->assertFalse($sutil->isMap());
+    }
+
+    /**
      * This tests the getUserHtml method, which returns the HTML string for the 
      * "Use HTML" control.
      *
