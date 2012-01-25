@@ -24,41 +24,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 {
 
     /**
-     * The title element.
-     *
-     * @var Element
-     **/
-    var $_title;
-
-    /**
-     * The subject element.
-     *
-     * @var Element
-     **/
-    var $_subject;
-
-    /**
-     * The coverage element.
-     *
-     * @var Element
-     **/
-    var $_coverage;
-
-    /**
-     * The NeatlineFeatures_Utils_View for the coverage element.
-     *
-     * @var NeatlineFeatures_Utils_View
-     **/
-    var $_cutil;
-
-    /**
-     * This is an item to play with.
-     *
-     * @var Item
-     **/
-    var $_item;
-
-    /**
      * This performs a little set up for this set of tests.
      *
      * @return void
@@ -68,37 +33,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     {
         parent::setUp();
 
-        $rows = $this
-            ->db
-            ->getTable('Element')
-            ->findBy(array('name' => 'Coverage'));
-
-        foreach ($rows as $row) {
-            switch ($row->name) {
-            case 'Coverage':
-                $this->_coverage = $row;
-                $this->_cutil = new NeatlineFeatures_Utils_View();
-                $this->_cutil->setEditOptions(
-                    'Elements[38][0]', null, array(), null, $row
-                );
-                break;
-            case 'Title':
-                $this->_title = $row;
-                break;
-            case 'Subject':
-                $this->_subject = $row;
-                break;
-            }
-        }
-
-        $this->_item = new Item;
-        $this->_item->save();
-
-        $this->addElementText($this->_item, $this->_title, '<b>A Title</b>',
-            TRUE);
-        $this->addElementText($this->_item, $this->_subject, 'Subject');
-
-        $this->_item->save();
     }
 
     /**
@@ -110,14 +44,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function tearDown()
     {
         parent::tearDown();
-        if (isset($this->_item['title'])) {
-            $this->_item['title']->delete();
-        }
-        if (isset($this->_item['subject'])) {
-            $this->_item['subject']->delete();
-        }
-        $this->_item->delete();
-        $this->_item = null;
     }
 
     /**
