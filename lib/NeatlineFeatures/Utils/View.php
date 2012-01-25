@@ -257,6 +257,40 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This predicate tests whether this element currently is marked to have 
+     * map data.
+     *
+     * @return bool
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function isMap()
+    {
+        $isMap = FALSE;
+
+        if ($this->isPosted()) {
+            try {
+                $isMap = (bool)$_POST['Elements'][$this->getElementId()]
+                    [$this->getIndex()]['mapon'];
+            } catch (Exception $e) {
+                $isMap = FALSE;
+            }
+        } else {
+            $db  = get_db();
+            $sql = $db
+                ->select()
+                ->from("{$db->prefix}neatline_features")
+                ->where('item_id=?', $this->_record->id);
+            $stmt = $db->query($sql);
+            $stmt->setFetchMode(Zend_Db::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+
+            $isMap = (count($result) == 1) ? (bool)$result[0]['is_map'] : FALSE;
+        }
+
+        return $isMap;
+    }
+
+    /**
      * This returns the string for a "Use X" widget.
      *
      * @param $key   string The key for the widget's name.
