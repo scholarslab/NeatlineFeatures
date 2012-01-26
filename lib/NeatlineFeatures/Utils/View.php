@@ -171,6 +171,17 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This returns the current element.
+     *
+     * @return Element
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getElement()
+    {
+        return $this->_element;
+    }
+
+    /**
      * This returns the element data's index as parsed from $inputNameStem.
      *
      * @return int|NULL

@@ -403,5 +403,23 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 
         return $child;
     }
+
+    /**
+     * This tests that the setCoverageElement method retrieves the correct 
+     * element.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testSetCoverageElement()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        $el = $utils->getElement();
+        $this->assertEquals('Dublin Core', $el->getElementSet()->name);
+        $this->assertEquals('Coverage', $el->name);
+    }
+
 }
 
