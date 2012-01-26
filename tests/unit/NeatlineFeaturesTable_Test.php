@@ -123,5 +123,24 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->assertCount(1, $this->table->getItemFeatures($item));
     }
 
+    /**
+     * This tests removeItemFeatures.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testRemoveItemFeatures()
+    {
+        $item = new Item();
+        $item->save();
+        $this->toDelete($item);
+        $this->setupCoverageData($item, "WKT: Data\n\nText");
+        $item->save();
+        $this->assertCount(1, $this->table->getItemFeatures($item));
+
+        $this->table->removeItemFeatures($item);
+        $this->assertEmpty($this->table->getItemFeatures($item));
+    }
+
 }
 
