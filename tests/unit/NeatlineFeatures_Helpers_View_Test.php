@@ -421,5 +421,32 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->assertEquals('Coverage', $el->name);
     }
 
+    /**
+     * This tests the POST data returned by the getPost function.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetPost()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        // No Elements in _POST.
+        if (array_key_exists('Elements', $_POST)) {
+            unset($_POST['Elements']);
+        }
+        $this->assertNull($utils->getPost());
+
+        // No element ID in Elements.
+        $_POST['Elements'] = array();
+        $this->assertNull($utils->getPost());
+
+        // I CAN HAZ VALUE!
+        $cid = (string)$this->_coverage->id;
+        $_POST['Elements'][$cid] = 'hi';
+        $this->assertEquals('hi', $utils->getPost());
+    }
+
 }
 
