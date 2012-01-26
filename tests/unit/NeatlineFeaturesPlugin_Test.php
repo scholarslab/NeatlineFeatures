@@ -36,6 +36,12 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
      **/
     public function testInstall()
     {
+        $db     = $this->db;
+        $tables = $db->listTables();
+        $this->assertContains(
+            "{$db->prefix}neatline_features",
+            $tables
+        );
     }
 
     /**
@@ -49,6 +55,14 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
      **/
     public function testUninstall()
     {
+        $this->nfPlugin->uninstall();
+
+        $db     = $this->db;
+        $tables = $db->listTables();
+        $this->assertNotContains(
+            "{$db->prefix}neatline_features",
+            $tables
+        );
     }
     // }}}
 }

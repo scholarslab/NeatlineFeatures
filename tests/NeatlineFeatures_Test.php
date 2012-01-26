@@ -168,7 +168,10 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         parent::tearDown();
 
         foreach ($this->_todel as $todel) {
-            $todel->delete();
+            try {
+                $todel->delete();
+            } catch (Exception $e) {
+            }
         }
         $this->_todel = array();
 
