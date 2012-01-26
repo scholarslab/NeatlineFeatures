@@ -134,6 +134,19 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This sets the current record.
+     *
+     * @param $record Omeka_Record The current item.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setRecord($record)
+    {
+        $this->_record = $record;
+    }
+
+    /**
      * This sets the Element that this will use.
      *
      * @param $element Element The element to use.
@@ -226,8 +239,10 @@ class NeatlineFeatures_Utils_View
     public function getPost()
     {
         $post = null;
-        if (array_key_exists('Elements', $_POST)) {
-            $post = $_POST['Elements'][$this->_element->id];
+        $eid  = (string)$this->getElementId();
+        if (array_key_exists('Elements', $_POST) &&
+            array_key_exists($eid, $_POST['Elements'])) {
+            $post = $_POST['Elements'][$eid];
         }
         return $post;
     }
@@ -314,6 +329,21 @@ class NeatlineFeatures_Utils_View
                 $isMap = FALSE;
             }
         } else {
+            $etext = $this->getElementText();
+            if (isset($etext)) {
+                $db      = get_db();
+                $record  = $db
+                    ->getTable('Item')
+                    ->find($etext->record_id);
+                $feature = $db
+                    ->getTable('NeatlineFeature')
+                    ->getRecordByItemAndElementText($record, $etext);
+
+                if (isset($feature)) {
+                    $isMap = (bool)$feature->is_map;
+                }
+            }
+
             $db  = get_db();
             $sql = $db
                 ->select()

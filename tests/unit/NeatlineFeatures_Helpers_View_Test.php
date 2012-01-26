@@ -284,6 +284,23 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
             $this->_item, $this->_title
         );
+
+        $text = "WKT: something\n\nhi";
+        $this->addElementText($this->_item, $this->_coverage, $text);
+        $eid = (string)$this->_cutil->getElementId();
+        $_POST['Elements'][$eid] = array(
+            '0' => array(
+                'mapon' => '1',
+                'text'  => $text
+            )
+        );
+        $features = get_db()
+            ->getTable('NeatlineFeature')
+            ->updateFeatures($this->_item, $_POST['Elements'][$eid]);
+        $feature = $features[0];
+        $feature->is_map = 1;
+        $feature->save();
+
         $this->assertTrue($tutil->isMap());
     }
 
