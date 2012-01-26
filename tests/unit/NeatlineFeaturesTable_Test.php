@@ -142,5 +142,58 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->assertEmpty($this->table->getItemFeatures($item));
     }
 
+    /**
+     * This tests createFeatures if there isn't a map feature.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testCreateFeaturesNoMap()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+        $et_table = $this->db->getTable('ElementText');
+
+        $item = new Item();
+        $item->save();
+        $this->toDelete($item);
+
+        $this->setupCoverageData($item, "Just Text.", FALSE, FALSE);
+        $features = $this->table->createFeatures($item, $utils->getPost());
+        $this->assertCount(1, $features);
+        $this->assertFalse((bool)$features[0]->is_map);
+        $this->assertEquals(
+            "Just Text.",
+            $et_table->find($features[0]->element_text_id)->getText()
+        );
+    }
+
+    /**
+     * This tests createFeatures for map features.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testCreateFeaturesUsesMap()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+        $et_table = $this->db->getTable('ElementText');
+
+        $item = new Item();
+        $item->save();
+        $this->toDelete($item);
+
+        $this->setupCoverageData($item, "WKT: POINT\n\nJust Text.", FALSE, TRUE);
+        $features = $this->table->createFeatures($item, $utils->getPost());
+        $this->assertCount(1, $features);
+        $this->assertTrue((bool)$features[0]->is_map);
+        $this->assertEquals(
+            "WKT: POINT\n\nJust Text.",
+            $et_table->find($features[0]->element_text_id)->getText()
+        );
+    }
+
+
 }
 
