@@ -210,6 +210,27 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     }
 
     /**
+     * This sets up the POST request for a coverage field. It returns the 
+     * ElementText for the coverage field.
+     *
+     * @return ElementText
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function setupCoverageData($item, $text, $html=FALSE, $map=TRUE)
+    {
+        $etext = $this->addElementText($item, $this->_coverage, $text, $html);
+
+        $_POST['Elements'][(string)$this->_coverage->id] = array(
+            '0' => array(
+                'mapon' => $map ? '1' : '0',
+                'text'  => $text
+            )
+        );
+
+        return $etext;
+    }
+
+    /**
      * This pushes an item onto the queue of items to delete when the step's 
      * over.
      *

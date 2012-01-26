@@ -64,6 +64,24 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
             $tables
         );
     }
+
+    /**
+     * This tests the after_save_item hook.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testAfterSaveItem()
+    {
+        $text = "WKT: data\n\ntext";
+        $cov  = $this->setupCoverageData($this->_item, $text);
+        $this->_item->save();
+        $features = $this
+            ->db
+            ->getTable('NeatlineFeature')
+            ->getItemFeatures($this->_item);
+        $this->assertEquals(1, count($features));
+    }
     // }}}
 }
 
