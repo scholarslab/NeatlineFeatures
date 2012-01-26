@@ -74,7 +74,8 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
             ->getTable('NeatlineFeature')
             ->findBy(array( 'item_id' => $item->id ));
         $this->assertInternalType('array', $results);
-        $this->assertGreaterThan(0, count($results));
+        // Not saved yet, so it's not actually in the DB yet.
+        $this->assertEquals(0, count($results));
 
     }
 
