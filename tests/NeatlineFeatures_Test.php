@@ -216,17 +216,30 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
      * @return ElementText
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    protected function setupCoverageData($item, $text, $html=FALSE, $map=TRUE)
-    {
+    protected function setupCoverageData(
+        $item, $text, $html=FALSE, $map=TRUE, $append=FALSE
+    ) {
         $etext = $this->addElementText($item, $this->_coverage, $text, $html);
         $this->toDelete($etext);
 
-        $_POST['Elements'][(string)$this->_coverage->id] = array(
-            '0' => array(
-                'mapon' => $map ? '1' : '0',
-                'text'  => $text
-            )
+        $param = array(
+            'mapon' => $map ? '1' : '0',
+            'text'  => $text
         );
+
+        if ($append) {
+            if (!isset($_POST['Elements'][(string)$this->_coverage->id])) {
+                $_POST['Elements'][(string)$this->_coverage->id] = array();
+            }
+            array_push(
+                $_POST['Elements'][(string)$this->_coverage->id],
+                $param
+            );
+        } else {
+            $_POST['Elements'][(string)$this->_coverage->id] = array(
+                '0' => $param
+            );
+        }
 
         return $etext;
     }
