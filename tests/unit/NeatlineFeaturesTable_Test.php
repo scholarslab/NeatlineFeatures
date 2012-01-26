@@ -116,7 +116,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->assertInternalType('array', $results);
         $this->assertGreaterThan(0, count($results));
 
-        $this->assertTrue($features->is_map);
+        $this->assertTrue((bool)$features->is_map);
     }
 
 }
