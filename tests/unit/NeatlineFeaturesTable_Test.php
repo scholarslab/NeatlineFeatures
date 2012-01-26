@@ -22,6 +22,13 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
 {
 
     /**
+     * The NeatlineFeaturesTable being tested.
+     *
+     * @var NeatlineFeaturesTable
+     **/
+    var $table;
+
+    /**
      * This sets up for this set of tests.
      *
      * @return void
@@ -30,6 +37,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
     public function setUp()
     {
         parent::setUp();
+        $this->table = $this->db->getTable('NeatlineFeature');
     }
 
     /**
@@ -58,21 +66,12 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         );
         $this->toDelete($item);
 
-        $results = $this
-            ->db
-            ->getTable('NeatlineFeature')
-            ->findBy(array( 'item_id' => $item->id ));
+        $results = $this->table->findBy(array( 'item_id' => $item->id ));
         $this->assertEquals(0, count($results));
 
-        $features = $this
-            ->db
-            ->getTable('NeatlineFeature')
-            ->createOrGetRecord($item, $text);
+        $features = $this->table->createOrGetRecord($item, $text);
 
-        $results = $this
-            ->db
-            ->getTable('NeatlineFeature')
-            ->findBy(array( 'item_id' => $item->id ));
+        $results = $this->table->findBy(array( 'item_id' => $item->id ));
         $this->assertInternalType('array', $results);
         // Not saved yet, so it's not actually in the DB yet.
         $this->assertEquals(0, count($results));
@@ -91,32 +90,37 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $item->save();
         $this->toDelete($item);
 
-        $raw  = "WKT: POINT(123, 456)\n\nSomthing";
-        $text = $this->addElementText($item, $this->_coverage,
-            $raw, FALSE);
-        $this->toDelete($text);
-
-        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array(
-                'mapon' => '1',
-                'text'  => $raw
-            )
-        );
+        $raw  = "WKT: POINT(123, 456)\n\nSomething";
+        $text = $this->setupCoverageData($item, $raw, FALSE, TRUE);
         $item->save();
 
-        $features = $this
-            ->db
-            ->getTable('NeatlineFeature')
-            ->createOrGetRecord($item, $text);
+        $features = $this->table->createOrGetRecord($item, $text);
 
-        $results = $this
-            ->db
-            ->getTable('NeatlineFeature')
-            ->findBy(array( 'item_id' => $item->id ));
+        $results = $this->table->findBy(array( 'item_id' => $item->id ));
         $this->assertInternalType('array', $results);
         $this->assertGreaterThan(0, count($results));
 
         $this->assertTrue((bool)$features->is_map);
+    }
+
+    /**
+     * This tests getItemFeatures.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetItemFeatures()
+    {
+        $item = new Item();
+        $item->save();
+        $this->toDelete($item);
+
+        $this->assertEmpty($this->table->getItemFeatures($item));
+
+        $this->setupCoverageData($item, "WKT: Data\n\nText");
+        $item->save();
+
+        $this->assertCount(1, $this->table->getItemFeatures($item));
     }
 
 }

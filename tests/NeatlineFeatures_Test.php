@@ -219,6 +219,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     protected function setupCoverageData($item, $text, $html=FALSE, $map=TRUE)
     {
         $etext = $this->addElementText($item, $this->_coverage, $text, $html);
+        $this->toDelete($etext);
 
         $_POST['Elements'][(string)$this->_coverage->id] = array(
             '0' => array(
