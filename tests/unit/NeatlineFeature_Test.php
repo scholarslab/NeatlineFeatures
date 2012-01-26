@@ -58,7 +58,7 @@ class NeatlineFeature_Test extends NeatlineFeatures_Test
             ->getTable('NeatlineFeature')
             ->createOrGetRecord($this->_item, $this->_coverage_text);
 
-        $this->assertTrue($features->is_map);
+        $this->assertTrue((bool)$features->is_map);
     }
 
     /**
@@ -83,7 +83,7 @@ class NeatlineFeature_Test extends NeatlineFeatures_Test
             ->getTable('NeatlineFeature')
             ->createOrGetRecord($this->_item, $this->_coverage_text);
 
-        $this->assertFalse($features->is_map);
+        $this->assertFalse((bool)$features->is_map);
     }
 
 }
