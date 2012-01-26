@@ -25,6 +25,7 @@ Feature: Bug Fix Tests
     And I click on "Add Item"
     And I click "'Use HTML' is Checked When Editing Items"
     When I click on "Edit this Item"
+    And I wait 30 seconds
     Then "Elements-38-0-html" should be checked
     And I should see ".mceEditor" in "#element-38"
 

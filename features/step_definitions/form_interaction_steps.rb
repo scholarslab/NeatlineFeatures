@@ -35,12 +35,16 @@ When /^I click "OK" in the alert$/ do
   page.driver.browser.switch_to.alert.accept
 end
 
+When /^I wait (\d+) seconds$/ do |count|
+  sleep(count.to_i)
+end
+
 Then /^"([^"]*)" should be checked$/ do |checkbox|
-  page.has_checked_field?(checkbox).should == true
+  page.has_checked_field?(checkbox).should be_true
 end
 
 Then /^"([^"]*)" should not be checked$/ do |checkbox|
-  page.has_checked_field?(checkbox).should == false
+  page.has_checked_field?(checkbox).should be_false
 end
 
 Then /^I see "([^"]*)" contains "([^"]*)"$/ do |input, content|
