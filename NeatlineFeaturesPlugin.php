@@ -51,7 +51,7 @@ class NeatlineFeaturesPlugin
         'admin_theme_header',
         'public_theme_header',
         'after_save_item',
-        'after_delete_item'
+        'before_delete_item'
     );
 
     /**
@@ -216,12 +216,12 @@ class NeatlineFeaturesPlugin
     /**
      * This deletes the NL Features data for this item.
      *
-     * @param $record Omeka_Record The record that was just deleted.
+     * @param $record Omeka_Record The record that is to be deleted.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function afterDeleteItem($record)
+    public function beforeDeleteItem($record)
     {
         $this
             ->_db

@@ -82,6 +82,34 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
             ->getItemFeatures($this->_item);
         $this->assertEquals(1, count($features));
     }
+
+    /**
+     * This tests the before_delete_item hook.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testBeforeDeleteItem()
+    {
+        $text = "WKT: data\n\ntext";
+        $cov  = $this->setupCoverageData($this->_item, $text);
+        $this->_item->save();
+
+        $db    = $this->db;
+        $table = $db->getTable('NeatlineFeature');
+
+        $features = $table->fetchAll(
+            $db->select()->from($table->getTableName())
+        );
+        $this->assertCount(1, $features);
+
+        $this->_item->delete();
+        $features = $table->fetchAll(
+            $db->select()->from($table->getTableName())
+        );
+        $this->assertEmpty($features);
+    }
+
     // }}}
 }
 

@@ -92,8 +92,10 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      **/
     public function removeItemFeatures($item)
     {
-        $where = $this->getAdapter()->quoteInto('item_id=?', $item->id);
-        $this->delete($this->getTableName(), $where);
+        if (!is_null($item->id)) {
+            $where = $this->getAdapter()->quoteInto('item_id=?', $item->id);
+            $this->delete($this->getTableName(), $where);
+        }
     }
 
     /**
