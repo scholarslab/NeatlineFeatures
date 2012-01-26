@@ -45,7 +45,7 @@ class NeatlineFeature extends Omeka_Record
     /**
      * Is the map enabled for this coverage field?
      *
-     * @var string
+     * @var int
      **/
     public $is_map;
 
