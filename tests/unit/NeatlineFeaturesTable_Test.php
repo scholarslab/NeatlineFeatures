@@ -194,6 +194,65 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         );
     }
 
+    /**
+     * This tests updateFeatures.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testUpdateFeatures()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+        $et_table = $this->db->getTable('ElementText');
+
+        $item = new Item();
+        $item->save();
+        $this->toDelete($item);
+
+        // First test with no features.
+        $features = $this->table->updateFeatures($item, array());
+        $this->assertEmpty($features);
+
+        // Now test with two features.
+        $this->setupCoverageData($item, "Just Text.", FALSE, FALSE);
+        $this->setupCoverageData($item, "WKT: POINT\n\nAnd Text.", FALSE, TRUE, TRUE);
+        $features = $this->table->updateFeatures($item, $utils->getPost());
+        $this->assertCount(2, $features);
+        $this->assertFalse((bool)$features[0]->is_map);
+        $this->assertEquals(
+            "Just Text.",
+            $et_table->find($features[0]->element_text_id)->getText()
+        );
+        $this->assertTrue ((bool)$features[1]->is_map);
+        $this->assertEquals(
+            "WKT: POINT\n\nAnd Text.",
+            $et_table->find($features[1]->element_text_id)->getText()
+        );
+
+        // Finally, wipe those out and test with just one feature.
+        $etexts = $et_table->fetchObjects(
+            $this
+                ->db
+                ->select()
+                ->from($et_table->getTableName())
+                ->where('element_id=?', $this->_coverage->id)
+                ->where('record_id=?', $item->id)
+            );
+        foreach ($etexts as $et) {
+            $et->delete();
+        }
+
+        $this->setupCoverageData($item, "Other Text.", FALSE, FALSE);
+        $this->table->updateFeatures($item, $utils->getPost());
+        $features = $this->table->getItemFeatures($item);
+        $this->assertCount(1, $features);
+        $this->assertFalse ((bool)$features[0]->is_map);
+        $this->assertEquals(
+            "Other Text.",
+            $et_table->find($features[0]->element_text_id)->getText()
+        );
+    }
 
 }
 
