@@ -181,6 +181,19 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
     }
     // }}}
 
+    // Null text {{{
+    /**
+     * This is a null test to make PHPUnit shut up.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function test()
+    {
+        $this->assertTrue(TRUE);
+    }
+    // }}}
+
     // Utility Methods {{{
     /**
      * This cereates and element text and adds it to an item.
