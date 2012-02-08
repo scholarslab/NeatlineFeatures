@@ -70,13 +70,10 @@ class NeatlineFeatures_Functions
      **/
     public static function displayCoverage($text, $record, $elementText=NULL)
     {
-        $output = $text;
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setViewOptions($text, $record, $elementText);
 
-        if ($text != "" && NeatlineFeatures_Functions::isWkt($text)) {
-            $util = new NeatlineFeatures_Utils_View();
-            $util->setViewOptions($text, $record, $elementText);
-            $output = $util->getView();
-        }
+        $output = $util->getView();
 
         return $output;
     }

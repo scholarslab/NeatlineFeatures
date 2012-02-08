@@ -3,6 +3,7 @@
   (function($) {
     return $.widget('nlfeatures.featurewidget', {
       options: {
+        mode: 'view',
         id_prefix: null,
         text: null,
         free: null,
@@ -41,7 +42,8 @@
         this._recaptureEditor();
         this._updateFreeText();
         if (!this.options.formats.is_map) this.hideMap();
-        return this._addUpdateEvents();
+        this._addUpdateEvents();
+        if (this.options.mode !== 'edit') return this._fillFreeView();
       },
       destroy: function() {
         return $.Widget.prototype.destroy.call(this);
@@ -59,7 +61,8 @@
           wkt: this.parseTextInput(this.options.value).wkt
         };
         local_options = {
-          edit_json: item
+          mode: this.options.mode,
+          json: item
         };
         all_options = $.extend(true, {}, this.options.map_options, local_options);
         return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
@@ -163,8 +166,9 @@
       },
       parseTextInput: function(input) {
         var lines, output, splitAt;
-        if (input == null) input = null;
-        if (input == null) input = $(this.options.text).val();
+        if (input == null) {
+          input = this.options.mode === 'edit' ? $(this.options.text).val() : this.options.value;
+        }
         output = {
           wkt: '',
           free: ''
@@ -188,6 +192,10 @@
         var output;
         output = this.parseTextInput();
         return $(this.options.free).val(output.free);
+      },
+      _fillFreeView: function(free) {
+        if (free == null) free = this.parseTextInput().free;
+        return $(this.options.free).html(free);
       }
     });
   })(jQuery);

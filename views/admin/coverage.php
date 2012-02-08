@@ -31,6 +31,7 @@
 (function($) {
     $(function() {
         var options = {
+            mode: 'edit',
             map_options: {
                 styles: {
                     point_graphic: '<?php echo img('pushpin-1.png'); ?>'
@@ -39,7 +40,7 @@
             value: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
             formats: {
                 is_html: <?php echo json_encode($isHtml) ?>,
-                is_map: <?php echo json_encode($isMap) ?>
+                is_map : <?php echo json_encode($isMap) ?>
                 }
             };
         $("#<?php echo $idPrefix ?>widget").featurewidget(options);

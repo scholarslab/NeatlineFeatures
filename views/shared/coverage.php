@@ -16,18 +16,28 @@
  */
 ?>
 <div id="<?php echo $idPrefix ?>nlf" class='nlfeatures'>
-  <div id="<?php echo $idPrefix ?>map">
+  <div id="<?php echo $idPrefix ?>map" class='map map-container'>
+  </div>
+  <div id="<?php echo $idPrefix ?>free" class='freetext'>
   </div>
 </div>
 <script type='text/javascript'>
-jQuery(function() {
-    var options = {
-        styles: {
-            point_graphic: '<?php echo img('pushpin-1.png'); ?>'
-        }
-    };
-    NLFeatures.viewCoverageMap('#<?php echo $idPrefix ?>map',
-                               <?php echo json_encode($text) ?>,
-                               options);
-});
+(function($) {
+    $(function() {
+        var options = {
+            mode: 'view',
+            map_options: {
+                styles: {
+                    point_graphic: '<?php echo img('pushpin-1.png'); ?>'
+                    }
+                },
+            value: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
+            formats: {
+                is_html: <?php echo json_encode($isHtml) ?>,
+                is_map : <?php echo json_encode($isMap) ?>
+                }
+            };
+        $("#<?php echo $idPrefix ?>nlf").featurewidget(options);
+    });
+})(jQuery);
 </script>

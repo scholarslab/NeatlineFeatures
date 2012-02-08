@@ -452,10 +452,27 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $text        = strip_tags($this->_text);
-        $record      = $this->_record;
-        $elementText = $this->_elementText;
-        $idPrefix    = uniqid("nlfeatures-") . '-';
+        $inputNameStem = $this->_inputNameStem;
+
+        // Pull a fresh $value, if we can.
+        $value = '';
+        if ($this->_elementText != NULL) {
+            $value = $this->_elementText->getText();
+        } else {
+            $value = $this->_text;
+        }
+
+        // $value has been HTML escaped, so we have to take the first two <br 
+        // /> tags out.
+        $value = preg_replace('/<br \/>(\r\n|\n|\r)/', "\n", $value, 2);
+
+        $options = $this->_options;
+        $record  = $this->_record;
+        $element = $this->_element;
+
+        $idPrefix  = preg_replace('/\W+/', '-', $inputNameStem);
+        $isHtml    = $this->isHtml();
+        $isMap     = $this->isMap();
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';

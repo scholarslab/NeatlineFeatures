@@ -26,6 +26,8 @@
 (($) ->
   $.widget('nlfeatures.featurewidget',
     options: {
+      mode        : 'view'
+
       id_prefix   : null
       text        : null
       free        : null
@@ -57,6 +59,8 @@
       this.hideMap() unless @options.formats.is_map
       this._addUpdateEvents()
 
+      this._fillFreeView() unless @options.mode == 'edit'
+
     destroy: ->
       $.Widget.prototype.destroy.call this
 
@@ -73,7 +77,8 @@
         id    : @element.attr 'id'
         wkt   : this.parseTextInput(@options.value).wkt
       local_options =
-        edit_json: item
+        mode: @options.mode
+        json: item
 
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)
@@ -184,8 +189,11 @@
 
     # This breaks the value of the text input into 'wkt' and 'free' and returns
     # a JS object with those properties.
-    parseTextInput: (input=null) ->
-      input ?= $(@options.text).val()
+    parseTextInput: (input) ->
+      input ?= if @options.mode == 'edit'
+        $(@options.text).val()
+      else
+        @options.value
       output = wkt: '', free: ''
 
       if input.substr(0, 5) == 'WKT: '
@@ -208,6 +216,11 @@
     _updateFreeText: ->
       output = this.parseTextInput()
       $(@options.free).val output.free
+
+    # This populates the free-text DIV.
+    _fillFreeView: (free) ->
+      free ?= this.parseTextInput().free
+      $(@options.free).html(free)
 
   ))(jQuery)
 
