@@ -80,6 +80,21 @@ Feature: Draw Features on a Map
     Then "Elements-38-0-mapon" should not be checked
     And I should not see a map in "#element-38"
 
+  Scenario: Free Text should not Contain WKT
+    Given I am logged into the admin console
+    And I click "Add a new item to your archive"
+    And I enter "Cucumber: Use Map True should Persist" for the "Elements-50-0-text"
+    And I enter "Use Map True should Persist" for the "Elements-49-0-text"
+    And I click "Use Map" checkbox in "#element-38"
+    And I draw a point on "div.olMap"
+    And I draw a line on "div.olMap"
+    And I click on "Add Item"
+    And I click "Use Map True should Persist"
+    And I click "Edit this Item"
+    Then "Elements-38-0-mapon" should be checked
+    And I should see a map in "#element-38"
+    And I should see that "#Elements-38-0-free" does not contain "WKT"
+
   # This fails since GeoLocation isn't turned on automatically in the browser.
   #Scenario: Map Location Should Default to the User's Location
     #Given I am logged into the admin console

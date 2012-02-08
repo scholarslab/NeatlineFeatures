@@ -51,3 +51,7 @@ Then /^I see "([^"]*)" contains "([^"]*)"$/ do |input, content|
   find(input).value.should have_content(content)
 end
 
+Then /^I should see that "([^"]*)" does not contain "([^"]*)"$/ do |input, content|
+  find(input).value.should_not have_content(content)
+end
+
