@@ -209,7 +209,7 @@ class NeatlineFeatures_Utils_View
     {
         return __v()->formTextarea(
             $this->_inputNameStem . '[free]',
-            $this->_value,
+            '',
             array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
         );
     }
@@ -436,6 +436,7 @@ class NeatlineFeatures_Utils_View
         $textField = $this->getTextField();
         $isHtml    = $this->isHtml();
         $useHtml   = $this->getUseHtml();
+        $isMap     = $this->isMap();
         $useMap    = $this->getUseMap();
 
         ob_start();

@@ -12,7 +12,7 @@
         map_options: {},
         value: null,
         formats: {
-          is_wkt: false,
+          is_map: false,
           is_html: false
         }
       },
@@ -38,8 +38,9 @@
           _base6.map = "" + this.options.id_prefix + "map";
         }
         this.map = this._initMap();
-        this.hideMap();
         this._recaptureEditor();
+        this._updateFreeText();
+        if (!this.options.formats.is_map) this.hideMap();
         return this._addUpdateEvents();
       },
       destroy: function() {
@@ -55,7 +56,7 @@
           title: 'Coverage',
           name: 'Coverage',
           id: this.element.attr('id'),
-          wkt: this.options.value
+          wkt: this.parseTextInput(this.options.value).wkt
         };
         local_options = {
           edit_json: item
@@ -159,6 +160,34 @@
           buffer.push($(this.options.free).val());
         }
         return $(this.options.text).val(buffer.join(''));
+      },
+      parseTextInput: function(input) {
+        var lines, output, splitAt;
+        if (input == null) input = null;
+        if (input == null) input = $(this.options.text).val();
+        output = {
+          wkt: '',
+          free: ''
+        };
+        if (input.substr(0, 5) === 'WKT: ') {
+          lines = input.split(/\r\n|\n|\r/);
+          splitAt = 0;
+          while (splitAt < lines.length && !lines[splitAt].match(/^\s*$/)) {
+            splitAt++;
+          }
+          if (splitAt < lines.length) {
+            output.wkt = lines.slice(0, splitAt).join("\n").substr(5);
+            output.free = lines.slice(splitAt + 1).join("\n");
+          }
+        } else {
+          output.free = input;
+        }
+        return output;
+      },
+      _updateFreeText: function() {
+        var output;
+        output = this.parseTextInput();
+        return $(this.options.free).val(output.free);
       }
     });
   })(jQuery);

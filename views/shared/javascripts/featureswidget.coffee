@@ -37,7 +37,7 @@
 
       value       : null
       formats     :
-        is_wkt    : false
+        is_map    : false
         is_html   : false
     }
 
@@ -52,11 +52,10 @@
       @options.map   ?= "#{@options.id_prefix}map"
 
       @map = this._initMap()
-      this.hideMap()
       this._recaptureEditor()
+      this._updateFreeText()
+      this.hideMap() unless @options.formats.is_map
       this._addUpdateEvents()
-
-      # console.log this
 
     destroy: ->
       $.Widget.prototype.destroy.call this
@@ -72,7 +71,7 @@
         title : 'Coverage'
         name  : 'Coverage'
         id    : @element.attr 'id'
-        wkt   : @options.value
+        wkt   : this.parseTextInput(@options.value).wkt
       local_options =
         edit_json: item
 
@@ -181,8 +180,34 @@
       else
         buffer.push $(@options.free).val()
 
-      # console.log 'updating', buffer
       $(@options.text).val(buffer.join '')
+
+    # This breaks the value of the text input into 'wkt' and 'free' and returns
+    # a JS object with those properties.
+    parseTextInput: (input=null) ->
+      input ?= $(@options.text).val()
+      output = wkt: '', free: ''
+
+      if input.substr(0, 5) == 'WKT: '
+        lines = input.split(/\r\n|\n|\r/)
+
+        # This walks through the array to find the first blank line.
+        splitAt = 0
+        while (splitAt < lines.length && ! lines[splitAt].match(/^\s*$/))
+          splitAt++
+
+        if splitAt < lines.length
+          output.wkt  = lines.slice(0, splitAt).join("\n").substr(5)
+          output.free = lines.slice(splitAt + 1).join("\n")
+      else
+        output.free = input
+
+      output
+
+    # This updates the free-text field from the 
+    _updateFreeText: ->
+      output = this.parseTextInput()
+      $(@options.free).val output.free
 
   ))(jQuery)
 
