@@ -359,8 +359,8 @@ class NeatlineFeatures_Utils_View
             $sql = $db
                 ->select()
                 ->from("{$db->prefix}neatline_features")
-                ->where('item_id=?', $this->_record->id);
-            $stmt = $db->query($sql);
+                ->where('item_id=?');
+            $stmt = $db->query($sql, array($this->_record->id));
             $stmt->setFetchMode(Zend_Db::FETCH_ASSOC);
             $result = $stmt->fetchAll();
 
@@ -414,7 +414,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getUseMap()
     {
-        return $this->_getUseWidget('mapon', 'Map', false);
+        return $this->_getUseWidget('mapon', 'Map', $this->isMap());
     }
 
     /**
