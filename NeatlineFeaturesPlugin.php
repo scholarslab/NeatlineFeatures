@@ -169,7 +169,6 @@ class NeatlineFeaturesPlugin
 
         queue_js('nlfeatures');
         queue_js('editor/edit_features');
-        queue_js('nlfeatures-init');
         queue_js('featureswidget');
     }
 
@@ -187,7 +186,7 @@ class NeatlineFeaturesPlugin
         $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
-        queue_js('nlfeatures-init');
+        queue_js('featureswidget');
     }
 
     /**
