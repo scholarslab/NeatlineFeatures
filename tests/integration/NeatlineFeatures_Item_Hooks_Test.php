@@ -16,7 +16,7 @@
 require_once 'NeatlineFeatures_Test.php';
 require_once 'application/helpers/FormFunctions.php';
 require_once 'lib/NeatlineFeatures/Utils/View.php';
-require_once 'models/NeatlineFeaturesDataRecordTable.php';
+require_once 'models/NeatlineFeatureTable.php';
 
 /**
  * This tests that item update and delete hooks are working properly.
@@ -66,13 +66,16 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $this->toDelete($text);
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array('mapon' => '1')
+            '0' => array(
+                'mapon' => '1',
+                'text'  => ''
+            )
         );
         $item->save();
 
         $features = $this
             ->db
-            ->getTable('NeatlineFeaturesDataRecord')
+            ->getTable('NeatlineFeature')
             ->createOrGetRecord($item);
 
         $this->assertTrue($features->isMap());
@@ -97,7 +100,10 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $this->toDelete($text);
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
-            '0' => array('mapon' => '1')
+            '0' => array(
+                'mapon' => '1',
+                'text'  => ''
+            )
         );
         $item->save();
 
@@ -106,7 +112,7 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
 
         $results = $this
             ->db
-            ->getTable('NeatlineFeaturesDataRecord')
+            ->getTable('NeatlineFeature')
             ->findBy(array( 'item_id' => $item_id ));
 
         $this->assertNull($results);
