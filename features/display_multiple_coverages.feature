@@ -12,8 +12,10 @@ Feature: Display Multiple Coverages
     And I enter "Cucumber: Display All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
+    And I see "#Elements-38-0-free" contains "Charlottesville, VA"
     And I click "add_element_38"
     And I enter "UVa" into "Elements-38-1-free"
+    And I see "#Elements-38-1-free" contains "UVa"
     And I click on "Add Item"
     And I click "Display All Non-Feature Coverages"
     When I click "View Public Page"
