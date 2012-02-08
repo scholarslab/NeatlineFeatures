@@ -122,7 +122,7 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
             ->getTable('NeatlineFeature')
             ->findBy(array( 'item_id' => $item_id ));
 
-        $this->assertNull($results);
+        $this->assertEmpty($results);
     }
 
 }
