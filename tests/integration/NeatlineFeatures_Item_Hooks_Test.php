@@ -68,7 +68,7 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array(
                 'mapon' => '1',
-                'text'  => ''
+                'text'  => "WKT: POINT(123, 456)\n\nSomthing"
             )
         );
         $item->save();
@@ -76,9 +76,16 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $features = $this
             ->db
             ->getTable('NeatlineFeature')
-            ->createOrGetRecord($item);
+            ->findBy(array(
+                'item_id'         => $item -> id,
+                'element_text_id' => $text -> id
+            ));
 
-        $this->assertTrue($features->isMap());
+        $this->assertNotNull($features);
+        $this->assertGreaterThan(0, count($features));
+
+        $feature = $features[0];
+        $this->assertTrue((bool)$feature->is_map);
     }
 
     /**

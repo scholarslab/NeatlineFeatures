@@ -28,8 +28,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      * @param $item         Omeka_Record The Omeka item associated with this 
      * feature.
      * @param $element_text ElementText The Omeka element text that this is 
-     * associated with. If not given, it just takes the first element text for 
-     * the Coverage field.
+     * associated with.
      *
      * @return NeatlineFeature
      * @author Eric Rochester <erochest@virginia.edu>
@@ -120,7 +119,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         $cid      = $coverage->id;
 
         $sql     = $db->prepare(
-            "INSERT INTO {$db->prefix}neatline_features
+            "INSERT INTO $name
                 (added, item_id, element_text_id, is_map)
                 SELECT NOW(), ?, et.id, ?
                 FROM {$db->prefix}element_texts et
