@@ -35,7 +35,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      **/
     public function createOrGetRecord($item, $element_text)
     {
-        $record = $this->getRecordByItemAndElementText($item, $element_text);
+        $record = $this->getRecordByElementText($element_text);
 
         if (is_null($record)) {
             return new NeatlineFeature($item, $element_text);
@@ -45,11 +45,9 @@ class NeatlineFeatureTable extends Omeka_Db_Table
     }
 
     /**
-     * This looks in the database for a neatline features row for an item or 
-     * element. If it cannot find one, it returns null.
+     * This looks in the database for a neatline features row for an element 
+     * text.
      *
-     * @param $item         Omeka_Record The Omeka item associated with this 
-     * feature.
      * @param $element_text ElementText The Omeka element text that this is 
      * associated with. If not given, it just takes the first element text for 
      * the Coverage field.
@@ -57,13 +55,86 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      * @return NeatlineFeature|null
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getRecordByItemAndElementText($item, $element_text)
+    public function getRecordByElementText($element_text)
     {
-        return $this->fetchObject(
-            $this->getSelect()
-                ->where('item_id=?', $item->id)
-                ->where('element_text_id=?', $element_text->id)
-        );
+        $db     = $this->getDb();
+        $select = $db
+            ->select()
+            ->from(array( 'nf' => $this->getTableName() ))
+            ->where('nf.item_id=?', $element_text->record_id);
+
+        if (isset($element_text->id) && !is_null($element_text->id)) {
+            $select = $select
+                ->where('nf.element_text_id=?', $element_text->id);
+        } else {
+            $etTable = $db->getTable('ElementText');
+
+            $text = $this->_findLongestNonHtml($element_text->text);
+            $op   = (strlen(trim($text, '%')) == strlen($text)) ? '=' : 'LIKE';
+
+            $select = $select
+                ->join(
+                    array( 'et' => $etTable->getTableName() ),
+                    'nf.element_text_id=et.id',
+                    array()
+                )
+                ->where('et.record_id=?', $element_text->record_id)
+                ->where('et.record_type_id=?', $element_text->record_type_id)
+                ->where('et.element_id=?', $element_text->element_id)
+                ->where('et.html=?', $element_text->html)
+                ->where("et.text $op ?", $text);
+        }
+
+        return $this->fetchObject($select);
+    }
+
+    /**
+     * This splits the input on anything that looks HTML-ish and returns the 
+     * longest part, decorated with SQL wildcards (%).
+     *
+     * This is to handle the ElementText data. The text is sometimes HTML 
+     * escaped, so we'll try to match on a subset of the text string. We'll get 
+     * the longest subset that's not HTML.
+     *
+     * @param $text string The input string to split.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _findLongestNonHtml($text)
+    {
+        $output = $text;
+
+        if (strlen($text) > 0) {
+            $parts = preg_split('/<[^>]+>|&[\S;]+;/', $text);
+            $plen  = count($parts);
+            $maxi  = -1;
+            $maxl  = -1;
+            $maxp  = '';
+
+            // If there's only one part, there's no HTML. We can just match.
+            if ($plen > 1) {
+                for ($i = 0; $i<$plen; $i++) {
+                    $part = $parts[$i];
+                    if (strlen($part) > $maxl) {
+                        $maxp = $part;
+                        $maxl = strlen($part);
+                        $maxi = $i;
+                    }
+                }
+
+                $trimmed = trim($maxp);
+                if ($maxi == 0) {
+                    $output = "{$trimmed}%";
+                } else if ($maxi == $plen - 1) {
+                    $output = "%{$trimmed}";
+                } else {
+                    $output = "%{$trimmed}%";
+                }
+            }
+        }
+
+        return $output;
     }
 
     /**
