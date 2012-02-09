@@ -301,7 +301,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $feature->is_map = 1;
         $feature->save();
 
-        $this->assertTrue($tutil->isMap());
+        $this->assertTrue($this->_cutil->isMap());
     }
 
     /**
