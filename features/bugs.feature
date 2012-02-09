@@ -20,12 +20,12 @@ Feature: Bug Fix Tests
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I enter "Cucumber: 'Use HTML' is Checked When Editing Items" into "Elements-50-0-text"
+    Then I should see "#Elements-38-0-free" in "#element-38"
     And I enter "hi" into "Elements-38-0-free"
     And I click "Use HTML" checkbox in "#element-38"
     And I click on "Add Item"
     And I click "'Use HTML' is Checked When Editing Items"
     When I click on "Edit this Item"
-    And I wait 30 seconds
-    Then "Elements-38-0-html" should be checked
-    And I should see ".mceEditor" in "#element-38"
+    Then I should see ".mceEditor" in "#element-38"
+    And "Elements-38-0-html" should be checked
 
