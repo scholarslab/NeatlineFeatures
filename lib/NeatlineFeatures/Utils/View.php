@@ -20,7 +20,7 @@ require_once dirname(__FILE__) .
  * This contructs the view and holds a bunch of utility methods.
  *
  * TODO: A bunch of this was just copied-and-pasted from the Omeka code-base.
- * Surely there must be a better way.  Bring this up on #slab.
+ * Surely there must be a better way.  Bring this up on #omeka.
  **/
 class NeatlineFeatures_Utils_View
 {
@@ -116,6 +116,76 @@ class NeatlineFeatures_Utils_View
         $this->_text        = $text;
         $this->_record      = $record;
         $this->_elementText = $elementText;
+        $this->createInputNameStem();
+    }
+
+    /**
+     * This sets the input name stem from the element text, if it's available. 
+     * Otherwise, it sets a random number.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function createInputNameStem()
+    {
+        $stem = NULL;
+
+        if (is_null($this->_elementText)) {
+            $stem = uniqid("nlfeatures");
+        } else {
+            $feature = get_db()
+                ->getTable('NeatlineFeature')
+                ->getRecordByElementText($this->_elementText);
+            if (is_null($feature) || !isset($feature->id) || is_null($feature->id)) {
+                $stem = uniqid("nlfeatures");
+            } else {
+                $stem = "nlfeatures{$feature->id}_";
+            }
+        }
+
+        $this->_inputNameStem = $stem;
+        return $stem;
+    }
+
+    /**
+     * This sets the element to the dc:coverage field.
+     *
+     * @return Element The Element for the dc:coverage field.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setCoverageElement()
+    {
+        $coverage = get_db()
+            ->getTable('Element')
+            ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
+        $this->setElement($coverage);
+        return $coverage;
+    }
+
+    /**
+     * This sets the current record.
+     *
+     * @param $record Omeka_Record The current item.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setRecord($record)
+    {
+        $this->_record = $record;
+    }
+
+    /**
+     * This sets the Element that this will use.
+     *
+     * @param $element Element The element to use.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function setElement($element)
+    {
+        $this->_element = $element;
     }
 
     /**
@@ -127,6 +197,17 @@ class NeatlineFeatures_Utils_View
     public function getElementId()
     {
         return $this->_element->id;
+    }
+
+    /**
+     * This returns the current element.
+     *
+     * @return Element
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getElement()
+    {
+        return $this->_element;
     }
 
     /**
@@ -147,18 +228,33 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This constructs the TEXTAREA for the raw coverage data and returns it as
-     * a string.
+     * This constructs the TEXTAREA for the free-form coverage data and returns 
+     * it as a string.
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getRawField()
+    public function getFreeField()
     {
         return __v()->formTextarea(
-            $this->_inputNameStem . '[text]',
-            $this->_value,
+            $this->_inputNameStem . '[free]',
+            '',
             array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
+        );
+    }
+
+    /**
+     * This constructs a hidden field for the WKT and free-form coverage data 
+     * and returns it as a string.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getTextField()
+    {
+        return __v()->formHidden(
+            $this->_inputNameStem . '[text]',
+            $this->_value
         );
     }
 
@@ -171,11 +267,24 @@ class NeatlineFeatures_Utils_View
      **/
     public function isPosted()
     {
-        $posted = FALSE;
-        if (array_key_exists('Elements', $_POST)) {
-            $posted = !empty($_POST['Elements'][$this->_element->id]);
+        return (! is_null($this->getPost()));
+    }
+
+    /**
+     * This returns the POST data for this, if it's available.
+     *
+     * @return array|null
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getPost()
+    {
+        $post = null;
+        $eid  = (string)$this->getElementId();
+        if (array_key_exists('Elements', $_POST) &&
+            array_key_exists($eid, $_POST['Elements'])) {
+            $post = $_POST['Elements'][$eid];
         }
-        return $posted;
+        return $post;
     }
 
     /**
@@ -200,13 +309,18 @@ class NeatlineFeatures_Utils_View
      **/
     public function getElementText()
     {
-        $index = $this->getIndex();
-        $texts = $this->_record->getTextsByElement($this->_element);
         $text  = NULL;
 
-        if ($index !== NULL) {
-            if (array_key_exists($index, $texts)) {
-                $text = $texts[$index];
+        if (isset($this->_elementText) && ! is_null($this->_elementText)) {
+            $text = $this->_elementText;
+        } else {
+            $index = $this->getIndex();
+            $texts = $this->_record->getTextsByElement($this->_element);
+
+            if ($index !== NULL) {
+                if (array_key_exists($index, $texts)) {
+                    $text = $texts[$index];
+                }
             }
         }
 
@@ -242,6 +356,65 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This predicate tests whether this element currently is marked to have 
+     * map data.
+     *
+     * @return bool
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function isMap()
+    {
+        $isMap = FALSE;
+
+        if ($this->isPosted()) {
+            try {
+                $isMap = (bool)$_POST['Elements'][$this->getElementId()]
+                    [$this->getIndex()]['mapon'];
+            } catch (Exception $e) {
+                $isMap = FALSE;
+            }
+        } else {
+            $etext = $this->getElementText();
+            if (isset($etext) && !is_null($etext)) {
+                $feature = get_db()
+                    ->getTable('NeatlineFeature')
+                    ->getRecordByElementText($etext);
+
+                if (! is_null($feature)) {
+                    $isMap = (bool)$feature->is_map;
+                }
+            }
+        }
+
+        return $isMap;
+    }
+
+    /**
+     * This returns the string for a "Use X" widget.
+     *
+     * @param $key   string The key for the widget's name.
+     * @param $label string The label (X above).
+     * @param $value bool   Is it checked or not?
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _getUseWidget($key, $label, $value)
+    {
+        $use = '';
+
+        $use .= "<label class='use-$key'>Use $label ";
+        $use .= __v()->formCheckbox(
+            "{$this->_inputNameStem}[$key]",
+            1,
+            array( 'checked' => $value )
+        );
+        $use .= '</label>';
+
+        return $use;
+    }
+
+    /**
      * This returns the HTML for the "Use HTML" widget.
      *
      * @return string
@@ -249,16 +422,18 @@ class NeatlineFeatures_Utils_View
      **/
     public function getUseHtml()
     {
-        $useHtml = '';
+        return $this->_getUseWidget('html', 'HTML', $this->isHtml());
+    }
 
-        $useHtml .= '<label class="use-html">Use HTML ';
-        $useHtml .= __v()->formCheckbox(
-            $this->_inputNameStem . '[html]', 1,
-            array('checked'=>$this->isHtml())
-        );
-        $useHtml .= '</label>';
-
-        return $useHtml;
+    /**
+     * This returns the HTML for the "Use Map" widget.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getUseMap()
+    {
+        return $this->_getUseWidget('mapon', 'Map', $this->isMap());
     }
 
     /**
@@ -275,10 +450,13 @@ class NeatlineFeatures_Utils_View
         $record        = $this->_record;
         $element       = $this->_element;
 
-        $idPrefix = preg_replace('/\W+/', '-', $inputNameStem);
-        $rawField = $this->getRawField();
-        $isHtml   = $this->isHtml();
-        $useHtml  = $this->getUseHtml();
+        $idPrefix  = preg_replace('/\W+/', '-', $inputNameStem);
+        $freeField = $this->getFreeField();
+        $textField = $this->getTextField();
+        $isHtml    = $this->isHtml();
+        $useHtml   = $this->getUseHtml();
+        $isMap     = $this->isMap();
+        $useMap    = $this->getUseMap();
 
         ob_start();
         include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
@@ -293,14 +471,41 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $text        = strip_tags($this->_text);
-        $record      = $this->_record;
-        $elementText = $this->_elementText;
-        $idPrefix    = uniqid("nlfeatures-") . '-';
+        $isHtml    = $this->isHtml();
+        $isMap     = $this->isMap();
+        $etext     = $this->_elementText;
 
-        ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
-        return ob_get_clean();
+        // Pull a fresh $value, if we can.
+        $value = '';
+        if (! is_null($etext)) {
+            $value = $etext->getText();
+        } else {
+            $value = $this->_text;
+        }
+
+        if (! is_null($etext) && is_null($etext->record_id)) {
+            // There's no data for this.
+            $view = '';
+        } else if ((bool)$isMap) {
+            $inputNameStem = $this->_inputNameStem;
+            $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
+
+            // $value has been HTML escaped, so we have to take the first two <br 
+            // /> tags out.
+            $value = preg_replace('/<br \/>(\r\n|\n|\r)/', "\n", $value, 2);
+
+            $options = $this->_options;
+            $record  = $this->_record;
+            $element = $this->_element;
+
+            ob_start();
+            include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
+            $view = ob_get_clean();
+        } else {
+            $view = $value;
+        }
+
+        return $view;
     }
 }
 

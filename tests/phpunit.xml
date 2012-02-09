@@ -8,5 +8,6 @@
     </php>
     <testsuite name="NeatlineFeaturesTests">
       <directory>unit</directory>
+      <directory>integration</directory>
     </testsuite>
 </phpunit>
