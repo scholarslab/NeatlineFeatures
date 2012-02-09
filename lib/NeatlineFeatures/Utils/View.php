@@ -136,7 +136,7 @@ class NeatlineFeatures_Utils_View
             $feature = get_db()
                 ->getTable('NeatlineFeature')
                 ->getRecordByElementText($this->_elementText);
-            if (!isset($feature->id) || is_null($feature->id)) {
+            if (is_null($feature) || !isset($feature->id) || is_null($feature->id)) {
                 $stem = uniqid("nlfeatures");
             } else {
                 $stem = "nlfeatures{$feature->id}_";
@@ -473,16 +473,20 @@ class NeatlineFeatures_Utils_View
     {
         $isHtml    = $this->isHtml();
         $isMap     = $this->isMap();
+        $etext     = $this->_elementText;
 
         // Pull a fresh $value, if we can.
         $value = '';
-        if (! is_null($this->_elementText)) {
-            $value = $this->_elementText->getText();
+        if (! is_null($etext)) {
+            $value = $etext->getText();
         } else {
             $value = $this->_text;
         }
 
-        if ((bool)$isMap) {
+        if (! is_null($etext) && is_null($etext->record_id)) {
+            // There's no data for this.
+            $view = '';
+        } else if ((bool)$isMap) {
             $inputNameStem = $this->_inputNameStem;
             $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
 

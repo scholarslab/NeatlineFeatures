@@ -66,6 +66,10 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         if (isset($element_text->id) && !is_null($element_text->id)) {
             $select = $select
                 ->where('nf.element_text_id=?', $element_text->id);
+
+        } else if (is_null($element_text->record_id)) {
+            $select = NULL;
+
         } else {
             $etTable = $db->getTable('ElementText');
 
@@ -85,7 +89,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                 ->where("et.text $op ?", $text);
         }
 
-        return $this->fetchObject($select);
+        return is_null($select) ? NULLL : $this->fetchObject($select);
     }
 
     /**
