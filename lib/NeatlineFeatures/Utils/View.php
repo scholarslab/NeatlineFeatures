@@ -116,6 +116,35 @@ class NeatlineFeatures_Utils_View
         $this->_text        = $text;
         $this->_record      = $record;
         $this->_elementText = $elementText;
+        $this->createInputNameStem();
+    }
+
+    /**
+     * This sets the input name stem from the element text, if it's available. 
+     * Otherwise, it sets a random number.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function createInputNameStem()
+    {
+        $stem = NULL;
+
+        if (is_null($this->_elementText)) {
+            $stem = uniqid("nlfeatures");
+        } else {
+            $feature = get_db()
+                ->getTable('NeatlineFeature')
+                ->getRecordByElementText($this->_elementText);
+            if (!isset($feature->id) || is_null($feature->id)) {
+                $stem = uniqid("nlfeatures");
+            } else {
+                $stem = "nlfeatures{$feature->id}_";
+            }
+        }
+
+        $this->_inputNameStem = $stem;
+        return $stem;
     }
 
     /**
@@ -280,13 +309,18 @@ class NeatlineFeatures_Utils_View
      **/
     public function getElementText()
     {
-        $index = $this->getIndex();
-        $texts = $this->_record->getTextsByElement($this->_element);
         $text  = NULL;
 
-        if ($index !== NULL) {
-            if (array_key_exists($index, $texts)) {
-                $text = $texts[$index];
+        if (isset($this->_elementText) && ! is_null($this->_elementText)) {
+            $text = $this->_elementText;
+        } else {
+            $index = $this->getIndex();
+            $texts = $this->_record->getTextsByElement($this->_element);
+
+            if ($index !== NULL) {
+                if (array_key_exists($index, $texts)) {
+                    $text = $texts[$index];
+                }
             }
         }
 
@@ -342,29 +376,14 @@ class NeatlineFeatures_Utils_View
         } else {
             $etext = $this->getElementText();
             if (isset($etext)) {
-                $db      = get_db();
-                $record  = $db
-                    ->getTable('Item')
-                    ->find($etext->record_id);
-                $feature = $db
+                $feature = get_db()
                     ->getTable('NeatlineFeature')
-                    ->getRecordByItemAndElementText($record, $etext);
+                    ->getRecordByElementText($etext);
 
-                if (isset($feature)) {
+                if (! is_null($feature)) {
                     $isMap = (bool)$feature->is_map;
                 }
             }
-
-            $db  = get_db();
-            $sql = $db
-                ->select()
-                ->from("{$db->prefix}neatline_features")
-                ->where('item_id=?');
-            $stmt = $db->query($sql, array($this->_record->id));
-            $stmt->setFetchMode(Zend_Db::FETCH_ASSOC);
-            $result = $stmt->fetchAll();
-
-            $isMap = (count($result) == 1) ? (bool)$result[0]['is_map'] : FALSE;
         }
 
         return $isMap;
@@ -452,31 +471,37 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $inputNameStem = $this->_inputNameStem;
+        $isHtml    = $this->isHtml();
+        $isMap     = $this->isMap();
 
         // Pull a fresh $value, if we can.
         $value = '';
-        if ($this->_elementText != NULL) {
+        if (! is_null($this->_elementText)) {
             $value = $this->_elementText->getText();
         } else {
             $value = $this->_text;
         }
 
-        // $value has been HTML escaped, so we have to take the first two <br 
-        // /> tags out.
-        $value = preg_replace('/<br \/>(\r\n|\n|\r)/', "\n", $value, 2);
+        if ((bool)$isMap) {
+            $inputNameStem = $this->_inputNameStem;
+            $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
 
-        $options = $this->_options;
-        $record  = $this->_record;
-        $element = $this->_element;
+            // $value has been HTML escaped, so we have to take the first two <br 
+            // /> tags out.
+            $value = preg_replace('/<br \/>(\r\n|\n|\r)/', "\n", $value, 2);
 
-        $idPrefix  = preg_replace('/\W+/', '-', $inputNameStem);
-        $isHtml    = $this->isHtml();
-        $isMap     = $this->isMap();
+            $options = $this->_options;
+            $record  = $this->_record;
+            $element = $this->_element;
 
-        ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
-        return ob_get_clean();
+            ob_start();
+            include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
+            $view = ob_get_clean();
+        } else {
+            $view = $value;
+        }
+
+        return $view;
     }
 }
 
