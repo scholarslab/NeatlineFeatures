@@ -23,6 +23,8 @@ require_once NEATLINE_FEATURES_PLUGIN_DIR .
     '/lib/NeatlineFeatures/Utils/View.php';
 require_once NEATLINE_FEATURES_PLUGIN_DIR .
     '/lib/NeatlineFeatures_Functions.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR .
+    '/models/NeatlineFeatureTable.php';
 
 /**
  * This class manages the plugin itself. It defines controllers for all the
@@ -47,7 +49,9 @@ class NeatlineFeaturesPlugin
         'install',
         'uninstall',
         'admin_theme_header',
-        'public_theme_header'
+        'public_theme_header',
+        'after_save_item',
+        'before_delete_item'
     );
 
     /**
@@ -105,6 +109,17 @@ class NeatlineFeaturesPlugin
      **/
     public function install()
     {
+        $sql = "
+            CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}neatline_features` (
+                id              INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
+                added           TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+                item_id         INT(10)    UNSIGNED NOT NULL,
+                element_text_id INT(10)    UNSIGNED NOT NULL,
+                is_map          TINYINT(1) NOT NULL DEFAULT 0,
+                CONSTRAINT PRIMARY KEY (id),
+                INDEX (item_id, element_text_id)
+            ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
+        $this->_db->query($sql);
     }
 
     /**
@@ -115,6 +130,27 @@ class NeatlineFeaturesPlugin
      **/
     public function uninstall()
     {
+        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}neatline_features`;";
+        $this->_db->query($sql);
+    }
+
+    /**
+     * This is a utility function that appends a javascript URL.
+     *
+     * @param $uri string This is the URI to queue.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _queueJsUri($uri)
+    {
+        // We are also outputting the script tags to load OpenLayers here.
+        $head = __v()->headScript();
+        $head->appendScript(
+            '',
+            'text/javascript',
+            array('src' => 'http://openlayers.org/api/OpenLayers.js')
+        );
     }
 
     /**
@@ -129,13 +165,11 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeature-editor');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' " .
-            "src='http://openlayers.org/api/OpenLayers.js'></script>";
+        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
         queue_js('editor/edit_features');
-        queue_js('nlfeatures-simpletab');
-        queue_js('nlfeatures-init');
+        queue_js('featureswidget');
     }
 
     /**
@@ -149,11 +183,49 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
-        echo "<script type='text/javascript' " .
-            "src='http://openlayers.org/api/OpenLayers.js'></script>";
+        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
-        queue_js('nlfeatures-init');
+        queue_js('featureswidget');
+    }
+
+    /**
+     * This saves the is_map field, whenever the item is saved in a POST 
+     * request.
+     *
+     * @param $record Omeka_Record The record that was just saved.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function afterSaveItem($record)
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        $post = $utils->getPost();
+        if (!is_null($post)) {
+            $this
+                ->_db
+                ->getTable('NeatlineFeature')
+                ->updateFeatures($record, $utils->getPost());
+        }
+    }
+
+    /**
+     * This deletes the NL Features data for this item.
+     *
+     * @param $record Omeka_Record The record that is to be deleted.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function beforeDeleteItem($record)
+    {
+        $this
+            ->_db
+            ->getTable('NeatlineFeature')
+            ->removeItemFeatures($record);
     }
 
     // }}}

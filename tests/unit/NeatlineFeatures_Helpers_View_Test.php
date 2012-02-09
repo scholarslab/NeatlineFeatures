@@ -24,41 +24,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 {
 
     /**
-     * The title element.
-     *
-     * @var Element
-     **/
-    var $_title;
-
-    /**
-     * The subject element.
-     *
-     * @var Element
-     **/
-    var $_subject;
-
-    /**
-     * The coverage element.
-     *
-     * @var Element
-     **/
-    var $_coverage;
-
-    /**
-     * The NeatlineFeatures_Utils_View for the coverage element.
-     *
-     * @var NeatlineFeatures_Utils_View
-     **/
-    var $_cutil;
-
-    /**
-     * This is an item to play with.
-     *
-     * @var Item
-     **/
-    var $_item;
-
-    /**
      * This performs a little set up for this set of tests.
      *
      * @return void
@@ -68,37 +33,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     {
         parent::setUp();
 
-        $rows = $this
-            ->db
-            ->getTable('Element')
-            ->findBy(array('name' => 'Coverage'));
-
-        foreach ($rows as $row) {
-            switch ($row->name) {
-            case 'Coverage':
-                $this->_coverage = $row;
-                $this->_cutil = new NeatlineFeatures_Utils_View();
-                $this->_cutil->setEditOptions(
-                    'Elements[38][0]', null, array(), null, $row
-                );
-                break;
-            case 'Title':
-                $this->_title = $row;
-                break;
-            case 'Subject':
-                $this->_subject = $row;
-                break;
-            }
-        }
-
-        $this->_item = new Item;
-        $this->_item->save();
-
-        $this->addElementText($this->_item, $this->_title, '<b>A Title</b>',
-            TRUE);
-        $this->addElementText($this->_item, $this->_subject, 'Subject');
-
-        $this->_item->save();
     }
 
     /**
@@ -110,14 +44,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function tearDown()
     {
         parent::tearDown();
-        if (isset($this->_item['title'])) {
-            $this->_item['title']->delete();
-        }
-        if (isset($this->_item['subject'])) {
-            $this->_item['subject']->delete();
-        }
-        $this->_item->delete();
-        $this->_item = null;
     }
 
     /**
@@ -152,25 +78,46 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     }
 
     /**
-     * This tests the TEXTAREA returned by getRawField.
+     * This tests the TEXTAREA returned by getFreeField.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function testGetRawField()
+    public function testGetFreeField()
     {
         $expected = new DOMDocument;
         $expected->loadXML(
-            '<textarea id="Elements-38-0-text" name="Elements[38][0][text]" ' .
+            '<textarea id="Elements-38-0-free" name="Elements[38][0][free]" ' .
             'class="textinput" rows="5" cols="50"></textarea>'
         );
 
         $actual = new DOMDocument;
-        $actual->loadXML($this->_cutil->getRawField());
+        $actual->loadXML($this->_cutil->getFreeField());
 
         $this->assertEqualXMLStructure(
             $expected->firstChild, $actual->firstChild, TRUE
         );
+    }
+
+    /**
+     * This tests whether the text field is created as a hidden field.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetTextField()
+    {
+        $expected = new DOMDocument;
+        $expected->loadXML(
+            '<input type="hidden" id="Elements-38-0-text" name="Elements[38][0][text]" ' .
+            'value="" />'
+        );
+
+        $actual = new DOMDocument;
+        $actual->loadHTML($this->_cutil->getTextField());
+        $input = $actual->getElementsByTagName('input')->item(0);
+
+        $this->assertEqualXMLStructure($expected->firstChild, $input, TRUE);
     }
 
     /**
@@ -296,6 +243,85 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     }
 
     /**
+     * This tests the isMap predicate in a POST request, when it is true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapInPostTrue()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array('mapon' => '1')
+        );
+        $this->assertTrue($this->_cutil->isMap());
+    }
+
+    /**
+     * This tests the isMap predicate in a POST request, when it is false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapInPostFalse()
+    {
+        $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
+            '0' => array()
+        );
+        $this->assertFalse($this->_cutil->isMap());
+    }
+
+    /**
+      * This tests the isMap predicate outside of a POST request, when it is
+      * true.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapNoPostTrue()
+    {
+        $tutil = new NeatlineFeatures_Utils_View();
+        $tutil->setEditOptions(
+            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
+            $this->_item, $this->_title
+        );
+
+        $text = "WKT: something\n\nhi";
+        $this->addElementText($this->_item, $this->_coverage, $text);
+        $eid = (string)$this->_cutil->getElementId();
+        $_POST['Elements'][$eid] = array(
+            '0' => array(
+                'mapon' => '1',
+                'text'  => $text
+            )
+        );
+        $features = get_db()
+            ->getTable('NeatlineFeature')
+            ->updateFeatures($this->_item, $_POST['Elements'][$eid]);
+        $feature = $features[0];
+        $feature->is_map = 1;
+        $feature->save();
+
+        $this->assertTrue($this->_cutil->isMap());
+    }
+
+    /**
+     * This tests the isMap predicate outside of a POST request, when it is
+     * false.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testIsMapNoPostFalse()
+    {
+        $sutil = new NeatlineFeatures_Utils_View();
+        $sutil->setEditOptions(
+            "Elements[{$this->_subject->id}[0]", 'Subject', array(),
+            $this->_item, $this->_subject
+        );
+        $this->assertFalse($sutil->isMap());
+    }
+
+    /**
      * This tests the getUserHtml method, which returns the HTML string for the 
      * "Use HTML" control.
      *
@@ -377,5 +403,50 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
 
         return $child;
     }
+
+    /**
+     * This tests that the setCoverageElement method retrieves the correct 
+     * element.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testSetCoverageElement()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        $el = $utils->getElement();
+        $this->assertEquals('Dublin Core', $el->getElementSet()->name);
+        $this->assertEquals('Coverage', $el->name);
+    }
+
+    /**
+     * This tests the POST data returned by the getPost function.
+     *
+     * @return void
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function testGetPost()
+    {
+        $utils = new NeatlineFeatures_Utils_View();
+        $utils->setCoverageElement();
+
+        // No Elements in _POST.
+        if (array_key_exists('Elements', $_POST)) {
+            unset($_POST['Elements']);
+        }
+        $this->assertNull($utils->getPost());
+
+        // No element ID in Elements.
+        $_POST['Elements'] = array();
+        $this->assertNull($utils->getPost());
+
+        // I CAN HAZ VALUE!
+        $cid = (string)$this->_coverage->id;
+        $_POST['Elements'][$cid] = 'hi';
+        $this->assertEquals('hi', $utils->getPost());
+    }
+
 }
 

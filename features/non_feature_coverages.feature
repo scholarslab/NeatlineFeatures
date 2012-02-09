@@ -9,21 +9,32 @@ Feature: Non-Feature Coverages
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Add Non-Feature Coverage Data" for the "Elements-50-0-text"  # Title
     And I enter "AddNonFeatureCoverageData" for the "Elements-49-0-text"  # Subject
-    And I click the "Raw" tab on "#Elements-38-0-widget"
-    And I enter "Charlottesville, VA" into "Elements-38-0-text"
+    And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "Add Item"
     When I click on "Cucumber: Add Non-Feature Coverage Data"
     Then I should see text "Charlottesville, VA" in "#dublin-core-coverage"
 
-  Scenario: If coverage data does not contain features, default to the "Raw" tab
+  Scenario: If existing coverage data does not contain features, don't show a map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Default Raw Tab" for the "Elements-50-0-text"  # Title
     And I enter "Default Raw Tab" for the "Elements-49-0-text"  # Subject
-    And I click the "Raw" tab on "#Elements-38-0-widget"
-    And I enter "Charlottesville, VA" into "Elements-38-0-text"
+    And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "Add Item"
     And I click on "Cucumber: Default Raw Tab"
     When I click on "Edit this Item"
-    Then I should see "#Elements-38-0-text"
+    Then I should see "#Elements-38-0-free"
+    But I should not see a map in "#element-38"
+
+  Scenario: If a new coverage input is added, the existing map should still show
+    Given I am logged into the admin console
+    And I click "Add a new item to your archive"
+    And I enter "Cucumber: New Coverage, Existing Map" for the "Elements-50-0-text"   # Title
+    And I enter "New Coverage, Existing Map" for the "Elements-49-0-text"             # Subject
+    And I click "Use Map" checkbox in "#Elements-38-0-widget"
+    And I draw a point on "div#Elements-38-0-map.olMap"
+    When I click on "add_element_38"
+    Then I should see "#Elements-38-1-widget"
+    And I should see a map in "#Elements-38-0-widget"
+    And "Elements-38-0-mapon" should be checked
 

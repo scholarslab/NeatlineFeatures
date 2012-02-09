@@ -11,6 +11,7 @@ Cucumber::Rake::Task.new do |t|
   t.cucumber_opts = %w{--format pretty}
 end
 
+# require '/Users/err8n/p/zayin/lib/zayin/rake/vagrant/php'
 require 'zayin/rake/vagrant/php'
 Zayin::Rake::Vagrant::PhpTasks.new
 
@@ -24,7 +25,7 @@ namespace :php do
     Rake::Task['vagrant:php:unit'].invoke(
       File.join(VM_BASEDIR, 'tests'),
       File.join(VM_BASEDIR, 'tests', 'phpunit.xml'),
-      'unit'
+      '.'
       # File.join(VM_BASEDIR, 'coverage')
     )
   end

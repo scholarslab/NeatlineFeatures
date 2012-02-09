@@ -9,8 +9,7 @@ Feature: Display Non-Feature Coverage Data
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display Non-Feature Coverage" for the "Elements-50-0-text"      # Title
     And I enter "Display Non-Feature Coverage" for the "Elements-49-0-text"      # Subject
-    And I click the "Raw" tab on "#element-38"
-    And I enter "Charlottesville, VA" into "Elements-38-0-text"
+    And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "Add Item"
     And I click "Display Non-Feature Coverage"
     When I click "View Public Page"

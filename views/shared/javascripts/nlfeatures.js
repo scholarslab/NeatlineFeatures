@@ -96,10 +96,14 @@
                 raw_update: undefined
             },
 
+            // If given and set to 'edit' and if the json data is given, this
+            // causes the control to be set up to edit that data.
+            mode: null,
+
             // If given, this loads this item and sets up the widget to edit
             // it. If given, it should be a JavaScript object like the
             // `.editJson` method expects.
-            edit_json: null
+            json: null
         },
 
         /*
@@ -120,11 +124,13 @@
             this.requestData = null;
 
             // Load data. Maybe set edit mode.
-            if (typeof this.options.edit_json !== 'undefined' &&
-                this.options.edit_json !== null) {
-                this.loadLocalData([this.options.edit_json]);
+            if (typeof this.options.json !== 'undefined' &&
+                this.options.json !== null) {
+                this.loadLocalData([this.options.json]);
                 this.setViewport();
-                this.editJson(this.options.edit_json, true);
+                if (this.options.mode === 'edit') {
+                    this.editJson(this.options.json, true);
+                }
             } else {
                 this.loadData();
             }

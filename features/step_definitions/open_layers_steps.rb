@@ -41,6 +41,12 @@ Then /^I should not see a map$/ do |arg1|
   find('.olMap').should_not be_visible
 end
 
+Then /^I should not see a map in "([^"]*)"$/ do |parent|
+  within(parent) do
+    find('.olMap').should_not be_visible
+  end
+end
+
 Then /^I should see an OpenLayers map$/ do
   find('.olMap').should be_visible
 end
