@@ -26,6 +26,7 @@
     $(function() {
         var options = {
             mode: 'view',
+            id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
             map_options: {
                 styles: {
                     point_graphic: '<?php echo img('pushpin-1.png'); ?>'
