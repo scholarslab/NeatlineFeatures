@@ -39,7 +39,7 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
-    But I should not see text "WKT" in "#dublin-core-coverage"
+    But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
 
   @file_fixture
   Scenario: Mixed Feature Coverages
@@ -57,5 +57,5 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And I should see text "UVa" in "#dublin-core-coverage"
-    But I should not see text "WKT" in "#dublin-core-coverage"
+    But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
 
