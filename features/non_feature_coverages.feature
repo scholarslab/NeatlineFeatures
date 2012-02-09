@@ -36,5 +36,5 @@ Feature: Non-Feature Coverages
     When I click on "add_element_38"
     Then I should see "#Elements-38-1-widget"
     And I should see a map in "#Elements-38-0-widget"
-    And "#Elements-38-0-mapon" should be checked
+    And "Elements-38-0-mapon" should be checked
 
