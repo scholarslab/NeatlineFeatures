@@ -39,11 +39,14 @@
           _base6.map = "" + this.options.id_prefix + "map";
         }
         this.map = this._initMap();
-        this._recaptureEditor();
-        this._updateFreeText();
-        if (!this.options.formats.is_map) this.hideMap();
-        this._addUpdateEvents();
-        if (this.options.mode !== 'edit') return this._fillFreeView();
+        if (this.options.mode === 'edit') {
+          this._recaptureEditor();
+          this._updateFreeText();
+          this._addUpdateEvents();
+        } else {
+          this._fillFreeView();
+        }
+        if (!this.options.formats.is_map) return this.hideMap();
       },
       destroy: function() {
         return $.Widget.prototype.destroy.call(this);

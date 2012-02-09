@@ -54,12 +54,13 @@
       @options.map   ?= "#{@options.id_prefix}map"
 
       @map = this._initMap()
-      this._recaptureEditor()
-      this._updateFreeText()
+      if @options.mode == 'edit'
+        this._recaptureEditor()
+        this._updateFreeText()
+        this._addUpdateEvents()
+      else
+        this._fillFreeView()
       this.hideMap() unless @options.formats.is_map
-      this._addUpdateEvents()
-
-      this._fillFreeView() unless @options.mode == 'edit'
 
     destroy: ->
       $.Widget.prototype.destroy.call this
