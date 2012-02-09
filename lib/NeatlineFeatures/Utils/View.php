@@ -375,7 +375,7 @@ class NeatlineFeatures_Utils_View
             }
         } else {
             $etext = $this->getElementText();
-            if (isset($etext)) {
+            if (isset($etext) && !is_null($etext)) {
                 $feature = get_db()
                     ->getTable('NeatlineFeature')
                     ->getRecordByElementText($etext);
