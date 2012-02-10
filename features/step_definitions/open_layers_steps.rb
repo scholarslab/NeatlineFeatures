@@ -27,6 +27,14 @@ Given /^I draw a line on "([^"]*)"$/ do |map|
                  perform
 end
 
+Given /^I move "([^"]*)" to "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat|
+  evaluate_script("jQuery('#{map}').data('nlfeatures').setCenterLonLat(#{lon}, #{lat})")
+end
+
+Given /^I zoom "([^"]*)" to "(\d*)"/ do |map, zoom|
+  evaluate_script("jQuery('#{map}').data('nlfeatures').setZoom(#{zoom})")
+end
+
 Then /^I should see a map in "([^"]*)"$/ do |parent|
   within(parent) do
     find(".olMap").should be_visible
@@ -69,6 +77,10 @@ Then /^a line is defined in "([^"]*)"$/ do |textarea|
   find(textarea).value.should match(/LINESTRING/)
 end
 
+Then /^the viewport is defined in "([^"]*)"$/ do |textarea|
+  find (textarea).value.should match(/VIEWPORT:/)
+end
+
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
   within(parent) do
     find('script').should have_content('POINT')
@@ -109,5 +121,17 @@ Then /^"([^"]*)" should center on my location$/ do |map|
   my_loc = GeoMagic::Remote.my_location
   (map_lon - my_loc.longitude.to_f).should be < 1.0
   (map_lat - my_loc.latitude.to_f ).should be < 1.0
+end
+
+Given /^"([^"]*)" should center on "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat|
+  map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
+  map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f
+  (map_lon - lon.to_f).should be < 1.0
+  (map_lat - lon.to_f).should be < 1.0
+end
+
+Given /^"([^"]*)" should be zoomed to "(\d*)"/ do |map, zoom|
+  map_zoom = evaluate_script("jQuery('#{map}').data('nlfeatures').map.getZoom()").to_i
+  map_zoom.should be(zoom.to_i)
 end
 

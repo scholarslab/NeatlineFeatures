@@ -3,6 +3,12 @@ Given /^I click(?: on)? "([^"]*)"$/ do |link_text|
   click_on link_text
 end
 
+Given /^I click(?: on)? "([^"]*)" in "([^"]*)"$/ do |link_text, parent|
+  within(parent) do
+    click_on link_text
+  end
+end
+
 Given /^I click(?: on)? XPath "([^"]*)"$/ do |xpath|
   find(:xpath, xpath).click
 end
