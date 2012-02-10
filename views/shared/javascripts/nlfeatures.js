@@ -892,6 +892,23 @@
         },
 
         /*
+         * This moves the center-point and zoom to the place specified.
+         */
+        setCenterLonLat: function(lon, lat) {
+            var lonLat = new OpenLayers.LonLat(lon, lat),
+                wsg    = new OpenLayers.Projection('EPSG:4326'),
+                proj   = this.map.getProjectionObject();
+            return this.map.panTo(lonLat.transform(wsg, proj));
+        },
+
+         /*
+          * This sets the zoom level.
+          */
+         setZoom: function(zoom) {
+             return this.map.zoomTo(zoom);
+         },
+
+        /*
          * This tests whether the map has any layer with a point feature.
          */
         hasPoint: function() {
