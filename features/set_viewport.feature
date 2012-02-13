@@ -10,7 +10,7 @@ Feature: Set Viewport
     And I click "Use Map" checkbox in "#element-38"
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
     And I zoom "#Elements-38-0-map" to "6"
-    When I click "Save Viewport" in "#element-38"
+    When I click "Save View" in "#element-38"
     Then the viewport is defined in "#Elements-38-0-text"
 
   Scenario: Viewport Settings Persist
@@ -21,7 +21,7 @@ Feature: Set Viewport
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
     And I zoom "#Elements-38-0-map" to "6"
     And I draw a point on "div.olMap"
-    And I click on "Save Viewport" in "#element-38"
+    And I click on "Save View" in "#element-38"
     And I click on "Add Item"
     When I click "Viewport Settings Persist"
     Then "#dublin-core-coverage .map" should center on "-78.5057, 38.03652"
