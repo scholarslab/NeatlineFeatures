@@ -175,6 +175,10 @@
         .bind('featureadded.nlfeatures', handler)
         .bind('update.nlfeatures'      , handler)
         .bind('delete.nlfeatures'      , handler)
+        .bind('saveview.nlfeatures'    , =>
+          @map.saveViewport()
+          this.updateTextInput()
+        )
 
     # This handles passing the content from the visible inputs to the hidden
     # field that Omeka actually uses.

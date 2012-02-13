@@ -155,7 +155,10 @@
           return _this.updateTextInput();
         };
         $(this.options.free).change(handler);
-        return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler);
+        return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler).bind('saveview.nlfeatures', function() {
+          _this.map.saveViewport();
+          return _this.updateTextInput();
+        });
       },
       updateTextInput: function() {
         var buffer, center, zoom;
