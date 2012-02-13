@@ -81,6 +81,8 @@
         mode: @options.mode
         json: item
 
+      # TODO: add zoom, center to the options
+
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)
         .nlfeatures(all_options)
@@ -180,6 +182,7 @@
 
       if this.usesMap()
         buffer.push "WKT: #{@map.getWktForSave()}\n\n"
+        # TODO: zoom, center
 
       if this.usesHtml()
         buffer.push tinyMCE.get(@options.free.substr 1).getContent()
@@ -197,6 +200,7 @@
         @options.value
       output = wkt: '', free: ''
 
+      # TODO: zoom, center
       if input.substr(0, 5) == 'WKT: '
         lines = input.split(/\r\n|\n|\r/)
 

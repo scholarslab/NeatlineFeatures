@@ -185,6 +185,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      **/
     public function createFeatures($item, $params)
     {
+        // TODO: parse out and save zoom and center
         $name     = $this->getTableName();
         $item_id  = $item->id;
         $db       = $this->getDb();

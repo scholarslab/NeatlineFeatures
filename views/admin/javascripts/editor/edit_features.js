@@ -60,6 +60,7 @@
         _create: function() {
             var self = this;
 
+            // TODO: add save viewport button
             // Build the buttons, insert, and gloss.
             this.scaleButton =
                 $('<button id="scale-button" type="button" class="btn edit-geometry-small geo-edit">Scale</button>');

@@ -60,6 +60,7 @@
 (function($, undefined) {
     $.widget('nlfeatures.nlfeatures', {
         options: {
+            // TODO: option for zoom, center
 
             // `loadData()` and `loadLocalData()` can parse out multiple WKT
             // features from their inputs' `wkt` fields. This is the string to
@@ -691,6 +692,7 @@
          * the a view of the features added to the map.
          */
         setViewport: function() {
+            // TODO: look for zoom, center options
             var self, featureCount, i, vlen, vlayer, j, flen, geometry, bounds, geolocate;
 
             self = this;
