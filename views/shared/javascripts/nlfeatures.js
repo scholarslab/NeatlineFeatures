@@ -919,7 +919,6 @@
           * This gets the current center of the map reprojected into EPSG:4326
           * and returned as an object with `lat` and `lon` properties.
           */
-
         getCenterLonLat: function() {
             var wsg  = new OpenLayers.Projection('EPSG:4326'),
                 proj = this.map.getProjectionObject();
@@ -1004,6 +1003,21 @@
          */
         getSavedCenter: function() {
             return this.options.center;
+        },
+
+        /*
+         * This saves the current viewport to the options.
+         */
+        saveViewport: function() {
+            var center = this.map.getCenter();
+            var zoom   = this.map.getZoom();
+
+            this.options.zoom   = zoom;
+            this.options.center = {
+                lon: center.lon,
+                lat: center.lat
+            };
         }
+
     });
 })( jQuery );
