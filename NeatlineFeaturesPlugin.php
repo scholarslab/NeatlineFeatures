@@ -116,8 +116,6 @@ class NeatlineFeaturesPlugin
                 item_id         INT(10)        UNSIGNED NOT NULL,
                 element_text_id INT(10)        UNSIGNED NOT NULL,
                 is_map          TINYINT(1)     NOT NULL DEFAULT 0,
-                zoom            SMALLINT       NOT NULL DEFAULT 6,
-                center          DECIMAL(12, 9) NOT NULL DEFAULT 0.0,
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
