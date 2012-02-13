@@ -71,17 +71,18 @@
     # This initializes a map for editing with the value passed in. It returns
     # the nlfeatures data object.
     _initMap: ->
+      input = this.parseTextInput(@options.value)
       map = $ @options.map
       item =
         title : 'Coverage'
         name  : 'Coverage'
         id    : @element.attr 'id'
-        wkt   : this.parseTextInput(@options.value).wkt
+        wkt   : input.wkt
       local_options =
         mode: @options.mode
         json: item
-
-      # TODO: add zoom, center to the options
+      item.zoom   = input.zoom   if input.zoom?
+      item.center = input.center if input.center?
 
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)

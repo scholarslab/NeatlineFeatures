@@ -55,18 +55,21 @@
         return $.Widget.prototype._setOption.apply(this, arguments);
       },
       _initMap: function() {
-        var all_options, item, local_options, map;
+        var all_options, input, item, local_options, map;
+        input = this.parseTextInput(this.options.value);
         map = $(this.options.map);
         item = {
           title: 'Coverage',
           name: 'Coverage',
           id: this.element.attr('id'),
-          wkt: this.parseTextInput(this.options.value).wkt
+          wkt: input.wkt
         };
         local_options = {
           mode: this.options.mode,
           json: item
         };
+        if (input.zoom != null) item.zoom = input.zoom;
+        if (input.center != null) item.center = input.center;
         all_options = $.extend(true, {}, this.options.map_options, local_options);
         return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
       },
