@@ -60,8 +60,6 @@
 (function($, undefined) {
     $.widget('nlfeatures.nlfeatures', {
         options: {
-            // TODO: option for zoom, center
-
             // `loadData()` and `loadLocalData()` can parse out multiple WKT
             // features from their inputs' `wkt` fields. This is the string to
             // use to separate out the WKT features.
@@ -104,7 +102,14 @@
             // If given, this loads this item and sets up the widget to edit
             // it. If given, it should be a JavaScript object like the
             // `.editJson` method expects.
-            json: null
+            json: null,
+
+            // If given, this sets the zoom level for the map.
+            zoom: null,
+
+            // If given, this sets the center for the map. This hsould be a JS
+            // object with the properties lon, lat, and srs (optional).
+            center: null
         },
 
         /*
@@ -692,7 +697,35 @@
          * the a view of the features added to the map.
          */
         setViewport: function() {
-            // TODO: look for zoom, center options
+            if (this.options.zoom != null && this.options.center != null) {
+                this._setViewportFromOptions();
+            } else {
+                this._setViewportFromData();
+            }
+        },
+
+        /*
+         * This sets the data from the options.
+         */
+        _setViewportFromOptions: function() {
+            var zoom   = this.options.zoom,
+                center = this.options.center,
+                lonlat = new OpenLayers.LonLat(center.lon, center.lat);
+            var proj, wsg;
+
+            if (center.srs != null) {
+                wsg    = new OpenLayers.Projection(center.srs);
+                proj   = this.map.getProjectionObject();
+                lonlat = lonlat.transform(wsg, proj);
+            }
+
+            this.map.setCenter(lonlat, zoom, false, false);
+        },
+
+        /*
+         * This sets the viewport from the data.
+         */
+        _setViewportFromData: function() {
             var self, featureCount, i, vlen, vlayer, j, flen, geometry, bounds, geolocate;
 
             self = this;
