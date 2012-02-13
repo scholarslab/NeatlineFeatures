@@ -995,8 +995,7 @@
          * This returns the saved zoom setting.
          */
         getSavedZoom: function() {
-            // TODO
-            return null;
+            return this.options.zoom;
         },
 
         /*
@@ -1004,8 +1003,7 @@
          * an object the lat and lon properties.
          */
         getSavedCenter: function() {
-            // TODO
-            return null;
+            return this.options.center;
         }
     });
 })( jQuery );
