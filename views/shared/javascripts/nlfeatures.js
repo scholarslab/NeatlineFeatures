@@ -956,6 +956,23 @@
          */
         exists: function(slot) {
             return (typeof slot !== 'undefined' && slot !== null);
+        },
+
+        /*
+         * This returns the saved zoom setting.
+         */
+        getSavedZoom: function() {
+            // TODO
+            return null;
+        },
+
+        /*
+         * This returns the saved center setting. This will either be null or
+         * an object the lat and lon properties.
+         */
+        getSavedCenter: function() {
+            // TODO
+            return null;
         }
     });
 })( jQuery );

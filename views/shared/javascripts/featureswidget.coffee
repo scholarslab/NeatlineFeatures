@@ -182,8 +182,15 @@
       buffer = []
 
       if this.usesMap()
-        buffer.push "WKT: #{@map.getWktForSave()}\n\n"
-        # TODO: zoom, center
+        buffer.push "WKT: #{@map.getWktForSave()}\n"
+
+        zoom = @map.getSavedZoom()
+        buffer.push "ZOOM: #{zoom}\n" if zoom?
+
+        center = @map.getSavedCenter()
+        buffer.push "CENTER: #{center.lat},#{center.lon}\n" if center?
+
+        buffer.push "\n"
 
       if this.usesHtml()
         buffer.push tinyMCE.get(@options.free.substr 1).getContent()

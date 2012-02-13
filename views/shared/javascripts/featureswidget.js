@@ -158,10 +158,17 @@
         return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler);
       },
       updateTextInput: function() {
-        var buffer;
+        var buffer, center, zoom;
         buffer = [];
         if (this.usesMap()) {
-          buffer.push("WKT: " + (this.map.getWktForSave()) + "\n\n");
+          buffer.push("WKT: " + (this.map.getWktForSave()) + "\n");
+          zoom = this.map.getSavedZoom();
+          if (zoom != null) buffer.push("ZOOM: " + zoom + "\n");
+          center = this.map.getSavedCenter();
+          if (center != null) {
+            buffer.push("CENTER: " + center.lat + "," + center.lon + "\n");
+          }
+          buffer.push("\n");
         }
         if (this.usesHtml()) {
           buffer.push(tinyMCE.get(this.options.free.substr(1)).getContent());
