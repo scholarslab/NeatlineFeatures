@@ -208,7 +208,6 @@
         @options.value
       output = wkt: '', free: ''
 
-      # TODO: zoom, center
       if input.substr(0, 5) == 'WKT: '
         lines = input.split(/\r\n|\n|\r/)
 
@@ -218,12 +217,51 @@
           splitAt++
 
         if splitAt < lines.length
-          output.wkt  = lines.slice(0, splitAt).join("\n").substr(5)
-          output.free = lines.slice(splitAt + 1).join("\n")
+          prefixLines   = lines.slice(0, splitAt)
+          prefix        = this._parseFeatureData lines.slice(0, splitAt)
+
+          output.wkt    = prefix.wkt
+          output.zoom   = prefix.zoom
+          output.center = prefix.center
+          output.free   = lines.slice(splitAt + 1).join("\n")
       else
         output.free = input
 
       output
+
+    # This takes an array of lines and parses them for the WKT, ZOOM, and
+    # CENTER fields.
+    _parseFeatureData: (lines) ->
+      data =
+        wkt    : null
+        zoom   : null
+        center : null
+      current = null
+
+      for line in lines
+        line = line.trim()
+
+        if line.length == 0
+          continue
+        else if line.substr(0, 5) == 'WKT: '
+          current  = 'wkt'
+          data.wkt = []
+          data.wkt.push line.substr(5)
+        else if line.substr(0, 6) == 'ZOOM: '
+          current   = 'zoom'
+          data.zoom = parseInt line.substr(6)
+        else if line.substr(0, 8) == 'CENTER: '
+          current = 'center'
+          [lon, lat] = line.substr(8).split ','
+          data.center =
+            lon: parseFloat lon
+            lat: parseFloat lat
+        else if current == 'wkt'
+          data.wkt.push line
+
+      if data.wkt?
+        data.wkt = data.wkt.join("\n") 
+      data
 
     # This updates the free-text field from the 
     _updateFreeText: ->
