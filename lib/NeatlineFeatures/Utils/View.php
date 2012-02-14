@@ -490,9 +490,7 @@ class NeatlineFeatures_Utils_View
             $inputNameStem = $this->_inputNameStem;
             $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
 
-            // $value has been HTML escaped, so we have to take the first two <br 
-            // /> tags out.
-            $value = preg_replace('/<br \/>(\r\n|\n|\r)/', "\n", $value, 2);
+            $value = $this->_unescape($value);
 
             $options = $this->_options;
             $record  = $this->_record;
@@ -506,6 +504,37 @@ class NeatlineFeatures_Utils_View
         }
 
         return $view;
+    }
+
+    /**
+     * This removes the HTML escaping from the first section of the input. This 
+     * is the section that contains the WKT, ZOOM, and CENTER values.
+     *
+     * @param $input string The input value of the coverage field.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    protected function _unescape($input)
+    {
+        $parts = preg_split('/<br \/>[\r\n]+/', $input);
+
+        $splitAt = -1;
+        for ($i=0; $i<count($parts); $i++) {
+            $part = $parts[$i];
+            if (strlen(trim($part)) == 0) {
+                $splitAt = $i;
+                break;
+            }
+        }
+
+        if ($splitAt > -1) {
+            $data  = implode("\n", array_slice($parts, 0, $splitAt));
+            $text  = implode("<br />\n", array_slice($parts, $splitAt + 1));
+            $input = "$data\n\n$text";
+        }
+
+        return $input;
     }
 }
 

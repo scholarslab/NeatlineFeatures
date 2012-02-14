@@ -81,8 +81,8 @@
       local_options =
         mode: @options.mode
         json: item
-      item.zoom   = input.zoom   if input.zoom?
-      item.center = input.center if input.center?
+      local_options.zoom   = input.zoom   if input.zoom?
+      local_options.center = input.center if input.center?
 
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)
@@ -192,7 +192,7 @@
         buffer.push "ZOOM: #{zoom}\n" if zoom?
 
         center = @map.getSavedCenter()
-        buffer.push "CENTER: #{center.lat},#{center.lon}\n" if center?
+        buffer.push "CENTER: #{center.lon},#{center.lat}\n" if center?
 
         buffer.push "\n"
 

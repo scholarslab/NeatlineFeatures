@@ -68,8 +68,8 @@
           mode: this.options.mode,
           json: item
         };
-        if (input.zoom != null) item.zoom = input.zoom;
-        if (input.center != null) item.center = input.center;
+        if (input.zoom != null) local_options.zoom = input.zoom;
+        if (input.center != null) local_options.center = input.center;
         all_options = $.extend(true, {}, this.options.map_options, local_options);
         return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
       },
@@ -169,7 +169,7 @@
           if (zoom != null) buffer.push("ZOOM: " + zoom + "\n");
           center = this.map.getSavedCenter();
           if (center != null) {
-            buffer.push("CENTER: " + center.lat + "," + center.lon + "\n");
+            buffer.push("CENTER: " + center.lon + "," + center.lat + "\n");
           }
           buffer.push("\n");
         }
