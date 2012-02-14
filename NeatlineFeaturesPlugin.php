@@ -146,11 +146,7 @@ class NeatlineFeaturesPlugin
     {
         // We are also outputting the script tags to load OpenLayers here.
         $head = __v()->headScript();
-        $head->appendScript(
-            '',
-            'text/javascript',
-            array('src' => 'http://openlayers.org/api/OpenLayers.js')
-        );
+        $head->appendScript('', 'text/javascript', array('src' => $uri));
     }
 
     /**
