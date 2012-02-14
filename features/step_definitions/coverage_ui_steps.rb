@@ -47,6 +47,10 @@ Then /^I should see "([^"]*)"$/ do |target|
   find(target).should be_visible
 end
 
+Then /^I should see XPath "([^"]*)"$/ do |target|
+  find(:xpath, target).should be_visible
+end
+
 Then /^I should not see "([^"]*)"$/ do |target|
   find(target).should_not be_visible
 end

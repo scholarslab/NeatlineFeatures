@@ -79,8 +79,10 @@
         id    : @element.attr 'id'
         wkt   : input.wkt
       local_options =
-        mode: @options.mode
-        json: item
+        mode   : @options.mode
+        json   : item
+        markup :
+          id_prefix: @options.id_prefix
       local_options.zoom   = input.zoom   if input.zoom?
       local_options.center = input.center if input.center?
 
@@ -265,6 +267,8 @@
 
       if data.wkt?
         data.wkt = data.wkt.join("\n") 
+      else
+        data.wkt = ''
       data
 
     # This updates the free-text field from the 

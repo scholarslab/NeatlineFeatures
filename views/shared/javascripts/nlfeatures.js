@@ -68,7 +68,8 @@
             // Markup hooks.
             markup: {
                 // The CSS class for the editing toolbar.
-                toolbar_class: 'olControlEditingToolbar'
+                toolbar_class: 'olControlEditingToolbar',
+                id_prefix: 'nlf-'
             },
 
             // Animation constants.
@@ -585,7 +586,11 @@
             this.modifyFeatures.activate();
 
             // Instantiate the geometry editor.
-            this.element.editfeatures();
+            this.element.editfeatures({
+                markup: {
+                    id_prefix: this.options.markup.id_prefix
+                }
+            });
             // On update.
             this.element.bind('update.nlfeatures',
                 function(event, obj) {

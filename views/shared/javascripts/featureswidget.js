@@ -66,7 +66,10 @@
         };
         local_options = {
           mode: this.options.mode,
-          json: item
+          json: item,
+          markup: {
+            id_prefix: this.options.id_prefix
+          }
         };
         if (input.zoom != null) local_options.zoom = input.zoom;
         if (input.center != null) local_options.center = input.center;
@@ -239,7 +242,11 @@
             data.wkt.push(line);
           }
         }
-        if (data.wkt != null) data.wkt = data.wkt.join("\n");
+        if (data.wkt != null) {
+          data.wkt = data.wkt.join("\n");
+        } else {
+          data.wkt = '';
+        }
         return data;
       },
       _updateFreeText: function() {

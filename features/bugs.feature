@@ -31,3 +31,14 @@ Feature: Bug Fix Tests
     # Then I should see ".mceEditor" in "#element-38"
     # And "Elements-38-0-html" should be checked
 
+  Scenario: Editing buttons should have unique IDs.
+    Given I am logged into the admin console
+    When I click "Add a new item to your archive"
+    And I click "Use Map" checkbox in "#Elements-38-0-widget"
+    And I should see "#Elements-38-0-widget div.olMap"
+    And I click on "add_element_38"
+    And I click "Use Map" checkbox in "#Elements-38-1-widget"
+    And I should see "#Elements-38-1-widget div.olMap"
+    Then I should see XPath ".//div[@id='Elements-38-0-widget']//button[@id='Elements-38-0-drag-button']"
+    And I should see XPath ".//div[@id='Elements-38-1-widget']//button[@id='Elements-38-1-drag-button']"
+
