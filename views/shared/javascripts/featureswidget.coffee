@@ -267,6 +267,8 @@
 
       if data.wkt?
         data.wkt = data.wkt.join("\n") 
+      else
+        data.wkt = ''
       data
 
     # This updates the free-text field from the 

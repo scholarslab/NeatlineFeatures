@@ -242,7 +242,11 @@
             data.wkt.push(line);
           }
         }
-        if (data.wkt != null) data.wkt = data.wkt.join("\n");
+        if (data.wkt != null) {
+          data.wkt = data.wkt.join("\n");
+        } else {
+          data.wkt = '';
+        }
         return data;
       },
       _updateFreeText: function() {
