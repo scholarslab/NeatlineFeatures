@@ -226,10 +226,18 @@
                     }
                 );
             } else {
-                this.baseLayer = new OpenLayers.Layer.OSM();
+                this.baseLayers = this._getBaseLayers();
+                this.baseLayer = this.baseLayers.osm;
             }
 
-            this.map.addLayers([this.baseLayer]);
+            this.map.addLayers([
+                this.baseLayers.osm,
+                this.baseLayers.gphy,
+                this.baseLayers.gmap,
+                this.baseLayers.ghyb,
+                this.baseLayers.gsat
+            ]);
+            this.map.setBaseLayer(this.baseLayer);
 
             // If there is a default bounding box set for the exhibit, construct
             // a second Bounds object to use as the starting zoom target.
@@ -253,6 +261,33 @@
                 // Set starting zoom focus.
                 this.map.zoomToExtent(bounds);
             }
+        },
+
+        /*
+         * This creates the base layers.
+         */
+        _getBaseLayers: function() {
+            var baseLayers = {};
+
+            baseLayers.gphy = new OpenLayers.Layer.Google(
+                "Google Physical",
+                {type: google.maps.MapTypeId.TERRAIN}
+            );
+            baseLayers.gmap = new OpenLayers.Layer.Google(
+                "Google Streets",
+                {numZoomLevels: 20}
+            );
+            baseLayers.ghyb = new OpenLayers.Layer.Google(
+                "Google Hybrid",
+                {type: google.maps.MapTypeId.HYBRID, numZoomLevels: 20}
+            );
+            baseLayers.gsat = new OpenLayers.Layer.Google(
+                "Google Satellite",
+                {type: google.maps.MapTypeId.SATELLITE, numZoomLevels: 22}
+            );
+            baseLayers.osm = new OpenLayers.Layer.OSM();
+
+            return baseLayers;
         },
 
         /*
