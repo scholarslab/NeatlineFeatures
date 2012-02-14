@@ -60,7 +60,6 @@
 (function($, undefined) {
     $.widget('nlfeatures.nlfeatures', {
         options: {
-
             // `loadData()` and `loadLocalData()` can parse out multiple WKT
             // features from their inputs' `wkt` fields. This is the string to
             // use to separate out the WKT features.
@@ -103,7 +102,14 @@
             // If given, this loads this item and sets up the widget to edit
             // it. If given, it should be a JavaScript object like the
             // `.editJson` method expects.
-            json: null
+            json: null,
+
+            // If given, this sets the zoom level for the map.
+            zoom: null,
+
+            // If given, this sets the center for the map. This hsould be a JS
+            // object with the properties lon, lat, and srs (optional).
+            center: null
         },
 
         /*
@@ -691,6 +697,35 @@
          * the a view of the features added to the map.
          */
         setViewport: function() {
+            if (this.options.zoom != null && this.options.center != null) {
+                this._setViewportFromOptions();
+            } else {
+                this._setViewportFromData();
+            }
+        },
+
+        /*
+         * This sets the data from the options.
+         */
+        _setViewportFromOptions: function() {
+            var zoom   = this.options.zoom,
+                center = this.options.center,
+                lonlat = new OpenLayers.LonLat(center.lon, center.lat);
+            var proj, wsg;
+
+            if (center.srs != null) {
+                wsg    = new OpenLayers.Projection(center.srs);
+                proj   = this.map.getProjectionObject();
+                lonlat = lonlat.transform(wsg, proj);
+            }
+
+            this.map.setCenter(lonlat, zoom, false, false);
+        },
+
+        /*
+         * This sets the viewport from the data.
+         */
+        _setViewportFromData: function() {
             var self, featureCount, i, vlen, vlayer, j, flen, geometry, bounds, geolocate;
 
             self = this;
@@ -884,12 +919,28 @@
           * This gets the current center of the map reprojected into EPSG:4326
           * and returned as an object with `lat` and `lon` properties.
           */
-
         getCenterLonLat: function() {
             var wsg  = new OpenLayers.Projection('EPSG:4326'),
                 proj = this.map.getProjectionObject();
             return this.map.getCenter().transform(proj, wsg);
         },
+
+        /*
+         * This moves the center-point and zoom to the place specified.
+         */
+        setCenterLonLat: function(lon, lat) {
+            var lonLat = new OpenLayers.LonLat(lon, lat),
+                wsg    = new OpenLayers.Projection('EPSG:4326'),
+                proj   = this.map.getProjectionObject();
+            return this.map.panTo(lonLat.transform(wsg, proj));
+        },
+
+         /*
+          * This sets the zoom level.
+          */
+         setZoom: function(zoom) {
+             return this.map.zoomTo(zoom);
+         },
 
         /*
          * This tests whether the map has any layer with a point feature.
@@ -937,6 +988,36 @@
          */
         exists: function(slot) {
             return (typeof slot !== 'undefined' && slot !== null);
+        },
+
+        /*
+         * This returns the saved zoom setting.
+         */
+        getSavedZoom: function() {
+            return this.options.zoom;
+        },
+
+        /*
+         * This returns the saved center setting. This will either be null or
+         * an object the lat and lon properties.
+         */
+        getSavedCenter: function() {
+            return this.options.center;
+        },
+
+        /*
+         * This saves the current viewport to the options.
+         */
+        saveViewport: function() {
+            var center = this.map.getCenter();
+            var zoom   = this.map.getZoom();
+
+            this.options.zoom   = zoom;
+            this.options.center = {
+                lon: center.lon,
+                lat: center.lat
+            };
         }
+
     });
 })( jQuery );

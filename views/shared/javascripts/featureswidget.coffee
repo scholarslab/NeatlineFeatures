@@ -71,15 +71,18 @@
     # This initializes a map for editing with the value passed in. It returns
     # the nlfeatures data object.
     _initMap: ->
+      input = this.parseTextInput(@options.value)
       map = $ @options.map
       item =
         title : 'Coverage'
         name  : 'Coverage'
         id    : @element.attr 'id'
-        wkt   : this.parseTextInput(@options.value).wkt
+        wkt   : input.wkt
       local_options =
         mode: @options.mode
         json: item
+      local_options.zoom   = input.zoom   if input.zoom?
+      local_options.center = input.center if input.center?
 
       all_options = $.extend true, {}, @options.map_options, local_options
       $(@options.map)
@@ -172,6 +175,10 @@
         .bind('featureadded.nlfeatures', handler)
         .bind('update.nlfeatures'      , handler)
         .bind('delete.nlfeatures'      , handler)
+        .bind('saveview.nlfeatures'    , =>
+          @map.saveViewport()
+          this.updateTextInput()
+        )
 
     # This handles passing the content from the visible inputs to the hidden
     # field that Omeka actually uses.
@@ -179,7 +186,15 @@
       buffer = []
 
       if this.usesMap()
-        buffer.push "WKT: #{@map.getWktForSave()}\n\n"
+        buffer.push "WKT: #{@map.getWktForSave()}\n"
+
+        zoom = @map.getSavedZoom()
+        buffer.push "ZOOM: #{zoom}\n" if zoom?
+
+        center = @map.getSavedCenter()
+        buffer.push "CENTER: #{center.lon},#{center.lat}\n" if center?
+
+        buffer.push "\n"
 
       if this.usesHtml()
         buffer.push tinyMCE.get(@options.free.substr 1).getContent()
@@ -206,12 +221,51 @@
           splitAt++
 
         if splitAt < lines.length
-          output.wkt  = lines.slice(0, splitAt).join("\n").substr(5)
-          output.free = lines.slice(splitAt + 1).join("\n")
+          prefixLines   = lines.slice(0, splitAt)
+          prefix        = this._parseFeatureData lines.slice(0, splitAt)
+
+          output.wkt    = prefix.wkt
+          output.zoom   = prefix.zoom
+          output.center = prefix.center
+          output.free   = lines.slice(splitAt + 1).join("\n")
       else
         output.free = input
 
       output
+
+    # This takes an array of lines and parses them for the WKT, ZOOM, and
+    # CENTER fields.
+    _parseFeatureData: (lines) ->
+      data =
+        wkt    : null
+        zoom   : null
+        center : null
+      current = null
+
+      for line in lines
+        line = line.trim()
+
+        if line.length == 0
+          continue
+        else if line.substr(0, 5) == 'WKT: '
+          current  = 'wkt'
+          data.wkt = []
+          data.wkt.push line.substr(5)
+        else if line.substr(0, 6) == 'ZOOM: '
+          current   = 'zoom'
+          data.zoom = parseInt line.substr(6)
+        else if line.substr(0, 8) == 'CENTER: '
+          current = 'center'
+          [lon, lat] = line.substr(8).split ','
+          data.center =
+            lon: parseFloat lon
+            lat: parseFloat lat
+        else if current == 'wkt'
+          data.wkt.push line
+
+      if data.wkt?
+        data.wkt = data.wkt.join("\n") 
+      data
 
     # This updates the free-text field from the 
     _updateFreeText: ->

@@ -48,24 +48,30 @@
 .nlfeatures #rotate-button {
     font-size: 0.85em;
     width: 52px;
-    right: 124px;
+    right: 0px;
 }
 
 .nlfeatures #scale-button {
     font-size: 0.85em;
     width: 47px;
-    right: 182px;
+    right: 58px;
 }
 
 .nlfeatures #drag-button {
     font-size: 0.85em;
     width: 45px;
-    right: 235px;
+    right: 111px;
 }
 
 .nlfeatures #delete-button {
     font-size: 0.85em;
     width: 45px;
-    right: 286px;
+    right: 162px;
+}
+
+.nlfeatures #viewport-button {
+    font-size: 0.85em;
+    width: 65px;
+    right: 213px;
 }
 

@@ -73,11 +73,15 @@
             this.deleteButton =
                 $('<button id="delete-button" type="button" class="btn danger edit-geometry-small geo-edit">Delete</button>');
 
+            this.viewportButton =
+                $('<button id="viewport-button" type="button" class="btn edit-geometry-small geo-edit">Save View</button>');
+
             // Insert the buttons.
             this.element.append(this.dragButton);
             this.element.append(this.rotateButton);
             this.element.append(this.scaleButton);
             this.element.append(this.deleteButton);
+            this.element.append(this.viewportButton);
 
             // Store starting status data trackers.
             this.scaleButton.data('activated', false);
@@ -202,6 +206,15 @@
                     e.preventDefault();
                 }
 
+            });
+
+            this.viewportButton.bind({
+                'mousedown': function() {
+                    self.element.trigger('saveview.nlfeatures');
+                },
+                'click': function(e) {
+                    e.preventDefault();
+                }
             });
         },
 

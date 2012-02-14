@@ -55,18 +55,21 @@
         return $.Widget.prototype._setOption.apply(this, arguments);
       },
       _initMap: function() {
-        var all_options, item, local_options, map;
+        var all_options, input, item, local_options, map;
+        input = this.parseTextInput(this.options.value);
         map = $(this.options.map);
         item = {
           title: 'Coverage',
           name: 'Coverage',
           id: this.element.attr('id'),
-          wkt: this.parseTextInput(this.options.value).wkt
+          wkt: input.wkt
         };
         local_options = {
           mode: this.options.mode,
           json: item
         };
+        if (input.zoom != null) local_options.zoom = input.zoom;
+        if (input.center != null) local_options.center = input.center;
         all_options = $.extend(true, {}, this.options.map_options, local_options);
         return $(this.options.map).nlfeatures(all_options).data('nlfeatures');
       },
@@ -152,13 +155,23 @@
           return _this.updateTextInput();
         };
         $(this.options.free).change(handler);
-        return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler);
+        return $(this.map.element).bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler).bind('saveview.nlfeatures', function() {
+          _this.map.saveViewport();
+          return _this.updateTextInput();
+        });
       },
       updateTextInput: function() {
-        var buffer;
+        var buffer, center, zoom;
         buffer = [];
         if (this.usesMap()) {
-          buffer.push("WKT: " + (this.map.getWktForSave()) + "\n\n");
+          buffer.push("WKT: " + (this.map.getWktForSave()) + "\n");
+          zoom = this.map.getSavedZoom();
+          if (zoom != null) buffer.push("ZOOM: " + zoom + "\n");
+          center = this.map.getSavedCenter();
+          if (center != null) {
+            buffer.push("CENTER: " + center.lon + "," + center.lat + "\n");
+          }
+          buffer.push("\n");
         }
         if (this.usesHtml()) {
           buffer.push(tinyMCE.get(this.options.free.substr(1)).getContent());
@@ -168,7 +181,7 @@
         return $(this.options.text).val(buffer.join(''));
       },
       parseTextInput: function(input) {
-        var lines, output, splitAt;
+        var lines, output, prefix, prefixLines, splitAt;
         if (input == null) {
           input = this.options.mode === 'edit' ? $(this.options.text).val() : this.options.value;
         }
@@ -183,13 +196,51 @@
             splitAt++;
           }
           if (splitAt < lines.length) {
-            output.wkt = lines.slice(0, splitAt).join("\n").substr(5);
+            prefixLines = lines.slice(0, splitAt);
+            prefix = this._parseFeatureData(lines.slice(0, splitAt));
+            output.wkt = prefix.wkt;
+            output.zoom = prefix.zoom;
+            output.center = prefix.center;
             output.free = lines.slice(splitAt + 1).join("\n");
           }
         } else {
           output.free = input;
         }
         return output;
+      },
+      _parseFeatureData: function(lines) {
+        var current, data, lat, line, lon, _i, _len, _ref;
+        data = {
+          wkt: null,
+          zoom: null,
+          center: null
+        };
+        current = null;
+        for (_i = 0, _len = lines.length; _i < _len; _i++) {
+          line = lines[_i];
+          line = line.trim();
+          if (line.length === 0) {
+            continue;
+          } else if (line.substr(0, 5) === 'WKT: ') {
+            current = 'wkt';
+            data.wkt = [];
+            data.wkt.push(line.substr(5));
+          } else if (line.substr(0, 6) === 'ZOOM: ') {
+            current = 'zoom';
+            data.zoom = parseInt(line.substr(6));
+          } else if (line.substr(0, 8) === 'CENTER: ') {
+            current = 'center';
+            _ref = line.substr(8).split(','), lon = _ref[0], lat = _ref[1];
+            data.center = {
+              lon: parseFloat(lon),
+              lat: parseFloat(lat)
+            };
+          } else if (current === 'wkt') {
+            data.wkt.push(line);
+          }
+        }
+        if (data.wkt != null) data.wkt = data.wkt.join("\n");
+        return data;
       },
       _updateFreeText: function() {
         var output;

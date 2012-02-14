@@ -111,11 +111,11 @@ class NeatlineFeaturesPlugin
     {
         $sql = "
             CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}neatline_features` (
-                id              INT(10)    UNSIGNED NOT NULL AUTO_INCREMENT,
-                added           TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
-                item_id         INT(10)    UNSIGNED NOT NULL,
-                element_text_id INT(10)    UNSIGNED NOT NULL,
-                is_map          TINYINT(1) NOT NULL DEFAULT 0,
+                id              INT(10)        UNSIGNED NOT NULL AUTO_INCREMENT,
+                added           TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
+                item_id         INT(10)        UNSIGNED NOT NULL,
+                element_text_id INT(10)        UNSIGNED NOT NULL,
+                is_map          TINYINT(1)     NOT NULL DEFAULT 0,
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
