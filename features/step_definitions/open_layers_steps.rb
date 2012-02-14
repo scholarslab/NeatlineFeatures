@@ -78,7 +78,8 @@ Then /^a line is defined in "([^"]*)"$/ do |textarea|
 end
 
 Then /^the viewport is defined in "([^"]*)"$/ do |textarea|
-  find (textarea).value.should match(/VIEWPORT:/)
+  find(textarea).value.should match(/ZOOM:/)
+  find(textarea).value.should match(/CENTER:/)
 end
 
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
@@ -127,7 +128,7 @@ Given /^"([^"]*)" should center on "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat
   map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
   map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f
   (map_lon - lon.to_f).should be < 1.0
-  (map_lat - lon.to_f).should be < 1.0
+  (map_lat - lat.to_f).should be < 1.0
 end
 
 Given /^"([^"]*)" should be zoomed to "(\d*)"/ do |map, zoom|
