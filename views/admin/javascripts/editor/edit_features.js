@@ -45,7 +45,8 @@
         options: {
             // Markup hooks.
             markup: {
-                geo_edit_class: 'geo-edit'
+                geo_edit_class: 'geo-edit',
+                id_prefix: 'nlf-'
             },
 
             // Animation constants.
@@ -55,26 +56,35 @@
         },
 
         /*
+         * This creates an editing button.
+         *
+         * o prefix: The prefix to use for the ID. This is combined with the next parameter;
+         * o className: The class name to use for this button; and
+         * o text: The text of the button
+         *
+         * Returns a jQuery selector containing the button.
+         */
+        _createEditButton: function(prefix, className, text) {
+            return $('<button id="' + prefix + className + '" ' +
+                     'type="button" class="btn edit-geometry-small geo-edit ' + className + '">' +
+                     text + '</button>');
+        },
+
+        /*
          * Create the buttons to edit features, hook up events, etc.
          */
         _create: function() {
-            var self = this;
+            var self   = this;
+            var prefix = this.options.markup.id_prefix;
+
+            if (prefix.charAt(0) == '#') prefix = prefix.substr(1);
 
             // Build the buttons, insert, and gloss.
-            this.scaleButton =
-                $('<button id="scale-button" type="button" class="btn edit-geometry-small geo-edit">Scale</button>');
-
-            this.rotateButton =
-                $('<button id="rotate-button" type="button" class="btn edit-geometry-small geo-edit">Rotate</button>');
-
-            this.dragButton =
-                $('<button id="drag-button" type="button" class="btn edit-geometry-small geo-edit">Drag</button>');
-
-            this.deleteButton =
-                $('<button id="delete-button" type="button" class="btn danger edit-geometry-small geo-edit">Delete</button>');
-
-            this.viewportButton =
-                $('<button id="viewport-button" type="button" class="btn edit-geometry-small geo-edit">Save View</button>');
+            this.scaleButton    = this._createEditButton(prefix, 'scale-button', 'Scale');
+            this.rotateButton   = this._createEditButton(prefix, 'rotate-button', 'Rotate');
+            this.dragButton     = this._createEditButton(prefix, 'drag-button', 'Drag');
+            this.deleteButton   = this._createEditButton(prefix, 'delete-button', 'Delete');
+            this.viewportButton = this._createEditButton(prefix, 'viewport-button', 'Save View');
 
             // Insert the buttons.
             this.element.append(this.dragButton);

@@ -66,7 +66,10 @@
         };
         local_options = {
           mode: this.options.mode,
-          json: item
+          json: item,
+          markup: {
+            id_prefix: this.options.id_prefix
+          }
         };
         if (input.zoom != null) local_options.zoom = input.zoom;
         if (input.center != null) local_options.center = input.center;

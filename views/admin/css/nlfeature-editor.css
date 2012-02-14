@@ -45,31 +45,31 @@
     -webkit-transition: 0.0s linear all !important;
 }
 
-.nlfeatures #rotate-button {
+.nlfeatures .rotate-button {
     font-size: 0.85em;
     width: 52px;
     right: 0px;
 }
 
-.nlfeatures #scale-button {
+.nlfeatures .scale-button {
     font-size: 0.85em;
     width: 47px;
     right: 58px;
 }
 
-.nlfeatures #drag-button {
+.nlfeatures .drag-button {
     font-size: 0.85em;
     width: 45px;
     right: 111px;
 }
 
-.nlfeatures #delete-button {
+.nlfeatures .delete-button {
     font-size: 0.85em;
     width: 45px;
     right: 162px;
 }
 
-.nlfeatures #viewport-button {
+.nlfeatures .viewport-button {
     font-size: 0.85em;
     width: 65px;
     right: 213px;
