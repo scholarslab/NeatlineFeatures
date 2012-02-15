@@ -86,19 +86,19 @@
       ViewWidget.prototype.build = function() {
         var el, id_prefix, map, text;
         el = $(this.widget.element);
-        id_prefix = this.widget.id_prefix;
-        map = $("<div id = '" + id_prefix + "map' class = 'map map-container'></div>");
-        text = $("<div id = '" + id_prefix + "text' class = 'freetext'></div>");
-        el.addChild('nlfeatures').append(map).append(text);
+        id_prefix = derefid(this.widget.options.id_prefix);
+        map = $("<div id='" + id_prefix + "map' class='map map-container'></div>");
+        text = $("<div id='" + id_prefix + "text' class='freetext'></div>");
+        el.addClass('nlfeatures').append(map).append(text);
         this.fields = {
-          map: $("" + id_prefix + "map"),
-          text: $("" + id_prefix + "text")
+          map: $("#" + id_prefix + "map"),
+          text: $("#" + id_prefix + "text")
         };
         return el;
       };
 
       ViewWidget.prototype.populate = function() {
-        return this.fields.text.html(this.widget.values.text);
+        return this.fields.text.html(this.widget.options.values.text);
       };
 
       return ViewWidget;
@@ -247,7 +247,6 @@
         if ((_base2 = this.options).name_prefix == null) {
           _base2.name_prefix = this._idPrefixToNamePrefix();
         }
-        window.features = this;
         this.mode = this.options.mode === 'edit' ? new EditWidget(this) : new ViewWidget(this);
         this.mode.init();
         if (!this.options.values.is_map) return this.mode.hideMap();

@@ -92,23 +92,23 @@
 
     build: ->
       el        = $ @widget.element
-      id_prefix = @widget.id_prefix
+      id_prefix = derefid @widget.options.id_prefix
 
-      map  = $ "<div id = '#{id_prefix}map' class = 'map map-container'></div>"
-      text = $ "<div id = '#{id_prefix}text' class = 'freetext'></div>"
+      map  = $ "<div id='#{id_prefix}map' class='map map-container'></div>"
+      text = $ "<div id='#{id_prefix}text' class='freetext'></div>"
 
-      el.addChild('nlfeatures')
+      el.addClass('nlfeatures')
         .append(map)
         .append(text)
 
       @fields =
-        map  : $ "#{id_prefix}map"
-        text : $ "#{id_prefix}text"
+        map  : $ "##{id_prefix}map"
+        text : $ "##{id_prefix}text"
 
       el
 
     populate: ->
-      @fields.text.html @widget.values.text
+      @fields.text.html @widget.options.values.text
 
 
   class EditWidget extends BaseWidget
@@ -270,8 +270,6 @@
       id = @element.attr 'id'
       @options.id_prefix   ?= '#' + id.substring(0, id.length - 'widget'.length)
       @options.name_prefix ?= this._idPrefixToNamePrefix()
-
-      window.features = this
 
       @mode = if @options.mode == 'edit'
         new EditWidget this
