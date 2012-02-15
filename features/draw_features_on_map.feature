@@ -24,7 +24,7 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     When I click "Use Map" checkbox in "#element-38"
     Then I should see a map in "#element-38"
-    And I should see "#Elements-38-0-free"
+    And I should see "#Elements-38-0-text"
     But I should not see "#Elements-38-0-text"
 
   Scenario: Draw Point on a Map
@@ -93,7 +93,7 @@ Feature: Draw Features on a Map
     And I click "Edit this Item"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
-    And I should see that "#Elements-38-0-free" does not contain "WKT"
+    And I should see that "#Elements-38-0-text" does not contain "WKT"
 
   # This fails since GeoLocation isn't turned on automatically in the browser.
   #Scenario: Map Location Should Default to the User's Location

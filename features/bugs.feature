@@ -8,7 +8,7 @@ Feature: Bug Fix Tests
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
     # This is to work around the setTimeout described here https://github.com/scholarslab/NeatlineFeatures/blob/ea055c7f4900310ed79c20ea7914f96bd795ac9a/views/admin/coverage.php#L56
-    Then I should see "#Elements-38-0-free" in "#element-38"
+    Then I should see "#Elements-38-0-text" in "#element-38"
     But I should not see ".mceEditor" in "#element-38"
 
   Scenario: "Use HTML" is Unchecked for New Items
@@ -22,8 +22,8 @@ Feature: Bug Fix Tests
     # Given I am logged into the admin console
     # And I click "Add a new item to your archive"
     # And I enter "Cucumber: 'Use HTML' is Checked When Editing Items" into "Elements-50-0-text"
-    # Then I should see "#Elements-38-0-free" in "#element-38"
-    # And I enter "hi" into "Elements-38-0-free"
+    # Then I should see "#Elements-38-0-text" in "#element-38"
+    # And I enter "hi" into "Elements-38-0-text"
     # And I click "Use HTML" checkbox in "#element-38"
     # And I click on "Add Item"
     # And I click "'Use HTML' is Checked When Editing Items"

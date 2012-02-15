@@ -21,24 +21,24 @@ Feature: Delete Features from an Item
   Scenario: Remove First Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "1" into "Elements-38-0-free"
+    And I enter "1" into "Elements-38-0-text"
     And I click "add_element_38"
-    And I enter "2" into "Elements-38-1-free"
+    And I enter "2" into "Elements-38-1-text"
     When I click on XPath ".//div[@class='input-block'][1]//input[@id='remove_element_38']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
-    And I see "#Elements-38-1-free" contains "2"
+    And I see "#Elements-38-1-text" contains "2"
     But I should not see "#remove_element_38" in "#element-38"
 
   Scenario: Remove Second Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "1" into "Elements-38-0-free"
+    And I enter "1" into "Elements-38-0-text"
     And I click "add_element_38"
-    And I enter "2" into "Elements-38-1-free"
+    And I enter "2" into "Elements-38-1-text"
     When I click on XPath ".//div[@class='input-block'][2]//input[@id='remove_element_38']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
-    And I see "#Elements-38-0-free" contains "1"
+    And I see "#Elements-38-0-text" contains "1"
     But I should not see "#remove_element_38" in "#element-38"
 

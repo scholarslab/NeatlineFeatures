@@ -11,9 +11,9 @@ Feature: Test Coverage Data
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
-    And I enter "Charlottesville, VA" into "Elements-38-0-free"
+    And I enter "Charlottesville, VA" into "Elements-38-0-text"
     And I click "add_element_38"
-    And I enter "UVa" into "Elements-38-1-free"
+    And I enter "UVa" into "Elements-38-1-text"
     And I click on "Add Item"
     And I click "Test Iterate All Non-Feature Coverages"
     When I click "View Public Page"
@@ -50,7 +50,7 @@ Feature: Test Coverage Data
     And I click "Use Map" checkbox in "#Elements-38-0-widget"
     And I draw a line on "div#Elements-38-0-map.olMap"
     And I click "add_element_38"
-    And I enter "UVa" into "Elements-38-1-free"
+    And I enter "UVa" into "Elements-38-1-text"
     And I click on "Add Item"
     And I click "Test Iterate Mixed Feature Coverages"
     When I click "View Public Page"
