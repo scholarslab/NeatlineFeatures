@@ -15,30 +15,27 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<?php echo $idPrefix ?>widget" class='nlfeatures nlfeatures-edit'>
-  <div class='nlfeatures map-container'>
-    <div id="<?php echo $idPrefix ?>map"></div>
-    <div class='nlfeatures-map-tools'></div>
-  </div>
-  <div class='nlfeatures text-container'>
-    <?php echo $textField ?>
-    <?php echo $freeField ?>
-    <?php echo $useHtml   ?>
-    <?php echo $useMap    ?>
-  </div>
-</div>
+<div id="<?php echo $idPrefix ?>widget"></div>
 <script type='text/javascript'>
 (function($) {
     $(function() {
         var options = {
             mode: 'edit',
+            id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
+            name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
                 styles: {
                     point_graphic: '<?php echo img('pushpin-1.png'); ?>'
                     }
                 },
-            value: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
-            formats: {
+            values: {
+                wkt: <?php echo json_encode(is_null($wkt) ? '' : $wkt) ?>,
+                zoom: <?php echo json_encode($zoom) ?>,
+                center: {
+                    lon: <?php echo json_encode($center_lon) ?>,
+                    lat: <?php echo json_encode($center_lat) ?>
+                    },
+                text: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
                 is_html: <?php echo json_encode($isHtml) ?>,
                 is_map : <?php echo json_encode($isMap) ?>
                 }
