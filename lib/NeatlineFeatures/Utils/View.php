@@ -115,15 +115,17 @@ class NeatlineFeatures_Utils_View
     {
         $etext = null;
 
-        $table = get_db()
-            ->getTable('ElementText');
-        $search = $table
-            ->getSelect()
-            ->where('record_id=?',      $record->id)
-            ->where('record_type_id=?', $element->data_type_id)
-            ->where('element_id=?',     $element->id)
-            ->where('text=?',           $value);
-        $etext = $table->fetchObject($search);
+        if (!is_null($record) && !is_null($record->id) && !is_null($element)) {
+            $table = get_db()
+                ->getTable('ElementText');
+            $search = $table
+                ->getSelect()
+                ->where('record_id=?',      $record->id)
+                ->where('record_type_id=?', $element->data_type_id)
+                ->where('element_id=?',     $element->id)
+                ->where('text=?',           is_null($value) ? $value : '');
+            $etext = $table->fetchObject($search);
+        }
 
         return $etext;
     }
