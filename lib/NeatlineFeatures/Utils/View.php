@@ -131,11 +131,9 @@ class NeatlineFeatures_Utils_View
         $stem = NULL;
 
         if (is_null($this->_elementText)) {
-            $stem = uniqid("nlfeatures");
+            $stem = uniqid("nlfeatures") . '_';
         } else {
-            $feature = get_db()
-                ->getTable('NeatlineFeature')
-                ->getRecordByElementText($this->_elementText);
+            $feature = $this->getNeatlineFeature();
             if (is_null($feature) || !isset($feature->id) || is_null($feature->id)) {
                 $stem = uniqid("nlfeatures");
             } else {
@@ -145,6 +143,26 @@ class NeatlineFeatures_Utils_View
 
         $this->_inputNameStem = $stem;
         return $stem;
+    }
+
+    /**
+     * This returns either the valid nlfeature object for this ElementText or 
+     * its own.
+     *
+     * @return NeatlineFeature
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function getNeatlineFeature()
+    {
+        $feature = null;
+        if (is_null($this->_elementText)) {
+            $feature = new NeatlineFeature();
+        } else {
+            $feature = get_db()
+                ->getTable('NeatlineFeature')
+                ->getRecordByElementText($this->_elementText);
+        }
+        return $feature;
     }
 
     /**
@@ -228,37 +246,6 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This constructs the TEXTAREA for the free-form coverage data and returns 
-     * it as a string.
-     *
-     * @return string
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function getFreeField()
-    {
-        return __v()->formTextarea(
-            $this->_inputNameStem . '[free]',
-            '',
-            array('class'=>'textinput', 'rows'=>5, 'cols'=>50)
-        );
-    }
-
-    /**
-     * This constructs a hidden field for the WKT and free-form coverage data 
-     * and returns it as a string.
-     *
-     * @return string
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function getTextField()
-    {
-        return __v()->formHidden(
-            $this->_inputNameStem . '[text]',
-            $this->_value
-        );
-    }
-
-    /**
      * This predicate tests whether data for the element is in the POST
      * request.
      *
@@ -297,7 +284,6 @@ class NeatlineFeatures_Utils_View
     {
         $edata = $_POST['Elements'][$this->_element->id];
         $value = $edata[$this->getIndex()]['html'];
-
         return $value;
     }
 
@@ -376,10 +362,7 @@ class NeatlineFeatures_Utils_View
         } else {
             $etext = $this->getElementText();
             if (isset($etext) && !is_null($etext)) {
-                $feature = get_db()
-                    ->getTable('NeatlineFeature')
-                    ->getRecordByElementText($etext);
-
+                $feature = $this->getNeatlineFeature();
                 if (! is_null($feature)) {
                     $isMap = (bool)$feature->is_map;
                 }
@@ -390,53 +373,6 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This returns the string for a "Use X" widget.
-     *
-     * @param $key   string The key for the widget's name.
-     * @param $label string The label (X above).
-     * @param $value bool   Is it checked or not?
-     *
-     * @return string
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    private function _getUseWidget($key, $label, $value)
-    {
-        $use = '';
-
-        $use .= "<label class='use-$key'>Use $label ";
-        $use .= __v()->formCheckbox(
-            "{$this->_inputNameStem}[$key]",
-            1,
-            array( 'checked' => $value )
-        );
-        $use .= '</label>';
-
-        return $use;
-    }
-
-    /**
-     * This returns the HTML for the "Use HTML" widget.
-     *
-     * @return string
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function getUseHtml()
-    {
-        return $this->_getUseWidget('html', 'HTML', $this->isHtml());
-    }
-
-    /**
-     * This returns the HTML for the "Use Map" widget.
-     *
-     * @return string
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function getUseMap()
-    {
-        return $this->_getUseWidget('mapon', 'Map', $this->isMap());
-    }
-
-    /**
      * This returns the HTML for the edit control.
      *
      * @return string
@@ -444,23 +380,11 @@ class NeatlineFeatures_Utils_View
      **/
     public function getEditControl()
     {
-        $inputNameStem = $this->_inputNameStem;
-        $value         = $this->_value;
-        $options       = $this->_options;
-        $record        = $this->_record;
-        $element       = $this->_element;
-
-        $idPrefix  = preg_replace('/\W+/', '-', $inputNameStem);
-        $freeField = $this->getFreeField();
-        $textField = $this->getTextField();
-        $isHtml    = $this->isHtml();
-        $useHtml   = $this->getUseHtml();
-        $isMap     = $this->isMap();
-        $useMap    = $this->getUseMap();
-
-        ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php';
-        return ob_get_clean();
+        return $this->_getHtmlView(
+            $this->isHtml(),
+            $this->isMap(), 
+            NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php'
+        );
     }
 
     /**
@@ -487,18 +411,7 @@ class NeatlineFeatures_Utils_View
             // There's no data for this.
             $view = '';
         } else if ((bool)$isMap) {
-            $inputNameStem = $this->_inputNameStem;
-            $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
-
-            $value = $this->_unescape($value);
-
-            $options = $this->_options;
-            $record  = $this->_record;
-            $element = $this->_element;
-
-            ob_start();
-            include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
-            $view = ob_get_clean();
+            $view = $this->getViewMap($isHtml);
         } else {
             $view = $value;
         }
@@ -507,34 +420,54 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This removes the HTML escaping from the first section of the input. This 
-     * is the section that contains the WKT, ZOOM, and CENTER values.
+     * This returns the HTML string for the Map widget.
      *
-     * @param $input string The input value of the coverage field.
+     * @param $isHtml bool Does the text value contain HTML?
+     * @param $isMap  bool Should the text be 
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    protected function _unescape($input)
+    public function getViewMap($isHtml)
     {
-        $parts = preg_split('/<br \/>[\r\n]+/', $input);
-
-        $splitAt = -1;
-        for ($i=0; $i<count($parts); $i++) {
-            $part = $parts[$i];
-            if (strlen(trim($part)) == 0) {
-                $splitAt = $i;
-                break;
-            }
-        }
-
-        if ($splitAt > -1) {
-            $data  = implode("\n", array_slice($parts, 0, $splitAt));
-            $text  = implode("<br />\n", array_slice($parts, $splitAt + 1));
-            $input = "$data\n\n$text";
-        }
-
-        return $input;
+        return $this->_getHtmlView(
+            $isHtml,
+            1,
+            NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php'
+        );
     }
+
+    /**
+     * This actually handles setting up the environment and passing execution 
+     * off to a PHP-HTML file.
+     *
+     * @param $isHtml   bool   Does the text value contain HTML?
+     * @param $isMap    bool   Should the text be .
+     * @param $template string The template to call.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _getHtmlView($isHtml, $isMap, $template)
+    {
+        $inputNameStem = $this->_inputNameStem;
+        $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
+        $value         = $this->_value;
+        $options       = $this->_options;
+        $record        = $this->_record;
+        $element       = $this->_element;
+
+
+        $feature    = $this->getNeatlineFeature();
+        $wkt        = $feature->wkt;
+        $zoom       = $feature->zoom;
+        $center_lon = $feature->center_lon;
+        $center_lat = $feature->center_lat;
+
+        ob_start();
+        include $template;
+        return ob_get_clean();
+    }
+
 }
 
