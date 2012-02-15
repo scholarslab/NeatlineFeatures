@@ -167,7 +167,8 @@
         this.fields.wkt.val(to_s(values.wkt));
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-        return this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        return this.fields.text.val(to_s(values.text));
       };
 
       EditWidget.prototype.wire = function() {

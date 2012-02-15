@@ -204,6 +204,7 @@
       @fields.zoom.val to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
+      @fields.text.val to_s(values.text)
 
     wire: ->
       handler = => this.updateFields()
