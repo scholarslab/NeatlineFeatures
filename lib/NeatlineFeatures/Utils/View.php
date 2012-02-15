@@ -457,12 +457,20 @@ class NeatlineFeatures_Utils_View
         $record        = $this->_record;
         $element       = $this->_element;
 
-
-        $feature    = $this->getNeatlineFeature();
-        $wkt        = $feature->wkt;
-        $zoom       = $feature->zoom;
-        $center_lon = $feature->center_lon;
-        $center_lat = $feature->center_lat;
+        $post = $this->getPost();
+        if (is_null($post)) {
+            $feature    = $this->getNeatlineFeature();
+            $wkt        = $feature->wkt;
+            $zoom       = $feature->zoom;
+            $center_lon = $feature->center_lon;
+            $center_lat = $feature->center_lat;
+        } else {
+            $i          = $this->getIndex();
+            $wkt        = $post[$i]['wkt'];
+            $zoom       = $post[$i]['zoom'];
+            $center_lon = $post[$i]['center_lon'];
+            $center_lat = $post[$i]['center_lat'];
+        }
 
         ob_start();
         include $template;
