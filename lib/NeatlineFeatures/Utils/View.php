@@ -452,10 +452,15 @@ class NeatlineFeatures_Utils_View
     {
         $inputNameStem = $this->_inputNameStem;
         $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
-        $value         = $this->_value;
         $options       = $this->_options;
         $record        = $this->_record;
         $element       = $this->_element;
+
+        if (isset($this->_value) && !is_null($this->_value)) {
+            $value = $this->_value;
+        } else {
+            $value = $this->_text;
+        }
 
         $post = $this->getPost();
         if (is_null($post)) {
