@@ -209,15 +209,17 @@
       };
 
       EditWidget.prototype.updateFields = function() {
-        var center, zoom;
+        var center, text, zoom;
         this.fields.wkt.val(this.nlfeatures.getWktForSave());
         zoom = this.nlfeatures.getSavedZoom();
         if (zoom != null) this.fields.zoom.val(zoom);
         center = this.nlfeatures.getSavedCenter();
         if (center != null) {
           this.fields.center_lon.val(center.lon);
-          return this.fields.center_lat.val(center.lat);
+          this.fields.center_lat.val(center.lat);
         }
+        text = this.fields.text.val();
+        if (text.length === 0) return this.fields.text.val(' ');
       };
 
       return EditWidget;
