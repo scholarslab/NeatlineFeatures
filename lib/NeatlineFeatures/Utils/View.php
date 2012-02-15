@@ -97,6 +97,35 @@ class NeatlineFeatures_Utils_View
         $this->_options       = $options;
         $this->_record        = $record;
         $this->_element       = $element;
+        $this->_elementText   = $this->findElementText($record, $element, $value);
+    }
+
+    /**
+     * This finds the element text from the value of the element, record, and 
+     * value.
+     *
+     * @param $record  Omeka_Record The record associated with the ElementText.
+     * @param $element Element      The element to look for.
+     * @param $value   string       The string value of the ElementText.
+     *
+     * @return ElementText|null
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    public function findElementText($record, $element, $value)
+    {
+        $etext = null;
+
+        $table = get_db()
+            ->getTable('ElementText');
+        $search = $table
+            ->getSelect()
+            ->where('record_id=?',      $record->id)
+            ->where('record_type_id=?', $element->data_type_id)
+            ->where('element_id=?',     $element->id)
+            ->where('text=?',           $value);
+        $etext = $table->fetchObject($search);
+
+        return $etext;
     }
 
     /**
