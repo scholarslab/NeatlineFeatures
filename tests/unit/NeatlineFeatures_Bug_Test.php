@@ -29,6 +29,6 @@ class NeatlineFeatures_Bug_Test extends NeatlineFeatures_Test
     public function testNullWkt()
     {
         $this->dispatch('/items/add');
-        $this->assertNotQueryContentContains('#element-38//script', 'null');
+        $this->assertNotQueryContentContains('#element-38//script', 'wkt: null');
     }
 }
