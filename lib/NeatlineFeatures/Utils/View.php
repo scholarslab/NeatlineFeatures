@@ -186,12 +186,13 @@ class NeatlineFeatures_Utils_View
     public function getNeatlineFeature()
     {
         $feature = null;
-        if (is_null($this->_elementText)) {
+        $etext = $this->getElementText();
+        if (is_null($etext)) {
             $feature = new NeatlineFeature();
         } else {
             $feature = get_db()
                 ->getTable('NeatlineFeature')
-                ->getRecordByElementText($this->_elementText);
+                ->getRecordByElementText($etext);
         }
         return $feature;
     }
