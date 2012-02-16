@@ -444,7 +444,11 @@ class NeatlineFeatures_Utils_View
         } else if ((bool)$isMap) {
             $view = $this->getViewMap($isHtml);
         } else {
-            $view = substr($value, strpos($value, "\r\n") + 1);
+            if (($i = strpos($value, "\r\n")) != FALSE) {
+                $view = substr($value, $i + 2);
+            } else {
+                $view = $value;
+            }
         }
 
         return $view;
