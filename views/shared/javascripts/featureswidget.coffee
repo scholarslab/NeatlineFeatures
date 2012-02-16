@@ -280,11 +280,11 @@
         @fields.center_lon.val center.lon
         @fields.center_lat.val center.lat
 
-      free = @fields.free.val()
-      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}\n#{free}"
-
       base_layer = @nlfeatures.getBaseLayerCode()
       @fields.base_layer.val base_layer if base_layer?
+
+      free = @fields.free.val()
+      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}/#{base_layer}\n#{free}"
 
 
   # And here's the widget itself.

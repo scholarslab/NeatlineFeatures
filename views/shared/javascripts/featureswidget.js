@@ -259,10 +259,10 @@
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
-        free = this.fields.free.val();
-        this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "\n" + free);
         base_layer = this.nlfeatures.getBaseLayerCode();
-        if (base_layer != null) return this.fields.base_layer.val(base_layer);
+        if (base_layer != null) this.fields.base_layer.val(base_layer);
+        free = this.fields.free.val();
+        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "/" + base_layer + "\n" + free);
       };
 
       return EditWidget;
