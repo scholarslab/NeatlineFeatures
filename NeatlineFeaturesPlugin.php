@@ -120,6 +120,7 @@ class NeatlineFeaturesPlugin
                 zoom            SMALLINT(2)    NOT NULL DEFAULT 3,
                 center_lon      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
                 center_lat      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
+                base_layer      VARCHAR(6)     DEFAULT NULL,
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -150,11 +151,7 @@ class NeatlineFeaturesPlugin
     {
         // We are also outputting the script tags to load OpenLayers here.
         $head = __v()->headScript();
-        $head->appendScript(
-            '',
-            'text/javascript',
-            array('src' => 'http://openlayers.org/api/OpenLayers.js')
-        );
+        $head->appendScript('', 'text/javascript', array('src' => $uri));
     }
 
     /**
@@ -169,6 +166,7 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeature-editor');
 
         // We are also outputting the script tags to load OpenLayers here.
+        $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');
@@ -187,6 +185,7 @@ class NeatlineFeaturesPlugin
         queue_css('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
+        $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
 
         queue_js('nlfeatures');

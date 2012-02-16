@@ -68,6 +68,7 @@
         };
         if (input.zoom != null) local_options.zoom = input.zoom;
         if (input.center != null) local_options.center = input.center;
+        if (input.base_layer != null) local_options.base_layer = input.base_layer;
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -135,7 +136,7 @@
         id_prefix = derefid(this.widget.options.id_prefix);
         name_prefix = this.widget.options.name_prefix;
         map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'></div>\n</div>");
-        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
+        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
         el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
         this.fields = {
           map_container: el.find(".map-container"),
@@ -149,7 +150,8 @@
           wkt: $("#" + id_prefix + "wkt"),
           zoom: $("#" + id_prefix + "zoom"),
           center_lon: $("#" + id_prefix + "center_lon"),
-          center_lat: $("#" + id_prefix + "center_lat")
+          center_lat: $("#" + id_prefix + "center_lat"),
+          base_layer: $("#" + id_prefix + "base_layer")
         };
         return el;
       };
@@ -181,6 +183,7 @@
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
         this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        this.fields.base_layer.val(to_s(values.base_layer));
         this.fields.text.val(to_s(values.text));
         return this.fields.free.val(stripFirstLine(values.text));
       };
@@ -192,9 +195,12 @@
           return _this.updateFields();
         };
         this.fields.free.change(updateFields);
-        return this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
+        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
           return _this.updateFields();
+        });
+        return this.nlfeatures.map.events.on({
+          changebaselayer: updateFields
         });
       };
 
@@ -244,7 +250,7 @@
       };
 
       EditWidget.prototype.updateFields = function() {
-        var center, free, wkt, zoom;
+        var base_layer, center, free, wkt, zoom;
         wkt = this.nlfeatures.getWktForSave();
         this.fields.wkt.val(wkt);
         zoom = this.nlfeatures.getSavedZoom();
@@ -254,8 +260,10 @@
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
+        base_layer = this.nlfeatures.getBaseLayerCode();
+        if (base_layer != null) this.fields.base_layer.val(base_layer);
         free = this.fields.free.val();
-        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "\n" + free);
+        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "/" + base_layer + "\n" + free);
       };
 
       return EditWidget;

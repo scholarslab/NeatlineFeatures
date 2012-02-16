@@ -79,8 +79,9 @@
         json   : item
         markup :
           id_prefix: @widget.options.id_prefix
-      local_options.zoom   = input.zoom   if input.zoom?
-      local_options.center = input.center if input.center?
+      local_options.zoom       = input.zoom   if input.zoom?
+      local_options.center     = input.center if input.center?
+      local_options.base_layer = input.base_layer if input.base_layer?
 
       all_options = $.extend true, {}, @widget.options.map_options, local_options
       @nlfeatures = map
@@ -143,6 +144,7 @@
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
+          <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <label class="use-html">Use HTML
@@ -175,6 +177,7 @@
         zoom           : $ "##{id_prefix}zoom"
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
+        base_layer     : $ "##{id_prefix}base_layer"
 
       el
 
@@ -215,6 +218,7 @@
       @fields.zoom.val to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
+      @fields.base_layer.val to_s(values.base_layer)
       @fields.text.val to_s(values.text)
       @fields.free.val stripFirstLine(values.text)
 
@@ -229,6 +233,9 @@
           @nlfeatures.saveViewport()
           this.updateFields()
         )
+      @nlfeatures.map.events.on(
+        changebaselayer: updateFields
+      )
 
     # Tests for the content types active. These look at the states of the
     # checkboxes.
@@ -274,8 +281,11 @@
         @fields.center_lon.val center.lon
         @fields.center_lat.val center.lat
 
+      base_layer = @nlfeatures.getBaseLayerCode()
+      @fields.base_layer.val base_layer if base_layer?
+
       free = @fields.free.val()
-      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}\n#{free}"
+      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}/#{base_layer}\n#{free}"
 
 
   # And here's the widget itself.

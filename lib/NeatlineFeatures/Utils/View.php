@@ -412,11 +412,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getEditControl()
     {
-        return $this->_getHtmlView(
-            $this->isHtml(),
-            $this->isMap(), 
-            NEATLINE_FEATURES_PLUGIN_DIR . '/views/admin/coverage.php'
-        );
+        return $this->_getHtmlView($this->isHtml(), $this->isMap(), 'edit');
     }
 
     /**
@@ -466,25 +462,21 @@ class NeatlineFeatures_Utils_View
      **/
     public function getViewMap($isHtml)
     {
-        return $this->_getHtmlView(
-            $isHtml,
-            1,
-            NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php'
-        );
+        return $this->_getHtmlView($isHtml, 1, 'view');
     }
 
     /**
      * This actually handles setting up the environment and passing execution 
      * off to a PHP-HTML file.
      *
-     * @param $isHtml   bool   Does the text value contain HTML?
-     * @param $isMap    bool   Should the text be .
-     * @param $template string The template to call.
+     * @param $isHtml bool   Does the text value contain HTML?
+     * @param $isMap  bool   Should the text be .
+     * @param $view   string The mode to put the widget in.
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    private function _getHtmlView($isHtml, $isMap, $template)
+    private function _getHtmlView($isHtml, $isMap, $mode)
     {
         $inputNameStem = $this->_inputNameStem;
         $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
@@ -505,16 +497,18 @@ class NeatlineFeatures_Utils_View
             $zoom       = $feature->zoom;
             $center_lon = $feature->center_lon;
             $center_lat = $feature->center_lat;
+            $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
             $wkt        = $post[$i]['wkt'];
             $zoom       = $post[$i]['zoom'];
             $center_lon = $post[$i]['center_lon'];
             $center_lat = $post[$i]['center_lat'];
+            $base_layer = $post[$i]['base_layer'];
         }
 
         ob_start();
-        include $template;
+        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
         return ob_get_clean();
     }
 

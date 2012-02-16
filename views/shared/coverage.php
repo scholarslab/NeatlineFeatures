@@ -20,7 +20,7 @@
 (function($) {
     $(function() {
         var options = {
-            mode: 'view',
+            mode: <?php echo json_encode($mode) ?>,
             id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
             name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
@@ -35,6 +35,7 @@
                     lon: <?php echo json_encode(is_null($center_lon) ? '' : $center_lon) ?>,
                     lat: <?php echo json_encode(is_null($center_lat) ? '' : $center_lat) ?>
                     },
+                base_layer: <?php echo json_encode(is_null($base_layer) ? '' : $base_layer) ?>,
                 text: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
                 is_html: <?php echo json_encode($isHtml) ?>,
                 is_map : <?php echo json_encode($isMap) ?>

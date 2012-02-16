@@ -46,10 +46,11 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
             array_push($columns, $col['COLUMN_NAME']);
         }
 
-        $this->assertContains('wkt', $columns);
-        $this->assertContains('zoom', $columns);
+        $this->assertContains('wkt',        $columns);
+        $this->assertContains('zoom',       $columns);
         $this->assertContains('center_lat', $columns);
         $this->assertContains('center_lon', $columns);
+        $this->assertContains('base_layer', $columns);
     }
 
     /**
