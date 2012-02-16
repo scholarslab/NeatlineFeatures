@@ -497,12 +497,14 @@ class NeatlineFeatures_Utils_View
             $zoom       = $feature->zoom;
             $center_lon = $feature->center_lon;
             $center_lat = $feature->center_lat;
+            $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
             $wkt        = $post[$i]['wkt'];
             $zoom       = $post[$i]['zoom'];
             $center_lon = $post[$i]['center_lon'];
             $center_lat = $post[$i]['center_lat'];
+            $base_layer = $post[$i]['base_layer'];
         }
 
         ob_start();
