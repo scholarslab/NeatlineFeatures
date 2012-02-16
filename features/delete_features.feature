@@ -33,9 +33,9 @@ Feature: Delete Features from an Item
   Scenario: Remove Second Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
-    And I enter "1" into "Elements-38-0-text"
+    And I enter "1" into "Elements-38-0-free"
     And I click "add_element_38"
-    And I enter "2" into "Elements-38-1-text"
+    And I enter "2" into "Elements-38-1-free"
     When I click on XPath ".//div[@class='input-block'][2]//input[@id='remove_element_38']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
