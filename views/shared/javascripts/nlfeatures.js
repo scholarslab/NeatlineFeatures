@@ -227,7 +227,11 @@
                 );
             } else {
                 this.baseLayers = this._getBaseLayers();
-                this.baseLayer = this.baseLayers.osm;
+                if (this.baseLayers[this.options.base_layer] !== undefined) {
+                    this.baseLayer = this.baseLayers[this.options.base_layer];
+                } else {
+                    this.baseLayer = this.baseLayers.osm;
+                }
             }
 
             this.map.addLayers([
@@ -879,6 +883,27 @@
 
             // Clear the item tracker.
             this._currentEditItem = null;
+        },
+
+        /*
+         * This returns a code for the current base layer.
+         */
+        getBaseLayerCode: function() {
+            var c, clen, code, codes, i, name;
+
+            name = this.map.baseLayer.name;
+            code = null;
+            codes = ['osm', 'gphy', 'gmap', 'ghyb', 'gsat'];
+
+            for (i=0, clen=codes.length; i<clen; i++) {
+                c = codes[i];
+                if (name === this.baseLayers[c].name) {
+                    code = c;
+                    break;
+                }
+            }
+
+            return code;
         },
 
         /*
