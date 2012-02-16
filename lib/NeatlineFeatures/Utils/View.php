@@ -123,7 +123,7 @@ class NeatlineFeatures_Utils_View
                 ->where('record_id=?',      $record->id)
                 ->where('record_type_id=?', $element->data_type_id)
                 ->where('element_id=?',     $element->id)
-                ->where('text=?',           is_null($value) ? $value : '');
+                ->where('text=?',           is_null($value) ? '' : $value);
             $etext = $table->fetchObject($search);
         }
 
