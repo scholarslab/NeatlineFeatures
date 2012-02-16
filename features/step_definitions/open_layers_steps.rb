@@ -77,9 +77,10 @@ Then /^a line is defined in "([^"]*)"$/ do |textarea|
   find(textarea).value.should match(/LINESTRING/)
 end
 
-Then /^the viewport is defined in "([^"]*)"$/ do |textarea|
-  find(textarea).value.should match(/ZOOM:/)
-  find(textarea).value.should match(/CENTER:/)
+Then /^the viewport is defined in "([^"]*)"$/ do |widget|
+  find("##{widget}-zoom").value.should match(/\d/)
+  find("##{widget}-center_lon").value.should match(/\d/)
+  find("##{widget}-center_lat").value.should match(/\d/)
 end
 
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
