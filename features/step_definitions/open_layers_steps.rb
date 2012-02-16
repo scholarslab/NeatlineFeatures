@@ -151,7 +151,7 @@ Given /^"([^"]*)" should be zoomed to "(\d*)"/ do |map, zoom|
 end
 
 Then /^"([^"]*)" should have the base layer "([^"]*)"/ do |map, base_layer|
-  map_base_layer = evaluate_script("jQuery('#{map}').data('nlfeatures').getBaseLayerCode()")
-  map_base_layer.should be base_layer
+  map_base_layer = evaluate_script("jQuery('#{map}').data('featurewidget').mode.nlfeatures.getBaseLayerCode()")
+  map_base_layer.should == base_layer
 end
 
