@@ -99,7 +99,7 @@ class NeatlineFeatures_Functions
         } else {
             $repr = print_r($obj, true);
         }
-        NeatlineFeatures_Functions::flog($filename, "$name => $obj");
+        NeatlineFeatures_Functions::flog($filename, "$name => $repr");
     }
 
 }
