@@ -3,7 +3,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   (function($) {
-    var BaseWidget, EditWidget, ViewWidget, derefid, poll, to_s;
+    var BaseWidget, EditWidget, ViewWidget, derefid, poll, stripFirstLine, to_s;
     derefid = function(id) {
       if (id[0] === '#') {
         return id.slice(1, id.length);
@@ -35,6 +35,13 @@
         }
       };
       return setTimeout(_poll, timeout);
+    };
+    stripFirstLine = function(text) {
+      if (text != null) {
+        return text.substr(text.indexOf("\n") + 1);
+      } else {
+        return '';
+      }
     };
     BaseWidget = (function() {
 
@@ -84,21 +91,23 @@
       };
 
       ViewWidget.prototype.build = function() {
-        var el, id_prefix, map, text;
+        var el, free, id_prefix, map;
         el = $(this.widget.element);
         id_prefix = derefid(this.widget.options.id_prefix);
         map = $("<div id='" + id_prefix + "map' class='map map-container'></div>");
-        text = $("<div id='" + id_prefix + "text' class='freetext'></div>");
-        el.addClass('nlfeatures').append(map).append(text);
+        free = $("<div id='" + id_prefix + "free' class='freetext'></div>");
+        el.addClass('nlfeatures').append(map).append(free);
         this.fields = {
           map: $("#" + id_prefix + "map"),
-          text: $("#" + id_prefix + "text")
+          free: $("#" + id_prefix + "free")
         };
         return el;
       };
 
       ViewWidget.prototype.populate = function() {
-        return this.fields.text.html(this.widget.options.values.text);
+        var free;
+        free = this.widget.options.values.text;
+        return this.fields.free.html(stripFirstLine(free));
       };
 
       return ViewWidget;
@@ -126,7 +135,7 @@
         id_prefix = derefid(this.widget.options.id_prefix);
         name_prefix = this.widget.options.name_prefix;
         map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'></div>\n</div>");
-        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
+        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
         el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
         this.fields = {
           map_container: el.find(".map-container"),
@@ -135,6 +144,7 @@
           map_tools: el.find(".nlfeatures-map-tools"),
           mapon: $("#" + id_prefix + "mapon"),
           text: $("#" + id_prefix + "text"),
+          free: $("#" + id_prefix + "free"),
           html: $("#" + id_prefix + "html"),
           wkt: $("#" + id_prefix + "wkt"),
           zoom: $("#" + id_prefix + "zoom"),
@@ -149,13 +159,16 @@
         return poll(function() {
           return $('.mceEditor').length > 0;
         }, function() {
-          var text;
+          var free;
           if (!_this.usesHtml()) {
-            text = _this.fields.text.attr('id');
-            tinyMCE.execCommand('mceRemoveControl', false, text);
+            free = _this.fields.free.attr('id');
+            tinyMCE.execCommand('mceRemoveControl', false, free);
           }
-          return _this.fields.mapon.unbind('click').change(function() {
+          _this.fields.mapon.unbind('click').change(function() {
             return _this._onUseMap();
+          });
+          return _this.fields.html.change(function() {
+            return _this._updateTinyEvents();
           });
         });
       };
@@ -168,16 +181,18 @@
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
         this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
-        return this.fields.text.val(to_s(values.text));
+        this.fields.text.val(to_s(values.text));
+        return this.fields.free.val(stripFirstLine(values.text));
       };
 
       EditWidget.prototype.wire = function() {
-        var handler,
+        var updateFields,
           _this = this;
-        handler = function() {
+        updateFields = function() {
           return _this.updateFields();
         };
-        return this.nlfeatures.element.bind('featureadded.nlfeatures', handler).bind('update.nlfeatures', handler).bind('delete.nlfeatures', handler).bind('saveview.nlfeatures', function() {
+        this.fields.free.change(updateFields);
+        return this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
           return _this.updateFields();
         });
@@ -208,16 +223,39 @@
         return this.updateFields();
       };
 
+      EditWidget.prototype._updateTinyEvents = function() {
+        var freeId,
+          _this = this;
+        if (this.usesHtml()) {
+          freeId = this.fields.free.attr('id');
+          return poll(function() {
+            return tinyMCE.get(freeId) != null;
+          }, function() {
+            _this.fields.free.unbind('change');
+            return tinyMCE.get(freeId).onChange.add(function() {
+              return _this.updateFields();
+            });
+          });
+        } else {
+          return this.fields.free.change(function() {
+            return _this.updateFields();
+          });
+        }
+      };
+
       EditWidget.prototype.updateFields = function() {
-        var center, zoom;
-        this.fields.wkt.val(this.nlfeatures.getWktForSave());
+        var center, free, wkt, zoom;
+        wkt = this.nlfeatures.getWktForSave();
+        this.fields.wkt.val(wkt);
         zoom = this.nlfeatures.getSavedZoom();
         if (zoom != null) this.fields.zoom.val(zoom);
         center = this.nlfeatures.getSavedCenter();
         if (center != null) {
           this.fields.center_lon.val(center.lon);
-          return this.fields.center_lat.val(center.lat);
+          this.fields.center_lat.val(center.lat);
         }
+        free = this.fields.free.val();
+        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "\n" + free);
       };
 
       return EditWidget;

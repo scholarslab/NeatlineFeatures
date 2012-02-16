@@ -11,7 +11,7 @@ Feature: Display Multimodal Coverages
     And I enter "Multimodal Coverage" for the "Elements-49-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div#Elements-38-0-map.olMap"
-    And I enter "A pointed question" into "Elements-38-0-text"
+    And I enter "A pointed question" into "Elements-38-0-free"
     And I click on "Add Item"
     And I click "Multimodal Coverage"
     When I click "View Public Page"

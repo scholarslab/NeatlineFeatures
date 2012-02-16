@@ -53,6 +53,12 @@
 
     setTimeout _poll, timeout
 
+  # This strips the first line off the input text. That line acts as the hash
+  # to make sure that each coverage has unique data so we can search for it
+  # later.
+  stripFirstLine = (text) ->
+    if text? then text.substr(text.indexOf("\n") + 1) else ''
+
 
   # These classes encapsulate the parts of the widget that change depending on
   # the mode.
@@ -95,20 +101,21 @@
       id_prefix = derefid @widget.options.id_prefix
 
       map  = $ "<div id='#{id_prefix}map' class='map map-container'></div>"
-      text = $ "<div id='#{id_prefix}text' class='freetext'></div>"
+      free = $ "<div id='#{id_prefix}free' class='freetext'></div>"
 
       el.addClass('nlfeatures')
         .append(map)
-        .append(text)
+        .append(free)
 
       @fields =
         map  : $ "##{id_prefix}map"
-        text : $ "##{id_prefix}text"
+        free : $ "##{id_prefix}free"
 
       el
 
     populate: ->
-      @fields.text.html @widget.options.values.text
+      free = @widget.options.values.text
+      @fields.free.html stripFirstLine(free)
 
 
   class EditWidget extends BaseWidget
@@ -136,7 +143,8 @@
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
-          <textarea id="#{id_prefix}text" name="#{name_prefix}[text]" class="textinput" rows="5" cols="50"></textarea>
+          <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
+          <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <label class="use-html">Use HTML
             <input type="hidden" name="#{name_prefix}[html] value="0" />
             <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
@@ -160,6 +168,7 @@
         map_tools      : el.find ".nlfeatures-map-tools"
         mapon          : $ "##{id_prefix}mapon"
         text           : $ "##{id_prefix}text"
+        free           : $ "##{id_prefix}free"
         html           : $ "##{id_prefix}html"
         # Hidden fields that need to be maintained.
         wkt            : $ "##{id_prefix}wkt"
@@ -191,11 +200,13 @@
         -> $('.mceEditor').length > 0,
         =>
           if not this.usesHtml()
-            text = @fields.text.attr 'id'
-            tinyMCE.execCommand 'mceRemoveControl', false, text
+            free = @fields.free.attr 'id'
+            tinyMCE.execCommand 'mceRemoveControl', false, free
           @fields.mapon
             .unbind('click')
             .change => this._onUseMap()
+          @fields.html
+            .change => this._updateTinyEvents()
       )
 
     populate: (values=@widget.options.values) ->
@@ -205,13 +216,15 @@
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
       @fields.text.val to_s(values.text)
+      @fields.free.val stripFirstLine(values.text)
 
     wire: ->
-      handler = => this.updateFields()
+      updateFields = => this.updateFields()
+      @fields.free.change updateFields
       @nlfeatures.element
-        .bind('featureadded.nlfeatures', handler)
-        .bind('update.nlfeatures'      , handler)
-        .bind('delete.nlfeatures'      , handler)
+        .bind('featureadded.nlfeatures', updateFields)
+        .bind('update.nlfeatures'      , updateFields)
+        .bind('delete.nlfeatures'      , updateFields)
         .bind('saveview.nlfeatures'    , =>
           @nlfeatures.saveViewport()
           this.updateFields()
@@ -233,10 +246,25 @@
         this.hideMap()
       this.updateFields()
 
+    # This adds a change event to the TinyMCE editor to update the text field.
+    _updateTinyEvents: ->
+      if this.usesHtml()
+        freeId = @fields.free.attr 'id'
+        poll(
+          -> tinyMCE.get(freeId)?,
+          =>
+            @fields.free.unbind 'change'
+            tinyMCE.get(freeId).onChange.add =>
+              this.updateFields()
+          )
+      else
+        @fields.free.change => this.updateFields()
+
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
-      @fields.wkt.val @nlfeatures.getWktForSave()
+      wkt = @nlfeatures.getWktForSave()
+      @fields.wkt.val wkt
 
       zoom = @nlfeatures.getSavedZoom()
       @fields.zoom.val zoom if zoom?
@@ -245,6 +273,9 @@
       if center?
         @fields.center_lon.val center.lon
         @fields.center_lat.val center.lat
+
+      free = @fields.free.val()
+      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}\n#{free}"
 
 
   # And here's the widget itself.

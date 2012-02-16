@@ -24,7 +24,7 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     When I click "Use Map" checkbox in "#element-38"
     Then I should see a map in "#element-38"
-    And I should see "#Elements-38-0-text"
+    And I should see "#Elements-38-0-free"
     But I should not see "#Elements-38-0-text"
 
   Scenario: Draw Point on a Map
@@ -32,14 +32,14 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a point on "div.olMap"
-    Then a point is defined in "#Elements-38-0-text"
+    Then a point is defined in "#Elements-38-0-wkt"
 
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a line on "div.olMap"
-    Then a line is defined in "#Elements-38-0-text"
+    Then a line is defined in "#Elements-38-0-wkt"
 
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
@@ -93,7 +93,7 @@ Feature: Draw Features on a Map
     And I click "Edit this Item"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
-    And I should see that "#Elements-38-0-text" does not contain "WKT"
+    And I should see that "#Elements-38-0-free" does not contain "WKT"
 
   # This fails since GeoLocation isn't turned on automatically in the browser.
   #Scenario: Map Location Should Default to the User's Location
