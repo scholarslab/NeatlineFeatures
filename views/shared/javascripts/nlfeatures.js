@@ -715,14 +715,14 @@
         viewportOptionsValid: function() {
             var good = true;
 
-            good = good && this.options.map.zoom != null;
-            good = good && this.options.map.zoom > 0;
+            good = good && this.options.zoom != null;
+            good = good && this.options.zoom > 0;
 
-            good = good && this.options.map.center != null;
-            good = good && this.options.map.center.lon != null;
-            good = good && this.options.map.center.lat != null;
-            good = good && this.options.map.center.lon > 0.0;
-            good = good && this.options.map.center.lat > 0.0;
+            good = good && this.options.center != null;
+            good = good && this.options.center.lon != null;
+            good = good && this.options.center.lat != null;
+            good = good && !isNaN(parseFloat(this.options.center.lon));
+            good = good && !isNaN(parseFloat(this.options.center.lat));
 
             return good;
         },
