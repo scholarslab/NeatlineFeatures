@@ -11,7 +11,7 @@ Feature: Set Viewport
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
     And I zoom "#Elements-38-0-map" to "6"
     When I click "Save View" in "#element-38"
-    Then the viewport is defined in "#Elements-38-0-text"
+    Then the viewport is defined in "Elements-38-0"
 
   Scenario: Viewport Settings Persist
     Given I am logged into the admin console

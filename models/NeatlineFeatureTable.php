@@ -89,7 +89,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                 ->where("et.text $op ?", $text);
         }
 
-        return is_null($select) ? NULLL : $this->fetchObject($select);
+        return is_null($select) ? NULL : $this->fetchObject($select);
     }
 
     /**
@@ -195,27 +195,53 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
         $sql     = $db->prepare(
             "INSERT INTO $name
-                (added, item_id, element_text_id, is_map)
-                SELECT NOW(), ?, et.id, ?
+                (added, item_id, element_text_id, is_map, wkt, zoom,
+                 center_lon, center_lat)
+                SELECT NOW(), ?, et.id, ?, ?, ?, ?, ?
                 FROM {$db->prefix}element_texts et
                 WHERE et.record_id=? AND et.text=? AND et.element_id=?;
             "
         );
 
         foreach ($params as $field) {
-            $isMap = FALSE;
-            try {
-                $isMap = (bool)$field['mapon'];
-            } catch (Exception $e) {
-            }
+            $isMap      = (bool)$this->_param($field, 'mapon', FALSE);
+            $wkt        = $this->_param($field, 'wkt');
+            $zoom       = $this->_param($field, 'zoom');
+            $center_lon = $this->_param($field, 'center_lon');
+            $center_lat = $this->_param($field, 'center_lat');
 
             $data = array(
-                $item_id, (int)$isMap, $item_id, $field['text'], $cid
+                $item_id, (int)$isMap, $wkt, $zoom, $center_lon, $center_lat,
+                $item_id, $field['text'], $cid
             );
             $sql->execute($data);
         }
 
         return $this->getItemFeatures($item);
+    }
+
+    /**
+     * This attempts to get a field from an array of params or it returns the 
+     * default.
+     *
+     * @param $params array This is an of parameters to read the input from.
+     * @param $key string This is the key to read.
+     * @param $default any This is the value to return if the $key isn't 
+     * defined in the $params.
+     *
+     * @return string|any The value of the key or the default.
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _param($params, $key, $default=null)
+    {
+        $value = $default;
+        try {
+            if (array_key_exists($key, $params)) {
+                $value = $params[$key];
+            }
+        } catch (Exception $e) {
+        }
+        return $value;
     }
 
     /**

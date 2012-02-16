@@ -9,7 +9,7 @@ require 'geo_magic/remote'
 
 Capybara.app_host = 'http://features.dev'
 Capybara.run_server = false
-Capybara.default_wait_time = 20
+Capybara.default_wait_time = 30
 
 Capybara.default_driver = :selenium
 

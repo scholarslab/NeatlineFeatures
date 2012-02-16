@@ -702,11 +702,29 @@
          * the a view of the features added to the map.
          */
         setViewport: function() {
-            if (this.options.zoom != null && this.options.center != null) {
+            if (this.viewportOptionsValid()) {
                 this._setViewportFromOptions();
             } else {
                 this._setViewportFromData();
             }
+        },
+
+        /*
+         * This tests whether the viewport options are valid.
+         */
+        viewportOptionsValid: function() {
+            var good = true;
+
+            good = good && this.options.zoom != null;
+            good = good && this.options.zoom > 0;
+
+            good = good && this.options.center != null;
+            good = good && this.options.center.lon != null;
+            good = good && this.options.center.lat != null;
+            good = good && !isNaN(parseFloat(this.options.center.lon));
+            good = good && !isNaN(parseFloat(this.options.center.lat));
+
+            return good;
         },
 
         /*

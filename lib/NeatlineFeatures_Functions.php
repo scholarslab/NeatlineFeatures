@@ -78,4 +78,28 @@ class NeatlineFeatures_Functions
         return $output;
     }
 
+    public static function fclear($filename)
+    {
+        $f = fopen($filename, 'w');
+        fclose($f);
+    }
+
+    public static function flog($filename, $msg)
+    {
+        $now = date(DATE_ISO8601);
+        $f   = fopen($filename, 'a');
+        fwrite($f, "[$now] $msg\n");
+        fclose($f);
+    }
+
+    public static function fdump($filename, $name, $obj)
+    {
+        if (is_null($obj)) {
+            $repr = "NULL";
+        } else {
+            $repr = print_r($obj, true);
+        }
+        NeatlineFeatures_Functions::flog($filename, "$name => $repr");
+    }
+
 }
