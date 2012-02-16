@@ -11,7 +11,7 @@
     # And I enter "Cucumber: Enter Raw WKT" for the "Elements-50-0-text"      # Title
     # And I enter "Enter Raw WKT" for the "Elements-49-0-text"      # Subject
     # And I click the "Raw" tab on "#Elements-38-0-widget"
-    # And I enter "POINT(888546.3715643873 8501594.843567504)" into "Elements-38-0-text"
+    # And I enter "POINT(888546.3715643873 8501594.843567504)" into "Elements-38-0-free"
     # When I click the "NL Features" tab on "#Elements-38-0-widget"
     # Then the map at "#Elements-38-0-map" should display a point feature
 

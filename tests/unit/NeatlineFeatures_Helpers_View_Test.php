@@ -78,49 +78,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     }
 
     /**
-     * This tests the TEXTAREA returned by getFreeField.
-     *
-     * @return void
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function testGetFreeField()
-    {
-        $expected = new DOMDocument;
-        $expected->loadXML(
-            '<textarea id="Elements-38-0-free" name="Elements[38][0][free]" ' .
-            'class="textinput" rows="5" cols="50"></textarea>'
-        );
-
-        $actual = new DOMDocument;
-        $actual->loadXML($this->_cutil->getFreeField());
-
-        $this->assertEqualXMLStructure(
-            $expected->firstChild, $actual->firstChild, TRUE
-        );
-    }
-
-    /**
-     * This tests whether the text field is created as a hidden field.
-     *
-     * @return void
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function testGetTextField()
-    {
-        $expected = new DOMDocument;
-        $expected->loadXML(
-            '<input type="hidden" id="Elements-38-0-text" name="Elements[38][0][text]" ' .
-            'value="" />'
-        );
-
-        $actual = new DOMDocument;
-        $actual->loadHTML($this->_cutil->getTextField());
-        $input = $actual->getElementsByTagName('input')->item(0);
-
-        $this->assertEqualXMLStructure($expected->firstChild, $input, TRUE);
-    }
-
-    /**
      * This tests the predicate for whether this is submitted using POST or 
      * not.
      *
@@ -319,70 +276,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             $this->_item, $this->_subject
         );
         $this->assertFalse($sutil->isMap());
-    }
-
-    /**
-     * This tests the getUserHtml method, which returns the HTML string for the 
-     * "Use HTML" control.
-     *
-     * @return void
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function testGetUseHtmlChecked()
-    {
-        $tid = $this->_title->id;
-        $expected = new DOMDocument;
-        $expected->loadXML(
-            '<label class="use-html">Use HTML' .
-            "<input type='hidden' value='1' name='Elements[{$tid}][0][html]' />" .
-            "<input name='Elements[{$tid}][0][html]' id='Elements-{$tid}-0-html' " .
-            'type="checkbox" value="1" checked="checked" />' .
-            '</label>'
-        );
-
-        $tutil = new NeatlineFeatures_Utils_View();
-        $tutil->setEditOptions(
-            "Elements[{$this->_title->id}][0]", '<b>A Title</b>', array(),
-            $this->_item, $this->_title);
-        $actual = new DOMDocument;
-        $actual->loadHTML($tutil->getUseHtml());
-        $label = $actual->getElementsByTagName('label');
-
-        $this->assertEqualXMLStructure(
-            $expected->firstChild, $label->item(0), TRUE
-        );
-    }
-
-    /**
-     * This tests the getUserHtml method, which returns the HTML string for the 
-     * "Use HTML" control.
-     *
-     * @return void
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function testGetUseHtmlUnchecked()
-    {
-        $sid = $this->_subject->id;
-        $expected = new DOMDocument;
-        $expected->loadXML(
-            '<label class="use-html">Use HTML' .
-            "<input type='hidden' value='1' name='Elements[{$sid}][0][html]' />" .
-            "<input name='Elements[{$sid}][0][html]' id='Elements-{$sid}-0-html' " .
-            'type="checkbox" value="1" />' .
-            '</label>'
-        );
-
-        $sutil = new NeatlineFeatures_Utils_View();
-        $sutil->setEditOptions(
-            "Elements[{$this->_subject->id}][0]", 'Subject', array(),
-            $this->_item, $this->_subject);
-        $actual = new DOMDocument;
-        $actual->loadHTML($sutil->getUseHtml());
-        $label = $actual->getElementsByTagName('label');
-
-        $this->assertEqualXMLStructure(
-            $expected->firstChild, $label->item(0), TRUE
-        );
     }
 
     /**

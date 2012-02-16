@@ -32,14 +32,14 @@ Feature: Draw Features on a Map
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a point on "div.olMap"
-    Then a point is defined in "#Elements-38-0-text"
+    Then a point is defined in "#Elements-38-0-wkt"
 
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a line on "div.olMap"
-    Then a line is defined in "#Elements-38-0-text"
+    Then a line is defined in "#Elements-38-0-wkt"
 
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console

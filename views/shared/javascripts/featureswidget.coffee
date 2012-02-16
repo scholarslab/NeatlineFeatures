@@ -24,72 +24,159 @@
 # </div>
 
 (($) ->
-  $.widget('nlfeatures.featurewidget',
-    options: {
-      mode        : 'view'
+  ## Some utility functions
 
-      id_prefix   : null
-      text        : null
-      free        : null
-      html        : null
-      mapon       : null
-      map         : null
+  # Dereferences ID attributes (i.e., it removes the '#' at the start)
+  derefid = (id) ->
+    if id[0] == '#' then id[1...id.length] else id
 
-      map_options : {}
+  # This convert values to string, or null or undefined to an empty string.
+  to_s = (value) ->
+    if value? then value.toString() else ''
 
-      value       : null
-      formats     :
-        is_map    : false
-        is_html   : false
-    }
+  # This polls until either the predicate returns true or until the maximum
+  # number of polls is reached. When it's done polling, then it calls
+  # callback.
+  poll = (predicate, callback, maxPoll=null, timeout=100) ->
+    n = 0
+    pred = if maxPoll? && maxPoll != 0
+      -> (predicate() || n >= maxPoll)
+    else
+      predicate
 
-    _create: ->
-      id = @element.attr 'id'
-      @options.id_prefix ?= '#' + id.substring(0, id.length - 'widget'.length)
-
-      @options.text  ?= "#{@options.id_prefix}text"
-      @options.free  ?= "#{@options.id_prefix}free"
-      @options.html  ?= "#{@options.id_prefix}html"
-      @options.mapon ?= "#{@options.id_prefix}mapon"
-      @options.map   ?= "#{@options.id_prefix}map"
-
-      @map = this._initMap()
-      if @options.mode == 'edit'
-        this._recaptureEditor()
-        this._updateFreeText()
-        this._addUpdateEvents()
+    _poll = ->
+      if pred()
+        callback()
       else
-        this._fillFreeView()
-      this.hideMap() unless @options.formats.is_map
+        n++
+        setTimeout _poll, timeout
 
-    destroy: ->
-      $.Widget.prototype.destroy.call this
+    setTimeout _poll, timeout
 
-    _setOptions: (key, value) ->
-      $.Widget.prototype._setOption.apply this, arguments
+  # This strips the first line off the input text. That line acts as the hash
+  # to make sure that each coverage has unique data so we can search for it
+  # later.
+  stripFirstLine = (text) ->
+    if text? then text.substr(text.indexOf("\n") + 1) else ''
 
-    # This initializes a map for editing with the value passed in. It returns
-    # the nlfeatures data object.
-    _initMap: ->
-      input = this.parseTextInput(@options.value)
-      map = $ @options.map
+
+  # These classes encapsulate the parts of the widget that change depending on
+  # the mode.
+
+  class BaseWidget
+    constructor: (@widget) ->
+
+    initMap: ->
+      map = @fields.map
+      input = @widget.options.values
       item =
-        title : 'Coverage'
-        name  : 'Coverage'
-        id    : @element.attr 'id'
-        wkt   : input.wkt
+        title  : 'Coverage'
+        name   : 'Coverage'
+        id     : @widget.element.attr 'id'
+        wkt    : input.wkt
       local_options =
-        mode   : @options.mode
+        mode   : @widget.options.mode
         json   : item
         markup :
-          id_prefix: @options.id_prefix
+          id_prefix: @widget.options.id_prefix
       local_options.zoom   = input.zoom   if input.zoom?
       local_options.center = input.center if input.center?
 
-      all_options = $.extend true, {}, @options.map_options, local_options
-      $(@options.map)
+      all_options = $.extend true, {}, @widget.options.map_options, local_options
+      @nlfeatures = map
         .nlfeatures(all_options)
         .data('nlfeatures')
+
+      @nlfeatures
+
+
+  class ViewWidget extends BaseWidget
+    init: ->
+      this.build()
+      this.initMap()
+      this.populate()
+
+    build: ->
+      el        = $ @widget.element
+      id_prefix = derefid @widget.options.id_prefix
+
+      map  = $ "<div id='#{id_prefix}map' class='map map-container'></div>"
+      free = $ "<div id='#{id_prefix}free' class='freetext'></div>"
+
+      el.addClass('nlfeatures')
+        .append(map)
+        .append(free)
+
+      @fields =
+        map  : $ "##{id_prefix}map"
+        free : $ "##{id_prefix}free"
+
+      el
+
+    populate: ->
+      free = @widget.options.values.text
+      @fields.free.html stripFirstLine(free)
+
+
+  class EditWidget extends BaseWidget
+    init: ->
+      this.build()
+      this.initMap()
+      this.captureEditor()
+      this.populate()
+      this.wire()
+
+    build: ->
+      el          = $ @widget.element
+      id_prefix   = derefid @widget.options.id_prefix
+      name_prefix = @widget.options.name_prefix
+
+      map_container = $ """
+        <div class="nlfeatures map-container">
+          <div id="#{id_prefix}map"></div>
+          <div class='nlfeatures-map-tools'></div>
+        </div>
+        """
+      text_container = $ """
+        <div class="nlfeatures text-container">
+          <input type="hidden" id="#{id_prefix}wkt" name="#{name_prefix}[wkt]" value="" />
+          <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
+          <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
+          <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
+          <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
+          <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
+          <label class="use-html">Use HTML
+            <input type="hidden" name="#{name_prefix}[html] value="0" />
+            <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
+          </label>
+          <label class="use-mapon">Use Map
+            <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
+            <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
+          </label>
+        </div>
+        """
+
+      el.addClass('nlfeatures')
+        .addClass('nlfeatures-edit')
+        .append(map_container)
+        .append(text_container)
+
+      @fields =
+        map_container  : el.find ".map-container"
+        text_container : el.find ".text-container"
+        map            : $ "##{id_prefix}map"
+        map_tools      : el.find ".nlfeatures-map-tools"
+        mapon          : $ "##{id_prefix}mapon"
+        text           : $ "##{id_prefix}text"
+        free           : $ "##{id_prefix}free"
+        html           : $ "##{id_prefix}html"
+        # Hidden fields that need to be maintained.
+        wkt            : $ "##{id_prefix}wkt"
+        zoom           : $ "##{id_prefix}zoom"
+        center_lon     : $ "##{id_prefix}center_lon"
+        center_lat     : $ "##{id_prefix}center_lat"
+
+      el
 
     # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
     # initialized, and then it turns off the TEXTAREA specified.
@@ -108,178 +195,134 @@
     # TODO: Bring this up on #omeka and file a bug report.
     # admin/themes/default/javascripts/items.js, around line 410, should be
     # more specific.
-    _recaptureEditor: ->
-      this._poll(
+    captureEditor: ->
+      poll(
         -> $('.mceEditor').length > 0,
         =>
           if not this.usesHtml()
-            free = @options.free.substr 1
+            free = @fields.free.attr 'id'
             tinyMCE.execCommand 'mceRemoveControl', false, free
-          $(@options.mapon)
+          @fields.mapon
             .unbind('click')
             .change => this._onUseMap()
-          $(@options.html)
+          @fields.html
             .change => this._updateTinyEvents()
       )
 
-    # This polls until either the predicate returns true or until the maximum
-    # number of polls is reached. When it's done polling, then it calls
-    # callback.
-    _poll: (predicate, callback, maxPoll=null, timeout=100) ->
-      n = 0
-      pred = if maxPoll? && maxPoll != 0
-        -> (predicate() || n >= maxPoll)
-      else
-        predicate
+    populate: (values=@widget.options.values) ->
+      @fields.mapon.attr 'checked', values.is_map
+      @fields.wkt.val to_s(values.wkt)
+      @fields.zoom.val to_s(values.zoom)
+      @fields.center_lon.val to_s(values.center?.lon)
+      @fields.center_lat.val to_s(values.center?.lat)
+      @fields.text.val to_s(values.text)
+      @fields.free.val stripFirstLine(values.text)
 
-      _poll = ->
-        if pred()
-          callback()
-        else
-          n++
-          setTimeout _poll, timeout
-
-      setTimeout _poll, timeout
+    wire: ->
+      updateFields = => this.updateFields()
+      @fields.free.change updateFields
+      @nlfeatures.element
+        .bind('featureadded.nlfeatures', updateFields)
+        .bind('update.nlfeatures'      , updateFields)
+        .bind('delete.nlfeatures'      , updateFields)
+        .bind('saveview.nlfeatures'    , =>
+          @nlfeatures.saveViewport()
+          this.updateFields()
+        )
 
     # Tests for the content types active. These look at the states of the
     # checkboxes.
-    usesHtml: -> $(@options.html ).is ':checked'
-    usesMap : -> $(@options.mapon).is ':checked'
+    usesHtml: -> @fields.html.is  ':checked'
+    usesMap : -> @fields.mapon.is ':checked'
+
+    showMap : -> @fields.map_container.show()
+    hideMap : -> @fields.map_container.hide()
 
     # This handles when the Use Map checkbox is clicked.
-    _onUseMap: ->
+    _onUseMap : ->
       if this.usesMap()
         this.showMap()
       else
         this.hideMap()
-      this.updateTextInput()
+      this.updateFields()
 
-    showMap: -> $(@element).find('.map-container').show()
-    hideMap: -> $(@element).find('.map-container').hide()
-
+    # This adds a change event to the TinyMCE editor to update the text field.
     _updateTinyEvents: ->
       if this.usesHtml()
-        free = @options.free.substr 1
-        this._poll(
-          -> tinyMCE.get(free)?,
+        freeId = @fields.free.attr 'id'
+        poll(
+          -> tinyMCE.get(freeId)?,
           =>
-            $(@options.free).unbind('change')
-            tinyMCE.get(free).onChange.add =>
-              this.updateTextInput()
-        )
+            @fields.free.unbind 'change'
+            tinyMCE.get(freeId).onChange.add =>
+              this.updateFields()
+          )
       else
-        $(@options.free).change => this.updateTextInput()
+        @fields.free.change => this.updateFields()
 
-    _addUpdateEvents: ->
-      handler = => this.updateTextInput()
-      $(@options.free).change handler
-      $(@map.element)
-        .bind('featureadded.nlfeatures', handler)
-        .bind('update.nlfeatures'      , handler)
-        .bind('delete.nlfeatures'      , handler)
-        .bind('saveview.nlfeatures'    , =>
-          @map.saveViewport()
-          this.updateTextInput()
-        )
+    # This handles passing the content from the visible inputs (the map) to the
+    # hidden field that Omeka actually uses.
+    updateFields: ->
+      wkt = @nlfeatures.getWktForSave()
+      @fields.wkt.val wkt
 
-    # This handles passing the content from the visible inputs to the hidden
-    # field that Omeka actually uses.
-    updateTextInput: ->
-      buffer = []
+      zoom = @nlfeatures.getSavedZoom()
+      @fields.zoom.val zoom if zoom?
 
-      if this.usesMap()
-        buffer.push "WKT: #{@map.getWktForSave()}\n"
+      center = @nlfeatures.getSavedCenter()
+      if center?
+        @fields.center_lon.val center.lon
+        @fields.center_lat.val center.lat
 
-        zoom = @map.getSavedZoom()
-        buffer.push "ZOOM: #{zoom}\n" if zoom?
+      free = @fields.free.val()
+      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}\n#{free}"
 
-        center = @map.getSavedCenter()
-        buffer.push "CENTER: #{center.lon},#{center.lat}\n" if center?
 
-        buffer.push "\n"
+  # And here's the widget itself.
+  $.widget('nlfeatures.featurewidget',
+    options: {
+      mode        : 'view'
 
-      if this.usesHtml()
-        buffer.push tinyMCE.get(@options.free.substr 1).getContent()
+      id_prefix   : null
+      name_prefix : null
+
+      map_options : {}
+
+      values:
+        wkt     : null
+        zoom    : null
+        center  : null  # center is an object with the lon and lat properties.
+        text    : null
+        is_html : null
+        is_map  : null
+    }
+
+    _create: ->
+      id = @element.attr 'id'
+      @options.id_prefix   ?= '#' + id.substring(0, id.length - 'widget'.length)
+      @options.name_prefix ?= this._idPrefixToNamePrefix()
+
+      @mode = if @options.mode == 'edit'
+        new EditWidget this
       else
-        buffer.push $(@options.free).val()
+        new ViewWidget this
 
-      $(@options.text).val(buffer.join '')
+      @mode.init()
+      @mode.hideMap() unless @options.values.is_map
 
-    # This breaks the value of the text input into 'wkt' and 'free' and returns
-    # a JS object with those properties.
-    parseTextInput: (input) ->
-      input ?= if @options.mode == 'edit'
-        $(@options.text).val()
-      else
-        @options.value
-      output = wkt: '', free: ''
+    # This converts the ID prefix to a name prefix, which uses array-access.
+    _idPrefixToNamePrefix: (id_prefix=@options.id_prefix) ->
+      id_prefix = derefid id_prefix
+      parts     = (p for p in id_prefix.split '-' when p.length > 0)
+      base      = parts.shift()
+      indices   = ("[#{p}]" for p in parts)
+      "#{base}#{ indices.join('') }"
 
-      if input.substr(0, 5) == 'WKT: '
-        lines = input.split(/\r\n|\n|\r/)
+    destroy: ->
+      $.Widget.prototype.destroy.call this
 
-        # This walks through the array to find the first blank line.
-        splitAt = 0
-        while (splitAt < lines.length && ! lines[splitAt].match(/^\s*$/))
-          splitAt++
-
-        if splitAt < lines.length
-          prefixLines   = lines.slice(0, splitAt)
-          prefix        = this._parseFeatureData lines.slice(0, splitAt)
-
-          output.wkt    = prefix.wkt
-          output.zoom   = prefix.zoom
-          output.center = prefix.center
-          output.free   = lines.slice(splitAt + 1).join("\n")
-      else
-        output.free = input
-
-      output
-
-    # This takes an array of lines and parses them for the WKT, ZOOM, and
-    # CENTER fields.
-    _parseFeatureData: (lines) ->
-      data =
-        wkt    : null
-        zoom   : null
-        center : null
-      current = null
-
-      for line in lines
-        line = line.trim()
-
-        if line.length == 0
-          continue
-        else if line.substr(0, 5) == 'WKT: '
-          current  = 'wkt'
-          data.wkt = []
-          data.wkt.push line.substr(5)
-        else if line.substr(0, 6) == 'ZOOM: '
-          current   = 'zoom'
-          data.zoom = parseInt line.substr(6)
-        else if line.substr(0, 8) == 'CENTER: '
-          current = 'center'
-          [lon, lat] = line.substr(8).split ','
-          data.center =
-            lon: parseFloat lon
-            lat: parseFloat lat
-        else if current == 'wkt'
-          data.wkt.push line
-
-      if data.wkt?
-        data.wkt = data.wkt.join("\n") 
-      else
-        data.wkt = ''
-      data
-
-    # This updates the free-text field from the 
-    _updateFreeText: ->
-      output = this.parseTextInput()
-      $(@options.free).val output.free
-
-    # This populates the free-text DIV.
-    _fillFreeView: (free) ->
-      free ?= this.parseTextInput().free
-      $(@options.free).html(free)
+    _setOptions: (key, value) ->
+      $.Widget.prototype._setOption.apply this, arguments
 
   ))(jQuery)
 

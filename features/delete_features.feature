@@ -39,6 +39,6 @@ Feature: Delete Features from an Item
     When I click on XPath ".//div[@class='input-block'][2]//input[@id='remove_element_38']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
-    And I see "#Elements-38-0-free" contains "1"
+    And I see "#Elements-38-0-text" contains "1"
     But I should not see "#remove_element_38" in "#element-38"
 

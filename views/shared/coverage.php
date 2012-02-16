@@ -1,5 +1,5 @@
 <?php
-/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4; */
+/* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
  * PHP version 5
@@ -15,30 +15,32 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
-<div id="<?php echo $idPrefix ?>nlf" class='nlfeatures'>
-  <div id="<?php echo $idPrefix ?>map" class='map map-container'>
-  </div>
-  <div id="<?php echo $idPrefix ?>free" class='freetext'>
-  </div>
-</div>
+<div id="<?php echo $idPrefix ?>widget"></div>
 <script type='text/javascript'>
 (function($) {
     $(function() {
         var options = {
             mode: 'view',
             id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
+            name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
                 styles: {
                     point_graphic: '<?php echo img('pushpin-1.png'); ?>'
                     }
                 },
-            value: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
-            formats: {
+            values: {
+                wkt: <?php echo json_encode(is_null($wkt) ? '' : $wkt) ?>,
+                zoom: <?php echo json_encode(is_null($zoom) ? '' : $zoom) ?>,
+                center: {
+                    lon: <?php echo json_encode(is_null($center_lon) ? '' : $center_lon) ?>,
+                    lat: <?php echo json_encode(is_null($center_lat) ? '' : $center_lat) ?>
+                    },
+                text: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
                 is_html: <?php echo json_encode($isHtml) ?>,
                 is_map : <?php echo json_encode($isMap) ?>
                 }
             };
-        $("#<?php echo $idPrefix ?>nlf").featurewidget(options);
+        $("#<?php echo $idPrefix ?>widget").featurewidget(options);
     });
 })(jQuery);
 </script>

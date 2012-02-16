@@ -37,11 +37,19 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
     public function testInstall()
     {
         $db     = $this->db;
+        $table  = "{$db->prefix}neatline_features";
         $tables = $db->listTables();
-        $this->assertContains(
-            "{$db->prefix}neatline_features",
-            $tables
-        );
+        $this->assertContains($table, $tables);
+
+        $columns = array();
+        foreach ($db->describeTable($table) as $col) {
+            array_push($columns, $col['COLUMN_NAME']);
+        }
+
+        $this->assertContains('wkt', $columns);
+        $this->assertContains('zoom', $columns);
+        $this->assertContains('center_lat', $columns);
+        $this->assertContains('center_lon', $columns);
     }
 
     /**

@@ -49,6 +49,34 @@ class NeatlineFeature extends Omeka_Record
      **/
     public $is_map;
 
+    /**
+     * This contains the WKT describing the features on the map.
+     *
+     * @var string
+     **/
+    public $wkt;
+
+    /**
+     * This is the zoom level for the saved view.
+     *
+     * @var int
+     **/
+    public $zoom;
+
+    /**
+     * This is the center longitude for the saved view.
+     *
+     * @var double
+     **/
+    public $center_lon;
+
+    /**
+     * This is the center latitude for the saved view.
+     *
+     * @var double
+     **/
+    public $center_lat;
+
     //}}}
 
     //{{{ Constructors
