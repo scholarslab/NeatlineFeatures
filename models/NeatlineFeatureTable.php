@@ -89,7 +89,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                 ->where("et.text $op ?", $text);
         }
 
-        return is_null($select) ? NULLL : $this->fetchObject($select);
+        return is_null($select) ? NULL : $this->fetchObject($select);
     }
 
     /**
