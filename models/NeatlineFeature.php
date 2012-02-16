@@ -77,6 +77,15 @@ class NeatlineFeature extends Omeka_Record
      **/
     public $center_lat;
 
+    /**
+     * A short code for the base layer. This is one of 'gphy' (Google 
+     * Physical), 'gmap' (Google Streets), 'ghyb' (Google Hybrid), 'gsat' 
+     * (Google Satellite), or 'osm' (Open Street Maps).
+     *
+     * @var string
+     **/
+    public $base_layer;
+
     //}}}
 
     //{{{ Constructors
