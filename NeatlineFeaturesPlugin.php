@@ -120,6 +120,7 @@ class NeatlineFeaturesPlugin
                 zoom            SMALLINT(2)    NOT NULL DEFAULT 3,
                 center_lon      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
                 center_lat      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
+                base_layer      VARCHAR(6)     DEFAULT NULL,
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
