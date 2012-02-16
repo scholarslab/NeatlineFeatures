@@ -68,6 +68,7 @@
         };
         if (input.zoom != null) local_options.zoom = input.zoom;
         if (input.center != null) local_options.center = input.center;
+        if (input.base_layer != null) local_options.base_layer = input.base_layer;
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -193,9 +194,12 @@
           return _this.updateFields();
         };
         this.fields.free.change(updateFields);
-        return this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
+        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
           return _this.updateFields();
+        });
+        return this.nlfeatures.map.events.on({
+          changebaselayer: updateFields
         });
       };
 
@@ -245,7 +249,7 @@
       };
 
       EditWidget.prototype.updateFields = function() {
-        var center, free, wkt, zoom;
+        var base_layer, center, free, wkt, zoom;
         wkt = this.nlfeatures.getWktForSave();
         this.fields.wkt.val(wkt);
         zoom = this.nlfeatures.getSavedZoom();
@@ -256,7 +260,9 @@
           this.fields.center_lat.val(center.lat);
         }
         free = this.fields.free.val();
-        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "\n" + free);
+        this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "\n" + free);
+        base_layer = this.nlfeatures.getBaseLayerCode();
+        if (base_layer != null) return this.fields.base_layer.val(base_layer);
       };
 
       return EditWidget;

@@ -79,8 +79,9 @@
         json   : item
         markup :
           id_prefix: @widget.options.id_prefix
-      local_options.zoom   = input.zoom   if input.zoom?
-      local_options.center = input.center if input.center?
+      local_options.zoom       = input.zoom   if input.zoom?
+      local_options.center     = input.center if input.center?
+      local_options.base_layer = input.base_layer if input.base_layer?
 
       all_options = $.extend true, {}, @widget.options.map_options, local_options
       @nlfeatures = map
@@ -231,6 +232,9 @@
           @nlfeatures.saveViewport()
           this.updateFields()
         )
+      @nlfeatures.map.events.on(
+        changebaselayer: updateFields
+      )
 
     # Tests for the content types active. These look at the states of the
     # checkboxes.
@@ -278,6 +282,9 @@
 
       free = @fields.free.val()
       @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}\n#{free}"
+
+      base_layer = @nlfeatures.getBaseLayerCode()
+      @fields.base_layer.val base_layer if base_layer?
 
 
   # And here's the widget itself.
