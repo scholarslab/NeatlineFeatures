@@ -27,6 +27,19 @@ Given /^I draw a line on "([^"]*)"$/ do |map|
                  perform
 end
 
+Given /^I switch to the "([^"]*)" base layer on "([^"]*)"/ do |base_layer, map|
+  map_div = find(map)
+
+  map_div.find('div.olMapViewport')
+  map_div.find('.maximizeDiv').click
+  map_div.find(:xpath, ".//input[@value='#{base_layer}']").should be_visible
+  map_div.find('.layersDiv').should be_visible
+  map_div.find('.layersDiv').find(:xpath, ".//input[@value='#{base_layer}']").should be_visible
+  map_div.find('.layersDiv').
+          find(:xpath, ".//input[@value='#{base_layer}']").
+          click
+end
+
 Given /^I move "([^"]*)" to "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat|
   evaluate_script("jQuery('#{map}').data('nlfeatures').setCenterLonLat(#{lon}, #{lat})")
 end
@@ -135,5 +148,10 @@ end
 Given /^"([^"]*)" should be zoomed to "(\d*)"/ do |map, zoom|
   map_zoom = evaluate_script("jQuery('#{map}').data('nlfeatures').map.getZoom()").to_i
   map_zoom.should be(zoom.to_i)
+end
+
+Then /^"([^"]*)" should have the base layer "([^"]*)"/ do |map, base_layer|
+  map_base_layer = evaluate_script("jQuery('#{map}').data('nlfeatures').getBaseLayerCode()")
+  map_base_layer.should be base_layer
 end
 
