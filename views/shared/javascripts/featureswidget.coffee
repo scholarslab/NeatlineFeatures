@@ -246,10 +246,6 @@
         @fields.center_lon.val center.lon
         @fields.center_lat.val center.lat
 
-      text = @fields.text.val()
-      if text.length == 0
-        @fields.text.val ' '
-
 
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',
