@@ -20,7 +20,7 @@
 (function($) {
     $(function() {
         var options = {
-            mode: 'view',
+            mode: <?php echo json_encode($mode) ?>,
             id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
             name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
