@@ -183,6 +183,7 @@
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
         this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        this.fields.base_layer.val(to_s(values.base_layer));
         this.fields.text.val(to_s(values.text));
         return this.fields.free.val(stripFirstLine(values.text));
       };

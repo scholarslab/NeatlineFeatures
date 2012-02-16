@@ -218,6 +218,7 @@
       @fields.zoom.val to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
+      @fields.base_layer.val to_s(values.base_layer)
       @fields.text.val to_s(values.text)
       @fields.free.val stripFirstLine(values.text)
 
