@@ -143,6 +143,7 @@
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
+          <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <label class="use-html">Use HTML
@@ -175,6 +176,7 @@
         zoom           : $ "##{id_prefix}zoom"
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
+        base_layer     : $ "##{id_prefix}base_layer"
 
       el
 
