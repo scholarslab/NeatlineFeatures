@@ -13,8 +13,7 @@
  */
 ?><?php
 
-require_once dirname(__FILE__) .
-    '/../../../../../application/helpers/Functions.php';
+require_once APP_DIR . '/helpers/Functions.php';
 
 /**
  * This contructs the view and holds a bunch of utility methods.
