@@ -13,10 +13,10 @@
  */
 ?><?php
 
-require_once 'NeatlineFeatures_Test.php';
-require_once 'application/helpers/FormFunctions.php';
-require_once 'lib/NeatlineFeatures/Utils/View.php';
-require_once 'models/NeatlineFeatureTable.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/tests/NeatlineFeatures_Test.php';
+require_once APP_DIR . '/helpers/FormFunctions.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures/Utils/View.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/models/NeatlineFeatureTable.php';
 
 /**
  * This tests that item update and delete hooks are working properly.

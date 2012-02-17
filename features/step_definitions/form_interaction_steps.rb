@@ -33,6 +33,10 @@ Given /^I click "([^"]*)" checkbox in "([^"]*)"$/ do |checkbox, parent|
   end
 end
 
+Given /^I check "([^"]*)"$/ do |checkbox|
+  check checkbox
+end
+
 When /^I press "([^"]*)"$/ do |button|
   click_on button
 end

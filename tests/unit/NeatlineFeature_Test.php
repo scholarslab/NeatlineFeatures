@@ -13,7 +13,7 @@
  */
 ?><?php
 
-require_once 'NeatlineFeatures_Test.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/tests/NeatlineFeatures_Test.php';
 
 /**
  * This tests the NeatlineFeature model class.

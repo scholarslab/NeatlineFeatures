@@ -13,8 +13,8 @@
  */
 ?><?php
 
-require_once 'NeatlineFeatures_Test.php';
-require_once 'lib/NeatlineFeatures_Functions.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/tests/NeatlineFeatures_Test.php';
+require_once NEATLINE_FEATURES_PLUGIN_DIR . '/lib/NeatlineFeatures_Functions.php';
 
 /**
  * This tests the various utility functions in NeatlineFeatures_Functions.php.
