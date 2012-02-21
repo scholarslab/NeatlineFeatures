@@ -62,7 +62,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $item = new Item();
         $item->save();
         $text = $this->addElementText(
-            $item, $this->_coverage, "WKT: POINT(1, 2)\n\nnothing", FALSE
+            $item, $this->_coverage, "WKT: POINT(1, 2)\n\nnothing", 0
         );
         $this->toDelete($item);
 
@@ -91,7 +91,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->toDelete($item);
 
         $raw  = "WKT: POINT(123, 456)\n\nSomething";
-        $text = $this->setupCoverageData($item, $raw, FALSE, TRUE);
+        $text = $this->setupCoverageData($item, $raw, 0, 1);
         $item->save();
 
         $features = $this->table->createOrGetRecord($item, $text);
@@ -158,7 +158,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $item->save();
         $this->toDelete($item);
 
-        $this->setupCoverageData($item, "Just Text.", FALSE, FALSE);
+        $this->setupCoverageData($item, "Just Text.", 0, 0);
         $features = $this->table->createFeatures($item, $utils->getPost());
         $this->assertCount(1, $features);
         $this->assertFalse((bool)$features[0]->is_map);
@@ -184,7 +184,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $item->save();
         $this->toDelete($item);
 
-        $this->setupCoverageData($item, "WKT: POINT\n\nJust Text.", FALSE, TRUE);
+        $this->setupCoverageData($item, "WKT: POINT\n\nJust Text.", 0, 1);
         $features = $this->table->createFeatures($item, $utils->getPost());
         $this->assertCount(1, $features);
         $this->assertTrue((bool)$features[0]->is_map);
@@ -215,8 +215,8 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
         $this->assertEmpty($features);
 
         // Now test with two features.
-        $this->setupCoverageData($item, "Just Text.", FALSE, FALSE);
-        $this->setupCoverageData($item, "WKT: POINT\n\nAnd Text.", FALSE, TRUE, TRUE);
+        $this->setupCoverageData($item, "Just Text.", 0, 0);
+        $this->setupCoverageData($item, "WKT: POINT\n\nAnd Text.", 0, 1, 1);
         $features = $this->table->updateFeatures($item, $utils->getPost());
         $this->assertCount(2, $features);
         $this->assertFalse((bool)$features[0]->is_map);
@@ -243,7 +243,7 @@ class NeatlineFeaturesTable_Test extends NeatlineFeatures_Test
             $et->delete();
         }
 
-        $this->setupCoverageData($item, "Other Text.", FALSE, FALSE);
+        $this->setupCoverageData($item, "Other Text.", 0, 0);
         $this->table->updateFeatures($item, $utils->getPost());
         $features = $this->table->getItemFeatures($item);
         $this->assertCount(1, $features);

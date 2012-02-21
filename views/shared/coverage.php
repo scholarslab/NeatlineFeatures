@@ -37,8 +37,8 @@
                     },
                 base_layer: <?php echo json_encode(is_null($base_layer) ? '' : $base_layer) ?>,
                 text: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
-                is_html: <?php echo json_encode($isHtml) ?>,
-                is_map : <?php echo json_encode($isMap) ?>
+                is_html: <?php echo json_encode((bool)$isHtml) ?>,
+                is_map : <?php echo json_encode((bool)$isMap) ?>
                 }
             };
         $("#<?php echo $idPrefix ?>widget").featurewidget(options);

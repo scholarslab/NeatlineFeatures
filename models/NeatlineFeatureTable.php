@@ -204,12 +204,12 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         );
 
         foreach ($params as $field) {
-            $isMap      = (bool)$this->_param($field, 'mapon', FALSE);
-            $wkt        = $this->_param($field, 'wkt');
-            $zoom       = $this->_param($field, 'zoom');
-            $center_lon = $this->_param($field, 'center_lon');
-            $center_lat = $this->_param($field, 'center_lat');
-            $base_layer = $this->_param($field, 'base_layer');
+            $isMap      = (bool)$this->_param($field, 'mapon', 0);
+            $wkt        = $this->_param($field, 'wkt', '');
+            $zoom       = $this->_param($field, 'zoom', 3);
+            $center_lon = $this->_param($field, 'center_lon', 0.0);
+            $center_lat = $this->_param($field, 'center_lat', 0.0);
+            $base_layer = $this->_param($field, 'base_layer', 'osm');
 
             $data = array(
                 $item_id, (int)$isMap,
