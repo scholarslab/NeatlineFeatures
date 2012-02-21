@@ -242,8 +242,8 @@
     usesHtml: -> @fields.html.is  ':checked'
     usesMap : -> @fields.mapon.is ':checked'
 
-    showMap : -> @fields.map_container.show()
-    hideMap : -> @fields.map_container.hide()
+    showMap : -> @fields.map_container.slideDown()
+    hideMap : -> @fields.map_container.slideUp()
 
     # This handles when the Use Map checkbox is clicked.
     _onUseMap : ->

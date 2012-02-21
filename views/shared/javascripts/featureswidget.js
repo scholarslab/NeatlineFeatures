@@ -213,11 +213,11 @@
       };
 
       EditWidget.prototype.showMap = function() {
-        return this.fields.map_container.show();
+        return this.fields.map_container.slideDown();
       };
 
       EditWidget.prototype.hideMap = function() {
-        return this.fields.map_container.hide();
+        return this.fields.map_container.slideUp();
       };
 
       EditWidget.prototype._onUseMap = function() {
