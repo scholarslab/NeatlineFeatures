@@ -353,14 +353,14 @@ class NeatlineFeatures_Utils_View
      **/
     public function isHtml()
     {
-        $isHtml = FALSE;
+        $isHtml = 0;
 
         if ($this->isPosted()) {
             try {
                 $isHtml = (bool)$_POST['Elements'][$this->getElementId()]
                     [$this->getIndex()]['html'];
             } catch (Exception $e) {
-                $isHtml = FALSE;
+                $isHtml = 0;
             }
         } else {
             $etext = $this->getElementText();
@@ -381,14 +381,14 @@ class NeatlineFeatures_Utils_View
      **/
     public function isMap()
     {
-        $isMap = FALSE;
+        $isMap = 0;
 
         if ($this->isPosted()) {
             try {
                 $isMap = (bool)$_POST['Elements'][$this->getElementId()]
                     [$this->getIndex()]['mapon'];
             } catch (Exception $e) {
-                $isMap = FALSE;
+                $isMap = 0;
             }
         } else {
             $etext = $this->getElementText();
