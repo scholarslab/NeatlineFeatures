@@ -213,11 +213,23 @@
       };
 
       EditWidget.prototype.showMap = function() {
-        return this.fields.map_container.slideDown();
+        var tools,
+          _this = this;
+        tools = this.fields.map.children('button');
+        return tools.hide('normal', function() {
+          return _this.fields.map_container.slideDown('normal', function() {
+            return tools.fadeIn();
+          });
+        });
       };
 
       EditWidget.prototype.hideMap = function() {
-        return this.fields.map_container.slideUp();
+        var tools,
+          _this = this;
+        tools = this.fields.map.children('button');
+        return tools.fadeOut('normal', function() {
+          return _this.fields.map_container.slideUp();
+        });
       };
 
       EditWidget.prototype._onUseMap = function() {
