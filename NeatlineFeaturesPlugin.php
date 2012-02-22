@@ -164,10 +164,11 @@ class NeatlineFeaturesPlugin
     {
         queue_css('nlfeatures');
         queue_css('nlfeature-editor');
+        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
-        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
+        queue_js('libraries/openlayers/OpenLayers.min');
 
         queue_js('nlfeatures');
         queue_js('editor/edit_features');
@@ -183,10 +184,11 @@ class NeatlineFeaturesPlugin
     public function publicThemeHeader()
     {
         queue_css('nlfeatures');
+        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
-        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
+        queue_js('libraries/openlayers/OpenLayers.min');
 
         queue_js('nlfeatures');
         queue_js('featureswidget');
