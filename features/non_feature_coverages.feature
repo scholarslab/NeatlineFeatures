@@ -21,7 +21,7 @@ Feature: Non-Feature Coverages
     And I enter "Default Raw Tab" for the "Elements-49-0-text"  # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I click on "Add Item"
-    And I click on "Cucumber: Default Raw Tab"
+    And I click on "Default Raw Tab"
     When I click on "Edit this Item"
     Then I should see "#Elements-38-0-free"
     But I should not see a map in "#element-38"
