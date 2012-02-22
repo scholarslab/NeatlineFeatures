@@ -135,7 +135,7 @@
         el = $(this.widget.element);
         id_prefix = derefid(this.widget.options.id_prefix);
         name_prefix = this.widget.options.name_prefix;
-        map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'></div>\n</div>");
+        map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
         text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
         el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
         this.fields = {
@@ -151,7 +151,8 @@
           zoom: $("#" + id_prefix + "zoom"),
           center_lon: $("#" + id_prefix + "center_lon"),
           center_lat: $("#" + id_prefix + "center_lat"),
-          base_layer: $("#" + id_prefix + "base_layer")
+          base_layer: $("#" + id_prefix + "base_layer"),
+          flash: el.find(".nlflash")
         };
         return el;
       };
@@ -197,7 +198,8 @@
         this.fields.free.change(updateFields);
         this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
-          return _this.updateFields();
+          _this.updateFields();
+          return _this.flash('View Saved...');
         });
         return this.nlfeatures.map.events.on({
           changebaselayer: updateFields
@@ -276,6 +278,16 @@
         if (base_layer != null) this.fields.base_layer.val(base_layer);
         free = this.fields.free.val();
         return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "/" + base_layer + "\n" + free);
+      };
+
+      EditWidget.prototype.flash = function(msg, delay) {
+        var _this = this;
+        if (delay == null) delay = 5000;
+        return this.fields.flash.html(msg).fadeIn('slow', function() {
+          return setTimeout(function() {
+            return _this.fields.flash.fadeOut('slow');
+          }, delay);
+        });
       };
 
       return EditWidget;
