@@ -170,9 +170,13 @@ class NeatlineFeaturesPlugin
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         queue_js('libraries/openlayers/OpenLayers.min');
 
-        queue_js('nlfeatures');
-        queue_js('editor/edit_features');
-        queue_js('featureswidget');
+        if (getenv('ENVIRONMENT') == 'development') {
+            queue_js('nlfeatures');
+            queue_js('editor/edit_features');
+            queue_js('featureswidget');
+        } else {
+            queue_js('neatline-features-0.1-min');
+        }
     }
 
     /**
@@ -190,8 +194,12 @@ class NeatlineFeaturesPlugin
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         queue_js('libraries/openlayers/OpenLayers.min');
 
-        queue_js('nlfeatures');
-        queue_js('featureswidget');
+        if (getenv('ENVIRONMENT') == 'development') {
+            queue_js('nlfeatures');
+            queue_js('featureswidget');
+        } else {
+            queue_js('neatline-features-0.1.min');
+        }
     }
 
     /**
