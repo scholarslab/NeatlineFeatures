@@ -3,7 +3,6 @@ fs = require 'fs'
 util = require 'util'
 
 files = [
-  './views/shared/javascripts/libraries/openlayers/OpenLayers.min.js'
   './views/shared/javascripts/nlfeatures.js'
   './views/admin/javascripts/editor/edit_features.js'
   './views/shared/javascripts/featureswidget.js'
@@ -11,7 +10,7 @@ files = [
 
 version = '0.1'
 
-builddir = './build/'
+builddir = './views/shared/javascripts'
 targetfile = "neatline-features-#{version}"
 
 task 'build:browser', 'Compile and minify for use in browser', ->
@@ -36,7 +35,7 @@ task 'build:browser', 'Compile and minify for use in browser', ->
         fs.writeFile "#{builddir}/#{targetfile}.js", code, 'utf8', (err) ->
           console.log err if err
           try
-            util.log "Creating #{builddir}/#{targetfile}.min.js"
+            util.log "Creating #{builddir}/#{targetfile}-min.js"
             {parser, uglify} = require 'uglify-js'
             ast = parser.parse code
             code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle ast, extra: yes
