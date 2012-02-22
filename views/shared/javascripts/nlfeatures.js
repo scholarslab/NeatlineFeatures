@@ -191,15 +191,23 @@
             var proj = (this.options.map.epsg !== undefined) ?
                        this.options.map.epsg[0] :
                        'EPSG:4326';
+            var controls = [
+                new OpenLayers.Control.Attribution(),
+                new OpenLayers.Control.Navigation(),
+                new OpenLayers.Control.PanZoomBar(),
+                new OpenLayers.Control.ScaleLine()
+            ];
+            if (this.options.mode === 'edit') {
+                controls = controls.concat(
+                    [
+                        new OpenLayers.Control.MousePosition(),
+                        new OpenLayers.Control.LayerSwitcher()
+                    ]
+                );
+            }
+
             var options = {
-                controls: [
-                  new OpenLayers.Control.PanZoomBar(),
-                  new OpenLayers.Control.Permalink('permalink'),
-                  new OpenLayers.Control.MousePosition(),
-                  new OpenLayers.Control.LayerSwitcher(),
-                  new OpenLayers.Control.Navigation(),
-                  new OpenLayers.Control.ScaleLine()
-                ],
+                controls: controls,
                 maxExtent: bounds,
                 maxResolution: 'auto',
                 projection: proj,
@@ -344,7 +352,9 @@
             this._resetData();
 
             this._buildVectorLayers(data);
-            this._addClickControls();
+            if (this.options.mode === 'edit') {
+                this._addClickControls();
+            }
         },
 
         /*
