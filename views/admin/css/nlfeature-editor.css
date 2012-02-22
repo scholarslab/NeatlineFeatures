@@ -35,6 +35,7 @@
 }
 
 .nlfeatures .geo-edit {
+    cursor: pointer;
     z-index: 999;
     position: absolute;
     padding: 4px 5px !important;
