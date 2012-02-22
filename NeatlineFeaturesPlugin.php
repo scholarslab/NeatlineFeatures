@@ -198,7 +198,7 @@ class NeatlineFeaturesPlugin
             queue_js('nlfeatures');
             queue_js('featureswidget');
         } else {
-            queue_js('neatline-features-0.1.min');
+            queue_js('neatline-features-0.1-min');
         }
     }
 
