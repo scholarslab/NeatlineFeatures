@@ -164,7 +164,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array()
         );
-        $this->assertFalse($this->_cutil->isHtml());
+        $this->assertFalse((bool)$this->_cutil->isHtml());
     }
 
     /**
@@ -224,7 +224,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array()
         );
-        $this->assertFalse($this->_cutil->isMap());
+        $this->assertFalse((bool)$this->_cutil->isMap());
     }
 
     /**
@@ -275,7 +275,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             "Elements[{$this->_subject->id}[0]", 'Subject', array(),
             $this->_item, $this->_subject
         );
-        $this->assertFalse($sutil->isMap());
+        $this->assertFalse((bool)$sutil->isMap());
     }
 
     /**

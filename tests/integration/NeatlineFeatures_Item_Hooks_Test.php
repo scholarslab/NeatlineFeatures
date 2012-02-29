@@ -59,10 +59,10 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $this->toDelete($item);
 
         $text = $this->addElementText($item, $this->_title,
-            '<b>testInsertHook</b>', TRUE);
+            '<b>testInsertHook</b>', 1);
         $this->toDelete($text);
         $text = $this->addElementText($item, $this->_coverage,
-            "WKT: POINT(123, 456)\n\nSomthing", FALSE);
+            "WKT: POINT(123, 456)\n\nSomthing", 0);
         $this->toDelete($text);
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
@@ -100,10 +100,10 @@ class NeatlineFeatures_Item_Hooks_Test extends NeatlineFeatures_Test
         $item->save();
 
         $text = $this->addElementText($item, $this->_title,
-            '<b>testDeleteHook</b>', TRUE);
+            '<b>testDeleteHook</b>', 1);
         $this->toDelete($text);
         $text = $this->addElementText($item, $this->_coverage,
-            "WKT: POINT(123, 456)\n\nSomthing", FALSE);
+            "WKT: POINT(123, 456)\n\nSomthing", 0);
         $this->toDelete($text);
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(

@@ -35,7 +35,7 @@ class NeatlineFeatures_Functions
      **/
     public static function isWkt($maybeWkt)
     {
-        $isWkt       = FALSE;
+        $isWkt       = 0;
         $wktFeatures = array(
             'POINT',
             'LINESTRING',

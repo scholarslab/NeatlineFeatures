@@ -38,7 +38,7 @@ class NeatlineFeature_Test extends NeatlineFeatures_Test
             )
         );
         $this->_coverage_text = $this->addElementText(
-            $this->_item, $this->_coverage, $text, FALSE
+            $this->_item, $this->_coverage, $text, 0
         );
         $this->toDelete($this->_coverage_text);
 

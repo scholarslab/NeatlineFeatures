@@ -50,6 +50,7 @@ Feature: Test Coverage Data
     And I click "Use Map" checkbox in "#Elements-38-0-widget"
     And I draw a line on "div#Elements-38-0-map.olMap"
     And I click "add_element_38"
+    And I wait 15 seconds
     And I enter "UVa" into "Elements-38-1-free"
     And I click on "Add Item"
     And I click "Test Iterate Mixed Feature Coverages"

@@ -133,7 +133,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->toDelete($this->_item);
 
         $t1 = $this->addElementText($this->_item, $this->_title, '<b>A Title</b>',
-            TRUE);
+            1);
         $t2 = $this->addElementText($this->_item, $this->_subject, 'Subject');
         $this->toDelete($t1);
         $this->toDelete($t2);
@@ -190,7 +190,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
      **/
     public function test()
     {
-        $this->assertTrue(TRUE);
+        $this->assertTrue((bool)1);
     }
     // }}}
 
@@ -206,7 +206,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
      * @return ElementText
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    protected function addElementText($item, $element, $text, $html=FALSE)
+    protected function addElementText($item, $element, $text, $html=0)
     {
         $etext = new ElementText;
 
@@ -230,7 +230,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     protected function setupCoverageData(
-        $item, $text, $html=FALSE, $map=TRUE, $append=FALSE
+        $item, $text, $html=0, $map=1, $append=0
     ) {
         $etext = $this->addElementText($item, $this->_coverage, $text, $html);
         $this->toDelete($etext);

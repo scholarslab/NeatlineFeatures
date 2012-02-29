@@ -116,7 +116,7 @@ class NeatlineFeaturesPlugin
                 item_id         INT(10)        UNSIGNED NOT NULL,
                 element_text_id INT(10)        UNSIGNED NOT NULL,
                 is_map          TINYINT(1)     NOT NULL DEFAULT 0,
-                wkt             TEXT           NOT NULL DEFAULT '',
+                wkt             TEXT           ,
                 zoom            SMALLINT(2)    NOT NULL DEFAULT 3,
                 center_lon      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
                 center_lat      DECIMAL(12, 5) NOT NULL DEFAULT 0.0,
@@ -164,14 +164,19 @@ class NeatlineFeaturesPlugin
     {
         queue_css('nlfeatures');
         queue_css('nlfeature-editor');
+        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
-        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
+        queue_js('libraries/openlayers/OpenLayers.min');
 
-        queue_js('nlfeatures');
-        queue_js('editor/edit_features');
-        queue_js('featureswidget');
+        if (getenv('ENVIRONMENT') == 'development') {
+            queue_js('nlfeatures');
+            queue_js('editor/edit_features');
+            queue_js('featureswidget');
+        } else {
+            queue_js('neatline-features-0.1-min');
+        }
     }
 
     /**
@@ -183,13 +188,18 @@ class NeatlineFeaturesPlugin
     public function publicThemeHeader()
     {
         queue_css('nlfeatures');
+        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
-        $this->_queueJsUri('http://openlayers.org/api/OpenLayers.js');
+        queue_js('libraries/openlayers/OpenLayers.min');
 
-        queue_js('nlfeatures');
-        queue_js('featureswidget');
+        if (getenv('ENVIRONMENT') == 'development') {
+            queue_js('nlfeatures');
+            queue_js('featureswidget');
+        } else {
+            queue_js('neatline-features-0.1-min');
+        }
     }
 
     /**

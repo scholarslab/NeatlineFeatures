@@ -135,7 +135,9 @@
       map_container = $ """
         <div class="nlfeatures map-container">
           <div id="#{id_prefix}map"></div>
-          <div class='nlfeatures-map-tools'></div>
+          <div class='nlfeatures-map-tools'>
+            <div class='nlflash'></div>
+          </div>
         </div>
         """
       text_container = $ """
@@ -178,6 +180,7 @@
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
         base_layer     : $ "##{id_prefix}base_layer"
+        flash          : el.find ".nlflash"
 
       el
 
@@ -232,6 +235,7 @@
         .bind('saveview.nlfeatures'    , =>
           @nlfeatures.saveViewport()
           this.updateFields()
+          this.flash 'View Saved...'
         )
       @nlfeatures.map.events.on(
         changebaselayer: updateFields
@@ -242,8 +246,22 @@
     usesHtml: -> @fields.html.is  ':checked'
     usesMap : -> @fields.mapon.is ':checked'
 
-    showMap : -> @fields.map_container.show()
-    hideMap : -> @fields.map_container.hide()
+    showMap : ->
+      tools = @fields.map.children 'button'
+      tools.hide(
+        'normal',
+        => @fields.map_container.slideDown(
+          'normal',
+          -> tools.fadeIn()
+        )
+      )
+
+    hideMap : ->
+      tools = @fields.map.children 'button'
+      tools.fadeOut(
+        'normal',
+        => @fields.map_container.slideUp()
+      )
 
     # This handles when the Use Map checkbox is clicked.
     _onUseMap : ->
@@ -287,6 +305,19 @@
       free = @fields.free.val()
       @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}/#{base_layer}\n#{free}"
 
+    # This sets the value of the flash div and fades it in for a short time (5
+    # seconds, by default).
+    flash: (msg, delay=5000) ->
+      @fields.flash
+        .html(msg)
+        .fadeIn(
+          'slow',
+          =>
+            setTimeout(
+              => @fields.flash.fadeOut 'slow',
+              delay
+            )
+        )
 
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',

@@ -51,6 +51,7 @@ Feature: Display Multiple Individual Coverages
     And I click "Use Map" checkbox in "#Elements-38-0-widget"
     And I draw a point on "div#Elements-38-0-map.olMap"
     And I click on "add_element_38"
+    And I wait 1 seconds
     And I enter "UVa" into "Elements-38-1-free"
     And I click on "Add Item"
     And I click "Iterate Mixed Feature Coverages"
