@@ -18,6 +18,7 @@ Feature: Delete Features from an Item
     And I see 2 ".input-block" in "#element-38"
     And I see 2 "input.remove-element" in "#element-38"
 
+  @selenium
   Scenario: Remove First Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

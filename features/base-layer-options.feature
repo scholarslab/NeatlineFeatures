@@ -11,6 +11,7 @@ Feature: Users can select a base layer from a set of options
     And I switch to the "Google Physical" base layer on "#Elements-38-0-map"
     Then I see "#Elements-38-0-base_layer" contains "gphy"
 
+  @selenium
   Scenario: Selected Base Layer should persist
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -23,6 +24,7 @@ Feature: Users can select a base layer from a set of options
     When I click "Edit this Item"
     Then I see "#Elements-38-0-base_layer" contains "gphy"
 
+  @selenium
   Scenario: Selected Base Layer should be visible on display
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

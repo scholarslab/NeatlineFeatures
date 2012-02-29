@@ -22,7 +22,7 @@ Feature: Display Multiple Coverages
     Then I should see text "Charlottesville, VA; UVa" in "#dublin-core-coverage"
     But I should not see text "null" in "#dublin-core-coverage"
 
-  @file_fixture
+  @file_fixture @selenium
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"
@@ -41,7 +41,7 @@ Feature: Display Multiple Coverages
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
     But I should not see text "null" in "#dublin-core-coverage .nlfeatures"
 
-  @file_fixture
+  @file_fixture @selenium
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"

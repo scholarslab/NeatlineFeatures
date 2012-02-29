@@ -14,6 +14,7 @@ Feature: Set Viewport
     Then I should see text "View Saved" in "#element-38 .nlflash"
     And the viewport is defined in "Elements-38-0"
 
+  @selenium
   Scenario: Viewport Settings Persist
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
