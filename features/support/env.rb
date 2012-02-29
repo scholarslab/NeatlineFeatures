@@ -21,7 +21,6 @@ Capybara.default_driver = :webkit
 module NeatlineFeatures
   class << self
     attr_accessor :file_fixtures
-    attr_accessor :driver
   end
 end
 

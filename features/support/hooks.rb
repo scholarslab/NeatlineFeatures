@@ -14,13 +14,3 @@ Around('@file_fixture') do |scenario, block|
   end
 end
 
-Around('@selenium') do |scenario, block|
-  NeatlineFeatures.driver = Capybara.default_driver
-  Capybara.default_driver = :selenium
-  begin
-    block.call
-  ensure
-    Capybara.default_driver = NeatlineFeatures.driver
-  end
-end
-
