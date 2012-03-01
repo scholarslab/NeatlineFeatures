@@ -31,6 +31,7 @@ Feature: Delete Features from an Item
     And I see "#Elements-38-1-free" contains "2"
     But I should not see "#remove_element_38" in "#element-38"
 
+  @selenium
   Scenario: Remove Second Coverage
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

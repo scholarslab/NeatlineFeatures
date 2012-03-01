@@ -8,6 +8,7 @@ Feature: Bug Fix Tests
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
     # This is to work around the setTimeout described here https://github.com/scholarslab/NeatlineFeatures/blob/ea055c7f4900310ed79c20ea7914f96bd795ac9a/views/admin/coverage.php#L56
+    And I wait 30 seconds
     Then I should see "#Elements-38-0-free" in "#element-38"
     But I should not see ".mceEditor" in "#element-38"
 
@@ -39,7 +40,7 @@ Feature: Bug Fix Tests
     And I click on "add_element_38"
     And I click "Use Map" checkbox in "#Elements-38-1-widget"
     And I should see "#Elements-38-1-widget div.olMap"
-    And I wait 1 seconds
-    Then I should see XPath ".//div[@id='Elements-38-0-widget']//button[@id='Elements-38-0-drag-button']"
-    And I should see XPath ".//div[@id='Elements-38-1-widget']//button[@id='Elements-38-1-drag-button']"
+    Then I should see "#Elements-38-0-drag-button"
+    And I wait 5 seconds
+    And I should see "#Elements-38-1-drag-button"
 

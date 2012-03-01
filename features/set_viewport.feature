@@ -10,6 +10,7 @@ Feature: Set Viewport
     And I click "Use Map" checkbox in "#element-38"
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
     And I zoom "#Elements-38-0-map" to "6"
+    And I wait 5 seconds
     When I click "Save View" in "#element-38"
     Then I should see text "View Saved" in "#element-38 .nlflash"
     And the viewport is defined in "Elements-38-0"
