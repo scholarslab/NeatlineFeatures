@@ -4,6 +4,7 @@ Feature: Users can select a base layer from a set of options
   I want to be able to select a base layer from a set of options
   So that I have more control over the information and look of the feature map
 
+  @selenium
   Scenario: Select a Base Layer
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

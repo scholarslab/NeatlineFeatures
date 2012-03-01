@@ -11,6 +11,7 @@ Feature: Draw Features on a Map
   Scenario: Coverage has no map displayed by default
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
+    And I wait 5 seconds
     Then I should not see a map in "#element-38" 
 
   Scenario: Coverage has a "Use Map" checkbox
