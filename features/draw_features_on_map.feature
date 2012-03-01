@@ -11,6 +11,7 @@ Feature: Draw Features on a Map
   Scenario: Coverage has no map displayed by default
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
+    And I wait 5 seconds
     Then I should not see a map in "#element-38" 
 
   Scenario: Coverage has a "Use Map" checkbox
@@ -27,6 +28,7 @@ Feature: Draw Features on a Map
     And I should see "#Elements-38-0-free"
     But I should not see "#Elements-38-0-text"
 
+  @selenium
   Scenario: Draw Point on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -34,6 +36,7 @@ Feature: Draw Features on a Map
     When I draw a point on "div.olMap"
     Then a point is defined in "#Elements-38-0-wkt"
 
+  @selenium
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -41,6 +44,7 @@ Feature: Draw Features on a Map
     When I draw a line on "div.olMap"
     Then a line is defined in "#Elements-38-0-wkt"
 
+  @selenium
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -55,6 +59,7 @@ Feature: Draw Features on a Map
     And the map in "#dublin-core-coverage" should have a point feature
     And the map in "#dublin-core-coverage" should have a line feature
 
+  @selenium
   Scenario: 'Use Map' True should Persist
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -80,6 +85,7 @@ Feature: Draw Features on a Map
     Then "Elements-38-0-mapon" should not be checked
     And I should not see a map in "#element-38"
 
+  @selenium
   Scenario: Free Text should not Contain WKT
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

@@ -4,6 +4,7 @@ Feature: Display Multimodal Coverages
   I want to be able to have geospatial and textual data in the same coverage field
   So that visitors can see all coverage data.
 
+  @selenium
   Scenario: Multimodal Coverages
     Given I am logged into the admin console
     And I click "Add a new item to your archive"

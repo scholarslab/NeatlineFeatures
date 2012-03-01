@@ -1,0 +1,3 @@
+---
+default: --format pretty --format rerun --out rerun.txt
+rerun: '@rerun-orig.txt --format pretty --format rerun --out rerun.txt'

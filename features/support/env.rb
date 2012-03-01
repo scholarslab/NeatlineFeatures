@@ -1,17 +1,17 @@
 
 require 'fileutils'
-require 'selenium-webdriver'
 require 'capybara'
 require 'capybara/cucumber'
 require 'capybara/dsl'
+require 'capybara/webkit'
 require 'rspec/expectations'
 require 'geo_magic/remote'
 
 Capybara.app_host = 'http://features.dev'
 Capybara.run_server = false
-Capybara.default_wait_time = 30
+Capybara.default_wait_time = 60
 
-Capybara.default_driver = :selenium
+Capybara.default_driver = :webkit
 
 # browser = Selenium::WebDriver.for :firefox
 
