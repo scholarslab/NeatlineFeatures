@@ -3,12 +3,28 @@ require 'cucumber/rake/task'
 
 task :default => [
   'php:unit',
-  'jasmine:ci',
+  # 'jasmine:ci',
   :cucumber,
 ]
 
-Cucumber::Rake::Task.new do |t|
-  t.cucumber_opts = %w{--format pretty}
+namespace :cucumber do
+  Cucumber::Rake::Task.new(:default, 'Run cucumber tests') do |t|
+    t.profile = 'default'
+  end
+
+  Cucumber::Rake::Task.new(:rerun, 'Rerun failed cucumber tests.') do |t|
+    File.delete('rerun-orig.txt') if File.exist?('rerun-orig.txt')
+    if File.exist?('rerun.txt')
+      File.rename('rerun.txt', 'rerun-orig.txt')
+    else
+      File.open('rerun-orig.txt', 'w+').close
+    end
+    t.profile = 'rerun'
+  end
+
+  Cucumber::Rake::Task.new(:current, 'Run cucumber scenarios tagged @current.') do |t|
+    t.cucumber_opts = %w{--profile default --tag @current}
+  end
 end
 
 # require '/Users/err8n/p/zayin/lib/zayin/rake/vagrant/php'
@@ -95,7 +111,10 @@ end
 
 namespace :watch do
   desc 'This runs watch:sass, watch:coffee, and watch:jasmine in parallel.'
-  multitask :all => ['watch:sass', 'watch:coffee', 'watch:jasmine']
+  multitask :all => ['watch:sass',
+                     'watch:coffee',
+#                     'watch:jasmine'
+  ]
 
   desc 'This watches the CSS files.'
   task :sass do
@@ -107,18 +126,18 @@ namespace :watch do
     sh %{coffee --watch --compile views/admin/javascripts/ views/shared/javascripts/}
   end
 
-  desc 'This watches the Jasmine spec Coffee Script files.'
-  task :jasmine do
-    sh %{coffee --watch --compile spec/javascripts/}
-  end
+#  desc 'This watches the Jasmine spec Coffee Script files.'
+#  task :jasmine do
+#    sh %{coffee --watch --compile spec/javascripts/}
+#  end
 end
 
 
-begin
-  require 'jasmine'
-  load 'jasmine/tasks/jasmine.rake'
-rescue LoadError
-  task :jasmine do
-    abort "Jasmine is not available. In order to run jasmine, you must: (sudo) gem install jasmine"
-  end
-end
+# begin
+#   require 'jasmine'
+#   load 'jasmine/tasks/jasmine.rake'
+# rescue LoadError
+#   task :jasmine do
+#     abort "Jasmine is not available. In order to run jasmine, you must: (sudo) gem install jasmine"
+#   end
+# end
