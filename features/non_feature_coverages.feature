@@ -23,6 +23,7 @@ Feature: Non-Feature Coverages
     And I click on "Add Item"
     And I click on "Default Raw Tab"
     When I click on "Edit this Item"
+    And I wait 5 seconds
     Then I should see "#Elements-38-0-free"
     But I should not see a map in "#element-38"
 
