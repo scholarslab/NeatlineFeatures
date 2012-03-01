@@ -6,7 +6,7 @@ Around('@file_fixture') do |scenario, block|
   ensure
     NeatlineFeatures.file_fixtures.each do |filename|
       if File::exists?(filename)
-        puts "rm #{filename}"
+        # puts "rm #{filename}"
         File::delete(filename)
       end
     end
