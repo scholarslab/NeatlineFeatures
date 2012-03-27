@@ -167,8 +167,9 @@ class NeatlineFeaturesPlugin
         queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
-        $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
+        $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         queue_js('libraries/openlayers/OpenLayers.min');
+        queue_js('libraries/tile.stamen');
 
         if (getenv('ENVIRONMENT') == 'development') {
             queue_js('nlfeatures');
@@ -191,8 +192,9 @@ class NeatlineFeaturesPlugin
         queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
-        $this->_queueJsuri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
+        $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
         queue_js('libraries/openlayers/OpenLayers.min');
+        queue_js('libraries/tile.stamen');
 
         if (getenv('ENVIRONMENT') == 'development') {
             queue_js('nlfeatures');
