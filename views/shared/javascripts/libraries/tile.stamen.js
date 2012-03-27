@@ -78,7 +78,7 @@ if (typeof OpenLayers === "object") {
     // based on http://www.bostongis.com/PrinterFriendly.aspx?content_name=using_custom_osm_tiles
     OpenLayers.Layer.Stamen = OpenLayers.Class(OpenLayers.Layer.OSM, {
         initialize: function(name, options) {
-            var provider = getProvider(name),
+            var provider = getProvider(options.provider || name),
                 url = provider.url,
                 hosts = [];
             if (url.indexOf("{S}") > -1) {
