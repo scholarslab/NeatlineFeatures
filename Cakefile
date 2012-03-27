@@ -1,6 +1,11 @@
 
-fs = require 'fs'
-util = require 'util'
+# This requires
+# > npm install iniparser
+#
+
+fs        = require 'fs'
+util      = require 'util'
+iniparser = require 'iniparser'
 
 files = [
   './views/shared/javascripts/nlfeatures.js'
@@ -8,15 +13,18 @@ files = [
   './views/shared/javascripts/featureswidget.js'
 ]
 
-version = '0.1'
-
-builddir = './views/shared/javascripts'
-targetfile = "neatline-features-#{version}"
+pluginini = './plugin.ini'
+builddir  = './views/shared/javascripts'
 
 task 'build:browser', 'Compile and minify for use in browser', ->
+  util.log "Reading plugin INI file #{pluginini}"
+  config     = iniparser.parseSync pluginini
+  version    = config.info.version.replace /['"]/g, ''
+  targetfile = "neatline-features-#{version}"
+
   util.log "Creating browser file for Neatline Features version #{version}."
-  contents = new Array
   remaining = files.length
+  contents = new Array remaining
   for file, index in files
     do (file, index) ->
       fs.readFile file, 'utf8', (err, cnt) ->
@@ -30,16 +38,15 @@ task 'build:browser', 'Compile and minify for use in browser', ->
     util.log "Creating #{builddir}/#{targetfile}.js"
 
     code = contents.join "\n\n"
-    fs.unlink builddir, ->
-      fs.mkdir builddir, 0755, ->
-        fs.writeFile "#{builddir}/#{targetfile}.js", code, 'utf8', (err) ->
-          console.log err if err
-          try
-            util.log "Creating #{builddir}/#{targetfile}-min.js"
-            {parser, uglify} = require 'uglify-js'
-            ast = parser.parse code
-            code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle ast, extra: yes
-            fs.writeFile "#{builddir}/#{targetfile}-min.js", code
+    fs.mkdir builddir, 0755, ->
+      fs.writeFile "#{builddir}/#{targetfile}.js", code, 'utf8', (err) ->
+        console.log err if err
+        try
+          util.log "Creating #{builddir}/#{targetfile}-min.js"
+          {parser, uglify} = require 'uglify-js'
+          ast = parser.parse code
+          code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle ast, extra: yes
+          fs.writeFile "#{builddir}/#{targetfile}-min.js", code
 
 task 'build', 'Compile', ->
   invoke 'build:browser'
