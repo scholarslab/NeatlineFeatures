@@ -155,6 +155,18 @@ class NeatlineFeaturesPlugin
     }
 
     /**
+     * This returns the name of the minified JS file for passing to queue_js.
+     *
+     * @return string
+     * @author Eric Rochester <erochest@virginia.edu>
+     **/
+    private function _nlMinJs()
+    {
+        $version = get_plugin_ini('NeatlineFeatures', 'version');
+        return "neatline-features-{$version}-min";
+    }
+
+    /**
      * This queues javascript and CSS for the admin header.
      *
      * @return void
@@ -176,7 +188,7 @@ class NeatlineFeaturesPlugin
             queue_js('editor/edit_features');
             queue_js('featureswidget');
         } else {
-            queue_js('neatline-features-0.1-min');
+            queue_js($this->_nlMinJs());
         }
     }
 
@@ -200,7 +212,7 @@ class NeatlineFeaturesPlugin
             queue_js('nlfeatures');
             queue_js('featureswidget');
         } else {
-            queue_js('neatline-features-0.1-min');
+            queue_js($this->_nlMinJs());
         }
     }
 
