@@ -32,6 +32,7 @@ Feature: Bug Fix Tests
     # Then I should see ".mceEditor" in "#element-38"
     # And "Elements-38-0-html" should be checked
 
+  @selenium
   Scenario: Editing buttons should have unique IDs.
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
@@ -43,4 +44,20 @@ Feature: Bug Fix Tests
     Then I should see "#Elements-38-0-drag-button"
     And I wait 5 seconds
     And I should see "#Elements-38-1-drag-button"
+
+  @current
+  @selenium
+  Scenario: Viewports sufficiently west should not overflow
+    Given I am logged into the admin console
+    And I click "Add a new item to your archive"
+    And I enter "Cucumber: Viewport overflow" for the "Elements-50-0-text"
+    And I click "Use Map" checkbox in "#Elements-38-0-widget"
+    And I move "#Elements-38-0-map" to "-111.883333, 40.75"
+    And I zoom "#Elements-38-0-map" to "10"
+    And I draw a point on "div.olMap"
+    And I click "Save View" in "#element-38"
+    And I click on "Add Item"
+    When I click "Viewport overflow"
+    Then "#dublin-core-coverage .map" should center on "-111.8833, 40.75"
+
 
