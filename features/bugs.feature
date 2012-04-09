@@ -45,7 +45,6 @@ Feature: Bug Fix Tests
     And I wait 5 seconds
     And I should see "#Elements-38-1-drag-button"
 
-  @current
   @selenium
   Scenario: Viewports sufficiently west should not overflow
     Given I am logged into the admin console
