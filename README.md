@@ -1,23 +1,76 @@
 
-# Neatline Features
+# NeatlineFeatures
 
-Neatline Features offers the ability to encode and edit geospatial shape
-information for Omeka items using a pleasant graphical interface.
+NeatlineFeatures offers the ability to graphically encode and edit geospatial
+shape metadata for Omeka items. This is stored in the coverage field alongside
+the textual coverage information, allowing you to add rich, multi-faceted
+geospatial metadata.
 
 ## Installation
 
-Installing this plugin is as easy as 1, 2, 3. Here's how:
+* Upload the ‘NeatlineFeatures’ plugin directory to your Omeka
+  installation’s `plugin` directory. See [Installing a
+  Plugin][installing].
+* Activate the plugin from the admin → Settings → Plugins page.
 
-1.  [Download](https://github.com/scholarslab/NeatlineFeatures/downloads) the
-    latest version of this code and drop it into `omeka/plugins`.
-2.  Once the `NeatlineFeatures` directory is in place, you'll need to log into
-    the Omeka admin console and install it on the plugins page.
-3.  Umm. That's it. Look at the *Coverage* field of any item, and you can start
-    adding spatial annotations.
+## Usage
 
-## Issues and Feature Requests
+Once installed, NeatlineFeatures adds an option to the Coverage field for the
+Dublin Core Element Set named "Use Map."
 
-If you find a bug or want to request a feature, please do so on the Github
-[issue tracker for Neatline
-Features](https://github.com/scholarslab/NeatlineFeatures/issues).
+### Add Coverage
+
+Go to the Item Edit view for the item you want to associate a geospatial
+feature with. Scroll to the Coverage field and select "Use Map"
+
+<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_1.png"><img class="alignnone size-full wp-image-430" title="features_1" src="http://23.21.98.97/wp-content/uploads/2011/05/features_1.png" alt="" width="620" height="277" /></a>
+
+This will reveal a map with some basic editing tools. If your browser supports
+this and if you give this page permission to know where you are, the map will
+also center on your current location.
+
+<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png"><img class="alignnone size-full wp-image-431" title="features_2" src="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png" alt="" width="627" height="536" /></a>
+
+Simply zoom to the location you want to draw a feature on, select the feature
+(polygon, point, or line), and draw. (//TODO: describe the drawing tools)
+
+<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png"><img class="alignnone size-full wp-image-432" title="features_3" src="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png" alt="" width="622" height="535" /></a>
+
+To save the zoom level and map center point, click on the Save View button.
+
+NeatlineFeatures also allows you to use a selection of base layers on your map.
+If you want to select a different base layer, click on the stack of papers in
+the upper-right corner of the coverage map and select from the list.
+
+<a href="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png"><img class="alignnone size-full wp-image-474" title="NeatlineFeatures select base layer" src="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png" alt="" width="640" height="548" /></a>
+
+### Textual Information
+
+The feature metadata is in addition to the standard coverage field. You can
+still enter text and HTML into the coverage field.
+
+### View Coverage
+
+Once you have drawn a coverage on an item, an interactive map viewer will
+appear on the item view with the coverage you drew.
+
+<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_4.png"><img class="alignnone size-full wp-image-433" title="features_4" src="http://23.21.98.97/wp-content/uploads/2011/05/features_4.png" alt="" width="765" height="545" /></a>
+
+Any text entered in the coverage field will display under the map.
+
+**Note**: If you are a theme developer, be sure to include the 
+[`public_append_to_items_show()`][public_append_to_items_show] hook where you
+want the map to appear in your theme.
+
+## Support
+
+We use an [issue tracker][issues] for feedback on issues and requested
+improvements. If you have general questions, you may also post them to
+the [Omeka Forums][forums]  or the [Omeka Developers Group][groups].
+
+[installing]: http://omeka.org/codex/Installing_a_Plugin "Installing a Plugin"
+[public_append_to_items_show]: http://omeka.org/codex/Hooks/public_append_to_items_show "public_append_to_items_show"
+[issues]: https://github.com/scholarslab/NeatlineTime/issues/ "issue tracker"
+[forums]: http://omeka.org/forums/
+[groups]: https://groups.google.com/forum/?fromgroups#!forum/omeka-dev
 
