@@ -481,8 +481,6 @@
             this._removeControls();
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-                box: true,
-
                 onSelect: function(feature) {
                     // Store the feature in the tracker.
                     self._clickedFeature = feature;
