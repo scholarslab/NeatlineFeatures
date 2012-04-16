@@ -25,7 +25,10 @@
             name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
                 styles: {
-                    point_graphic: '<?php echo img('pushpin-1.png'); ?>'
+                    point_graphic: {
+                        normal  : '<?php echo img('pushpin-1.png'); ?>',
+                        selected: '<?php echo img('pushpin-2.png'); ?>'
+                        }
                     }
                 },
             values: {

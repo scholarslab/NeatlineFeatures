@@ -83,7 +83,10 @@
                 default_color: '#ffb80e',
                 select_point_radius: 10,
                 select_stroke_color: '#ea3a3a',
-                point_graphic: undefined
+                point_graphic: {
+                    normal   : undefined,
+                    selected : undefined
+                }
             },
 
             // These are added to document options for the map.
@@ -1009,7 +1012,7 @@
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: fillColor,
                     pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic,
+                    externalGraphic: this.options.styles.point_graphic.normal,
                     strokeWidth: 1
                 }),
                 'select': new OpenLayers.Style({
@@ -1017,6 +1020,7 @@
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: this.options.styles.select_stroke_color,
                     pointRadius: this.options.styles.select_point_radius,
+                    externalGraphic: this.options.styles.point_graphic.selected,
                     strokeWidth: 2
                 })
             });
