@@ -1008,20 +1008,14 @@
         _getStyleMap: function(fillColor) {
             return new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
-                    fillColor: fillColor,
-                    fillOpacity: this.options.styles.default_opacity,
-                    strokeColor: fillColor,
-                    pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic.normal,
-                    strokeWidth: 1
+                    graphicWidth: 15,
+                    graphicHeight: 48,
+                    externalGraphic: this.options.styles.point_graphic.normal
                 }),
                 'select': new OpenLayers.Style({
-                    fillColor: fillColor,
-                    fillOpacity: this.options.styles.default_opacity,
-                    strokeColor: this.options.styles.select_stroke_color,
-                    pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic.selected,
-                    strokeWidth: 2
+                    graphicWidth: 15,
+                    graphicHeight: 48,
+                    externalGraphic: this.options.styles.point_graphic.selected
                 })
             });
         },
