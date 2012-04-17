@@ -25,7 +25,7 @@
             name_prefix: <?php echo json_encode($inputNameStem) ?>,
             map_options: {
                 styles: {
-                    default_opacity: 0.8,
+                    default_opacity: 0.4,
                     select_point_radius: 20,
                     point_graphic: {
                         normal  : '<?php echo img('pushpin-1.png'); ?>',

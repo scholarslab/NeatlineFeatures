@@ -1021,14 +1021,24 @@
         _getStyleMap: function(fillColor) {
             return new OpenLayers.StyleMap({
                 'default': new OpenLayers.Style({
-                    graphicWidth: 15,
-                    graphicHeight: 48,
-                    externalGraphic: this.options.styles.point_graphic.normal
+                    fillColor: fillColor,
+                    fillOpacity: this.options.styles.default_opacity,
+                    strokeColor: fillColor,
+                    strokeWidth: 1,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.normal
                 }),
                 'select': new OpenLayers.Style({
-                    graphicWidth: 15,
-                    graphicHeight: 48,
-                    externalGraphic: this.options.styles.point_graphic.selected
+                    fillColor: fillColor,
+                    fillOpacity: this.options.styles.default_opacity,
+                    strokeColor: this.options.styles.select_stroke_color,
+                    strokeWidth: 2,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.selected
                 })
             });
         },
