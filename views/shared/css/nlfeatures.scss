@@ -125,6 +125,21 @@ $border2: #FFF;
     .primary:hover {
         color: #fff;
     }
+    .disabled {
+        background-color: #cccccc;
+        background-repeat: repeat-x;
+        background-image: -khtml-gradient(linear, left top, left bottom, from(#737373), to(#cccccc));
+        background-image: -moz-linear-gradient(top, #737373, #cccccc);
+        background-image: -ms-linear-gradient(top, #737373, #cccccc);
+        background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #737373), color-stop(100%, #cccccc));
+        background-image: -webkit-linear-gradient(top, #737373, #cccccc);
+        background-image: -o-linear-gradient(top, #737373, #cccccc);
+        background-image: linear-gradient(top, #737373, #cccccc);
+        color: #fff;
+        text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+        border: 1px solid #004b9a;
+        border-bottom-color: #003f81;
+    }
     label.use-mapon {
         position: relative;
         float: left;
