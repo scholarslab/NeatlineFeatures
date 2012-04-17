@@ -104,6 +104,8 @@
 
                     // If not activated, activate.
                     if (!self.dragButton.data('activated')) {
+                        self.deactivateAllButtons(); 
+
                         // Do the color change.
                         self.dragButton.addClass('primary');
 
@@ -139,6 +141,8 @@
                 'mousedown': function() {
                     // If not activated, activate.
                     if (!self.scaleButton.data('activated')) {
+                        self.deactivateAllButtons(); 
+
                         // Do the color change.
                         self.scaleButton.addClass('primary');
 
@@ -174,6 +178,8 @@
                 'mousedown': function() {
                     // If not activated, activate.
                     if (!self.rotateButton.data('activated')) {
+                        self.deactivateAllButtons(); 
+
                         // Do the color change.
                         self.rotateButton.addClass('primary');
 
