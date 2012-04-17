@@ -83,7 +83,10 @@
                 default_color: '#ffb80e',
                 select_point_radius: 10,
                 select_stroke_color: '#ea3a3a',
-                point_graphic: undefined
+                point_graphic: {
+                    normal   : undefined,
+                    selected : undefined
+                }
             },
 
             // These are added to document options for the map.
@@ -481,27 +484,40 @@
             this._removeControls();
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-                box: true,
+                hover: true,
+                highlightOnly: true,
+                clickout: true,
 
-                onSelect: function(feature) {
-                    // Store the feature in the tracker.
-                    self._clickedFeature = feature;
+                overFeature: function(feature) {
+                    // This checks for ad-hoc features created by OL for edit
+                    // handles on a real feature.
+                    if (feature.geometry.parent != null) {
+                        return;
+                    }
 
-                    // Trigger out to the deployment code.
-                    self.element.trigger('featureclick.nlfeatures', {}, {
-                        'itemId': self.layerToId[feature.layer.id]
-                    });
+                    if (self.modifyFeatures !== undefined &&
+                        self._clickedFeature != null &&
+                        feature.id !== self._clickedFeature.id) {
 
-                    if (self.modifyFeatures !== undefined) {
+                        self.clickControl.unhighlight(self._clickedFeature);
+                        self.modifyFeatures.unselectFeature(self._clickedFeature);
+                        self._clickedFeature = null;
+                    }
+
+                    if (self.modifyFeatures !== undefined &&
+                        (self._clickedFeature == null ||
+                         feature.id !== self._clickedFeature.id)) {
+
                         self.modifyFeatures.selectFeature(feature);
+                        self.clickControl.highlight(feature);
+                        self._clickedFeature = feature;
                     }
                 },
 
-                onUnselect: function(feature) {
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.unselectFeature(feature);
-                    }
+                outFeature: function(feature) {
+                    return false;
                 }
+
             });
 
             // Add and activate.
@@ -669,96 +685,96 @@
             });
             // On update.
             this.element.bind('update.nlfeatures',
-                function(event, obj) {
-                    // Default to reshape.
-                    self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+                              function(event, obj) {
+                                  // Default to reshape.
+                                  self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
-                    // Rotation.
-                    if (obj.rotate) {
-                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
-                    }
+                                  // Rotation.
+                                  if (obj.rotate) {
+                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
+                                  }
 
-                    // Resize.
-                    if (obj.scale) {
-                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
-                    }
+                                  // Resize.
+                                  if (obj.scale) {
+                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+                                  }
 
-                    // Drag.
-                    if (obj.drag) {
-                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
-                    }
+                                  // Drag.
+                                  if (obj.drag) {
+                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
+                                  }
 
-                    // If rotate or drag, pop off reshape.
-                    if (obj.drag || obj.rotate) {
-                        self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
-                    }
+                                  // If rotate or drag, pop off reshape.
+                                  if (obj.drag || obj.rotate) {
+                                      self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
+                                  }
 
-                    var feature = self.modifyFeatures.feature;
+                                  var feature = self.modifyFeatures.feature;
 
-                    // If there is a selected feature, unselect and reselect it to apply
-                    // the new configuration.
-                    if (self.exists(feature)) {
-                        self.modifyFeatures.unselectFeature(feature);
-                        self.modifyFeatures.selectFeature(feature);
-                    }
-                });
+                                  // If there is a selected feature, unselect and reselect it to apply
+                                  // the new configuration.
+                                  if (self.exists(feature)) {
+                                      self.modifyFeatures.unselectFeature(feature);
+                                      self.modifyFeatures.selectFeature(feature);
+                                  }
+                              });
 
-            this.element.bind('delete.nlfeatures',
-                function() {
-                    if (self.modifyFeatures.feature) {
-                        var feature = self.modifyFeatures.feature;
-                        self._clickedFeature = null;
-                        self.modifyFeatures.unselectFeature(feature);
-                        self._currentEditLayer.destroyFeatures([ feature ]);
-                    }
-                });
+                              this.element.bind('delete.nlfeatures',
+                                                function() {
+                                                    if (self.modifyFeatures.feature) {
+                                                        var feature = self.modifyFeatures.feature;
+                                                        self._clickedFeature = null;
+                                                        self.modifyFeatures.unselectFeature(feature);
+                                                        self._currentEditLayer.destroyFeatures([ feature ]);
+                                                    }
+                                                });
 
-            // Only do the fade if the form open does not coincide with
-            // another form close.
-            if (!immediate) {
-                // Insert the edit geometry button.
-                this.element.editfeatures('showButtons', immediate);
+                                                // Only do the fade if the form open does not coincide with
+                                                // another form close.
+                                                if (!immediate) {
+                                                    // Insert the edit geometry button.
+                                                    this.element.editfeatures('showButtons', immediate);
 
-                // Fade up the toolbar.
-                $('.' + this.options.markup.toolbar_class).animate({
-                    'opacity': 1
-                }, this.options.animation.fade_duration);
-            } else {
-                // Pop up the toolbar.
-                $('.' + this.options.markup.toolbar_class).css('opacity', 1);
-            }
+                                                    // Fade up the toolbar.
+                                                    $('.' + this.options.markup.toolbar_class).animate({
+                                                        'opacity': 1
+                                                    }, this.options.animation.fade_duration);
+                                                } else {
+                                                    // Pop up the toolbar.
+                                                    $('.' + this.options.markup.toolbar_class).css('opacity', 1);
+                                                }
 
-            // If there is an update target for raw edits, wire up the handlers
-            // here.
-            if (this.options.map.raw_update !== undefined) {
-                var update_target = this.options.map.raw_update;
-                this.element.bind({
-                    'featureadded.nlfeatures': function() {
-                        self.updateRaw();
-                    },
-                    'update.nlfeatures': function() {
-                        self.updateRaw();
-                    },
-                    'delete.nlfeatures': function() {
-                        self.updateRaw();
-                    }
-                });
-            }
+                                                // If there is an update target for raw edits, wire up the handlers
+                                                // here.
+                                                if (this.options.map.raw_update !== undefined) {
+                                                    var update_target = this.options.map.raw_update;
+                                                    this.element.bind({
+                                                        'featureadded.nlfeatures': function() {
+                                                            self.updateRaw();
+                                                        },
+                                                        'update.nlfeatures': function() {
+                                                            self.updateRaw();
+                                                        },
+                                                        'delete.nlfeatures': function() {
+                                                            self.updateRaw();
+                                                        }
+                                                    });
+                                                }
 
-            // If the last selected features is among the features in the
-            // new currentEditLayer, mark it as selected by default. Notably,
-            // this would be the case of the edit flow was triggered by a
-            // feature click in the editor.
-            var inLayer = false;
-            $.each(this._currentEditLayer.features, function(i, feature) {
-                if (feature == self._clickedFeature) {
-                    inLayer = true;
-                }
-            });
+                                                // If the last selected features is among the features in the
+                                                // new currentEditLayer, mark it as selected by default. Notably,
+                                                // this would be the case of the edit flow was triggered by a
+                                                // feature click in the editor.
+                                                var inLayer = false;
+                                                $.each(this._currentEditLayer.features, function(i, feature) {
+                                                    if (feature == self._clickedFeature) {
+                                                        inLayer = true;
+                                                    }
+                                                });
 
-            if (inLayer) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
-            }
+                                                if (inLayer) {
+                                                    this.modifyFeatures.selectFeature(this._clickedFeature);
+                                                }
         },
 
         /*
@@ -1008,16 +1024,21 @@
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: fillColor,
-                    pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic,
-                    strokeWidth: 1
+                    strokeWidth: 1,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.normal
                 }),
                 'select': new OpenLayers.Style({
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: this.options.styles.select_stroke_color,
-                    pointRadius: this.options.styles.select_point_radius,
-                    strokeWidth: 2
+                    strokeWidth: 2,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.selected
                 })
             });
         },
