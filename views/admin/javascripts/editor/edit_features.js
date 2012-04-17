@@ -212,7 +212,6 @@
          * This does *not* trigger the 'update.nlfeatures' event.
          */
         deactivateAllButtons: function() {
-            console.log('deactivating', this.radioButtons);
             this.radioButtons
                 .removeClass('primary')
                 .data('activated', false);
@@ -222,7 +221,6 @@
          * This disables all buttons that operate on a selected feature.
          */
         disableAll: function() {
-            console.log('disabling', this.selectionButtons);
             this.selectionButtons
                 .removeClass('primary')
                 .addClass('disabled');
@@ -235,7 +233,6 @@
          * This enables all buttons that operate on a selected feature.
          */
         enableAll: function() {
-            console.log('enabling', this.selectionButtons);
             this.selectionButtons.removeClass('disabled');
             this.selectionButtons.each(function() {
                 this.disabled = false;
