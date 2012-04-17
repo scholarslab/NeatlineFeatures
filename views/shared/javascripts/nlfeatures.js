@@ -583,6 +583,13 @@
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
+
+            // Handle clicks on the map to remove focus.
+            this.map.events.register('click', this.map, function(e) {
+                if (self.clickedFeature != null) {
+                    self.deselectFeature();
+                }
+            });
         },
 
         /*
@@ -711,6 +718,7 @@
                     }
                 })
             ];
+
 
             // Instantiate the modify feature control.
             this.modifyFeatures = new OpenLayers.Control.ModifyFeature(this._currentEditLayer, {
