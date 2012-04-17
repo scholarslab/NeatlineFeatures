@@ -114,32 +114,8 @@
             // Gloss the drag button.
             this.dragButton.bind({
                 'mousedown': function() {
-
-                    // If not activated, activate.
-                    if (!self.dragButton.data('activated')) {
-                        self.deactivateAllButtons(); 
-
-                        // Do the color change.
-                        self.dragButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.dragButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.dragButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.dragButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.dragButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -152,31 +128,8 @@
             // Gloss the scale button.
             this.scaleButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.scaleButton.data('activated')) {
-                        self.deactivateAllButtons(); 
-
-                        // Do the color change.
-                        self.scaleButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.scaleButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.scaleButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.scaleButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.scaleButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -189,31 +142,8 @@
             // Gloss the rotate button.
             this.rotateButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.rotateButton.data('activated')) {
-                        self.deactivateAllButtons(); 
-
-                        // Do the color change.
-                        self.rotateButton.addClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.rotateButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.rotateButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -310,7 +240,47 @@
             this.selectionButtons.each(function() {
                 this.disabled = false;
             });
+        },
+
+        /*
+         * This activates a button.
+         */
+        activateButton: function(button) {
+            this.deactivateAllButtons();
+            button.addClass('primary')
+                  .data('activated', true);
+        },
+
+        /*
+         * This deactivates a button.
+         */
+        deactivateButton: function(button) {
+            button.removeClass('primary')
+                  .data('activated', false);
+        },
+
+        /*
+         * This toggles button activation.
+         */
+        toggleButton: function(button) {
+            if (button.data('activated')) {
+                this.deactivateButton(button);
+            } else {
+                this.activateButton(button);
+            }
+        },
+
+        /*
+         * This triggers the update.nlfeatures event.
+         */
+        triggerUpdateEvent: function() {
+            this.element.trigger('update.nlfeatures', [{
+                drag   : this.dragButton.data('activated'),
+                rotate : this.rotateButton.data('activated'),
+                scale  : this.scaleButton.data('activated')
+            }]);
         }
+
     });
 })( jQuery );
 
