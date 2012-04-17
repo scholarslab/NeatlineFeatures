@@ -99,6 +99,17 @@
 
             // Store starting status data trackers.
             this.radioButtons.data('activated', false);
+            this.disableAll();
+
+            // Enable only if a feature is selected.
+            this.element.bind({
+                'select.nlfeatures'  : function() {
+                    self.enableAll();
+                },
+                'deselect.nlfeatures': function() {
+                    self.disableAll();
+                }
+            });
 
             // Gloss the drag button.
             this.dragButton.bind({
