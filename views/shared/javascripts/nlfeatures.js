@@ -526,17 +526,21 @@
         /*
          * This deselects the current feature.
          */
-        deselectFeature: function(feature) {
+        deselectFeature: function(feature, force) {
             if (feature == null) {
                 feature = this.clickedFeature;
             }
-            if (this.isFocusLocked(feature)) {
+            if (this.isFocusLocked(feature) && !force) {
                 return;
             }
 
             this.clickControl.unhighlight(feature);
             this.modifyFeatures.unselectFeature(feature);
             this.unlistenToFeature(feature);
+            this.resetModifyFeatures();
+            if (feature.nlfeatures) {
+                feature.nlfeatures.focusLocked = false;
+            }
 
             if (feature === this.clickedFeature) {
                 this.clickedFeature = null;
@@ -630,7 +634,7 @@
             // Handle clicks on the map to remove focus.
             this.map.events.register('click', this.map, function(e) {
                 if (self.clickedFeature != null) {
-                    self.deselectFeature();
+                    self.deselectFeature(self.clickedFeature, true);
                 }
             });
         },
@@ -893,6 +897,13 @@
             if (inLayer) {
                 this.modifyFeatures.selectFeature(this.clickedFeature);
             }
+        },
+
+        /*
+         * This resets the modes on ModifyFeatures.
+         */
+        resetModifyFeatures: function() {
+            this.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
         },
 
         /*
