@@ -477,6 +477,10 @@
          * This selects a feature.
          */
         selectFeature: function(feature) {
+            if (this.isFocusLocked()) {
+                return;
+            }
+
             this.modifyFeatures.selectFeature(feature);
             this.clickControl.highlight(feature);
             this.clickedFeature = feature;
@@ -491,6 +495,9 @@
             if (feature == null) {
                 feature = this.clickedFeature;
             }
+            if (this.isFocusLocked(feature)) {
+                return;
+            }
 
             this.clickControl.unhighlight(feature);
             this.modifyFeatures.unselectFeature(feature);
@@ -500,6 +507,34 @@
             }
 
             this.element.trigger('deselect.nlfeatures', feature);
+        },
+
+        lockFocus: function() {
+            if (this.clickedFeature != null) {
+                if (this.clickedFeature.nlfeatures == null) {
+                    this.clickedFeature.nlfeatures = {
+                        focusLocked: true
+                    };
+                } else {
+                    this.clickedFeature.nlfeatures.focusLocked = true;
+                }
+            }
+        },
+
+        unlockFocus: function() {
+            if (this.clickedFeature != null &&
+                this.clickedFeature.nlfeatures != null) {
+                this.clickedFeature.nlfeatures.focusLocked = false;
+            }
+        },
+
+        isFocusLocked: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            return (feature != null &&
+                    feature.nlfeatures != null &&
+                    feature.nlfeatures.focusLocked);
         },
 
         /*
@@ -709,97 +744,105 @@
                 }
             });
             // On update.
-            this.element.bind('update.nlfeatures',
-                              function(event, obj) {
-                                  // Default to reshape.
-                                  self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+            this.element.bind({
+                'update.nlfeatures': function(event, obj) {
+                    // Default to reshape.
+                    self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
-                                  // Rotation.
-                                  if (obj.rotate) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
-                                  }
+                    // Rotation.
+                    if (obj.rotate) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
+                    }
 
-                                  // Resize.
-                                  if (obj.scale) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
-                                  }
+                    // Resize.
+                    if (obj.scale) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+                    }
 
-                                  // Drag.
-                                  if (obj.drag) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
-                                  }
+                    // Drag.
+                    if (obj.drag) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
+                    }
 
-                                  // If rotate or drag, pop off reshape.
-                                  if (obj.drag || obj.rotate) {
-                                      self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
-                                  }
+                    // If rotate or drag, pop off reshape.
+                    if (obj.drag || obj.rotate) {
+                        self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
+                    }
 
-                                  var feature = self.modifyFeatures.feature;
+                    var feature = self.modifyFeatures.feature;
 
-                                  // If there is a selected feature, unselect and reselect it to apply
-                                  // the new configuration.
-                                  if (self.exists(feature)) {
-                                      self.modifyFeatures.unselectFeature(feature);
-                                      self.modifyFeatures.selectFeature(feature);
-                                  }
-                              });
+                    // If there is a selected feature, unselect and reselect it to apply
+                    // the new configuration.
+                    if (self.exists(feature)) {
+                        self.modifyFeatures.unselectFeature(feature);
+                        self.modifyFeatures.selectFeature(feature);
+                    }
+                },
 
-                              this.element.bind('delete.nlfeatures',
-                                                function() {
-                                                    if (self.modifyFeatures.feature) {
-                                                        var feature = self.modifyFeatures.feature;
-                                                        self.clickedFeature = null;
-                                                        self.modifyFeatures.unselectFeature(feature);
-                                                        self._currentEditLayer.destroyFeatures([ feature ]);
-                                                    }
-                                                });
+                'lockfocus.nlfeatures': function() {
+                    self.lockFocus();
+                },
 
-                                                // Only do the fade if the form open does not coincide with
-                                                // another form close.
-                                                if (!immediate) {
-                                                    // Insert the edit geometry button.
-                                                    this.element.editfeatures('showButtons', immediate);
+                'unlockfocus.nlfeatures': function() {
+                    self.unlockFocus();
+                },
 
-                                                    // Fade up the toolbar.
-                                                    $('.' + this.options.markup.toolbar_class).animate({
-                                                        'opacity': 1
-                                                    }, this.options.animation.fade_duration);
-                                                } else {
-                                                    // Pop up the toolbar.
-                                                    $('.' + this.options.markup.toolbar_class).css('opacity', 1);
-                                                }
+                'delete.nlfeatures': function() {
+                    if (self.modifyFeatures.feature) {
+                        var feature = self.modifyFeatures.feature;
+                        self.clickedFeature = null;
+                        self.modifyFeatures.unselectFeature(feature);
+                        self._currentEditLayer.destroyFeatures([ feature ]);
+                    }
+                }
+            });
 
-                                                // If there is an update target for raw edits, wire up the handlers
-                                                // here.
-                                                if (this.options.map.raw_update !== undefined) {
-                                                    var update_target = this.options.map.raw_update;
-                                                    this.element.bind({
-                                                        'featureadded.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        },
-                                                        'update.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        },
-                                                        'delete.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        }
-                                                    });
-                                                }
+            // Only do the fade if the form open does not coincide with another
+            // form close.
+            if (!immediate) {
+                // Insert the edit geometry button.
+                this.element.editfeatures('showButtons', immediate);
 
-                                                // If the last selected features is among the features in the
-                                                // new currentEditLayer, mark it as selected by default. Notably,
-                                                // this would be the case of the edit flow was triggered by a
-                                                // feature click in the editor.
-                                                var inLayer = false;
-                                                $.each(this._currentEditLayer.features, function(i, feature) {
-                                                    if (feature == self.clickedFeature) {
-                                                        inLayer = true;
-                                                    }
-                                                });
+                // Fade up the toolbar.
+                $('.' + this.options.markup.toolbar_class).animate({
+                    'opacity': 1
+                }, this.options.animation.fade_duration);
+            } else {
+                // Pop up the toolbar.
+                $('.' + this.options.markup.toolbar_class).css('opacity', 1);
+            }
 
-                                                if (inLayer) {
-                                                    this.modifyFeatures.selectFeature(this.clickedFeature);
-                                                }
+            // If there is an update target for raw edits, wire up the handlers
+            // here.
+            if (this.options.map.raw_update !== undefined) {
+                var update_target = this.options.map.raw_update;
+                this.element.bind({
+                    'featureadded.nlfeatures': function() {
+                        self.updateRaw();
+                    },
+                    'update.nlfeatures': function() {
+                        self.updateRaw();
+                    },
+                    'delete.nlfeatures': function() {
+                        self.updateRaw();
+                    }
+                });
+            }
+
+            // If the last selected features is among the features in the
+            // new currentEditLayer, mark it as selected by default. Notably,
+            // this would be the case of the edit flow was triggered by a
+            // feature click in the editor.
+            var inLayer = false;
+            $.each(this._currentEditLayer.features, function(i, feature) {
+                if (feature == self.clickedFeature) {
+                    inLayer = true;
+                }
+            });
+
+            if (inLayer) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
+            }
         },
 
         /*

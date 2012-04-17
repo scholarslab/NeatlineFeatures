@@ -249,6 +249,7 @@
             this.deactivateAllButtons();
             button.addClass('primary')
                   .data('activated', true);
+            this.element.trigger('lockfocus.nlfeatures');
         },
 
         /*
@@ -257,6 +258,7 @@
         deactivateButton: function(button) {
             button.removeClass('primary')
                   .data('activated', false);
+            this.element.trigger('unlockfocus.nlfeatures');
         },
 
         /*
