@@ -80,10 +80,10 @@
             if (prefix.charAt(0) == '#') prefix = prefix.substr(1);
 
             // Build the buttons, insert, and gloss.
-            this.scaleButton    = this._createEditButton(prefix, 'scale-button', 'Scale');
-            this.rotateButton   = this._createEditButton(prefix, 'rotate-button', 'Rotate');
-            this.dragButton     = this._createEditButton(prefix, 'drag-button', 'Drag');
-            this.deleteButton   = this._createEditButton(prefix, 'delete-button', 'Delete');
+            this.scaleButton    = this._createEditButton(prefix, 'scale-button radio-button sel-button', 'Scale');
+            this.rotateButton   = this._createEditButton(prefix, 'rotate-button radio-button sel-button', 'Rotate');
+            this.dragButton     = this._createEditButton(prefix, 'drag-button radio-button sel-button', 'Drag');
+            this.deleteButton   = this._createEditButton(prefix, 'delete-button sel-button', 'Delete');
             this.viewportButton = this._createEditButton(prefix, 'viewport-button', 'Save View');
 
             // Insert the buttons.
@@ -93,38 +93,29 @@
             this.element.append(this.deleteButton);
             this.element.append(this.viewportButton);
 
+            // Sets of buttons for group operations later.
+            this.radioButtons     = this.element.children('button.radio-button');
+            this.selectionButtons = this.element.children('button.sel-button');
+
             // Store starting status data trackers.
-            this.scaleButton.data('activated', false);
-            this.rotateButton.data('activated', false);
-            this.dragButton.data('activated', false);
+            this.radioButtons.data('activated', false);
+            this.disableAll();
+
+            // Enable only if a feature is selected.
+            this.element.bind({
+                'select.nlfeatures'  : function() {
+                    self.enableAll();
+                },
+                'deselect.nlfeatures': function() {
+                    self.disableAll();
+                }
+            });
 
             // Gloss the drag button.
             this.dragButton.bind({
                 'mousedown': function() {
-
-                    // If not activated, activate.
-                    if (!self.dragButton.data('activated')) {
-                        // Do the color change.
-                        self.dragButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.dragButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.dragButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.dragButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.dragButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -137,29 +128,8 @@
             // Gloss the scale button.
             this.scaleButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.scaleButton.data('activated')) {
-                        // Do the color change.
-                        self.scaleButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.scaleButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.scaleButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.scaleButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.scaleButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -172,29 +142,8 @@
             // Gloss the rotate button.
             this.rotateButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.rotateButton.data('activated')) {
-                        // Do the color change.
-                        self.rotateButton.addClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.rotateButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.rotateButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -233,7 +182,7 @@
          */
         showButtons: function() {
             // Display:block the buttons.
-            $('.' + this.options.markup.geo_edit_class).css({
+            this.element.children('button').css({
                 'display': 'block !important',
                 'opacity': 0
             }).stop().animate({ 'opacity': 1}, this.options.animation.fade_duration);
@@ -247,7 +196,7 @@
          */
         hideButtons: function() {
             // Get the buttons.
-            var buttons = $('.' + this.options.markup.geo_edit_class);
+            var buttons = this.element.children('button');
 
             // Fade down.
             buttons.stop().animate({
@@ -263,18 +212,74 @@
          * This does *not* trigger the 'update.nlfeatures' event.
          */
         deactivateAllButtons: function() {
-            // Drag.
-            this.dragButton.removeClass('primary');
-            this.dragButton.data('activated', false);
+            this.radioButtons
+                .removeClass('primary')
+                .data('activated', false);
+        },
 
-            // Scale.
-            this.scaleButton.removeClass('primary');
-            this.scaleButton.data('activated', false);
+        /*
+         * This disables all buttons that operate on a selected feature.
+         */
+        disableAll: function() {
+            this.selectionButtons
+                .removeClass('primary')
+                .addClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = true;
+            });
+        },
 
-            // Rotate.
-            this.rotateButton.removeClass('primary');
-            this.rotateButton.data('activated', false);
+        /*
+         * This enables all buttons that operate on a selected feature.
+         */
+        enableAll: function() {
+            this.selectionButtons.removeClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = false;
+            });
+        },
+
+        /*
+         * This activates a button.
+         */
+        activateButton: function(button) {
+            this.deactivateAllButtons();
+            button.addClass('primary')
+                  .data('activated', true);
+            this.element.trigger('lockfocus.nlfeatures');
+        },
+
+        /*
+         * This deactivates a button.
+         */
+        deactivateButton: function(button) {
+            button.removeClass('primary')
+                  .data('activated', false);
+            this.element.trigger('unlockfocus.nlfeatures');
+        },
+
+        /*
+         * This toggles button activation.
+         */
+        toggleButton: function(button) {
+            if (button.data('activated')) {
+                this.deactivateButton(button);
+            } else {
+                this.activateButton(button);
+            }
+        },
+
+        /*
+         * This triggers the update.nlfeatures event.
+         */
+        triggerUpdateEvent: function() {
+            this.element.trigger('update.nlfeatures', [{
+                drag   : this.dragButton.data('activated'),
+                rotate : this.rotateButton.data('activated'),
+                scale  : this.scaleButton.data('activated')
+            }]);
         }
+
     });
 })( jQuery );
 

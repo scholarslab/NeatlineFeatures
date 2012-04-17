@@ -129,7 +129,7 @@
             this._currentVectorLayers = [];
             this._currentEditItem = null;
             this._currentEditLayer = null;
-            this._clickedFeature = null;
+            this.clickedFeature = null;
             this.idToLayer = {};
             this.requestData = null;
 
@@ -474,6 +474,118 @@
         },
 
         /*
+         * This selects a feature.
+         */
+        selectFeature: function(feature) {
+            if (this.isFocusLocked()) {
+                return;
+            }
+
+            this.modifyFeatures.selectFeature(feature);
+            this.clickControl.highlight(feature);
+            this.listenToFeature(feature);
+            this.clickedFeature = feature;
+
+            this.element.trigger('select.nlfeatures', feature);
+        },
+
+        /*
+         * This returns the SVG element for the feature.
+         */
+        getFeatureElement: function(feature) {
+            var gid;
+            gid = ('#' + feature.geometry.id).replace(/\./g, '\\.');
+            return $(gid);
+        },
+
+        /*
+         * This attaches mouse event listeners, if there aren't already some.
+         */
+        listenToFeature: function(feature) {
+            var fid, self, el;
+            fid = feature.id;
+            self = this;
+
+            el = this.getFeatureElement(feature);
+            el.on({
+                mousedown : function() { self.lockFocus(feature); },
+                mouseup   : function() { self.unlockFocus(feature); }
+            });
+        },
+
+        unlistenToFeature: function(feature, el) {
+            var self;
+            self = this;
+
+            if (el == null) {
+                el = this.getFeatureElement(feature);
+            }
+            el.off('mouseup').off('mousedown');
+        },
+
+        /*
+         * This deselects the current feature.
+         */
+        deselectFeature: function(feature, force) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            if (this.isFocusLocked(feature) && !force) {
+                return;
+            }
+
+            this.clickControl.unhighlight(feature);
+            this.modifyFeatures.unselectFeature(feature);
+            this.unlistenToFeature(feature);
+            this.resetModifyFeatures();
+            if (feature.nlfeatures) {
+                feature.nlfeatures.focusLocked = false;
+            }
+
+            if (feature === this.clickedFeature) {
+                this.clickedFeature = null;
+            }
+
+            this.element.trigger('deselect.nlfeatures', feature);
+        },
+
+        lockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null) {
+                if (feature.nlfeatures == null) {
+                    feature.nlfeatures = {
+                        focusLocked: true
+                    };
+                } else {
+                    feature.nlfeatures.focusLocked = true;
+                }
+            }
+        },
+
+        unlockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null &&
+                feature.nlfeatures != null) {
+                feature.nlfeatures.focusLocked = false;
+            }
+        },
+
+        isFocusLocked: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            return (feature != null &&
+                    feature.nlfeatures != null &&
+                    feature.nlfeatures.focusLocked);
+        },
+
+        /*
          * This adds the click control (`OpenLayers.Control.SelectFeature`) and
          * handlers for them.
          */
@@ -486,7 +598,6 @@
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
                 hover: true,
                 highlightOnly: true,
-                clickout: true,
 
                 overFeature: function(feature) {
                     // This checks for ad-hoc features created by OL for edit
@@ -496,21 +607,17 @@
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        self._clickedFeature != null &&
-                        feature.id !== self._clickedFeature.id) {
+                        self.clickedFeature != null &&
+                        feature.id !== self.clickedFeature.id) {
 
-                        self.clickControl.unhighlight(self._clickedFeature);
-                        self.modifyFeatures.unselectFeature(self._clickedFeature);
-                        self._clickedFeature = null;
+                        self.deselectFeature();
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        (self._clickedFeature == null ||
-                         feature.id !== self._clickedFeature.id)) {
+                        (self.clickedFeature == null ||
+                         feature.id !== self.clickedFeature.id)) {
 
-                        self.modifyFeatures.selectFeature(feature);
-                        self.clickControl.highlight(feature);
-                        self._clickedFeature = feature;
+                        self.selectFeature(feature);
                     }
                 },
 
@@ -523,6 +630,13 @@
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
+
+            // Handle clicks on the map to remove focus.
+            this.map.events.register('click', this.map, function(e) {
+                if (self.clickedFeature != null) {
+                    self.deselectFeature(self.clickedFeature, true);
+                }
+            });
         },
 
         /*
@@ -652,6 +766,7 @@
                 })
             ];
 
+
             // Instantiate the modify feature control.
             this.modifyFeatures = new OpenLayers.Control.ModifyFeature(this._currentEditLayer, {
                 // OL marks this callback as deprecated, but I can't find
@@ -662,7 +777,6 @@
 
                 standalone: true
             });
-
             // Instantiate the edit toolbar.
             this.editToolbar = new OpenLayers.Control.Panel({
                 defaultControl: panelControls[0],
@@ -684,97 +798,112 @@
                 }
             });
             // On update.
-            this.element.bind('update.nlfeatures',
-                              function(event, obj) {
-                                  // Default to reshape.
-                                  self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
+            this.element.bind({
+                'update.nlfeatures': function(event, obj) {
+                    // Default to reshape.
+                    self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
-                                  // Rotation.
-                                  if (obj.rotate) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
-                                  }
+                    // Rotation.
+                    if (obj.rotate) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.ROTATE;
+                    }
 
-                                  // Resize.
-                                  if (obj.scale) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
-                                  }
+                    // Resize.
+                    if (obj.scale) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.RESIZE;
+                    }
 
-                                  // Drag.
-                                  if (obj.drag) {
-                                      self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
-                                  }
+                    // Drag.
+                    if (obj.drag) {
+                        self.modifyFeatures.mode |= OpenLayers.Control.ModifyFeature.DRAG;
+                    }
 
-                                  // If rotate or drag, pop off reshape.
-                                  if (obj.drag || obj.rotate) {
-                                      self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
-                                  }
+                    // If rotate or drag, pop off reshape.
+                    if (obj.drag || obj.rotate) {
+                        self.modifyFeatures.mode &= -OpenLayers.Control.ModifyFeature.RESHAPE;
+                    }
 
-                                  var feature = self.modifyFeatures.feature;
+                    var feature = self.modifyFeatures.feature;
 
-                                  // If there is a selected feature, unselect and reselect it to apply
-                                  // the new configuration.
-                                  if (self.exists(feature)) {
-                                      self.modifyFeatures.unselectFeature(feature);
-                                      self.modifyFeatures.selectFeature(feature);
-                                  }
-                              });
+                    // If there is a selected feature, unselect and reselect it to apply
+                    // the new configuration.
+                    if (self.exists(feature)) {
+                        self.modifyFeatures.unselectFeature(feature);
+                        self.modifyFeatures.selectFeature(feature);
+                    }
+                },
 
-                              this.element.bind('delete.nlfeatures',
-                                                function() {
-                                                    if (self.modifyFeatures.feature) {
-                                                        var feature = self.modifyFeatures.feature;
-                                                        self._clickedFeature = null;
-                                                        self.modifyFeatures.unselectFeature(feature);
-                                                        self._currentEditLayer.destroyFeatures([ feature ]);
-                                                    }
-                                                });
+                'lockfocus.nlfeatures': function() {
+                    self.lockFocus();
+                },
 
-                                                // Only do the fade if the form open does not coincide with
-                                                // another form close.
-                                                if (!immediate) {
-                                                    // Insert the edit geometry button.
-                                                    this.element.editfeatures('showButtons', immediate);
+                'unlockfocus.nlfeatures': function() {
+                    self.unlockFocus();
+                },
 
-                                                    // Fade up the toolbar.
-                                                    $('.' + this.options.markup.toolbar_class).animate({
-                                                        'opacity': 1
-                                                    }, this.options.animation.fade_duration);
-                                                } else {
-                                                    // Pop up the toolbar.
-                                                    $('.' + this.options.markup.toolbar_class).css('opacity', 1);
-                                                }
+                'delete.nlfeatures': function() {
+                    if (self.modifyFeatures.feature) {
+                        var feature = self.modifyFeatures.feature;
+                        self.clickedFeature = null;
+                        self.modifyFeatures.unselectFeature(feature);
+                        self._currentEditLayer.destroyFeatures([ feature ]);
+                    }
+                }
+            });
 
-                                                // If there is an update target for raw edits, wire up the handlers
-                                                // here.
-                                                if (this.options.map.raw_update !== undefined) {
-                                                    var update_target = this.options.map.raw_update;
-                                                    this.element.bind({
-                                                        'featureadded.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        },
-                                                        'update.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        },
-                                                        'delete.nlfeatures': function() {
-                                                            self.updateRaw();
-                                                        }
-                                                    });
-                                                }
+            // Only do the fade if the form open does not coincide with another
+            // form close.
+            if (!immediate) {
+                // Insert the edit geometry button.
+                this.element.editfeatures('showButtons', immediate);
 
-                                                // If the last selected features is among the features in the
-                                                // new currentEditLayer, mark it as selected by default. Notably,
-                                                // this would be the case of the edit flow was triggered by a
-                                                // feature click in the editor.
-                                                var inLayer = false;
-                                                $.each(this._currentEditLayer.features, function(i, feature) {
-                                                    if (feature == self._clickedFeature) {
-                                                        inLayer = true;
-                                                    }
-                                                });
+                // Fade up the toolbar.
+                $('.' + this.options.markup.toolbar_class).animate({
+                    'opacity': 1
+                }, this.options.animation.fade_duration);
+            } else {
+                // Pop up the toolbar.
+                $('.' + this.options.markup.toolbar_class).css('opacity', 1);
+            }
 
-                                                if (inLayer) {
-                                                    this.modifyFeatures.selectFeature(this._clickedFeature);
-                                                }
+            // If there is an update target for raw edits, wire up the handlers
+            // here.
+            if (this.options.map.raw_update !== undefined) {
+                var update_target = this.options.map.raw_update;
+                this.element.bind({
+                    'featureadded.nlfeatures': function() {
+                        self.updateRaw();
+                    },
+                    'update.nlfeatures': function() {
+                        self.updateRaw();
+                    },
+                    'delete.nlfeatures': function() {
+                        self.updateRaw();
+                    }
+                });
+            }
+
+            // If the last selected features is among the features in the
+            // new currentEditLayer, mark it as selected by default. Notably,
+            // this would be the case of the edit flow was triggered by a
+            // feature click in the editor.
+            var inLayer = false;
+            $.each(this._currentEditLayer.features, function(i, feature) {
+                if (feature == self.clickedFeature) {
+                    inLayer = true;
+                }
+            });
+
+            if (inLayer) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
+            }
+        },
+
+        /*
+         * This resets the modes on ModifyFeatures.
+         */
+        resetModifyFeatures: function() {
+            this.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
         },
 
         /*
@@ -903,7 +1032,7 @@
             var toolbarClone = $('.' + this.options.markup.toolbar_class).clone();
 
             // Remove controls.
-            this.modifyFeatures.unselectFeature(this._clickedFeature);
+            this.modifyFeatures.unselectFeature(this.clickedFeature);
             this.map.removeControl(this.modifyFeatures);
             this.map.removeControl(this.editToolbar);
 
@@ -970,8 +1099,8 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
             // Push the wkt's onto the array.
@@ -979,8 +1108,8 @@
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
 
             return wkts.join(this.options.wkt_delimiter);
