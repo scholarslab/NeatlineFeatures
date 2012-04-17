@@ -485,26 +485,39 @@
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
                 hover: true,
+                highlightOnly: true,
+                clickout: true,
 
-                onSelect: function(feature) {
-                    // Store the feature in the tracker.
-                    self._clickedFeature = feature;
+                overFeature: function(feature) {
+                    // This checks for ad-hoc features created by OL for edit
+                    // handles on a real feature.
+                    if (feature.geometry.parent != null) {
+                        return;
+                    }
 
-                    // Trigger out to the deployment code.
-                    self.element.trigger('featureclick.nlfeatures', {}, {
-                        'itemId': self.layerToId[feature.layer.id]
-                    });
+                    if (self.modifyFeatures !== undefined &&
+                        self._clickedFeature != null &&
+                        feature.id !== self._clickedFeature.id) {
 
-                    if (self.modifyFeatures !== undefined) {
+                        self.clickControl.unhighlight(self._clickedFeature);
+                        self.modifyFeatures.unselectFeature(self._clickedFeature);
+                        self._clickedFeature = null;
+                    }
+
+                    if (self.modifyFeatures !== undefined &&
+                        (self._clickedFeature == null ||
+                         feature.id !== self._clickedFeature.id)) {
+
                         self.modifyFeatures.selectFeature(feature);
+                        self.clickControl.highlight(feature);
+                        self._clickedFeature = feature;
                     }
                 },
 
-                onUnselect: function(feature) {
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.unselectFeature(feature);
-                    }
+                outFeature: function(feature) {
+                    return false;
                 }
+
             });
 
             // Add and activate.
