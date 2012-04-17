@@ -80,10 +80,10 @@
             if (prefix.charAt(0) == '#') prefix = prefix.substr(1);
 
             // Build the buttons, insert, and gloss.
-            this.scaleButton    = this._createEditButton(prefix, 'scale-button', 'Scale');
-            this.rotateButton   = this._createEditButton(prefix, 'rotate-button', 'Rotate');
-            this.dragButton     = this._createEditButton(prefix, 'drag-button', 'Drag');
-            this.deleteButton   = this._createEditButton(prefix, 'delete-button', 'Delete');
+            this.scaleButton    = this._createEditButton(prefix, 'scale-button radio-button sel-button', 'Scale');
+            this.rotateButton   = this._createEditButton(prefix, 'rotate-button radio-button sel-button', 'Rotate');
+            this.dragButton     = this._createEditButton(prefix, 'drag-button radio-button sel-button', 'Drag');
+            this.deleteButton   = this._createEditButton(prefix, 'delete-button sel-button', 'Delete');
             this.viewportButton = this._createEditButton(prefix, 'viewport-button', 'Save View');
 
             // Insert the buttons.
@@ -93,10 +93,12 @@
             this.element.append(this.deleteButton);
             this.element.append(this.viewportButton);
 
+            // Sets of buttons for group operations later.
+            this.radioButtons     = this.element.children('button.radio-button');
+            this.selectionButtons = this.element.children('button.sel-button');
+
             // Store starting status data trackers.
-            this.scaleButton.data('activated', false);
-            this.rotateButton.data('activated', false);
-            this.dragButton.data('activated', false);
+            this.radioButtons.data('activated', false);
 
             // Gloss the drag button.
             this.dragButton.bind({
@@ -239,7 +241,7 @@
          */
         showButtons: function() {
             // Display:block the buttons.
-            $('.' + this.options.markup.geo_edit_class).css({
+            this.element.children('button').css({
                 'display': 'block !important',
                 'opacity': 0
             }).stop().animate({ 'opacity': 1}, this.options.animation.fade_duration);
@@ -253,7 +255,7 @@
          */
         hideButtons: function() {
             // Get the buttons.
-            var buttons = $('.' + this.options.markup.geo_edit_class);
+            var buttons = this.element.children('button');
 
             // Fade down.
             buttons.stop().animate({
@@ -269,17 +271,34 @@
          * This does *not* trigger the 'update.nlfeatures' event.
          */
         deactivateAllButtons: function() {
-            // Drag.
-            this.dragButton.removeClass('primary');
-            this.dragButton.data('activated', false);
+            console.log('deactivating', this.radioButtons);
+            this.radioButtons
+                .removeClass('primary')
+                .data('activated', false);
+        },
 
-            // Scale.
-            this.scaleButton.removeClass('primary');
-            this.scaleButton.data('activated', false);
+        /*
+         * This disables all buttons that operate on a selected feature.
+         */
+        disableAll: function() {
+            console.log('disabling', this.selectionButtons);
+            this.selectionButtons
+                .removeClass('primary')
+                .addClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = true;
+            });
+        },
 
-            // Rotate.
-            this.rotateButton.removeClass('primary');
-            this.rotateButton.data('activated', false);
+        /*
+         * This enables all buttons that operate on a selected feature.
+         */
+        enableAll: function() {
+            console.log('enabling', this.selectionButtons);
+            this.selectionButtons.removeClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = false;
+            });
         }
     });
 })( jQuery );
