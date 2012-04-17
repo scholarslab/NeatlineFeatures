@@ -480,6 +480,8 @@
             this.modifyFeatures.selectFeature(feature);
             this.clickControl.highlight(feature);
             this.clickedFeature = feature;
+
+            this.element.trigger('select.nlfeatures', feature);
         },
 
         /*
@@ -496,6 +498,8 @@
             if (feature === this.clickedFeature) {
                 this.clickedFeature = null;
             }
+
+            this.element.trigger('deselect.nlfeatures', feature);
         },
 
         /*
