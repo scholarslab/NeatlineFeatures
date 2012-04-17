@@ -129,7 +129,7 @@
             this._currentVectorLayers = [];
             this._currentEditItem = null;
             this._currentEditLayer = null;
-            this._clickedFeature = null;
+            this.clickedFeature = null;
             this.idToLayer = {};
             this.requestData = null;
 
@@ -474,6 +474,31 @@
         },
 
         /*
+         * This selects a feature.
+         */
+        selectFeature: function(feature) {
+            this.modifyFeatures.selectFeature(feature);
+            this.clickControl.highlight(feature);
+            this.clickedFeature = feature;
+        },
+
+        /*
+         * This deselects the current feature.
+         */
+        deselectFeature: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            this.clickControl.unhighlight(feature);
+            this.modifyFeatures.unselectFeature(feature);
+
+            if (feature === this.clickedFeature) {
+                this.clickedFeature = null;
+            }
+        },
+
+        /*
          * This adds the click control (`OpenLayers.Control.SelectFeature`) and
          * handlers for them.
          */
@@ -496,21 +521,17 @@
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        self._clickedFeature != null &&
-                        feature.id !== self._clickedFeature.id) {
+                        self.clickedFeature != null &&
+                        feature.id !== self.clickedFeature.id) {
 
-                        self.clickControl.unhighlight(self._clickedFeature);
-                        self.modifyFeatures.unselectFeature(self._clickedFeature);
-                        self._clickedFeature = null;
+                        self.deselectFeature();
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        (self._clickedFeature == null ||
-                         feature.id !== self._clickedFeature.id)) {
+                        (self.clickedFeature == null ||
+                         feature.id !== self.clickedFeature.id)) {
 
-                        self.modifyFeatures.selectFeature(feature);
-                        self.clickControl.highlight(feature);
-                        self._clickedFeature = feature;
+                        self.selectFeature(feature);
                     }
                 },
 
@@ -723,7 +744,7 @@
                                                 function() {
                                                     if (self.modifyFeatures.feature) {
                                                         var feature = self.modifyFeatures.feature;
-                                                        self._clickedFeature = null;
+                                                        self.clickedFeature = null;
                                                         self.modifyFeatures.unselectFeature(feature);
                                                         self._currentEditLayer.destroyFeatures([ feature ]);
                                                     }
@@ -767,13 +788,13 @@
                                                 // feature click in the editor.
                                                 var inLayer = false;
                                                 $.each(this._currentEditLayer.features, function(i, feature) {
-                                                    if (feature == self._clickedFeature) {
+                                                    if (feature == self.clickedFeature) {
                                                         inLayer = true;
                                                     }
                                                 });
 
                                                 if (inLayer) {
-                                                    this.modifyFeatures.selectFeature(this._clickedFeature);
+                                                    this.modifyFeatures.selectFeature(this.clickedFeature);
                                                 }
         },
 
@@ -903,7 +924,7 @@
             var toolbarClone = $('.' + this.options.markup.toolbar_class).clone();
 
             // Remove controls.
-            this.modifyFeatures.unselectFeature(this._clickedFeature);
+            this.modifyFeatures.unselectFeature(this.clickedFeature);
             this.map.removeControl(this.modifyFeatures);
             this.map.removeControl(this.editToolbar);
 
@@ -970,8 +991,8 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
             // Push the wkt's onto the array.
@@ -979,8 +1000,8 @@
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
 
             return wkts.join(this.options.wkt_delimiter);
