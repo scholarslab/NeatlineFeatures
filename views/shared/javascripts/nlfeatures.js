@@ -483,9 +483,44 @@
 
             this.modifyFeatures.selectFeature(feature);
             this.clickControl.highlight(feature);
+            this.listenToFeature(feature);
             this.clickedFeature = feature;
 
             this.element.trigger('select.nlfeatures', feature);
+        },
+
+        /*
+         * This returns the SVG element for the feature.
+         */
+        getFeatureElement: function(feature) {
+            var gid;
+            gid = ('#' + feature.geometry.id).replace(/\./g, '\\.');
+            return $(gid);
+        },
+
+        /*
+         * This attaches mouse event listeners, if there aren't already some.
+         */
+        listenToFeature: function(feature) {
+            var fid, self, el;
+            fid = feature.id;
+            self = this;
+
+            el = this.getFeatureElement(feature);
+            el.on({
+                mousedown : function() { self.lockFocus(feature); },
+                mouseup   : function() { self.unlockFocus(feature); }
+            });
+        },
+
+        unlistenToFeature: function(feature, el) {
+            var self;
+            self = this;
+
+            if (el == null) {
+                el = this.getFeatureElement(feature);
+            }
+            el.off('mouseup').off('mousedown');
         },
 
         /*
@@ -501,6 +536,7 @@
 
             this.clickControl.unhighlight(feature);
             this.modifyFeatures.unselectFeature(feature);
+            this.unlistenToFeature(feature);
 
             if (feature === this.clickedFeature) {
                 this.clickedFeature = null;
@@ -509,22 +545,30 @@
             this.element.trigger('deselect.nlfeatures', feature);
         },
 
-        lockFocus: function() {
-            if (this.clickedFeature != null) {
-                if (this.clickedFeature.nlfeatures == null) {
-                    this.clickedFeature.nlfeatures = {
+        lockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null) {
+                if (feature.nlfeatures == null) {
+                    feature.nlfeatures = {
                         focusLocked: true
                     };
                 } else {
-                    this.clickedFeature.nlfeatures.focusLocked = true;
+                    feature.nlfeatures.focusLocked = true;
                 }
             }
         },
 
-        unlockFocus: function() {
-            if (this.clickedFeature != null &&
-                this.clickedFeature.nlfeatures != null) {
-                this.clickedFeature.nlfeatures.focusLocked = false;
+        unlockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null &&
+                feature.nlfeatures != null) {
+                feature.nlfeatures.focusLocked = false;
             }
         },
 
@@ -550,7 +594,6 @@
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
                 hover: true,
                 highlightOnly: true,
-                clickout: true,
 
                 overFeature: function(feature) {
                     // This checks for ad-hoc features created by OL for edit
@@ -730,7 +773,6 @@
 
                 standalone: true
             });
-
             // Instantiate the edit toolbar.
             this.editToolbar = new OpenLayers.Control.Panel({
                 defaultControl: panelControls[0],
