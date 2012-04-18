@@ -176,7 +176,6 @@ class NeatlineFeaturesPlugin
     {
         queue_css('nlfeatures');
         queue_css('nlfeature-editor');
-        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
@@ -201,7 +200,6 @@ class NeatlineFeaturesPlugin
     public function publicThemeHeader()
     {
         queue_css('nlfeatures');
-        queue_css('theme/default/style');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.6&sensor=false");
