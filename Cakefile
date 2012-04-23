@@ -1,9 +1,14 @@
 
 # This requires
 # > npm install iniparser
+# > npm install glob
+#
+# Or just do this:
+# > npm link
 #
 
 fs        = require 'fs'
+glob      = require 'glob'
 util      = require 'util'
 iniparser = require 'iniparser'
 
@@ -13,14 +18,15 @@ files = [
   './views/shared/javascripts/featureswidget.js'
 ]
 
-pluginini = './plugin.ini'
-builddir  = './views/shared/javascripts'
+pluginini    = './plugin.ini'
+builddir     = './views/shared/javascripts'
+targetprefix = 'neatline-features'
 
 task 'build:browser', 'Compile and minify for use in browser', ->
   util.log "Reading plugin INI file #{pluginini}"
   config     = iniparser.parseSync pluginini
   version    = config.info.version.replace /['"]/g, ''
-  targetfile = "neatline-features-#{version}"
+  targetfile = "#{targetprefix}-#{version}"
 
   util.log "Creating browser file for Neatline Features version #{version}."
   remaining = files.length
@@ -48,6 +54,17 @@ task 'build:browser', 'Compile and minify for use in browser', ->
           code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle ast, extra: yes
           fs.writeFile "#{builddir}/#{targetfile}-min.js", code
 
+task 'clean', 'Clean up all minified JS files.', ->
+  pattern = "#{builddir}/#{targetprefix}-*.js"
+  util.log "Cleaning up #{pattern}"
+  glob pattern, (err, files) ->
+    if err != null
+      throw err
+    for fn in files
+      util.log "rm #{fn}"
+      fs.unlink fn
+
 task 'build', 'Compile', ->
+  invoke 'clean'
   invoke 'build:browser'
 

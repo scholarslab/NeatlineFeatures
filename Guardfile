@@ -12,7 +12,7 @@ end
 #
 guard 'shell' do
   watch(/views\/.*\.js/) do
-    `cake build:browser`
+    `cake build`
   end
 end
 
