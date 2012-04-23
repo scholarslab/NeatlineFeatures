@@ -1,5 +1,7 @@
 
 require 'cucumber/rake/task'
+require 'fileutils'
+require 'tempfile'
 
 task :default => [
   'php:unit',
@@ -130,6 +132,33 @@ namespace :watch do
 #  task :jasmine do
 #    sh %{coffee --watch --compile spec/javascripts/}
 #  end
+end
+
+desc "Updates the version in the 'plugin.in' and 'package.json' files. If given
+the version parameter, it also updates the version in the 'version' file.
+Before updating the metadata files."
+
+task :version, [:version] do |t, args|
+  if args[:version].nil?
+    version = IO.readlines('version')[0].strip
+  else
+    version = args[:version]
+    IO.write('version', version, :mode => 'w')
+  end
+
+  puts "updating plugin.ini and package.json to #{version}"
+
+  tmp = Tempfile.new 'features'
+  tmp.close
+  puts "TMP = <#{tmp.path.inspect}>"
+
+  # plugin.ini
+  FileUtils.mv 'plugin.ini', tmp.path, :verbose => true
+  sh %{cat #{tmp.path} | sed -e 's/^version=".*"/version="#{version.sub('-', '.')}"/' > plugin.ini}
+
+  # project.json
+  FileUtils.mv 'package.json', tmp.path, :verbose => true
+ sh %{cat #{tmp.path} | sed -e 's/^\\( *"version" *: *"\\).*\\(",*\\)/\\1#{version}\\2/' > package.json}
 end
 
 
