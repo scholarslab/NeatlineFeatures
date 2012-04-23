@@ -1,17 +1,10 @@
 
-group :frontend do
-  guard 'livereload' do
-    watch(%r{.+\.(css|js|html?|php|inc)$})
-  end
-end
-
-
 guard 'compass' do
-  watch('^views/(.*)\.s[ac]ss')
+  watch(/^_sass\/(.*)\.s[ac]ss/)
 end
 
 guard 'livereload' do
-  watch(%r{public/.+\.(css|js|html|php|inc)})
+  watch(%r{views/.+\.(css|js|html|php|inc)})
 end
 
 # Add files and commands to this file, like the example:
@@ -22,3 +15,5 @@ guard 'shell' do
     `cake build:browser`
   end
 end
+
+guard 'coffeescript', :input => 'views/shared/javascripts'
