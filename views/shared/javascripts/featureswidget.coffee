@@ -149,14 +149,16 @@
           <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
-          <label class="use-html">Use HTML
-            <input type="hidden" name="#{name_prefix}[html] value="0" />
-            <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
-          </label>
-          <label class="use-mapon">Use Map
-            <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
-            <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
-          </label>
+          <div>
+            <label class="use-html">Use HTML
+              <input type="hidden" name="#{name_prefix}[html] value="0" />
+              <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
+            </label>
+            <label class="use-mapon">Use Map
+              <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
+              <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
+            </label>
+          </div>
         </div>
         """
 
