@@ -1,5 +1,8 @@
 
 require 'cucumber/rake/task'
+require 'fileutils'
+require 'rake/packagetask'
+require 'tempfile'
 
 task :default => [
   'php:unit',
@@ -132,6 +135,69 @@ namespace :watch do
 #  end
 end
 
+desc 'This compiles the SCSS/Compass files.'
+task :compass do
+  sh %{compass compile}
+end
+
+desc 'This compiles the CoffeeScript files.'
+task :coffee do
+  sh %{find . -name \\*.coffee | xargs coffee --compile}
+end
+
+desc "Updates the version in the 'plugin.in' and 'package.json' files. If given
+the version parameter, it also updates the version in the 'version' file.
+Before updating the metadata files."
+
+task :version, [:version] do |t, args|
+  if args[:version].nil?
+    version = IO.readlines('version')[0].strip
+  else
+    version = args[:version]
+    IO.write('version', version, :mode => 'w')
+  end
+
+  puts "updating plugin.ini and package.json to #{version}"
+
+  tmp = Tempfile.new 'features'
+  tmp.close
+  puts "TMP = <#{tmp.path.inspect}>"
+
+  # plugin.ini
+  FileUtils.mv 'plugin.ini', tmp.path, :verbose => true
+  sh %{cat #{tmp.path} | sed -e 's/^version=".*"/version="#{version.sub('-', '.')}"/' > plugin.ini}
+
+  # project.json
+  FileUtils.mv 'package.json', tmp.path, :verbose => true
+ sh %{cat #{tmp.path} | sed -e 's/^\\( *"version" *: *"\\).*\\(",*\\)/\\1#{version}\\2/' > package.json}
+end
+
+Rake::PackageTask.new('dist') do |p|
+  p.name = 'NeatlineFeatures'
+  p.version = IO.readlines('version')[0].strip
+  p.need_tar_gz = true
+  p.need_zip = true
+
+  p.package_files.include('plugin.*')
+  p.package_files.include('lib/**/*.php')
+  p.package_files.include('LICENSE')
+  p.package_files.include('models/**.php')
+  p.package_files.include('NeatlineFeaturesPlugin.php')
+  p.package_files.include('README.md')
+  p.package_files.include('views/**/*.css')
+  p.package_files.include('views/**/*.gif')
+  p.package_files.include('views/**/*.js')
+  p.package_files.include('views/**/*.php')
+  p.package_files.include('views/**/*.png')
+end
+
+desc 'This calls the Cakefile to minify the JS.'
+task :minify do
+  sh %{cake build}
+end
+
+desc 'This updates the code and creates the distribution.'
+task 'dist' => [:compass, :coffee, :minify, :package]
 
 # begin
 #   require 'jasmine'

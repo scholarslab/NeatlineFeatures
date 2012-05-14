@@ -5,3 +5,5 @@ cs/
 depend/
 doc/
 md/
+node_modules/
+pkg/

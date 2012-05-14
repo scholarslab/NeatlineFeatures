@@ -83,7 +83,10 @@
                 default_color: '#ffb80e',
                 select_point_radius: 10,
                 select_stroke_color: '#ea3a3a',
-                point_graphic: undefined
+                point_graphic: {
+                    normal   : undefined,
+                    selected : undefined
+                }
             },
 
             // These are added to document options for the map.
@@ -126,7 +129,7 @@
             this._currentVectorLayers = [];
             this._currentEditItem = null;
             this._currentEditLayer = null;
-            this._clickedFeature = null;
+            this.clickedFeature = null;
             this.idToLayer = {};
             this.requestData = null;
 
@@ -471,6 +474,118 @@
         },
 
         /*
+         * This selects a feature.
+         */
+        selectFeature: function(feature) {
+            if (this.isFocusLocked()) {
+                return;
+            }
+
+            this.modifyFeatures.selectFeature(feature);
+            this.clickControl.highlight(feature);
+            this.listenToFeature(feature);
+            this.clickedFeature = feature;
+
+            this.element.trigger('select.nlfeatures', feature);
+        },
+
+        /*
+         * This returns the SVG element for the feature.
+         */
+        getFeatureElement: function(feature) {
+            var gid;
+            gid = ('#' + feature.geometry.id).replace(/\./g, '\\.');
+            return $(gid);
+        },
+
+        /*
+         * This attaches mouse event listeners, if there aren't already some.
+         */
+        listenToFeature: function(feature) {
+            var fid, self, el;
+            fid = feature.id;
+            self = this;
+
+            el = this.getFeatureElement(feature);
+            el.on({
+                mousedown : function() { self.lockFocus(feature); },
+                mouseup   : function() { self.unlockFocus(feature); }
+            });
+        },
+
+        unlistenToFeature: function(feature, el) {
+            var self;
+            self = this;
+
+            if (el == null) {
+                el = this.getFeatureElement(feature);
+            }
+            el.off('mouseup').off('mousedown');
+        },
+
+        /*
+         * This deselects the current feature.
+         */
+        deselectFeature: function(feature, force) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            if (this.isFocusLocked(feature) && !force) {
+                return;
+            }
+
+            this.clickControl.unhighlight(feature);
+            this.modifyFeatures.unselectFeature(feature);
+            this.unlistenToFeature(feature);
+            this.resetModifyFeatures();
+            if (feature.nlfeatures) {
+                feature.nlfeatures.focusLocked = false;
+            }
+
+            if (feature === this.clickedFeature) {
+                this.clickedFeature = null;
+            }
+
+            this.element.trigger('deselect.nlfeatures', feature);
+        },
+
+        lockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null) {
+                if (feature.nlfeatures == null) {
+                    feature.nlfeatures = {
+                        focusLocked: true
+                    };
+                } else {
+                    feature.nlfeatures.focusLocked = true;
+                }
+            }
+        },
+
+        unlockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null &&
+                feature.nlfeatures != null) {
+                feature.nlfeatures.focusLocked = false;
+            }
+        },
+
+        isFocusLocked: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            return (feature != null &&
+                    feature.nlfeatures != null &&
+                    feature.nlfeatures.focusLocked);
+        },
+
+        /*
          * This adds the click control (`OpenLayers.Control.SelectFeature`) and
          * handlers for them.
          */
@@ -481,32 +596,47 @@
             this._removeControls();
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-                box: true,
+                hover: true,
+                highlightOnly: true,
 
-                onSelect: function(feature) {
-                    // Store the feature in the tracker.
-                    self._clickedFeature = feature;
+                overFeature: function(feature) {
+                    // This checks for ad-hoc features created by OL for edit
+                    // handles on a real feature.
+                    if (feature.geometry.parent != null) {
+                        return;
+                    }
 
-                    // Trigger out to the deployment code.
-                    self.element.trigger('featureclick.nlfeatures', {}, {
-                        'itemId': self.layerToId[feature.layer.id]
-                    });
+                    if (self.modifyFeatures !== undefined &&
+                        self.clickedFeature != null &&
+                        feature.id !== self.clickedFeature.id) {
 
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.selectFeature(feature);
+                        self.deselectFeature();
+                    }
+
+                    if (self.modifyFeatures !== undefined &&
+                        (self.clickedFeature == null ||
+                         feature.id !== self.clickedFeature.id)) {
+
+                        self.selectFeature(feature);
                     }
                 },
 
-                onUnselect: function(feature) {
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.unselectFeature(feature);
-                    }
+                outFeature: function(feature) {
+                    return false;
                 }
+
             });
 
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
+
+            // Handle clicks on the map to remove focus.
+            this.map.events.register('click', this.map, function(e) {
+                if (self.clickedFeature != null) {
+                    self.deselectFeature(self.clickedFeature, true);
+                }
+            });
         },
 
         /*
@@ -636,6 +766,7 @@
                 })
             ];
 
+
             // Instantiate the modify feature control.
             this.modifyFeatures = new OpenLayers.Control.ModifyFeature(this._currentEditLayer, {
                 // OL marks this callback as deprecated, but I can't find
@@ -646,7 +777,6 @@
 
                 standalone: true
             });
-
             // Instantiate the edit toolbar.
             this.editToolbar = new OpenLayers.Control.Panel({
                 defaultControl: panelControls[0],
@@ -668,8 +798,8 @@
                 }
             });
             // On update.
-            this.element.bind('update.nlfeatures',
-                function(event, obj) {
+            this.element.bind({
+                'update.nlfeatures': function(event, obj) {
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
@@ -701,20 +831,28 @@
                         self.modifyFeatures.unselectFeature(feature);
                         self.modifyFeatures.selectFeature(feature);
                     }
-                });
+                },
 
-            this.element.bind('delete.nlfeatures',
-                function() {
+                'lockfocus.nlfeatures': function() {
+                    self.lockFocus();
+                },
+
+                'unlockfocus.nlfeatures': function() {
+                    self.unlockFocus();
+                },
+
+                'delete.nlfeatures': function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
-                        self._clickedFeature = null;
+                        self.clickedFeature = null;
                         self.modifyFeatures.unselectFeature(feature);
                         self._currentEditLayer.destroyFeatures([ feature ]);
                     }
-                });
+                }
+            });
 
-            // Only do the fade if the form open does not coincide with
-            // another form close.
+            // Only do the fade if the form open does not coincide with another
+            // form close.
             if (!immediate) {
                 // Insert the edit geometry button.
                 this.element.editfeatures('showButtons', immediate);
@@ -751,14 +889,21 @@
             // feature click in the editor.
             var inLayer = false;
             $.each(this._currentEditLayer.features, function(i, feature) {
-                if (feature == self._clickedFeature) {
+                if (feature == self.clickedFeature) {
                     inLayer = true;
                 }
             });
 
             if (inLayer) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
+        },
+
+        /*
+         * This resets the modes on ModifyFeatures.
+         */
+        resetModifyFeatures: function() {
+            this.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
         },
 
         /*
@@ -887,7 +1032,7 @@
             var toolbarClone = $('.' + this.options.markup.toolbar_class).clone();
 
             // Remove controls.
-            this.modifyFeatures.unselectFeature(this._clickedFeature);
+            this.modifyFeatures.unselectFeature(this.clickedFeature);
             this.map.removeControl(this.modifyFeatures);
             this.map.removeControl(this.editToolbar);
 
@@ -954,8 +1099,8 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
             // Push the wkt's onto the array.
@@ -963,8 +1108,8 @@
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
 
             return wkts.join(this.options.wkt_delimiter);
@@ -1008,16 +1153,21 @@
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: fillColor,
-                    pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic,
-                    strokeWidth: 1
+                    strokeWidth: 1,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.normal
                 }),
                 'select': new OpenLayers.Style({
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: this.options.styles.select_stroke_color,
-                    pointRadius: this.options.styles.select_point_radius,
-                    strokeWidth: 2
+                    strokeWidth: 2,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.selected
                 })
             });
         },
@@ -1227,10 +1377,10 @@
             if (prefix.charAt(0) == '#') prefix = prefix.substr(1);
 
             // Build the buttons, insert, and gloss.
-            this.scaleButton    = this._createEditButton(prefix, 'scale-button', 'Scale');
-            this.rotateButton   = this._createEditButton(prefix, 'rotate-button', 'Rotate');
-            this.dragButton     = this._createEditButton(prefix, 'drag-button', 'Drag');
-            this.deleteButton   = this._createEditButton(prefix, 'delete-button', 'Delete');
+            this.scaleButton    = this._createEditButton(prefix, 'scale-button radio-button sel-button', 'Scale');
+            this.rotateButton   = this._createEditButton(prefix, 'rotate-button radio-button sel-button', 'Rotate');
+            this.dragButton     = this._createEditButton(prefix, 'drag-button radio-button sel-button', 'Drag');
+            this.deleteButton   = this._createEditButton(prefix, 'delete-button sel-button', 'Delete');
             this.viewportButton = this._createEditButton(prefix, 'viewport-button', 'Save View');
 
             // Insert the buttons.
@@ -1240,38 +1390,29 @@
             this.element.append(this.deleteButton);
             this.element.append(this.viewportButton);
 
+            // Sets of buttons for group operations later.
+            this.radioButtons     = this.element.children('button.radio-button');
+            this.selectionButtons = this.element.children('button.sel-button');
+
             // Store starting status data trackers.
-            this.scaleButton.data('activated', false);
-            this.rotateButton.data('activated', false);
-            this.dragButton.data('activated', false);
+            this.radioButtons.data('activated', false);
+            this.disableAll();
+
+            // Enable only if a feature is selected.
+            this.element.bind({
+                'select.nlfeatures'  : function() {
+                    self.enableAll();
+                },
+                'deselect.nlfeatures': function() {
+                    self.disableAll();
+                }
+            });
 
             // Gloss the drag button.
             this.dragButton.bind({
                 'mousedown': function() {
-
-                    // If not activated, activate.
-                    if (!self.dragButton.data('activated')) {
-                        // Do the color change.
-                        self.dragButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.dragButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.dragButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.dragButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.dragButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -1284,29 +1425,8 @@
             // Gloss the scale button.
             this.scaleButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.scaleButton.data('activated')) {
-                        // Do the color change.
-                        self.scaleButton.addClass('primary');
-
-                        // Change the trackers.
-                        self.scaleButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.scaleButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.scaleButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.scaleButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -1319,29 +1439,8 @@
             // Gloss the rotate button.
             this.rotateButton.bind({
                 'mousedown': function() {
-                    // If not activated, activate.
-                    if (!self.rotateButton.data('activated')) {
-                        // Do the color change.
-                        self.rotateButton.addClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', true);
-                    }
-                    // If activated, deactivate.
-                    else {
-                        // Do the color change.
-                        self.rotateButton.removeClass('primary');
-
-                        // Change the tracker.
-                        self.rotateButton.data('activated', false);
-                    }
-
-                    // Fire out the update event.
-                    self.element.trigger('update.nlfeatures', [{
-                        'drag': self.dragButton.data('activated'),
-                        'rotate': self.rotateButton.data('activated'),
-                        'scale': self.scaleButton.data('activated')
-                    }]);
+                    self.toggleButton(self.rotateButton);
+                    self.triggerUpdateEvent();
                 },
 
                 // Suppress the default submit behavior on the button.
@@ -1380,7 +1479,7 @@
          */
         showButtons: function() {
             // Display:block the buttons.
-            $('.' + this.options.markup.geo_edit_class).css({
+            this.element.children('button').css({
                 'display': 'block !important',
                 'opacity': 0
             }).stop().animate({ 'opacity': 1}, this.options.animation.fade_duration);
@@ -1394,7 +1493,7 @@
          */
         hideButtons: function() {
             // Get the buttons.
-            var buttons = $('.' + this.options.markup.geo_edit_class);
+            var buttons = this.element.children('button');
 
             // Fade down.
             buttons.stop().animate({
@@ -1410,25 +1509,81 @@
          * This does *not* trigger the 'update.nlfeatures' event.
          */
         deactivateAllButtons: function() {
-            // Drag.
-            this.dragButton.removeClass('primary');
-            this.dragButton.data('activated', false);
+            this.radioButtons
+                .removeClass('primary')
+                .data('activated', false);
+        },
 
-            // Scale.
-            this.scaleButton.removeClass('primary');
-            this.scaleButton.data('activated', false);
+        /*
+         * This disables all buttons that operate on a selected feature.
+         */
+        disableAll: function() {
+            this.selectionButtons
+                .removeClass('primary')
+                .addClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = true;
+            });
+        },
 
-            // Rotate.
-            this.rotateButton.removeClass('primary');
-            this.rotateButton.data('activated', false);
+        /*
+         * This enables all buttons that operate on a selected feature.
+         */
+        enableAll: function() {
+            this.selectionButtons.removeClass('disabled');
+            this.selectionButtons.each(function() {
+                this.disabled = false;
+            });
+        },
+
+        /*
+         * This activates a button.
+         */
+        activateButton: function(button) {
+            this.deactivateAllButtons();
+            button.addClass('primary')
+                  .data('activated', true);
+            this.element.trigger('lockfocus.nlfeatures');
+        },
+
+        /*
+         * This deactivates a button.
+         */
+        deactivateButton: function(button) {
+            button.removeClass('primary')
+                  .data('activated', false);
+            this.element.trigger('unlockfocus.nlfeatures');
+        },
+
+        /*
+         * This toggles button activation.
+         */
+        toggleButton: function(button) {
+            if (button.data('activated')) {
+                this.deactivateButton(button);
+            } else {
+                this.activateButton(button);
+            }
+        },
+
+        /*
+         * This triggers the update.nlfeatures event.
+         */
+        triggerUpdateEvent: function() {
+            this.element.trigger('update.nlfeatures', [{
+                drag   : this.dragButton.data('activated'),
+                rotate : this.rotateButton.data('activated'),
+                scale  : this.scaleButton.data('activated')
+            }]);
         }
+
     });
 })( jQuery );
 
 
 
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
+  var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   (function($) {
@@ -1449,8 +1604,12 @@
     };
     poll = function(predicate, callback, maxPoll, timeout) {
       var n, pred, _poll;
-      if (maxPoll == null) maxPoll = null;
-      if (timeout == null) timeout = 100;
+      if (maxPoll == null) {
+        maxPoll = null;
+      }
+      if (timeout == null) {
+        timeout = 100;
+      }
       n = 0;
       pred = (maxPoll != null) && maxPoll !== 0 ? function() {
         return predicate() || n >= maxPoll;
@@ -1474,6 +1633,8 @@
     };
     BaseWidget = (function() {
 
+      BaseWidget.name = 'BaseWidget';
+
       function BaseWidget(widget) {
         this.widget = widget;
       }
@@ -1495,9 +1656,15 @@
             id_prefix: this.widget.options.id_prefix
           }
         };
-        if (input.zoom != null) local_options.zoom = input.zoom;
-        if (input.center != null) local_options.center = input.center;
-        if (input.base_layer != null) local_options.base_layer = input.base_layer;
+        if (input.zoom != null) {
+          local_options.zoom = input.zoom;
+        }
+        if (input.center != null) {
+          local_options.center = input.center;
+        }
+        if (input.base_layer != null) {
+          local_options.base_layer = input.base_layer;
+        }
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -1510,8 +1677,10 @@
 
       __extends(ViewWidget, _super);
 
+      ViewWidget.name = 'ViewWidget';
+
       function ViewWidget() {
-        ViewWidget.__super__.constructor.apply(this, arguments);
+        return ViewWidget.__super__.constructor.apply(this, arguments);
       }
 
       ViewWidget.prototype.init = function() {
@@ -1547,8 +1716,10 @@
 
       __extends(EditWidget, _super);
 
+      EditWidget.name = 'EditWidget';
+
       function EditWidget() {
-        EditWidget.__super__.constructor.apply(this, arguments);
+        return EditWidget.__super__.constructor.apply(this, arguments);
       }
 
       EditWidget.prototype.init = function() {
@@ -1565,7 +1736,7 @@
         id_prefix = derefid(this.widget.options.id_prefix);
         name_prefix = this.widget.options.name_prefix;
         map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
-        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <label class=\"use-html\">Use HTML\n    <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n  </label>\n  <label class=\"use-mapon\">Use Map\n    <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n    <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n  </label>\n</div>");
+        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <div>\n    <label class=\"use-html\">Use HTML\n      <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n    </label>\n    <label class=\"use-mapon\">Use Map\n      <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n    </label>\n  </div>\n</div>");
         el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
         this.fields = {
           map_container: el.find(".map-container"),
@@ -1606,13 +1777,15 @@
       };
 
       EditWidget.prototype.populate = function(values) {
-        var _ref, _ref2;
-        if (values == null) values = this.widget.options.values;
+        var _ref, _ref1;
+        if (values == null) {
+          values = this.widget.options.values;
+        }
         this.fields.mapon.attr('checked', values.is_map);
         this.fields.wkt.val(to_s(values.wkt));
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-        this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
         this.fields.base_layer.val(to_s(values.base_layer));
         this.fields.text.val(to_s(values.text));
         return this.fields.free.val(stripFirstLine(values.text));
@@ -1697,21 +1870,27 @@
         wkt = this.nlfeatures.getWktForSave();
         this.fields.wkt.val(wkt);
         zoom = this.nlfeatures.getSavedZoom();
-        if (zoom != null) this.fields.zoom.val(zoom);
+        if (zoom != null) {
+          this.fields.zoom.val(zoom);
+        }
         center = this.nlfeatures.getSavedCenter();
         if (center != null) {
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
         base_layer = this.nlfeatures.getBaseLayerCode();
-        if (base_layer != null) this.fields.base_layer.val(base_layer);
+        if (base_layer != null) {
+          this.fields.base_layer.val(base_layer);
+        }
         free = this.fields.free.val();
         return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "/" + base_layer + "\n" + free);
       };
 
       EditWidget.prototype.flash = function(msg, delay) {
         var _this = this;
-        if (delay == null) delay = 5000;
+        if (delay == null) {
+          delay = 5000;
+        }
         return this.fields.flash.html(msg).fadeIn('slow', function() {
           return setTimeout(function() {
             return _this.fields.flash.fadeOut('slow');
@@ -1738,21 +1917,25 @@
         }
       },
       _create: function() {
-        var id, _base, _base2;
+        var id, _base, _base1;
         id = this.element.attr('id');
         if ((_base = this.options).id_prefix == null) {
           _base.id_prefix = '#' + id.substring(0, id.length - 'widget'.length);
         }
-        if ((_base2 = this.options).name_prefix == null) {
-          _base2.name_prefix = this._idPrefixToNamePrefix();
+        if ((_base1 = this.options).name_prefix == null) {
+          _base1.name_prefix = this._idPrefixToNamePrefix();
         }
         this.mode = this.options.mode === 'edit' ? new EditWidget(this) : new ViewWidget(this);
         this.mode.init();
-        if (!this.options.values.is_map) return this.mode.hideMap();
+        if (!this.options.values.is_map) {
+          return this.mode.hideMap();
+        }
       },
       _idPrefixToNamePrefix: function(id_prefix) {
         var base, indices, p, parts;
-        if (id_prefix == null) id_prefix = this.options.id_prefix;
+        if (id_prefix == null) {
+          id_prefix = this.options.id_prefix;
+        }
         id_prefix = derefid(id_prefix);
         parts = (function() {
           var _i, _len, _ref, _results;
@@ -1760,7 +1943,9 @@
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             p = _ref[_i];
-            if (p.length > 0) _results.push(p);
+            if (p.length > 0) {
+              _results.push(p);
+            }
           }
           return _results;
         })();

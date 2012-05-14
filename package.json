@@ -1,0 +1,8 @@
+{
+    "name"         : "NeatlineFeatures",
+    "version"      : "1.0.0-rc2",
+    "dependencies" : {
+        "inireader" : "0.2.4",
+        "glob"      : "3.1.9"
+    }
+}

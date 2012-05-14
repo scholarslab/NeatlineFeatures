@@ -83,7 +83,10 @@
                 default_color: '#ffb80e',
                 select_point_radius: 10,
                 select_stroke_color: '#ea3a3a',
-                point_graphic: undefined
+                point_graphic: {
+                    normal   : undefined,
+                    selected : undefined
+                }
             },
 
             // These are added to document options for the map.
@@ -126,7 +129,7 @@
             this._currentVectorLayers = [];
             this._currentEditItem = null;
             this._currentEditLayer = null;
-            this._clickedFeature = null;
+            this.clickedFeature = null;
             this.idToLayer = {};
             this.requestData = null;
 
@@ -471,6 +474,118 @@
         },
 
         /*
+         * This selects a feature.
+         */
+        selectFeature: function(feature) {
+            if (this.isFocusLocked()) {
+                return;
+            }
+
+            this.modifyFeatures.selectFeature(feature);
+            this.clickControl.highlight(feature);
+            this.listenToFeature(feature);
+            this.clickedFeature = feature;
+
+            this.element.trigger('select.nlfeatures', feature);
+        },
+
+        /*
+         * This returns the SVG element for the feature.
+         */
+        getFeatureElement: function(feature) {
+            var gid;
+            gid = ('#' + feature.geometry.id).replace(/\./g, '\\.');
+            return $(gid);
+        },
+
+        /*
+         * This attaches mouse event listeners, if there aren't already some.
+         */
+        listenToFeature: function(feature) {
+            var fid, self, el;
+            fid = feature.id;
+            self = this;
+
+            el = this.getFeatureElement(feature);
+            el.on({
+                mousedown : function() { self.lockFocus(feature); },
+                mouseup   : function() { self.unlockFocus(feature); }
+            });
+        },
+
+        unlistenToFeature: function(feature, el) {
+            var self;
+            self = this;
+
+            if (el == null) {
+                el = this.getFeatureElement(feature);
+            }
+            el.off('mouseup').off('mousedown');
+        },
+
+        /*
+         * This deselects the current feature.
+         */
+        deselectFeature: function(feature, force) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            if (this.isFocusLocked(feature) && !force) {
+                return;
+            }
+
+            this.clickControl.unhighlight(feature);
+            this.modifyFeatures.unselectFeature(feature);
+            this.unlistenToFeature(feature);
+            this.resetModifyFeatures();
+            if (feature.nlfeatures) {
+                feature.nlfeatures.focusLocked = false;
+            }
+
+            if (feature === this.clickedFeature) {
+                this.clickedFeature = null;
+            }
+
+            this.element.trigger('deselect.nlfeatures', feature);
+        },
+
+        lockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null) {
+                if (feature.nlfeatures == null) {
+                    feature.nlfeatures = {
+                        focusLocked: true
+                    };
+                } else {
+                    feature.nlfeatures.focusLocked = true;
+                }
+            }
+        },
+
+        unlockFocus: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+
+            if (feature != null &&
+                feature.nlfeatures != null) {
+                feature.nlfeatures.focusLocked = false;
+            }
+        },
+
+        isFocusLocked: function(feature) {
+            if (feature == null) {
+                feature = this.clickedFeature;
+            }
+            return (feature != null &&
+                    feature.nlfeatures != null &&
+                    feature.nlfeatures.focusLocked);
+        },
+
+        /*
          * This adds the click control (`OpenLayers.Control.SelectFeature`) and
          * handlers for them.
          */
@@ -481,32 +596,47 @@
             this._removeControls();
 
             this.clickControl = new OpenLayers.Control.SelectFeature(this._currentVectorLayers, {
-                box: true,
+                hover: true,
+                highlightOnly: true,
 
-                onSelect: function(feature) {
-                    // Store the feature in the tracker.
-                    self._clickedFeature = feature;
+                overFeature: function(feature) {
+                    // This checks for ad-hoc features created by OL for edit
+                    // handles on a real feature.
+                    if (feature.geometry.parent != null) {
+                        return;
+                    }
 
-                    // Trigger out to the deployment code.
-                    self.element.trigger('featureclick.nlfeatures', {}, {
-                        'itemId': self.layerToId[feature.layer.id]
-                    });
+                    if (self.modifyFeatures !== undefined &&
+                        self.clickedFeature != null &&
+                        feature.id !== self.clickedFeature.id) {
 
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.selectFeature(feature);
+                        self.deselectFeature();
+                    }
+
+                    if (self.modifyFeatures !== undefined &&
+                        (self.clickedFeature == null ||
+                         feature.id !== self.clickedFeature.id)) {
+
+                        self.selectFeature(feature);
                     }
                 },
 
-                onUnselect: function(feature) {
-                    if (self.modifyFeatures !== undefined) {
-                        self.modifyFeatures.unselectFeature(feature);
-                    }
+                outFeature: function(feature) {
+                    return false;
                 }
+
             });
 
             // Add and activate.
             this.map.addControl(this.clickControl);
             this.clickControl.activate();
+
+            // Handle clicks on the map to remove focus.
+            this.map.events.register('click', this.map, function(e) {
+                if (self.clickedFeature != null) {
+                    self.deselectFeature(self.clickedFeature, true);
+                }
+            });
         },
 
         /*
@@ -636,6 +766,7 @@
                 })
             ];
 
+
             // Instantiate the modify feature control.
             this.modifyFeatures = new OpenLayers.Control.ModifyFeature(this._currentEditLayer, {
                 // OL marks this callback as deprecated, but I can't find
@@ -646,7 +777,6 @@
 
                 standalone: true
             });
-
             // Instantiate the edit toolbar.
             this.editToolbar = new OpenLayers.Control.Panel({
                 defaultControl: panelControls[0],
@@ -668,8 +798,8 @@
                 }
             });
             // On update.
-            this.element.bind('update.nlfeatures',
-                function(event, obj) {
+            this.element.bind({
+                'update.nlfeatures': function(event, obj) {
                     // Default to reshape.
                     self.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
 
@@ -701,20 +831,28 @@
                         self.modifyFeatures.unselectFeature(feature);
                         self.modifyFeatures.selectFeature(feature);
                     }
-                });
+                },
 
-            this.element.bind('delete.nlfeatures',
-                function() {
+                'lockfocus.nlfeatures': function() {
+                    self.lockFocus();
+                },
+
+                'unlockfocus.nlfeatures': function() {
+                    self.unlockFocus();
+                },
+
+                'delete.nlfeatures': function() {
                     if (self.modifyFeatures.feature) {
                         var feature = self.modifyFeatures.feature;
-                        self._clickedFeature = null;
+                        self.clickedFeature = null;
                         self.modifyFeatures.unselectFeature(feature);
                         self._currentEditLayer.destroyFeatures([ feature ]);
                     }
-                });
+                }
+            });
 
-            // Only do the fade if the form open does not coincide with
-            // another form close.
+            // Only do the fade if the form open does not coincide with another
+            // form close.
             if (!immediate) {
                 // Insert the edit geometry button.
                 this.element.editfeatures('showButtons', immediate);
@@ -751,14 +889,21 @@
             // feature click in the editor.
             var inLayer = false;
             $.each(this._currentEditLayer.features, function(i, feature) {
-                if (feature == self._clickedFeature) {
+                if (feature == self.clickedFeature) {
                     inLayer = true;
                 }
             });
 
             if (inLayer) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
+        },
+
+        /*
+         * This resets the modes on ModifyFeatures.
+         */
+        resetModifyFeatures: function() {
+            this.modifyFeatures.mode = OpenLayers.Control.ModifyFeature.RESHAPE;
         },
 
         /*
@@ -887,7 +1032,7 @@
             var toolbarClone = $('.' + this.options.markup.toolbar_class).clone();
 
             // Remove controls.
-            this.modifyFeatures.unselectFeature(this._clickedFeature);
+            this.modifyFeatures.unselectFeature(this.clickedFeature);
             this.map.removeControl(this.modifyFeatures);
             this.map.removeControl(this.editToolbar);
 
@@ -954,8 +1099,8 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
             // Push the wkt's onto the array.
@@ -963,8 +1108,8 @@
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this._clickedFeature)) {
-                this.modifyFeatures.selectFeature(this._clickedFeature);
+            if (this.exists(this.clickedFeature)) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
             }
 
             return wkts.join(this.options.wkt_delimiter);
@@ -1008,16 +1153,21 @@
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: fillColor,
-                    pointRadius: this.options.styles.select_point_radius,
-                    externalGraphic: this.options.styles.point_graphic,
-                    strokeWidth: 1
+                    strokeWidth: 1,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.normal
                 }),
                 'select': new OpenLayers.Style({
                     fillColor: fillColor,
                     fillOpacity: this.options.styles.default_opacity,
                     strokeColor: this.options.styles.select_stroke_color,
-                    pointRadius: this.options.styles.select_point_radius,
-                    strokeWidth: 2
+                    strokeWidth: 2,
+                    pointRadius: 10
+                    // graphicWidth: 15,
+                    // graphicHeight: 48,
+                    // externalGraphic: this.options.styles.point_graphic.selected
                 })
             });
         },
