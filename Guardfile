@@ -16,4 +16,7 @@ guard 'shell' do
   end
 end
 
-guard 'coffeescript', :input => 'views/shared/javascripts'
+guard 'coffeescript', :input => 'views/shared/javascripts' do
+  watch(/views\/shared\/javascripts\/(.*)\.coffee/)
+end
+

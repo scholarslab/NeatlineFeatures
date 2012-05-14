@@ -6,3 +6,4 @@ depend/
 doc/
 md/
 node_modules/
+pkg/
