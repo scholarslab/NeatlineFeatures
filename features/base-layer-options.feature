@@ -34,7 +34,7 @@ Feature: Users can select a base layer from a set of options
     And I switch to the "Google Physical" base layer on "#Elements-38-0-map"
     And I draw a point on "div.olMap"
     And I click on "Add Item"
-    And I click "Base Layer Settings Persist"
+    And I click "Base Layer Settings Display"
     When I click "View Public Page"
     Then ".nlfeatures" should have the base layer "gphy"
 
