@@ -165,11 +165,13 @@ task :version, [:version] do |t, args|
 
   # plugin.ini
   FileUtils.mv 'plugin.ini', tmp.path, :verbose => true
-  sh %{cat #{tmp.path} | sed -e 's/^version=".*"/version="#{version.sub('-', '.')}"/' > plugin.ini}
+  sh %{cat #{tmp.path} | sed -e 's/^version=".*"/version="#{version}"/' > plugin.ini}
 
   # project.json
   FileUtils.mv 'package.json', tmp.path, :verbose => true
- sh %{cat #{tmp.path} | sed -e 's/^\\( *"version" *: *"\\).*\\(",*\\)/\\1#{version}\\2/' > package.json}
+  sh %{cat #{tmp.path} | sed -e 's/^\\( *"version" *: *"\\).*\\(",*\\)/\\1#{version}\\2/' > package.json}
+
+  Rake::Task[:minify].invoke
 end
 
 Rake::PackageTask.new('dist') do |p|
