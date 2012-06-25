@@ -13,9 +13,6 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    capybara-webkit (0.9.0)
-      capybara (>= 1.0.0, < 1.2)
-      json
     childprocess (0.3.1)
       ffi (~> 1.0.6)
     chunky_png (1.2.5)
@@ -102,6 +99,7 @@ GEM
     multi_json (1.0.4)
     multi_xml (0.4.1)
     nokogiri (1.5.0)
+    peach (0.4)
     rack (1.4.1)
     rack-test (0.6.1)
       rack (>= 1.0)
@@ -135,7 +133,6 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
-  capybara-webkit
   compass
   compass-susy-plugin
   compass-validator
@@ -149,6 +146,7 @@ DEPENDENCIES
   guard-shell
   jasmine
   livereload
+  peach
   rake
   rspec-expectations
   sass
