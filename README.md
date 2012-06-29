@@ -86,7 +86,7 @@ the [Omeka Forums][forums]  or the [Omeka Developers Group][groups].
 
 [installing]: http://omeka.org/codex/Installing_a_Plugin "Installing a Plugin"
 [public_append_to_items_show]: http://omeka.org/codex/Hooks/public_append_to_items_show "public_append_to_items_show"
-[issues]: https://github.com/scholarslab/NeatlineTime/issues/ "issue tracker"
+[issues]: https://github.com/scholarslab/NeatlineFeatures/issues/ "issue tracker"
 [forums]: http://omeka.org/forums/
 [groups]: https://groups.google.com/forum/?fromgroups#!forum/omeka-dev
 
