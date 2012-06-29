@@ -31,16 +31,32 @@ also center on your current location.
 
 <a href="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png"><img class="alignnone size-full wp-image-431" title="features_2" src="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png" alt="" width="627" height="536" /></a>
 
-Simply zoom to the location you want to draw a feature on, select the feature
-(polygon, point, or line), and draw. (//TODO: describe the drawing tools)
+Simply zoom to the location you want to draw a feature on, select the drawing
+tool, and draw.
 
 <a href="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png"><img class="alignnone size-full wp-image-432" title="features_3" src="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png" alt="" width="622" height="535" /></a>
 
-To save the zoom level and map center point, click on the Save View button.
+There are three drawing tools, from left to right:
 
-NeatlineFeatures also allows you to use a selection of base layers on your map.
-If you want to select a different base layer, click on the stack of papers in
-the upper-right corner of the coverage map and select from the list.
+* **Polygon** is for drawing multi-sided, closed shapes;
+* **Point** is for drawing points;
+* **Line** is for drawing lines and open shapes; and
+* **Selection** is for selecting and editing the shapes.
+
+Along the bottom of the map are also a number of tools you can us to change
+shapes you've selected:
+
+* **Save View** bookmarks the zoom level and map center point, which will be
+  used whenever anyone views that coverage map;
+* **Delete** removes a feature from the map;
+* **Drag** adds a point to the shape so you can drag it to another location;
+* **Scale** adds a point to the lower right of the shape so you can scale it
+  and flip it; and
+* **Rotate** adds a point to the lower right of the shape so you can rotate it.
+
+NeatlineFeatures also provides you a choice of base layers for your map. To
+select a different base layer, click on the stack of papers in the upper-right
+corner of the coverage map and select from the list.
 
 <a href="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png"><img class="alignnone size-full wp-image-474" title="NeatlineFeatures select base layer" src="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png" alt="" width="640" height="548" /></a>
 
