@@ -317,15 +317,27 @@
                     'under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.';
                 baseLayers.swc = new OpenLayers.Layer.Stamen(
                     "Stamen Watercolor",
-                    { provider: 'watercolor', attribution: attribution }
+                    {
+                        provider: 'watercolor',
+                        attribution: attribution,
+                        tileOptions: { crossOriginKeyword: null }
+                    }
                 );
                 baseLayers.stn = new OpenLayers.Layer.Stamen(
                     "Stamen Toner",
-                    { provider: 'toner',      attribution: attribution }
+                    {
+                        provider: 'toner',
+                        attribution: attribution,
+                        tileOptions: { crossOriginKeyword: null }
+                    }
                 );
                 baseLayers.str = new OpenLayers.Layer.Stamen(
                     "Stamen Terrain",
-                    { provider: 'terrain',    attribution: attribution }
+                    {
+                        provider: 'terrain',
+                        attribution: attribution,
+                        tileOptions: { crossOriginKeyword: null }
+                    }
                 );
             }
 
