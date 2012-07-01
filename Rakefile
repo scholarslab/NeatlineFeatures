@@ -106,7 +106,8 @@ end
 
 Rake::PackageTask.new('dist') do |p|
   p.name = 'NeatlineFeatures'
-  p.version = IO.readlines('version')[0].strip
+  # p.version = IO.readlines('version')[0].strip
+  p.version = :noversion
   p.need_tar_gz = true
   p.need_zip = true
 
