@@ -20,8 +20,8 @@ if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
     define('NEATLINE_FEATURES_PLUGIN_DIR', dirname(__FILE__) . '/..');
 }
 // For some reason, this isn't getting picked up when running tests.
-require_once APP_DIR . '/models/Plugin.php';
-require_once NEATLINE_FEATURES_PLUGIN_DIR . '/NeatlineFeaturesPlugin.php';
+// require_once APP_DIR . '/models/Plugin.php';
+// require_once NEATLINE_FEATURES_PLUGIN_DIR . '/NeatlineFeaturesPlugin.php';
 
 /**
  * This is a base class for all NeatlineFeatures unit tests.

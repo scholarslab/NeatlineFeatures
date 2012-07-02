@@ -131,6 +131,8 @@
       el          = $ @widget.element
       id_prefix   = derefid @widget.options.id_prefix
       name_prefix = @widget.options.name_prefix
+      use_html    = @widget.options.labels.html
+      use_map     = @widget.options.labels.map
 
       map_container = $ """
         <div class="nlfeatures map-container">
@@ -150,11 +152,11 @@
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <div>
-            <label class="use-html">Use HTML
+            <label class="use-html">#{use_html}
               <input type="hidden" name="#{name_prefix}[html] value="0" />
               <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
             </label>
-            <label class="use-mapon">Use Map
+            <label class="use-mapon">#{use_map}
               <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
               <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
             </label>
@@ -328,6 +330,10 @@
 
       id_prefix   : null
       name_prefix : null
+
+      labels      :
+        html      : 'Use HTML'
+        map       : 'Use Map'
 
       map_options : {}
 

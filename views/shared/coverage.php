@@ -23,6 +23,10 @@
             mode: <?php echo json_encode($mode) ?>,
             id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
             name_prefix: <?php echo json_encode($inputNameStem) ?>,
+            labels: {
+                html : <?php echo json_encode(__('Use HTML')) ?>,
+                map  : <?php echo json_encode(__('Use Map')) ?>
+                },
             map_options: {
                 styles: {
                     default_opacity: 0.4,

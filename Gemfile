@@ -1,7 +1,8 @@
 source :rubygems
 
+gem 'peach'
 gem 'capybara'
-gem 'capybara-webkit'
+# gem 'capybara-webkit'
 gem 'compass'
 gem 'compass-susy-plugin'
 gem 'compass-validator'
