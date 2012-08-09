@@ -218,6 +218,8 @@
           @fields.html
             .change => this._updateTinyEvents()
       )
+      # In the meantime....
+      @fields.mapon .change => this._onUseMap()
 
     populate: (values=@widget.options.values) ->
       @fields.mapon.attr 'checked', values.is_map
