@@ -153,7 +153,7 @@
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <div>
             <label class="use-html">#{use_html}
-              <input type="hidden" name="#{name_prefix}[html] value="0" />
+              <input type="hidden" name="#{name_prefix}[html]" value="0" />
               <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
             </label>
             <label class="use-mapon">#{use_map}
