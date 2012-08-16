@@ -51,7 +51,8 @@ class NeatlineFeaturesPlugin
         'admin_theme_header',
         'public_theme_header',
         'after_save_item',
-        'before_delete_item'
+        'before_delete_item',
+        'initialize'
     );
 
     /**
@@ -251,6 +252,18 @@ class NeatlineFeaturesPlugin
             ->_db
             ->getTable('NeatlineFeature')
             ->removeItemFeatures($record);
+    }
+
+    /**
+     * Initialization.
+     *
+     * Adds tranlation source.
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        add_translation_source(dirname(__FILE__) . '/languages');
     }
 
     // }}}
