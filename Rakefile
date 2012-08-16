@@ -1,34 +1,12 @@
 require 'peach'
-require 'cucumber/rake/task'
 require 'fileutils'
 require 'rake/packagetask'
 require 'tempfile'
 
 task :default => [
-  'php:unit',
+  # 'php:unit',
   # 'jasmine:ci',
-  :cucumber,
 ]
-
-namespace :cucumber do
-  Cucumber::Rake::Task.new(:default, 'Run cucumber tests') do |t|
-    t.profile = 'default'
-  end
-
-  Cucumber::Rake::Task.new(:rerun, 'Rerun failed cucumber tests.') do |t|
-    File.delete('rerun-orig.txt') if File.exist?('rerun-orig.txt')
-    if File.exist?('rerun.txt')
-      File.rename('rerun.txt', 'rerun-orig.txt')
-    else
-      File.open('rerun-orig.txt', 'w+').close
-    end
-    t.profile = 'rerun'
-  end
-
-  Cucumber::Rake::Task.new(:current, 'Run cucumber scenarios tagged @current.') do |t|
-    t.cucumber_opts = %w{--profile default --tag @current}
-  end
-end
 
 namespace :js do
   desc 'This runs JSHint on the JavaScript files (CoffeeScript are assume to be OK).'
