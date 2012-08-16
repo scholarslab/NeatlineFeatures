@@ -190,3 +190,12 @@ task :update_pot do
   
 end
 
+desc 'Builds MO files from existing PO files.'
+task :build_mo do
+  files = Dir["languages/*.{po}"]
+
+  files.pmap do |filename|
+    targetfile = filename.sub(/\.po$/,'.mo')
+    sh %{msgfmt -o #{targetfile} #{filename}}
+  end
+end
