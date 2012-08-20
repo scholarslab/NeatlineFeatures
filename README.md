@@ -88,6 +88,7 @@ the [Omeka Forums][forums]  or the [Omeka Developers Group][groups].
 
 ### Translations
 
+* Gillian Price (Spanish)
 * Katina Rogers (French)
 
 [installing]: http://omeka.org/codex/Installing_a_Plugin "Installing a Plugin"
