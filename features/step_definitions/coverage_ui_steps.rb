@@ -55,3 +55,7 @@ Then /^I should not see "([^"]*)"$/ do |target|
   find(target).should_not be_visible
 end
 
+Then /^element "([^"]*)" should not be on the page$/ do |target|
+  page.should_not have_css(target)
+end
+

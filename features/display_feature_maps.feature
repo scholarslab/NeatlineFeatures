@@ -19,4 +19,5 @@ Feature: Display Feature Maps on Item Pages
     Then I should see an OpenLayers map
     And the map in "#dublin-core-coverage" should have a point feature
     And the map in "#dublin-core-coverage" should have a line feature
+    And element "#dublin-core-coverage .freetext" should not be on the page
 
