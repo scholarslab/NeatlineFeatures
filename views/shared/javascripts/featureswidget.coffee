@@ -115,8 +115,13 @@
       el
 
     populate: ->
-      free = @widget.options.values.text
-      @fields.free.html stripFirstLine(free)
+      free     = @widget.options.values.text
+      stripped = stripFirstLine free
+      if stripped == ''
+        @fields.free.detach()
+        delete @fields.free
+      else
+        @fields.free.html stripped
 
 
   class EditWidget extends BaseWidget
