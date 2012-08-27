@@ -1716,9 +1716,15 @@
       };
 
       ViewWidget.prototype.populate = function() {
-        var free;
+        var free, stripped;
         free = this.widget.options.values.text;
-        return this.fields.free.html(stripFirstLine(free));
+        stripped = stripFirstLine(free);
+        if (stripped === '') {
+          this.fields.free.detach();
+          return delete this.fields.free;
+        } else {
+          return this.fields.free.html(stripped);
+        }
       };
 
       return ViewWidget;
