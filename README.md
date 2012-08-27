@@ -88,7 +88,9 @@ the [Omeka Forums][forums]  or the [Omeka Developers Group][groups].
 
 ### Translations
 
+* Martin Liebeskind (German)
 * Gillian Price (Spanish)
+* Oguljan Reyimbaeva (Russian)
 * Katina Rogers (French)
 
 [installing]: http://omeka.org/codex/Installing_a_Plugin "Installing a Plugin"
