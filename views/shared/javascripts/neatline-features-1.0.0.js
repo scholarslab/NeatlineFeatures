@@ -197,8 +197,7 @@
             var controls = [
                 new OpenLayers.Control.Attribution(),
                 new OpenLayers.Control.Navigation(),
-                new OpenLayers.Control.PanZoomBar(),
-                new OpenLayers.Control.ScaleLine()
+                new OpenLayers.Control.PanZoomBar()
             ];
             if (this.options.mode === 'edit') {
                 controls = controls.concat(
