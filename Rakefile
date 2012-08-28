@@ -177,3 +177,174 @@ task :build_mo do
     sh %{msgfmt -o #{targetfile} #{filename}}
   end
 end
+
+begin
+  require 'cucumber/rake/task'
+
+  namespace :cucumber do
+    Cucumber::Rake::Task.new(:default, 'Run cucumber tests') do |t|
+      t.profile = 'default'
+    end
+
+    Cucumber::Rake::Task.new(:rerun, 'Rerun failed cucumber tests.') do |t|
+      File.delete('rerun-orig.txt') if File.exist?('rerun-orig.txt')
+      if File.exist?('rerun.txt')
+        File.rename('rerun.txt', 'rerun-orig.txt')
+      else
+        File.open('rerun-orig.txt', 'w+').close
+      end
+      t.profile = 'rerun'
+    end
+
+    Cucumber::Rake::Task.new(:current, 'Run cucumber scenarios tagged @current.') do |t|
+      t.cucumber_opts = %w{--profile default --tag @current}
+    end
+  end
+
+  desc 'Run tasks for Travis CI.'
+  task :travis do
+    system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL=null && bundle exec cucumber')
+  end
+
+  desc 'Run in neatline.dev environment. The task defaults to "cucumber:default".'
+  task :neatlinecuke, [:task] do |t, args|
+    task = args[:task] || 'cucumber:default'
+
+    ENV['OMEKA_HOST']   = 'http://neatline.dev'
+    ENV['OMEKA_USER']   = 'neatline'
+    ENV['OMEKA_PASSWD'] = 'neatline'
+    ENV['OMEKA_MYSQL']  = 'mysql -hneatline.dev -uomeka -pomeka omeka'
+
+    Rake::Task[task].invoke()
+  end
+rescue LoadError
+  desc 'Cucumber is not available. Run bundle with the "test" group.'
+  task :cucumber do
+    abort 'Cucumber is not available. Run bundle with the "test" group.'
+  end
+
+  desc 'Travis testing is unavailable because Cucumber is unavailable. So there.'
+  task :travis do
+    abort 'Travis testing is unavailable because Cucumber is unavailable. So there.'
+  end
+end
+
+begin
+  # require '/Users/err8n/p/zayin/lib/zayin/rake/vagrant/php'
+  require 'vagrant'
+  require 'zayin/rake/vagrant/php'
+  Zayin::Rake::Vagrant::PhpTasks.new
+
+  VM_BASEDIR = '/vagrant/omeka/plugins/NeatlineFeatures'
+
+  namespace :php do
+    desc 'This runs PHPUnit on NeatlineFeatures.'
+    task :unit, [:target] do |task, args|
+      target = args[:target] || '.'
+
+      # Enabling the coverage report below causes memory issues, so I've
+      # commented it out below.
+      Rake::Task['vagrant:php:unit'].invoke(
+        File.join(VM_BASEDIR, 'tests'),
+        File.join(VM_BASEDIR, 'tests', 'phpunit.xml'),
+        target
+        # File.join(VM_BASEDIR, 'coverage')
+      )
+    end
+
+    desc 'This runs PHP Copy/Paste Detection report on NeatlineFeatures.'
+    task :cpd do
+      Rake::Task['vagrant:php:cpd'].invoke(
+        VM_BASEDIR,
+        File.join(VM_BASEDIR, 'cpd')
+      )
+    end
+
+    desc 'This runs PHP CodeSniffer on NeatlineFeatures.'
+    task :cs do
+      Rake::Task['vagrant:php:cs'].invoke(
+        VM_BASEDIR,
+        File.join(VM_BASEDIR, 'cs'),
+        File.join(VM_BASEDIR, 'php-testing-rules', 'phpcs.xml'),
+        %{--ignore=*/features/*,*/tests/*}
+      )
+    end
+
+    desc 'This runs PHP Depend on NeatlineFeatures.'
+    task :depend do
+      Rake::Task['vagrant:php:depend'].invoke(
+        VM_BASEDIR,
+        File.join(VM_BASEDIR, 'depend')
+      )
+    end
+
+    desc 'This runs PHP Documentor on NeatlineFeatures.'
+    task :doc do
+      Rake::Task['vagrant:php:doc'].invoke(
+        VM_BASEDIR,
+        File.join(VM_BASEDIR, 'doc')
+      )
+    end
+
+    desc 'This run PHP Mess Detector on NeatlineFeatures.'
+    task :md do
+      Rake::Task['vagrant:php:md'].invoke(
+        VM_BASEDIR,
+        File.join(VM_BASEDIR, 'md'),
+        File.join(VM_BASEDIR, 'php-testing-rules', 'phpmd.xml')
+      )
+    end
+
+    desc 'This downloads the PHP style guides.'
+    task :getstyle do
+      sh %{git clone https://github.com/waynegraham/php-testing-rules}
+    end
+  end
+
+  def vm_ssh(env, cmd, output_dir)
+    puts ">>> #{cmd}"
+    unless output_dir.nil?
+      env.primary_vm.channel.execute(
+        "if [ ! -d #{output_dir} ]; then mkdir -p #{output_dir}; fi"
+      )
+    end
+    env.primary_vm.channel.execute cmd do |channel, data|
+      out = $stdout
+      if channel == :stderr
+        out = $stderr
+      end
+
+      out.write(data)
+      out.flush()
+    end
+  end
+
+  namespace :vm do
+    desc 'This removes all "Cucumber: ..." items from the DB in the VM.'
+    task :clearitems do
+      env = ::Vagrant::Environment.new
+      vm_ssh(
+        env,
+        "mysql -uomeka -pomeka omeka < #{VM_BASEDIR}/features/support/clean_db.sql",
+        nil
+      )
+    end
+
+    desc 'This updates the database dump for Travis.'
+    task :dbdump, [:output] do |task, args|
+      output = args[:output] || 'features/data/db-dump.sql.gz'
+      env = ::Vagrant::Environment.new
+      vm_ssh(
+        env,
+        "cd #{VM_BASEDIR} && mysqldump -uomeka -pomeka omeka | gzip > #{output}",
+        nil
+      )
+    end
+  end
+rescue LoadError
+  desc 'The PHP unit tests are unavailable until you install the "vagrant" group.'
+  task :vagrant do
+    abort 'The PHP unit tests are unavailable until you install the "vagrant" group.'
+  end
+end
+

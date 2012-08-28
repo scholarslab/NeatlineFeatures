@@ -1,24 +1,32 @@
 source :rubygems
 
-gem 'peach'
-gem 'capybara'
-# gem 'capybara-webkit'
-gem 'compass'
-gem 'compass-susy-plugin'
-gem 'compass-validator'
-gem 'cucumber'
-gem 'geo_magic'
-gem 'growl'
-gem 'guard'
-gem 'guard-coffeescript'
-gem 'guard-compass'
-gem 'guard-livereload'
-gem 'guard-shell'
-gem 'jasmine'
-gem 'livereload'
-gem 'rake'
-gem 'rspec-expectations'
-gem 'sass'
-gem 'selenium-webdriver'
-gem 'zayin'
+group :test do
+  gem 'capybara'
+  gem 'capybara-webkit'
+  gem 'cucumber'
+  gem 'geo_magic'
+  gem 'growl'
+  gem 'rspec-expectations'
+  gem 'selenium-webdriver'
+end
+
+group :development do
+  gem 'compass'
+  gem 'compass-susy-plugin'
+  gem 'compass-validator'
+  gem 'guard'
+  gem 'guard-coffeescript'
+  gem 'guard-compass'
+  gem 'guard-livereload'
+  gem 'guard-shell'
+  gem 'livereload'
+  gem 'peach'
+  gem 'rake'
+  gem 'sass'
+end
+
+group :vagrant do
+  gem 'vagrant', '~> 1.0.3'
+  gem 'zayin'
+end
 
