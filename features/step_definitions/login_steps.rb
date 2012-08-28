@@ -6,8 +6,8 @@ end
 
 Given /^I am logged into the admin console$/ do
   visit '/admin/users/login'
-  fill_in "Username", :with => "features"
-  fill_in "Password", :with => "features"
+  fill_in "Username", :with => (ENV['OMEKA_USER']   || "features")
+  fill_in "Password", :with => (ENV['OMEKA_PASSWD'] || "features")
   click_on "Log In"
 end
 

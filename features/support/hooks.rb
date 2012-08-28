@@ -14,3 +14,7 @@ Around('@file_fixture') do |scenario, block|
   end
 end
 
+Before do
+  NeatlineFeatures.omeka_dir = ENV['OMEKA_DIR'] || '../..'
+end
+
