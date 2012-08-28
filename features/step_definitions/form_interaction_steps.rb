@@ -50,9 +50,8 @@ When /^I wait (\d+) seconds$/ do |count|
 end
 
 When /^I view the page$/ do
-  puts "URL      => #{current_url}"
-  puts "Response => #{response_headers.inspect}"
-  puts "HTML     =>"
+  puts "URL  => #{current_url}"
+  puts "HTML => "
   puts html
   puts
 end
