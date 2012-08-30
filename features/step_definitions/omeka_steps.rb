@@ -1,6 +1,9 @@
 
 Given /^I replace "([^"]*)" with "([^"]*)"$/ do |dest, src|
+  dest    = File.join(NeatlineFeatures.omeka_dir, dest)
+  src     = File.join(NeatlineFeatures.omeka_dir, src)
   dirname = File.dirname(dest)
+
   FileUtils.mkdir_p(dirname) if !Dir.exists?(dirname)
   FileUtils.cp(src, dest)
   NeatlineFeatures.file_fixtures << dest

@@ -7,7 +7,7 @@ Feature: Test Coverage Data
   @file_fixture
   Scenario: Test All Non-Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -24,7 +24,7 @@ Feature: Test Coverage Data
   @file_fixture @selenium
   Scenario: All Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -43,7 +43,7 @@ Feature: Test Coverage Data
   @file_fixture @selenium
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject
