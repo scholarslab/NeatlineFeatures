@@ -22,7 +22,7 @@ Feature: Display Multiple Individual Coverages
       | UVa                 |
     But I should not see text "WKT" in "#dublin-core-coverage"
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-indiv.php"
@@ -41,7 +41,7 @@ Feature: Display Multiple Individual Coverages
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
     But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-indiv.php"

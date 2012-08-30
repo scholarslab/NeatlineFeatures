@@ -32,7 +32,7 @@ Feature: Bug Fix Tests
     # Then I should see ".mceEditor" in "#element-38"
     # And "Elements-38-0-html" should be checked
 
-  @selenium
+  @javascript
   Scenario: Editing buttons should have unique IDs.
     Given I am logged into the admin console
     When I click "Add a new item to your archive"

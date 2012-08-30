@@ -21,7 +21,7 @@ Feature: Test Coverage Data
       | false |
       | false |
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
@@ -40,7 +40,7 @@ Feature: Test Coverage Data
       | true  |
       | true  |
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
