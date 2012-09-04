@@ -56,6 +56,7 @@ Feature: Bug Fix Tests
     And I draw a point on "div.olMap"
     And I click "Save View" in "#element-38"
     And I click on "Add Item"
+    And I view the page
     When I click "Viewport overflow"
     Then "#dublin-core-coverage .map" should center on "-111.8833, 40.75"
 

@@ -27,6 +27,7 @@ Feature: Set Viewport
     And I click on "Save View" in "#element-38"
     And I click on "Add Item"
     When I click "Viewport Settings Persist"
+    And I view the page
     Then "#dublin-core-coverage .map" should center on "-78.5057, 38.03652"
     And "#dublin-core-coverage .map" should be zoomed to "6"
 

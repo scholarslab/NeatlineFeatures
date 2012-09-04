@@ -49,6 +49,14 @@ When /^I wait (\d+) seconds$/ do |count|
   sleep(count.to_i)
 end
 
+When /^I view the page$/ do
+  puts "URL      => #{current_url}"
+  puts "Response => #{response_headers.inspect}"
+  puts "HTML     =>"
+  puts html
+  puts
+end
+
 Then /^"([^"]*)" should be checked$/ do |checkbox|
   page.has_checked_field?(checkbox).should be_true
 end
