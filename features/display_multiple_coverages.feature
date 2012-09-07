@@ -7,7 +7,7 @@ Feature: Display Multiple Coverages
   @file_fixture
   Scenario: All Non-Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -22,10 +22,10 @@ Feature: Display Multiple Coverages
     Then I should see text "Charlottesville, VA; UVa" in "#dublin-core-coverage"
     But I should not see text "null" in "#dublin-core-coverage"
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -41,10 +41,10 @@ Feature: Display Multiple Coverages
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
     But I should not see text "null" in "#dublin-core-coverage .nlfeatures"
 
-  @file_fixture @selenium
+  @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-delim.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Display Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject

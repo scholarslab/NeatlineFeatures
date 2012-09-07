@@ -41,10 +41,12 @@ Given /^I switch to the "([^"]*)" base layer on "([^"]*)"/ do |base_layer, map|
 end
 
 Given /^I move "([^"]*)" to "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat|
+  sleep 5
   evaluate_script("jQuery('#{map}').data('nlfeatures').setCenterLonLat(#{lon}, #{lat})")
 end
 
 Given /^I zoom "([^"]*)" to "(\d*)"/ do |map, zoom|
+  sleep 5
   evaluate_script("jQuery('#{map}').data('nlfeatures').setZoom(#{zoom})")
 end
 
@@ -121,16 +123,19 @@ Then /^the map at "([^"]*)" should have a line feature$/ do |xpath|
 end
 
 Then /^the map at "([^"]*)" should display a point feature$/ do |map|
+  sleep 5
   result = evaluate_script("jQuery('#{map}').data('nlfeatures').hasPoint()")
   result.should be_true
 end
 
 Then /^the map at "([^"]*)" should display a line feature$/ do |xpath|
+  sleep 5
   result = (evaluate_script("jQuery('#{map}').data('nlfeatures').hasLine()") == 'true')
   result.should be_true
 end
 
 Then /^"([^"]*)" should center on my location$/ do |map|
+  sleep 5
   map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
   map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f
   my_loc = GeoMagic::Remote.my_location
@@ -139,6 +144,7 @@ Then /^"([^"]*)" should center on my location$/ do |map|
 end
 
 Given /^"([^"]*)" should center on "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat|
+  sleep 5
   map_lon = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lon").to_f
   map_lat = evaluate_script("jQuery('#{map}').data('nlfeatures').getCenterLonLat().lat").to_f
   (map_lon - lon.to_f).should be < 1.0
@@ -146,11 +152,13 @@ Given /^"([^"]*)" should center on "(-?\d*\.\d*), (\d*\.\d*)"/ do |map, lon, lat
 end
 
 Given /^"([^"]*)" should be zoomed to "(\d*)"/ do |map, zoom|
+  sleep 5
   map_zoom = evaluate_script("jQuery('#{map}').data('nlfeatures').map.getZoom()").to_i
   map_zoom.should be(zoom.to_i)
 end
 
 Then /^"([^"]*)" should have the base layer "([^"]*)"/ do |map, base_layer|
+  sleep 5
   map_base_layer = evaluate_script("jQuery('#{map}').data('featurewidget').mode.nlfeatures.getBaseLayerCode()")
   map_base_layer.should == base_layer
 end
