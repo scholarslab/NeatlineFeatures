@@ -113,5 +113,58 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
         );
     }
 
+    /**
+     * This tests whether a string is KML.
+     *
+     * @return void
+     * @author Eric Rochester
+     **/
+    public function testIsKml()
+    {
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://www.opengis.net/kml/2.2'>\n" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<kml xmlns='http://www.opengis.net/kml/2.2'>\n" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<kml:kml xmlns:kml='http://www.opengis.net/kml/2.2'>\n" .
+                "</kml:kml>"
+            )
+        );
+
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<kml>\n" .
+                "</kml>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<html>\n" .
+                "</html>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<html>\n" .
+                "</html>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml("MULTIPOLYGON (1 2,3 4,5 6)|END")
+        );
+    }
+
 }
 

@@ -56,6 +56,29 @@ class NeatlineFeatures_Functions
     }
 
     /**
+     * This returns true if the input string is KML.
+     *
+     * @param string $kml The string to test.
+     *
+     * @return bool $isKml Whether the string is KML.
+     * @author Eric Rochester
+     **/
+    public function isKml($kml)
+    {
+        $isKml = false;
+
+        try {
+            $doc = new DOMDocument();
+            $doc->loadXML($kml);
+            $nodes = $doc->getElementsByTagNameNS('http://www.opengis.net/kml/2.2', 'kml');
+            $isKml = ($nodes->length === 1);
+        } catch (Exception $e) {
+        }
+
+        return $isKml;
+    }
+
+    /**
      * This returns the string to display a coverage field, whether a map or 
      * not.
      *
