@@ -53,8 +53,8 @@ task :coffee do
   sh %{find . -name \\*.coffee | xargs coffee --compile}
 end
 
-desc "Updates the version in the 'plugin.in' and 'package.json' files. If given
-the version parameter, it also updates the version in the 'version' file.
+desc "Updates the version in the 'plugin.ini' and 'package.json' files. If
+given the version parameter, it also updates the version in the 'version' file.
 Before updating the metadata files."
 
 task :version, [:version] do |t, args|
@@ -190,6 +190,11 @@ begin
 
     Cucumber::Rake::Task.new(:current, 'Run cucumber scenarios tagged @current.') do |t|
       t.cucumber_opts = %w{--profile default --tag @current}
+    end
+
+    Cucumber::Rake::Task.new(:tags, 'Run cucumber scenarios with a given tag.') do |t|
+      tags = ENV['CUCUMBER_TAGS']
+      t.cucumber_opts = ['--profile', 'default', '--tag', tags]
     end
   end
 
