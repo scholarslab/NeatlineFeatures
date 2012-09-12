@@ -195,7 +195,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
         $sql     = $db->prepare(
             "INSERT INTO $name
-                (added, item_id, element_text_id, is_map, wkt, zoom,
+                (added, item_id, element_text_id, is_map, geo, zoom,
                  center_lon, center_lat, base_layer)
                 SELECT NOW(), ?, et.id, ?, ?, ?, ?, ?, ?
                 FROM {$db->prefix}element_texts et
@@ -205,7 +205,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
         foreach ($params as $field) {
             $isMap      = (bool)$this->_param($field, 'mapon', 0);
-            $wkt        = $this->_param($field, 'wkt', '');
+            $geo        = $this->_param($field, 'geo', '');
             $zoom       = $this->_param($field, 'zoom', 3);
             $center_lon = $this->_param($field, 'center_lon', 0.0);
             $center_lat = $this->_param($field, 'center_lat', 0.0);
@@ -213,7 +213,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
             $data = array(
                 $item_id, (int)$isMap,
-                $wkt, $zoom, $center_lon, $center_lat, $base_layer,
+                $geo, $zoom, $center_lon, $center_lat, $base_layer,
                 $item_id, $field['text'], $cid
             );
             $sql->execute($data);

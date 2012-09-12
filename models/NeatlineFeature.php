@@ -50,11 +50,11 @@ class NeatlineFeature extends Omeka_Record
     public $is_map;
 
     /**
-     * This contains the WKT describing the features on the map.
+     * This contains the KML describing the features on the map.
      *
      * @var string
      **/
-    public $wkt;
+    public $geo;
 
     /**
      * This is the zoom level for the saved view.
