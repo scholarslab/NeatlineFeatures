@@ -85,11 +85,11 @@ Then /^I should not see an OpenLayers map in the "([^"]*)" field$/ do |parent|
 end
 
 Then /^a point is defined in "([^"]*)"$/ do |textarea|
-  find(textarea).value.should match(/POINT/)
+  find(textarea).value.should match(/<Point>/)
 end
 
 Then /^a line is defined in "([^"]*)"$/ do |textarea|
-  find(textarea).value.should match(/LINESTRING/)
+  find(textarea).value.should match(/<LineString>/)
 end
 
 Then /^the viewport is defined in "([^"]*)"$/ do |widget|
@@ -100,26 +100,26 @@ end
 
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
   within(parent) do
-    find('script').should have_content('POINT')
+    find('script').should have_content('<Point>')
   end
 end
 
 Then /^the map in "([^"]*)" should have a line feature$/ do |parent|
   within(parent) do
-    find('script').should have_content('LINESTRING')
+    find('script').should have_content('<LineString>')
   end
 end
 
 Then /^the map at "([^"]*)" should have a point feature$/ do |xpath|
   parent = find(:xpath, xpath)
   script = parent.find(:xpath, 'following-sibling::script')
-  script.should have_content('POINT')
+  script.should have_content('<Point>')
 end
 
 Then /^the map at "([^"]*)" should have a line feature$/ do |xpath|
   parent = find(:xpath, xpath)
   script = parent.find(:xpath, 'following-sibling::script')
-  script.should have_content('LINESTRING')
+  script.should have_content('<LineString>')
 end
 
 Then /^the map at "([^"]*)" should display a point feature$/ do |map|

@@ -124,23 +124,57 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
         $this->assertTrue(
             NeatlineFeatures_Functions::isKml(
                 "<?xml version='1.0'?>\n" .
-                "<kml xmlns='http://www.opengis.net/kml/2.2'>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<Point>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</Point>" .
+                "</Placemark>" .
                 "</kml>"
             )
         );
         $this->assertTrue(
             NeatlineFeatures_Functions::isKml(
-                "<kml xmlns='http://www.opengis.net/kml/2.2'>\n" .
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<LineString>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</LineString>" .
+                "</Placemark>" .
                 "</kml>"
             )
         );
         $this->assertTrue(
             NeatlineFeatures_Functions::isKml(
-                "<kml:kml xmlns:kml='http://www.opengis.net/kml/2.2'>\n" .
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<Polygon>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</Polygon>" .
+                "</Placemark>" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<kml:kml xmlns:kml='http://earth.google.com/kml/2.0'>\n" .
+                "<kml:Placemark>" .
+                "<kml:Polygon>" .
+                "<kml:coordinates>0, 0</kml:coordinates>" .
+                "</kml:Polygon>" .
+                "</kml:Placemark>" .
                 "</kml:kml>"
             )
         );
 
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<kml:kml xmlns:kml='http://earth.google.com/kml/2.0'>\n" .
+                "</kml:kml>"
+            )
+        );
         $this->assertFalse(
             NeatlineFeatures_Functions::isKml(
                 "<kml>\n" .

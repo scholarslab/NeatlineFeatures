@@ -73,8 +73,20 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         } else {
             $etTable = $db->getTable('ElementText');
 
-            $text = $this->_findLongestNonHtml($element_text->text);
-            $op   = (strlen(trim($text, '%')) == strlen($text)) ? '=' : 'LIKE';
+            $lines   = explode(
+                "\n",
+                str_ireplace("\r", "", str_ireplace('<br />', "\n", $element_text->text)),
+                3
+            );
+            $parts   = explode('|',  $lines[0],           5);
+            $geo     = htmlspecialchars_decode($parts[0]);
+            $raw     = count($lines) >= 3 ? $lines[2] : '';
+            $text    = $this->_findLongestNonHtml($raw);
+            if ($raw == $text) {
+                $text = "%$text";
+            } else {
+                $text = "%$text%";
+            }
 
             $select = $select
                 ->join(
@@ -82,14 +94,17 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                     'nf.element_text_id=et.id',
                     array()
                 )
+                ->where('nf.geo=?', $geo)
                 ->where('et.record_id=?', $element_text->record_id)
                 ->where('et.record_type_id=?', $element_text->record_type_id)
                 ->where('et.element_id=?', $element_text->element_id)
-                ->where('et.html=?', $element_text->html)
-                ->where("et.text $op ?", $text);
+                ->where('et.html=?', $element_text->html);
+            if (!empty($text)) {
+                $select = $select->where("et.text LIKE ?", $text);
+            }
         }
 
-        return is_null($select) ? NULL : $this->fetchObject($select);
+        return (is_null($select) ? NULL : $this->fetchObject($select));
     }
 
     /**
@@ -127,14 +142,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                     }
                 }
 
-                $trimmed = trim($maxp);
-                if ($maxi == 0) {
-                    $output = "{$trimmed}%";
-                } else if ($maxi == $plen - 1) {
-                    $output = "%{$trimmed}";
-                } else {
-                    $output = "%{$trimmed}%";
-                }
+                $output = trim($maxp);
             }
         }
 

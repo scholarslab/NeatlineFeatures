@@ -73,7 +73,7 @@
         title  : 'Coverage'
         name   : 'Coverage'
         id     : @widget.element.attr 'id'
-        wkt    : input.wkt
+        geo    : input.geo
       local_options =
         mode   : @widget.options.mode
         json   : item
@@ -149,7 +149,7 @@
         """
       text_container = $ """
         <div class="nlfeatures text-container">
-          <input type="hidden" id="#{id_prefix}wkt" name="#{name_prefix}[wkt]" value="" />
+          <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
@@ -184,7 +184,7 @@
         free           : $ "##{id_prefix}free"
         html           : $ "##{id_prefix}html"
         # Hidden fields that need to be maintained.
-        wkt            : $ "##{id_prefix}wkt"
+        geo            : $ "##{id_prefix}geo"
         zoom           : $ "##{id_prefix}zoom"
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
@@ -228,7 +228,7 @@
 
     populate: (values=@widget.options.values) ->
       @fields.mapon.attr 'checked', values.is_map
-      @fields.wkt.val to_s(values.wkt)
+      @fields.geo.val to_s(values.geo)
       @fields.zoom.val to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
@@ -299,8 +299,8 @@
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
-      wkt = @nlfeatures.getWktForSave()
-      @fields.wkt.val wkt
+      geo = @nlfeatures.getKml()
+      @fields.geo.val geo
 
       zoom = @nlfeatures.getSavedZoom()
       @fields.zoom.val zoom if zoom?
@@ -314,7 +314,7 @@
       @fields.base_layer.val base_layer if base_layer?
 
       free = @fields.free.val()
-      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}/#{base_layer}\n#{free}"
+      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{free}"
 
     # This sets the value of the flash div and fades it in for a short time (5
     # seconds, by default).
@@ -345,7 +345,7 @@
       map_options : {}
 
       values:
-        wkt     : null
+        geo     : null
         zoom    : null
         center  : null  # center is an object with the lon and lat properties.
         text    : null
