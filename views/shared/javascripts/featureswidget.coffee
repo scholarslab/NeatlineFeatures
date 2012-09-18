@@ -243,6 +243,7 @@
         .bind('featureadded.nlfeatures', updateFields)
         .bind('update.nlfeatures'      , updateFields)
         .bind('delete.nlfeatures'      , updateFields)
+        .bind('refresh.nlfeatures'     , updateFields)
         .bind('saveview.nlfeatures'    , =>
           @nlfeatures.saveViewport()
           this.updateFields()

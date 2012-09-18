@@ -42,7 +42,6 @@ Feature: Test Coverage Data
       | true  |
       | true  |
 
-  @current
   @kml
   @file_fixture @javascript
   Scenario: Mixed Feature Coverages

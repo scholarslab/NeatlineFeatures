@@ -322,7 +322,7 @@ begin
       env = ::Vagrant::Environment.new
       vm_ssh(
         env,
-        "mysql -uomeka -pomeka omeka < #{VM_BASEDIR}/features/support/clean_db.sql",
+        "mysql -uomeka -pomeka omeka < #{VM_BASEDIR}/features/support/clean_db.sql; echo 'DELETE FROM omeka_neatline_features;' | mysql -uomeka -pomeka omeka",
         nil
       )
     end

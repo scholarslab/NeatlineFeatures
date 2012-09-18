@@ -428,33 +428,39 @@
          * - `geo`
          */
         _buildVectorLayers: function(data) {
-            var self = this;
+            var self         = this;
+            var needsUpgrade = false;
 
             // Instantiate associations objects.
             this.idToLayer = {};
             this.layerToId = {};
 
             $.each(data, function(i, item) {
-                // Get the id of the item.
-                var itemId = item.id;
-
-                // Try to get a color from the JSON, revert to default if no color is set..
-                var color = (item.color !== '') ? item.color : self.options.styles.default_color;
-
-                // Build the layer styles.
-                var style = self._getStyleMap(color);
-
-                // Build the layers.
-                var vectorLayer = new OpenLayers.Layer.Vector(item.title, {
+                var itemId       = item.id;
+                var color        = (item.color !== '') ?
+                                   item.color          :
+                                   self.options.styles.default_color;
+                var style        = self._getStyleMap(color);
+                var vectorLayer  = new OpenLayers.Layer.Vector(item.title, {
                     styleMap: style
                 });
 
-                // Build the features.
                 if (item.geo !== null) {
                     var kml      = new OpenLayers.Format.KML();
                     var features = kml.read(item.geo);
 
-                    // Add the vectors to the layer.
+                    if (features.length === 0) {
+                        var reader = new OpenLayers.Format.WKT();
+                        $.each(item.geo.split('|'), function(i, wkt) {
+                            if (reader.read(wkt) !== undefined) {
+                                var geometry = new OpenLayers.Geometry.fromWKT(wkt);
+                                var feature  = new OpenLayers.Feature.Vector(geometry);
+                                features.push(feature);
+                            }
+                        });
+                        needsUpgrade = (features.length > 0);
+                    }
+
                     if (features.length > 0) {
                         vectorLayer.addFeatures(features);
                     }
@@ -469,6 +475,13 @@
                 self._currentVectorLayers.push(vectorLayer);
                 self.map.addLayer(vectorLayer);
             });
+
+            if (needsUpgrade) {
+                // Have to wait for the events to get wired up.
+                setTimeout(function() {
+                    self.element.trigger('refresh.nlfeatures');
+                }, 250);
+            }
         },
 
         /*

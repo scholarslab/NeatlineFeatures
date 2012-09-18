@@ -207,7 +207,7 @@
           return _this.updateFields();
         };
         this.fields.free.change(updateFields);
-        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
+        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('refresh.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
           _this.updateFields();
           return _this.flash('View Saved...');

@@ -6,6 +6,7 @@ require 'capybara/dsl'
 require 'capybara/webkit'
 require 'rspec/expectations'
 require 'geo_magic/remote'
+require 'mechanize'
 
 Capybara.app_host = ENV['OMEKA_HOST'] || 'http://features.dev'
 Capybara.run_server = false

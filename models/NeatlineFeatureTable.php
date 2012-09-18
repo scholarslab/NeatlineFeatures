@@ -78,14 +78,17 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                 str_ireplace("\r", "", str_ireplace('<br />', "\n", $element_text->text)),
                 3
             );
-            $parts   = explode('|',  $lines[0],           5);
-            $geo     = htmlspecialchars_decode($parts[0]);
-            $raw     = count($lines) >= 3 ? $lines[2] : '';
-            $text    = $this->_findLongestNonHtml($raw);
-            if ($raw == $text) {
-                $text = "%$text";
+            $wktParts = explode('/', $lines[0], 2);
+            $qwkt     = $db->quote($wktParts[0]);
+            $parts    = explode('|', $lines[0], 5);
+            $geo      = htmlspecialchars_decode($parts[0]);
+            $qgeo     = $db->quote($geo);
+            $raw      = count($lines) >= 3 ? $lines[2] : '';
+            $text     = $this->_findLongestNonHtml($raw);
+            if ($raw === $text) {
+                $text     = "%$text";
             } else {
-                $text = "%$text%";
+                $text     = "%$text%";
             }
 
             $select = $select
@@ -94,11 +97,11 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                     'nf.element_text_id=et.id',
                     array()
                 )
-                ->where('nf.geo=?', $geo)
-                ->where('et.record_id=?', $element_text->record_id)
+                ->where("nf.geo=$qgeo OR nf.geo=$qwkt")
+                ->where('et.record_id=?',      $element_text->record_id)
                 ->where('et.record_type_id=?', $element_text->record_type_id)
-                ->where('et.element_id=?', $element_text->element_id)
-                ->where('et.html=?', $element_text->html);
+                ->where('et.element_id=?',     $element_text->element_id)
+                ->where('et.html=?',           $element_text->html);
             if (!empty($text)) {
                 $select = $select->where("et.text LIKE ?", $text);
             }
