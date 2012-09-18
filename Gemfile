@@ -8,6 +8,7 @@ group :test do
   gem 'growl'
   gem 'rspec-expectations'
   gem 'selenium-webdriver'
+  gem 'mechanize'
 end
 
 group :development do

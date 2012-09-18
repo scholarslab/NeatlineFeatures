@@ -4,6 +4,7 @@ Feature: Display Multiple Individual Coverages
   I want to be able to iterate over a mixed collection of coverage data and display each datum appropriately
   So that visitors can see all coverage data and I can customize their display.
 
+  @kml
   @file_fixture
   Scenario: All Non-Feature Coverages
     Given I am logged into the admin console
@@ -20,8 +21,9 @@ Feature: Display Multiple Individual Coverages
     Then I should see the following output in unordered list "#item-coverage":
       | Charlottesville, VA |
       | UVa                 |
-    But I should not see text "WKT" in "#dublin-core-coverage"
+    But I should not see text "kml" in "#dublin-core-coverage"
 
+  @kml
   @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
@@ -39,8 +41,9 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
-    But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
+    But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 
+  @kml
   @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
@@ -58,5 +61,5 @@ Feature: Display Multiple Individual Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And I should see text "UVa" in "#dublin-core-coverage"
-    But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
+    But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 

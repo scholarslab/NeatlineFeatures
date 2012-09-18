@@ -73,8 +73,23 @@ class NeatlineFeatureTable extends Omeka_Db_Table
         } else {
             $etTable = $db->getTable('ElementText');
 
-            $text = $this->_findLongestNonHtml($element_text->text);
-            $op   = (strlen(trim($text, '%')) == strlen($text)) ? '=' : 'LIKE';
+            $lines   = explode(
+                "\n",
+                str_ireplace("\r", "", str_ireplace('<br />', "\n", $element_text->text)),
+                3
+            );
+            $wktParts = explode('/', $lines[0], 2);
+            $qwkt     = $db->quote($wktParts[0]);
+            $parts    = explode('|', $lines[0], 5);
+            $geo      = htmlspecialchars_decode($parts[0]);
+            $qgeo     = $db->quote($geo);
+            $raw      = count($lines) >= 3 ? $lines[2] : '';
+            $text     = $this->_findLongestNonHtml($raw);
+            if ($raw === $text) {
+                $text     = "%$text";
+            } else {
+                $text     = "%$text%";
+            }
 
             $select = $select
                 ->join(
@@ -82,14 +97,17 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                     'nf.element_text_id=et.id',
                     array()
                 )
-                ->where('et.record_id=?', $element_text->record_id)
+                ->where("nf.geo=$qgeo OR nf.geo=$qwkt")
+                ->where('et.record_id=?',      $element_text->record_id)
                 ->where('et.record_type_id=?', $element_text->record_type_id)
-                ->where('et.element_id=?', $element_text->element_id)
-                ->where('et.html=?', $element_text->html)
-                ->where("et.text $op ?", $text);
+                ->where('et.element_id=?',     $element_text->element_id)
+                ->where('et.html=?',           $element_text->html);
+            if (!empty($text)) {
+                $select = $select->where("et.text LIKE ?", $text);
+            }
         }
 
-        return is_null($select) ? NULL : $this->fetchObject($select);
+        return (is_null($select) ? NULL : $this->fetchObject($select));
     }
 
     /**
@@ -127,14 +145,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
                     }
                 }
 
-                $trimmed = trim($maxp);
-                if ($maxi == 0) {
-                    $output = "{$trimmed}%";
-                } else if ($maxi == $plen - 1) {
-                    $output = "%{$trimmed}";
-                } else {
-                    $output = "%{$trimmed}%";
-                }
+                $output = trim($maxp);
             }
         }
 
@@ -195,7 +206,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
         $sql     = $db->prepare(
             "INSERT INTO $name
-                (added, item_id, element_text_id, is_map, wkt, zoom,
+                (added, item_id, element_text_id, is_map, geo, zoom,
                  center_lon, center_lat, base_layer)
                 SELECT NOW(), ?, et.id, ?, ?, ?, ?, ?, ?
                 FROM {$db->prefix}element_texts et
@@ -205,7 +216,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
         foreach ($params as $field) {
             $isMap      = (bool)$this->_param($field, 'mapon', 0);
-            $wkt        = $this->_param($field, 'wkt', '');
+            $geo        = $this->_param($field, 'geo', '');
             $zoom       = $this->_param($field, 'zoom', 3);
             $center_lon = $this->_param($field, 'center_lon', 0.0);
             $center_lat = $this->_param($field, 'center_lat', 0.0);
@@ -213,7 +224,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
 
             $data = array(
                 $item_id, (int)$isMap,
-                $wkt, $zoom, $center_lon, $center_lat, $base_layer,
+                $geo, $zoom, $center_lon, $center_lat, $base_layer,
                 $item_id, $field['text'], $cid
             );
             $sql->execute($data);

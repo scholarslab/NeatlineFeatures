@@ -1,4 +1,54 @@
 
+Given /^I have existing feature data named "([^"]*)"$/ do |title|
+  base_url   = Capybara.app_host
+  username   = ENV['OMEKA_USER']   || 'features'
+  passwd     = ENV['OMEKA_PASSWD'] || 'features'
+
+  wkt        = 'POINT(100 100)'
+  zoom       = 10
+  center_lon = 0.0
+  center_lat = 0.0
+  base_layer = 'gphy'
+  free       = 'Something here.'
+  text       = "#{wkt}/#{zoom}/#{center_lon}/#{center_lat}/#{base_layer}\n#{free}"
+  html       = 0
+  mapon      = 1
+  params = {
+    'Elements[50][0][text]'       => title,
+    'Elements[38][0][geo]'        => wkt,
+    'Elements[38][0][zoom]'       => zoom,
+    'Elements[38][0][center_lon]' => center_lon,
+    'Elements[38][0][center_lat]' => center_lat,
+    'Elements[38][0][base_layer]' => base_layer,
+    'Elements[38][0][text]'       => text,
+    'Elements[38][0][html]'       => 0,
+    'Elements[38][0][mapon]'      => 1,
+  }
+
+  agent = Mechanize.new do |a|
+    a.user_agent_alias = 'Mac Safari'
+  end
+  # Login in (again)
+  agent.get("#{base_url}/admin/users/login") do |page|
+    omeka_page = page.form_with(:action => '/admin/users/login') do |form|
+      form.username = username
+      form.password = passwd
+    end.submit
+    # Navigate to new item page.
+    item_page     = agent.click(omeka_page.link_with(:text => %r/Items/))
+    add_item_page = agent.click(item_page.link_with( :text => %r/Add an Item/))
+    # Submit the form.
+    add_item_page.form_with(:method => 'POST') do |form|
+      params.each do |key, value|
+        form[key] = value
+      end
+    end.submit
+  end
+
+  # Finally, navigate to the item list.
+  visit '/admin/items'
+end
+
 Given /^I draw a point on "([^"]*)"$/ do |map|
   find(map).find('div.olMapViewport')
   find(map).find('.olControlDrawFeaturePointItemInactive').click
@@ -85,11 +135,11 @@ Then /^I should not see an OpenLayers map in the "([^"]*)" field$/ do |parent|
 end
 
 Then /^a point is defined in "([^"]*)"$/ do |textarea|
-  find(textarea).value.should match(/POINT/)
+  find(textarea).value.should match(/<Point>/)
 end
 
 Then /^a line is defined in "([^"]*)"$/ do |textarea|
-  find(textarea).value.should match(/LINESTRING/)
+  find(textarea).value.should match(/<LineString>/)
 end
 
 Then /^the viewport is defined in "([^"]*)"$/ do |widget|
@@ -100,26 +150,33 @@ end
 
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
   within(parent) do
-    find('script').should have_content('POINT')
+    find('script').should have_content('<Point>')
   end
 end
 
 Then /^the map in "([^"]*)" should have a line feature$/ do |parent|
   within(parent) do
-    find('script').should have_content('LINESTRING')
+    find('script').should have_content('<LineString>')
   end
 end
 
 Then /^the map at "([^"]*)" should have a point feature$/ do |xpath|
   parent = find(:xpath, xpath)
   script = parent.find(:xpath, 'following-sibling::script')
-  script.should have_content('POINT')
+  script.should have_content('<Point>')
+end
+
+Then /^the map at "([^"]*)" should have a legacy point feature$/ do |xpath|
+  parent = find(:xpath, xpath)
+  script = parent.find(:xpath, 'following-sibling::script')
+  script.should have_content('geo')
+  script.should have_content('POINT(')
 end
 
 Then /^the map at "([^"]*)" should have a line feature$/ do |xpath|
   parent = find(:xpath, xpath)
   script = parent.find(:xpath, 'following-sibling::script')
-  script.should have_content('LINESTRING')
+  script.should have_content('<LineString>')
 end
 
 Then /^the map at "([^"]*)" should display a point feature$/ do |map|

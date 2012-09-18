@@ -22,6 +22,7 @@ Feature: Display Multiple Coverages
     Then I should see text "Charlottesville, VA; UVa" in "#dublin-core-coverage"
     But I should not see text "null" in "#dublin-core-coverage"
 
+  @kml
   @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
@@ -41,6 +42,7 @@ Feature: Display Multiple Coverages
     And the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[2]" should have a line feature
     But I should not see text "null" in "#dublin-core-coverage .nlfeatures"
 
+  @kml
   @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console

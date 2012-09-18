@@ -28,22 +28,25 @@ Feature: Draw Features on a Map
     And I should see "#Elements-38-0-free"
     But I should not see "#Elements-38-0-text"
 
+  @kml
   @javascript
   Scenario: Draw Point on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a point on "div.olMap"
-    Then a point is defined in "#Elements-38-0-wkt"
+    Then a point is defined in "#Elements-38-0-geo"
 
+  @kml
   @javascript
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a line on "div.olMap"
-    Then a line is defined in "#Elements-38-0-wkt"
+    Then a line is defined in "#Elements-38-0-geo"
 
+  @kml
   @javascript
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
@@ -85,8 +88,9 @@ Feature: Draw Features on a Map
     Then "Elements-38-0-mapon" should not be checked
     And I should not see a map in "#element-38"
 
+  @kml
   @javascript
-  Scenario: Free Text should not Contain WKT
+  Scenario: Free Text should not Contain KML
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Use Map True should Persist" for the "Elements-50-0-text"
@@ -99,7 +103,7 @@ Feature: Draw Features on a Map
     And I click "Edit this Item"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
-    And I should see that "#Elements-38-0-free" does not contain "WKT"
+    And I should see that "#Elements-38-0-free" does not contain "kml"
 
   # This fails since GeoLocation isn't turned on automatically in the browser.
   #Scenario: Map Location Should Default to the User's Location

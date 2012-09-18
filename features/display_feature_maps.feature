@@ -4,6 +4,7 @@ Feature: Display Feature Maps on Item Pages
   I want to be able to include annotated maps on the item (and other) pages
   So that visitors to the site can view the feature data.
 
+  @kml
   @javascript
   Scenario: Display Feature Maps on Item Page
     Given I am logged into the admin console

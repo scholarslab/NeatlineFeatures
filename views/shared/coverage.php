@@ -38,7 +38,7 @@
                     }
                 },
             values: {
-                wkt: <?php echo json_encode(is_null($wkt) ? '' : $wkt) ?>,
+                geo: <?php echo json_encode(is_null($geo) ? '' : $geo) ?>,
                 zoom: <?php echo json_encode(is_null($zoom) ? '' : $zoom) ?>,
                 center: {
                     lon: <?php echo json_encode(is_null($center_lon) ? '' : $center_lon) ?>,

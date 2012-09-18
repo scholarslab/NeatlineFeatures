@@ -60,11 +60,6 @@
 (function($, undefined) {
     $.widget('nlfeatures.nlfeatures', {
         options: {
-            // `loadData()` and `loadLocalData()` can parse out multiple WKT
-            // features from their inputs' `wkt` fields. This is the string to
-            // use to separate out the WKT features.
-            wkt_delimiter: '|',
-
             // Markup hooks.
             markup: {
                 // The CSS class for the editing toolbar.
@@ -385,7 +380,7 @@
          * - `id`
          * - `title`
          * - `color` (optional)
-         * - `wkt`
+         * - `geo`
          */
         loadLocalData: function(data) {
             var self = this;
@@ -430,47 +425,45 @@
          * - `id`
          * - `title`
          * - `color` (optional)
-         * - `wkt`
+         * - `geo`
          */
         _buildVectorLayers: function(data) {
-            var self = this;
+            var self         = this;
+            var needsUpgrade = false;
 
             // Instantiate associations objects.
             this.idToLayer = {};
             this.layerToId = {};
 
             $.each(data, function(i, item) {
-                // Get the id of the item.
-                var itemId = item.id;
-
-                // Try to get a color from the JSON, revert to default if no color is set..
-                var color = (item.color !== '') ? item.color : self.options.styles.default_color;
-
-                // Build the layer styles.
-                var style = self._getStyleMap(color);
-
-                // Build the layers.
-                var vectorLayer = new OpenLayers.Layer.Vector(item.title, {
+                var itemId       = item.id;
+                var color        = (item.color !== '') ?
+                                   item.color          :
+                                   self.options.styles.default_color;
+                var style        = self._getStyleMap(color);
+                var vectorLayer  = new OpenLayers.Layer.Vector(item.title, {
                     styleMap: style
                 });
 
-                // Empty array to hold features objects.
-                var features = [];
+                if (item.geo !== null) {
+                    var kml      = new OpenLayers.Format.KML();
+                    var features = kml.read(item.geo);
 
-                // Build the features.
-                $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
-                    if (wkt !== "") {
-                        var geometry = OpenLayers.Geometry.fromWKT(wkt);
-                        if (geometry !== undefined) {
-                            var feature = new OpenLayers.Feature.Vector(geometry);
-                            features.push(feature);
-                        }
+                    if (features.length === 0) {
+                        var reader = new OpenLayers.Format.WKT();
+                        $.each(item.geo.split('|'), function(i, wkt) {
+                            if (reader.read(wkt) !== undefined) {
+                                var geometry = new OpenLayers.Geometry.fromWKT(wkt);
+                                var feature  = new OpenLayers.Feature.Vector(geometry);
+                                features.push(feature);
+                            }
+                        });
+                        needsUpgrade = (features.length > 0);
                     }
-                });
 
-                // Add the vectors to the layer.
-                if (features.length > 0) {
-                    vectorLayer.addFeatures(features);
+                    if (features.length > 0) {
+                        vectorLayer.addFeatures(features);
+                    }
                 }
                 vectorLayer.setMap(self.map);
 
@@ -482,6 +475,13 @@
                 self._currentVectorLayers.push(vectorLayer);
                 self.map.addLayer(vectorLayer);
             });
+
+            if (needsUpgrade) {
+                // Have to wait for the events to get wired up.
+                setTimeout(function() {
+                    self.element.trigger('refresh.nlfeatures');
+                }, 250);
+            }
         },
 
         /*
@@ -1110,20 +1110,46 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this.clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this.clickedFeature);
-            }
-
             // Push the wkt's onto the array.
-            $.each(this._currentEditLayer.features, function(i, feature) {
+            this._getFeatures(function(i, feature) {
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this.clickedFeature)) {
-                this.modifyFeatures.selectFeature(this.clickedFeature);
+            return wkts.join('|');
+        },
+
+        /*
+         * This returns the features as KML.
+         */
+        getKml: function() {
+            var kml      = new OpenLayers.Format.KML();
+            var features = [];
+
+            this._getFeatures(function (i, f) {
+                features.push(f);
+            });
+
+            return kml.write(features);
+        },
+
+        /*
+         * This gets the current set of features, after deselecting the clicked
+         * feature.
+         *
+         * This handles them with the callback, which gets passed to `$.each`.
+         */
+        _getFeatures: function(callback) {
+            var isClicked = this.exists(this.clickedFeature);
+
+            if (isClicked) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
-            return wkts.join(this.options.wkt_delimiter);
+            $.each(this._currentEditLayer.features, callback);
+
+            if (isClicked) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
+            }
         },
 
         /*

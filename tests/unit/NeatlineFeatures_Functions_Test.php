@@ -113,5 +113,92 @@ class NeatlineFeatures_Functions_Test extends NeatlineFeatures_Test
         );
     }
 
+    /**
+     * This tests whether a string is KML.
+     *
+     * @return void
+     * @author Eric Rochester
+     **/
+    public function testIsKml()
+    {
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<Point>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</Point>" .
+                "</Placemark>" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<LineString>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</LineString>" .
+                "</Placemark>" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<kml xmlns='http://earth.google.com/kml/2.0'>\n" .
+                "<Placemark>" .
+                "<Polygon>" .
+                "<coordinates>0, 0</coordinates>" .
+                "</Polygon>" .
+                "</Placemark>" .
+                "</kml>"
+            )
+        );
+        $this->assertTrue(
+            NeatlineFeatures_Functions::isKml(
+                "<kml:kml xmlns:kml='http://earth.google.com/kml/2.0'>\n" .
+                "<kml:Placemark>" .
+                "<kml:Polygon>" .
+                "<kml:coordinates>0, 0</kml:coordinates>" .
+                "</kml:Polygon>" .
+                "</kml:Placemark>" .
+                "</kml:kml>"
+            )
+        );
+
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<kml:kml xmlns:kml='http://earth.google.com/kml/2.0'>\n" .
+                "</kml:kml>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<kml>\n" .
+                "</kml>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<html>\n" .
+                "</html>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml(
+                "<?xml version='1.0'?>\n" .
+                "<html>\n" .
+                "</html>"
+            )
+        );
+        $this->assertFalse(
+            NeatlineFeatures_Functions::isKml("MULTIPOLYGON (1 2,3 4,5 6)|END")
+        );
+    }
+
 }
 
