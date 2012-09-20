@@ -210,21 +210,12 @@
     # TODO: Bring this up on #omeka and file a bug report.
     # admin/themes/default/javascripts/items.js, around line 410, should be
     # more specific.
+    #
+    # NB: The work-around now is to monkey-patch Omeka.Items.enableWysiwyg to
+    # target the checkboxes better. Now, this just sets some change events.
     captureEditor: ->
-      poll(
-        -> $('.mceEditor').length > 0,
-        =>
-          if not this.usesHtml()
-            free = @fields.free.attr 'id'
-            tinyMCE.execCommand 'mceRemoveControl', false, free
-          @fields.mapon
-            .unbind('click')
-            .change => this._onUseMap()
-          @fields.html
-            .change => this._updateTinyEvents()
-      )
-      # In the meantime....
-      @fields.mapon .change => this._onUseMap()
+      @fields.mapon.change => this._onUseMap()
+      @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values) ->
       @fields.mapon.attr 'checked', values.is_map
@@ -288,10 +279,11 @@
       if this.usesHtml()
         freeId = @fields.free.attr 'id'
         poll(
-          -> tinyMCE.get(freeId)?,
+          -> tinymce.get(freeId)?,
           =>
             @fields.free.unbind 'change'
-            tinyMCE.get(freeId).onChange.add =>
+            ed = tinymce.get freeId
+            ed.onChange.add =>
               this.updateFields()
           )
       else
