@@ -229,7 +229,7 @@
       @fields.free.val       stripFirstLine(values.text)
 
     wire: ->
-      updateFields = => this.updateFields()
+      updateFields = => this.updateFields(@fields.free.val())
       @fields.free.change updateFields
       @nlfeatures.element
         .bind('featureadded.nlfeatures', updateFields)
@@ -283,17 +283,16 @@
           -> tinymce.get(freeId)?,
           =>
             @fields.free.unbind 'change'
-            ed = tinymce.get freeId
-            ed.onChange.add =>
-              this.updateFields(ed.getContent())
+            tinymce.get(freeId).onChange.add =>
+              this.updateFields()
           )
       else
         @fields.free.change =>
-          this.updateFields(@fields.free.val())
+          this.updateFields()
 
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
-    updateFields: (text) ->
+    updateFields: ->
       geo = @nlfeatures.getKml()
       @fields.geo.val geo
 
@@ -307,6 +306,11 @@
 
       base_layer = @nlfeatures.getBaseLayerCode()
       @fields.base_layer.val base_layer if base_layer?
+
+      if this.usesHtml()
+        text = tinymce.get(@fields.free.attr('id')).getContent()
+      else
+        text = @fields.free.val()
 
       @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{text}"
 

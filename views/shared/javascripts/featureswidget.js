@@ -205,7 +205,7 @@
         var updateFields,
           _this = this;
         updateFields = function() {
-          return _this.updateFields();
+          return _this.updateFields(_this.fields.free.val());
         };
         this.fields.free.change(updateFields);
         this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('refresh.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
@@ -263,22 +263,20 @@
           return poll(function() {
             return tinymce.get(freeId) != null;
           }, function() {
-            var ed;
             _this.fields.free.unbind('change');
-            ed = tinymce.get(freeId);
-            return ed.onChange.add(function() {
-              return _this.updateFields(ed.getContent());
+            return tinymce.get(freeId).onChange.add(function() {
+              return _this.updateFields();
             });
           });
         } else {
           return this.fields.free.change(function() {
-            return _this.updateFields(_this.fields.free.val());
+            return _this.updateFields();
           });
         }
       };
 
-      EditWidget.prototype.updateFields = function(text) {
-        var base_layer, center, geo, zoom;
+      EditWidget.prototype.updateFields = function() {
+        var base_layer, center, geo, text, zoom;
         geo = this.nlfeatures.getKml();
         this.fields.geo.val(geo);
         zoom = this.nlfeatures.getSavedZoom();
@@ -293,6 +291,11 @@
         base_layer = this.nlfeatures.getBaseLayerCode();
         if (base_layer != null) {
           this.fields.base_layer.val(base_layer);
+        }
+        if (this.usesHtml()) {
+          text = tinymce.get(this.fields.free.attr('id')).getContent();
+        } else {
+          text = this.fields.free.val();
         }
         return this.fields.text.val("" + geo + "|" + zoom + "|" + (center != null ? center.lon : void 0) + "|" + (center != null ? center.lat : void 0) + "|" + base_layer + "\n" + text);
       };

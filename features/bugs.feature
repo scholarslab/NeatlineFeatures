@@ -59,7 +59,6 @@ Feature: Bug Fix Tests
     When I click "Viewport overflow"
     Then "#dublin-core-coverage .map" should center on "-111.8833, 40.75"
 
-  @current
   @javascript
   Scenario: TinyMCE should be hidden when editing an existing file
     Given I have existing feature data named "Cucumber: Tiny Zombie"
