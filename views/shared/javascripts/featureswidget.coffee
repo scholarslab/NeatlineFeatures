@@ -218,14 +218,15 @@
       @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values) ->
-      @fields.mapon.attr 'checked', values.is_map
-      @fields.geo.val to_s(values.geo)
-      @fields.zoom.val to_s(values.zoom)
+      @fields.html.attr      'checked', values.is_html
+      @fields.mapon.attr     'checked', values.is_map
+      @fields.geo.val        to_s(values.geo)
+      @fields.zoom.val       to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
       @fields.base_layer.val to_s(values.base_layer)
-      @fields.text.val to_s(values.text)
-      @fields.free.val stripFirstLine(values.text)
+      @fields.text.val       to_s(values.text)
+      @fields.free.val       stripFirstLine(values.text)
 
     wire: ->
       updateFields = => this.updateFields()

@@ -1812,6 +1812,7 @@
         if (values == null) {
           values = this.widget.options.values;
         }
+        this.fields.html.attr('checked', values.is_html);
         this.fields.mapon.attr('checked', values.is_map);
         this.fields.geo.val(to_s(values.geo));
         this.fields.zoom.val(to_s(values.zoom));
