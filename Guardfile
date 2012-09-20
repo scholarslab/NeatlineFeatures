@@ -7,12 +7,16 @@ guard 'livereload' do
   watch(%r{views/.+\.(css|js|html|php|inc)})
 end
 
-# Add files and commands to this file, like the example:
-#   watch(%r{file/path}) { `command(s)` }
-#
-guard 'shell' do
-  watch(/views\/.*\.js/) do
-    `cake build`
+def cake_build
+  `cake build`
+end
+
+guard :shell do
+  watch(%r{ views/shared/javascripts/nlfeatures.js
+          | views/shared/javascripts/featureswidget.js
+          | views/admin/javascripts/editor/edit_features.js
+        }x) do
+    cake_build
   end
 end
 

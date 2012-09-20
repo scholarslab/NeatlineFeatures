@@ -210,34 +210,26 @@
     # TODO: Bring this up on #omeka and file a bug report.
     # admin/themes/default/javascripts/items.js, around line 410, should be
     # more specific.
+    #
+    # NB: The work-around now is to monkey-patch Omeka.Items.enableWysiwyg to
+    # target the checkboxes better. Now, this just sets some change events.
     captureEditor: ->
-      poll(
-        -> $('.mceEditor').length > 0,
-        =>
-          if not this.usesHtml()
-            free = @fields.free.attr 'id'
-            tinyMCE.execCommand 'mceRemoveControl', false, free
-          @fields.mapon
-            .unbind('click')
-            .change => this._onUseMap()
-          @fields.html
-            .change => this._updateTinyEvents()
-      )
-      # In the meantime....
-      @fields.mapon .change => this._onUseMap()
+      @fields.mapon.change => this._onUseMap()
+      @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values) ->
-      @fields.mapon.attr 'checked', values.is_map
-      @fields.geo.val to_s(values.geo)
-      @fields.zoom.val to_s(values.zoom)
+      @fields.html.attr      'checked', values.is_html
+      @fields.mapon.attr     'checked', values.is_map
+      @fields.geo.val        to_s(values.geo)
+      @fields.zoom.val       to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
       @fields.base_layer.val to_s(values.base_layer)
-      @fields.text.val to_s(values.text)
-      @fields.free.val stripFirstLine(values.text)
+      @fields.text.val       to_s(values.text)
+      @fields.free.val       stripFirstLine(values.text)
 
     wire: ->
-      updateFields = => this.updateFields()
+      updateFields = => this.updateFields(@fields.free.val())
       @fields.free.change updateFields
       @nlfeatures.element
         .bind('featureadded.nlfeatures', updateFields)
@@ -288,14 +280,15 @@
       if this.usesHtml()
         freeId = @fields.free.attr 'id'
         poll(
-          -> tinyMCE.get(freeId)?,
+          -> tinymce.get(freeId)?,
           =>
             @fields.free.unbind 'change'
-            tinyMCE.get(freeId).onChange.add =>
+            tinymce.get(freeId).onChange.add =>
               this.updateFields()
           )
       else
-        @fields.free.change => this.updateFields()
+        @fields.free.change =>
+          this.updateFields()
 
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
@@ -314,8 +307,12 @@
       base_layer = @nlfeatures.getBaseLayerCode()
       @fields.base_layer.val base_layer if base_layer?
 
-      free = @fields.free.val()
-      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{free}"
+      if this.usesHtml()
+        text = tinymce.get(@fields.free.attr('id')).getContent()
+      else
+        text = @fields.free.val()
+
+      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{text}"
 
     # This sets the value of the flash div and fades it in for a short time (5
     # seconds, by default).
