@@ -284,14 +284,15 @@
             @fields.free.unbind 'change'
             ed = tinymce.get freeId
             ed.onChange.add =>
-              this.updateFields()
+              this.updateFields(ed.getContent())
           )
       else
-        @fields.free.change => this.updateFields()
+        @fields.free.change =>
+          this.updateFields(@fields.free.val())
 
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
-    updateFields: ->
+    updateFields: (text) ->
       geo = @nlfeatures.getKml()
       @fields.geo.val geo
 
@@ -306,8 +307,7 @@
       base_layer = @nlfeatures.getBaseLayerCode()
       @fields.base_layer.val base_layer if base_layer?
 
-      free = @fields.free.val()
-      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{free}"
+      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{text}"
 
     # This sets the value of the flash div and fades it in for a short time (5
     # seconds, by default).

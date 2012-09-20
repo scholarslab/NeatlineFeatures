@@ -1888,18 +1888,18 @@
             _this.fields.free.unbind('change');
             ed = tinymce.get(freeId);
             return ed.onChange.add(function() {
-              return _this.updateFields();
+              return _this.updateFields(ed.getContent());
             });
           });
         } else {
           return this.fields.free.change(function() {
-            return _this.updateFields();
+            return _this.updateFields(_this.fields.free.val());
           });
         }
       };
 
-      EditWidget.prototype.updateFields = function() {
-        var base_layer, center, free, geo, zoom;
+      EditWidget.prototype.updateFields = function(text) {
+        var base_layer, center, geo, zoom;
         geo = this.nlfeatures.getKml();
         this.fields.geo.val(geo);
         zoom = this.nlfeatures.getSavedZoom();
@@ -1915,8 +1915,7 @@
         if (base_layer != null) {
           this.fields.base_layer.val(base_layer);
         }
-        free = this.fields.free.val();
-        return this.fields.text.val("" + geo + "|" + zoom + "|" + (center != null ? center.lon : void 0) + "|" + (center != null ? center.lat : void 0) + "|" + base_layer + "\n" + free);
+        return this.fields.text.val("" + geo + "|" + zoom + "|" + (center != null ? center.lon : void 0) + "|" + (center != null ? center.lat : void 0) + "|" + base_layer + "\n" + text);
       };
 
       EditWidget.prototype.flash = function(msg, delay) {
