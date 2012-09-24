@@ -153,12 +153,11 @@ class NeatlineFeaturesPlugin
     public function upgrade($oldVersion, $newVersion)
     {
         $table = $this->_db->getTable('NeatlineFeature');
+        $name  = $table->getTableName();
 
-        if ($table->hasColumn('wkt')) {
-            $this->_db->query(
-                "ALTER TABLE omeka_neatline_features " .
-                "CHANGE COLUMN wkt geo TEXT;"
-            );
+        try {
+            $this->_db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
+        } catch (Exception $e) {
         }
     }
 
