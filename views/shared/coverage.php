@@ -55,7 +55,7 @@
 
     // A nasty hack to clobber the current way that TinyMCE is set up for any 
     // element that has *any* checked checkbox in them.
-    if (Omeka !== undefined && Omeka.Items !== undefined) {
+    if (window.Omeka !== undefined && Omeka.Items !== undefined) {
         Omeka.Items.enableWysiwyg = function (element) {
             $(element)
                 .find('div.inputs label[class="use-html"] input[type="checkbox"]')
