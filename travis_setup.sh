@@ -53,6 +53,8 @@ echo "SET GLOBAL sql_mode='';" | mysql -uroot
 
 # Set up the site in Apache.
 echo "Set up web site."
+sudo apt-get clean
+sudo apt-get update
 sudo apt-get install apache2 libapache2-mod-php5 php5-mysql
 sudo cp /etc/apache2/sites-available/default /etc/apache2/sites-available/omeka
 ESCAPED_DIR=$(echo $OMEKA_DIR | sed 's|/|\\/|g')
