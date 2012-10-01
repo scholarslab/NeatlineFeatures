@@ -1,6 +1,6 @@
 (function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+  var __hasProp = Object.prototype.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   (function($) {
     var BaseWidget, EditWidget, ViewWidget, derefid, poll, stripFirstLine, to_s;
@@ -20,12 +20,8 @@
     };
     poll = function(predicate, callback, maxPoll, timeout) {
       var n, pred, _poll;
-      if (maxPoll == null) {
-        maxPoll = null;
-      }
-      if (timeout == null) {
-        timeout = 100;
-      }
+      if (maxPoll == null) maxPoll = null;
+      if (timeout == null) timeout = 100;
       n = 0;
       pred = (maxPoll != null) && maxPoll !== 0 ? function() {
         return predicate() || n >= maxPoll;
@@ -70,15 +66,9 @@
             id_prefix: this.widget.options.id_prefix
           }
         };
-        if (input.zoom != null) {
-          local_options.zoom = input.zoom;
-        }
-        if (input.center != null) {
-          local_options.center = input.center;
-        }
-        if (input.base_layer != null) {
-          local_options.base_layer = input.base_layer;
-        }
+        if (input.zoom != null) local_options.zoom = input.zoom;
+        if (input.center != null) local_options.center = input.center;
+        if (input.base_layer != null) local_options.base_layer = input.base_layer;
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -92,7 +82,7 @@
       __extends(ViewWidget, _super);
 
       function ViewWidget() {
-        return ViewWidget.__super__.constructor.apply(this, arguments);
+        ViewWidget.__super__.constructor.apply(this, arguments);
       }
 
       ViewWidget.prototype.init = function() {
@@ -135,7 +125,7 @@
       __extends(EditWidget, _super);
 
       function EditWidget() {
-        return EditWidget.__super__.constructor.apply(this, arguments);
+        EditWidget.__super__.constructor.apply(this, arguments);
       }
 
       EditWidget.prototype.init = function() {
@@ -186,16 +176,14 @@
       };
 
       EditWidget.prototype.populate = function(values) {
-        var _ref, _ref1;
-        if (values == null) {
-          values = this.widget.options.values;
-        }
+        var _ref, _ref2;
+        if (values == null) values = this.widget.options.values;
         this.fields.html.attr('checked', values.is_html);
         this.fields.mapon.attr('checked', values.is_map);
         this.fields.geo.val(to_s(values.geo));
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-        this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
+        this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
         this.fields.base_layer.val(to_s(values.base_layer));
         this.fields.text.val(to_s(values.text));
         return this.fields.free.val(stripFirstLine(values.text));
@@ -280,18 +268,14 @@
         geo = this.nlfeatures.getKml();
         this.fields.geo.val(geo);
         zoom = this.nlfeatures.getSavedZoom();
-        if (zoom != null) {
-          this.fields.zoom.val(zoom);
-        }
+        if (zoom != null) this.fields.zoom.val(zoom);
         center = this.nlfeatures.getSavedCenter();
         if (center != null) {
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
         base_layer = this.nlfeatures.getBaseLayerCode();
-        if (base_layer != null) {
-          this.fields.base_layer.val(base_layer);
-        }
+        if (base_layer != null) this.fields.base_layer.val(base_layer);
         if (this.usesHtml()) {
           text = tinymce.get(this.fields.free.attr('id')).getContent();
         } else {
@@ -302,9 +286,7 @@
 
       EditWidget.prototype.flash = function(msg, delay) {
         var _this = this;
-        if (delay == null) {
-          delay = 5000;
-        }
+        if (delay == null) delay = 5000;
         return this.fields.flash.html(msg).fadeIn('slow', function() {
           return setTimeout(function() {
             return _this.fields.flash.fadeOut('slow');
@@ -335,25 +317,21 @@
         }
       },
       _create: function() {
-        var id, _base, _base1, _ref, _ref1;
+        var id, _base, _base2;
         id = this.element.attr('id');
-        if ((_ref = (_base = this.options).id_prefix) == null) {
+        if ((_base = this.options).id_prefix == null) {
           _base.id_prefix = '#' + id.substring(0, id.length - 'widget'.length);
         }
-        if ((_ref1 = (_base1 = this.options).name_prefix) == null) {
-          _base1.name_prefix = this._idPrefixToNamePrefix();
+        if ((_base2 = this.options).name_prefix == null) {
+          _base2.name_prefix = this._idPrefixToNamePrefix();
         }
         this.mode = this.options.mode === 'edit' ? new EditWidget(this) : new ViewWidget(this);
         this.mode.init();
-        if (!this.options.values.is_map) {
-          return this.mode.hideMap();
-        }
+        if (!this.options.values.is_map) return this.mode.hideMap();
       },
       _idPrefixToNamePrefix: function(id_prefix) {
         var base, indices, p, parts;
-        if (id_prefix == null) {
-          id_prefix = this.options.id_prefix;
-        }
+        if (id_prefix == null) id_prefix = this.options.id_prefix;
         id_prefix = derefid(id_prefix);
         parts = (function() {
           var _i, _len, _ref, _results;
@@ -361,9 +339,7 @@
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             p = _ref[_i];
-            if (p.length > 0) {
-              _results.push(p);
-            }
+            if (p.length > 0) _results.push(p);
           }
           return _results;
         })();
