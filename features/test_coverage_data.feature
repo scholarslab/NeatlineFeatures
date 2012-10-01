@@ -4,10 +4,11 @@ Feature: Test Coverage Data
   I want to be able to test whether a coverage datum is feature data or not
   So that I can determine how to handle different types of coverage data correctly.
 
+  @kml
   @file_fixture
   Scenario: Test All Non-Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -21,10 +22,11 @@ Feature: Test Coverage Data
       | false |
       | false |
 
-  @file_fixture @selenium
+  @kml
+  @file_fixture @javascript
   Scenario: All Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate All Feature Coverages" for the "Elements-49-0-text"      # Subject
@@ -40,10 +42,11 @@ Feature: Test Coverage Data
       | true  |
       | true  |
 
-  @file_fixture @selenium
+  @kml
+  @file_fixture @javascript
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
-    And I replace "../../themes/default/items/show.php" with "features/data/show-display-coverage-test.php"
+    And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-test.php"
     And I click "Add a new item to your archive"
     And I enter "Cucumber: Test Iterate Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Iterate Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject

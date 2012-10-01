@@ -1,0 +1,11 @@
+<phpunit bootstrap="bootstrap.php"
+  convertErrorsToExceptions="true"
+  convertWarningsToExceptions="true"
+  colors="true">
+
+  <testsuite name="Neatline Time Tests">
+    <directory>integration</directory>
+    <directory>unit</directory>
+  </testsuite>
+
+</phpunit>

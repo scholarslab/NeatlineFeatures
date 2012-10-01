@@ -84,6 +84,15 @@ We use an [issue tracker][issues] for feedback on issues and requested
 improvements. If you have general questions, you may also post them to
 the [Omeka Forums][forums]  or the [Omeka Developers Group][groups].
 
+## Credits
+
+### Translations
+
+* Martin Liebeskind (German)
+* Gillian Price (Spanish)
+* Oguljan Reyimbaeva (Russian)
+* Katina Rogers (French)
+
 [installing]: http://omeka.org/codex/Installing_a_Plugin "Installing a Plugin"
 [public_append_to_items_show]: http://omeka.org/codex/Hooks/public_append_to_items_show "public_append_to_items_show"
 [issues]: https://github.com/scholarslab/NeatlineFeatures/issues/ "issue tracker"

@@ -492,14 +492,14 @@ class NeatlineFeatures_Utils_View
         $post = $this->getPost();
         if (is_null($post)) {
             $feature    = $this->getNeatlineFeature();
-            $wkt        = $feature->wkt;
+            $geo        = $feature->geo;
             $zoom       = $feature->zoom;
             $center_lon = $feature->center_lon;
             $center_lat = $feature->center_lat;
             $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
-            $wkt        = $post[$i]['wkt'];
+            $geo        = $post[$i]['geo'];
             $zoom       = $post[$i]['zoom'];
             $center_lon = $post[$i]['center_lon'];
             $center_lat = $post[$i]['center_lat'];

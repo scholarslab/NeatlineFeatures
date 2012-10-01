@@ -48,10 +48,12 @@ class NeatlineFeaturesPlugin
     private static $_hooks = array(
         'install',
         'uninstall',
+        'upgrade',
         'admin_theme_header',
         'public_theme_header',
         'after_save_item',
-        'before_delete_item'
+        'before_delete_item',
+        'initialize'
     );
 
     /**
@@ -116,7 +118,7 @@ class NeatlineFeaturesPlugin
                 item_id         INT(10)        UNSIGNED NOT NULL,
                 element_text_id INT(10)        UNSIGNED NOT NULL,
                 is_map          TINYINT(1)     NOT NULL DEFAULT 0,
-                wkt             TEXT           ,
+                geo             TEXT           ,
                 zoom            SMALLINT(2)    NOT NULL DEFAULT 3,
                 center_lon      DECIMAL(20, 7) NOT NULL DEFAULT 0.0,
                 center_lat      DECIMAL(20, 7) NOT NULL DEFAULT 0.0,
@@ -137,6 +139,26 @@ class NeatlineFeaturesPlugin
     {
         $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}neatline_features`;";
         $this->_db->query($sql);
+    }
+
+    /**
+     * This upgrades the database schema, if needed.
+     *
+     * @param string $oldVersion The previous version.
+     * @param string $newVersion The current, new version.
+     *
+     * @return void
+     * @author Eric Rochester
+     **/
+    public function upgrade($oldVersion, $newVersion)
+    {
+        $table = $this->_db->getTable('NeatlineFeature');
+        $name  = $table->getTableName();
+
+        try {
+            $this->_db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
+        } catch (Exception $e) {
+        }
     }
 
     /**
@@ -251,6 +273,18 @@ class NeatlineFeaturesPlugin
             ->_db
             ->getTable('NeatlineFeature')
             ->removeItemFeatures($record);
+    }
+
+    /**
+     * Initialization.
+     *
+     * Adds tranlation source.
+     *
+     * @return void
+     */
+    public function initialize()
+    {
+        add_translation_source(dirname(__FILE__) . '/languages');
     }
 
     // }}}

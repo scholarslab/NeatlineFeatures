@@ -96,7 +96,11 @@
   width: 100%;
   height: 360px;
 }
-/* line 110, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 109, ../../../_sass/shared/css/nlfeatures.scss */
+.nlfeatures .olMap svg {
+  display: block;
+}
+/* line 113, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .primary {
   background-color: #0064cd;
   background-repeat: repeat-x;
@@ -112,11 +116,11 @@
   border: 1px solid #004b9a;
   border-bottom-color: #003f81;
 }
-/* line 125, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 128, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .primary:hover {
   color: #fff;
 }
-/* line 128, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 131, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .disabled {
   background-color: #cccccc;
   background-repeat: repeat-x;
@@ -132,7 +136,7 @@
   border: 1px solid #004b9a;
   border-bottom-color: #003f81;
 }
-/* line 143, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 146, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures label.use-mapon {
   position: relative;
   float: left;
@@ -142,7 +146,7 @@
   font-size: 1.1em;
   margin: 0;
 }
-/* line 152, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 155, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures label.use-mapon input {
   position: absolute;
   top: 0;
@@ -151,7 +155,7 @@
   float: none;
   padding: 0;
 }
-/* line 161, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 164, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .nlflash {
   display: none;
   -moz-border-radius: 5px;
@@ -166,7 +170,7 @@
   width: 25%;
   opacity: 0.8;
 }
-/* line 175, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 178, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures label.olButton {
   color: #ddd;
 }

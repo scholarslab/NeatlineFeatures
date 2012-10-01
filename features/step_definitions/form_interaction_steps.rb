@@ -1,4 +1,10 @@
 
+def change_and_wait(id_attr, naptime=5)
+  # page.execute_script("jQuery('#save-changes').focus();")
+  page.execute_script("jQuery('##{id_attr}').change();")
+  sleep naptime
+end
+
 Given /^I click(?: on)? "([^"]*)"$/ do |link_text|
   click_on link_text
 end
@@ -19,12 +25,12 @@ end
 
 Given /^I enter "([^"]*)" into the "([^"]*)" field$/ do |value, label|
   fill_in(label, :with => value)
+  change_and_wait label
 end
 
 Given /^I enter "([^"]*)" into "([^"]*)"$/ do |value, field|
-  wait_until do
-    fill_in field, :with => value
-  end
+  fill_in field, :with => value
+  change_and_wait field
 end
 
 Given /^I click "([^"]*)" checkbox in "([^"]*)"$/ do |checkbox, parent|
@@ -47,6 +53,13 @@ end
 
 When /^I wait (\d+) seconds$/ do |count|
   sleep(count.to_i)
+end
+
+When /^I view the page$/ do
+  puts "URL  => #{current_url}"
+  puts "HTML => "
+  puts html
+  puts
 end
 
 Then /^"([^"]*)" should be checked$/ do |checkbox|

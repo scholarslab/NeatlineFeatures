@@ -73,7 +73,7 @@
         title  : 'Coverage'
         name   : 'Coverage'
         id     : @widget.element.attr 'id'
-        wkt    : input.wkt
+        geo    : input.geo
       local_options =
         mode   : @widget.options.mode
         json   : item
@@ -115,8 +115,13 @@
       el
 
     populate: ->
-      free = @widget.options.values.text
-      @fields.free.html stripFirstLine(free)
+      free     = @widget.options.values.text
+      stripped = stripFirstLine free
+      if stripped == ''
+        @fields.free.detach()
+        delete @fields.free
+      else
+        @fields.free.html stripped
 
 
   class EditWidget extends BaseWidget
@@ -144,7 +149,7 @@
         """
       text_container = $ """
         <div class="nlfeatures text-container">
-          <input type="hidden" id="#{id_prefix}wkt" name="#{name_prefix}[wkt]" value="" />
+          <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
@@ -153,7 +158,7 @@
           <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
           <div>
             <label class="use-html">#{use_html}
-              <input type="hidden" name="#{name_prefix}[html] value="0" />
+              <input type="hidden" name="#{name_prefix}[html]" value="0" />
               <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
             </label>
             <label class="use-mapon">#{use_map}
@@ -179,7 +184,7 @@
         free           : $ "##{id_prefix}free"
         html           : $ "##{id_prefix}html"
         # Hidden fields that need to be maintained.
-        wkt            : $ "##{id_prefix}wkt"
+        geo            : $ "##{id_prefix}geo"
         zoom           : $ "##{id_prefix}zoom"
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
@@ -205,37 +210,32 @@
     # TODO: Bring this up on #omeka and file a bug report.
     # admin/themes/default/javascripts/items.js, around line 410, should be
     # more specific.
+    #
+    # NB: The work-around now is to monkey-patch Omeka.Items.enableWysiwyg to
+    # target the checkboxes better. Now, this just sets some change events.
     captureEditor: ->
-      poll(
-        -> $('.mceEditor').length > 0,
-        =>
-          if not this.usesHtml()
-            free = @fields.free.attr 'id'
-            tinyMCE.execCommand 'mceRemoveControl', false, free
-          @fields.mapon
-            .unbind('click')
-            .change => this._onUseMap()
-          @fields.html
-            .change => this._updateTinyEvents()
-      )
+      @fields.mapon.change => this._onUseMap()
+      @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values) ->
-      @fields.mapon.attr 'checked', values.is_map
-      @fields.wkt.val to_s(values.wkt)
-      @fields.zoom.val to_s(values.zoom)
+      @fields.html.attr      'checked', values.is_html
+      @fields.mapon.attr     'checked', values.is_map
+      @fields.geo.val        to_s(values.geo)
+      @fields.zoom.val       to_s(values.zoom)
       @fields.center_lon.val to_s(values.center?.lon)
       @fields.center_lat.val to_s(values.center?.lat)
       @fields.base_layer.val to_s(values.base_layer)
-      @fields.text.val to_s(values.text)
-      @fields.free.val stripFirstLine(values.text)
+      @fields.text.val       to_s(values.text)
+      @fields.free.val       stripFirstLine(values.text)
 
     wire: ->
-      updateFields = => this.updateFields()
+      updateFields = => this.updateFields(@fields.free.val())
       @fields.free.change updateFields
       @nlfeatures.element
         .bind('featureadded.nlfeatures', updateFields)
         .bind('update.nlfeatures'      , updateFields)
         .bind('delete.nlfeatures'      , updateFields)
+        .bind('refresh.nlfeatures'     , updateFields)
         .bind('saveview.nlfeatures'    , =>
           @nlfeatures.saveViewport()
           this.updateFields()
@@ -280,20 +280,21 @@
       if this.usesHtml()
         freeId = @fields.free.attr 'id'
         poll(
-          -> tinyMCE.get(freeId)?,
+          -> tinymce.get(freeId)?,
           =>
             @fields.free.unbind 'change'
-            tinyMCE.get(freeId).onChange.add =>
+            tinymce.get(freeId).onChange.add =>
               this.updateFields()
           )
       else
-        @fields.free.change => this.updateFields()
+        @fields.free.change =>
+          this.updateFields()
 
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
-      wkt = @nlfeatures.getWktForSave()
-      @fields.wkt.val wkt
+      geo = @nlfeatures.getKml()
+      @fields.geo.val geo
 
       zoom = @nlfeatures.getSavedZoom()
       @fields.zoom.val zoom if zoom?
@@ -306,8 +307,12 @@
       base_layer = @nlfeatures.getBaseLayerCode()
       @fields.base_layer.val base_layer if base_layer?
 
-      free = @fields.free.val()
-      @fields.text.val "#{wkt}/#{zoom}/#{center?.lon}/#{center?.lat}/#{base_layer}\n#{free}"
+      if this.usesHtml()
+        text = tinymce.get(@fields.free.attr('id')).getContent()
+      else
+        text = @fields.free.val()
+
+      @fields.text.val "#{geo}|#{zoom}|#{center?.lon}|#{center?.lat}|#{base_layer}\n#{text}"
 
     # This sets the value of the flash div and fades it in for a short time (5
     # seconds, by default).
@@ -338,7 +343,7 @@
       map_options : {}
 
       values:
-        wkt     : null
+        geo     : null
         zoom    : null
         center  : null  # center is an object with the lon and lat properties.
         text    : null

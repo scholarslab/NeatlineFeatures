@@ -38,7 +38,7 @@
                     }
                 },
             values: {
-                wkt: <?php echo json_encode(is_null($wkt) ? '' : $wkt) ?>,
+                geo: <?php echo json_encode(is_null($geo) ? '' : $geo) ?>,
                 zoom: <?php echo json_encode(is_null($zoom) ? '' : $zoom) ?>,
                 center: {
                     lon: <?php echo json_encode(is_null($center_lon) ? '' : $center_lon) ?>,
@@ -52,5 +52,18 @@
             };
         $("#<?php echo $idPrefix ?>widget").featurewidget(options);
     });
+
+    // A nasty hack to clobber the current way that TinyMCE is set up for any 
+    // element that has *any* checked checkbox in them.
+    if (window.Omeka !== undefined && Omeka.Items !== undefined) {
+        Omeka.Items.enableWysiwyg = function (element) {
+            $(element)
+                .find('div.inputs label[class="use-html"] input[type="checkbox"]')
+                .each(function () {
+                    Omeka.Items.enableWysiwygCheckbox(this);
+                });
+        }
+    }
+
 })(jQuery);
 </script>

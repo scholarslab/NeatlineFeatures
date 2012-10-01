@@ -60,11 +60,6 @@
 (function($, undefined) {
     $.widget('nlfeatures.nlfeatures', {
         options: {
-            // `loadData()` and `loadLocalData()` can parse out multiple WKT
-            // features from their inputs' `wkt` fields. This is the string to
-            // use to separate out the WKT features.
-            wkt_delimiter: '|',
-
             // Markup hooks.
             markup: {
                 // The CSS class for the editing toolbar.
@@ -197,8 +192,7 @@
             var controls = [
                 new OpenLayers.Control.Attribution(),
                 new OpenLayers.Control.Navigation(),
-                new OpenLayers.Control.PanZoomBar(),
-                new OpenLayers.Control.ScaleLine()
+                new OpenLayers.Control.PanZoomBar()
             ];
             if (this.options.mode === 'edit') {
                 controls = controls.concat(
@@ -386,7 +380,7 @@
          * - `id`
          * - `title`
          * - `color` (optional)
-         * - `wkt`
+         * - `geo`
          */
         loadLocalData: function(data) {
             var self = this;
@@ -431,47 +425,45 @@
          * - `id`
          * - `title`
          * - `color` (optional)
-         * - `wkt`
+         * - `geo`
          */
         _buildVectorLayers: function(data) {
-            var self = this;
+            var self         = this;
+            var needsUpgrade = false;
 
             // Instantiate associations objects.
             this.idToLayer = {};
             this.layerToId = {};
 
             $.each(data, function(i, item) {
-                // Get the id of the item.
-                var itemId = item.id;
-
-                // Try to get a color from the JSON, revert to default if no color is set..
-                var color = (item.color !== '') ? item.color : self.options.styles.default_color;
-
-                // Build the layer styles.
-                var style = self._getStyleMap(color);
-
-                // Build the layers.
-                var vectorLayer = new OpenLayers.Layer.Vector(item.title, {
+                var itemId       = item.id;
+                var color        = (item.color !== '') ?
+                                   item.color          :
+                                   self.options.styles.default_color;
+                var style        = self._getStyleMap(color);
+                var vectorLayer  = new OpenLayers.Layer.Vector(item.title, {
                     styleMap: style
                 });
 
-                // Empty array to hold features objects.
-                var features = [];
+                if (item.geo !== null) {
+                    var kml      = new OpenLayers.Format.KML();
+                    var features = kml.read(item.geo);
 
-                // Build the features.
-                $.each(item.wkt.split(self.options.wkt_delimiter), function(i, wkt) {
-                    if (wkt !== "") {
-                        var geometry = OpenLayers.Geometry.fromWKT(wkt);
-                        if (geometry !== undefined) {
-                            var feature = new OpenLayers.Feature.Vector(geometry);
-                            features.push(feature);
-                        }
+                    if (features.length === 0) {
+                        var reader = new OpenLayers.Format.WKT();
+                        $.each(item.geo.split('|'), function(i, wkt) {
+                            if (reader.read(wkt) !== undefined) {
+                                var geometry = new OpenLayers.Geometry.fromWKT(wkt);
+                                var feature  = new OpenLayers.Feature.Vector(geometry);
+                                features.push(feature);
+                            }
+                        });
+                        needsUpgrade = (features.length > 0);
                     }
-                });
 
-                // Add the vectors to the layer.
-                if (features.length > 0) {
-                    vectorLayer.addFeatures(features);
+                    if (features.length > 0) {
+                        vectorLayer.addFeatures(features);
+                    }
                 }
                 vectorLayer.setMap(self.map);
 
@@ -483,6 +475,13 @@
                 self._currentVectorLayers.push(vectorLayer);
                 self.map.addLayer(vectorLayer);
             });
+
+            if (needsUpgrade) {
+                // Have to wait for the events to get wired up.
+                setTimeout(function() {
+                    self.element.trigger('refresh.nlfeatures');
+                }, 250);
+            }
         },
 
         /*
@@ -1111,20 +1110,46 @@
         getWktForSave: function() {
             var wkts = [];
 
-            if (this.exists(this.clickedFeature)) {
-                this.modifyFeatures.unselectFeature(this.clickedFeature);
-            }
-
             // Push the wkt's onto the array.
-            $.each(this._currentEditLayer.features, function(i, feature) {
+            this._getFeatures(function(i, feature) {
                 wkts.push(feature.geometry.toString());
             });
 
-            if (this.exists(this.clickedFeature)) {
-                this.modifyFeatures.selectFeature(this.clickedFeature);
+            return wkts.join('|');
+        },
+
+        /*
+         * This returns the features as KML.
+         */
+        getKml: function() {
+            var kml      = new OpenLayers.Format.KML();
+            var features = [];
+
+            this._getFeatures(function (i, f) {
+                features.push(f);
+            });
+
+            return kml.write(features);
+        },
+
+        /*
+         * This gets the current set of features, after deselecting the clicked
+         * feature.
+         *
+         * This handles them with the callback, which gets passed to `$.each`.
+         */
+        _getFeatures: function(callback) {
+            var isClicked = this.exists(this.clickedFeature);
+
+            if (isClicked) {
+                this.modifyFeatures.unselectFeature(this.clickedFeature);
             }
 
-            return wkts.join(this.options.wkt_delimiter);
+            $.each(this._currentEditLayer.features, callback);
+
+            if (isClicked) {
+                this.modifyFeatures.selectFeature(this.clickedFeature);
+            }
         },
 
         /*
@@ -1654,7 +1679,7 @@
           title: 'Coverage',
           name: 'Coverage',
           id: this.widget.element.attr('id'),
-          wkt: input.wkt
+          geo: input.geo
         };
         local_options = {
           mode: this.widget.options.mode,
@@ -1703,9 +1728,15 @@
       };
 
       ViewWidget.prototype.populate = function() {
-        var free;
+        var free, stripped;
         free = this.widget.options.values.text;
-        return this.fields.free.html(stripFirstLine(free));
+        stripped = stripFirstLine(free);
+        if (stripped === '') {
+          this.fields.free.detach();
+          return delete this.fields.free;
+        } else {
+          return this.fields.free.html(stripped);
+        }
       };
 
       return ViewWidget;
@@ -1735,7 +1766,7 @@
         use_html = this.widget.options.labels.html;
         use_map = this.widget.options.labels.map;
         map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
-        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "wkt\" name=\"" + name_prefix + "[wkt]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <div>\n    <label class=\"use-html\">" + use_html + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[html] value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n    </label>\n    <label class=\"use-mapon\">" + use_map + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n    </label>\n  </div>\n</div>");
+        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <div>\n    <label class=\"use-html\">" + use_html + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[html]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n    </label>\n    <label class=\"use-mapon\">" + use_map + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n    </label>\n  </div>\n</div>");
         el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
         this.fields = {
           map_container: el.find(".map-container"),
@@ -1746,7 +1777,7 @@
           text: $("#" + id_prefix + "text"),
           free: $("#" + id_prefix + "free"),
           html: $("#" + id_prefix + "html"),
-          wkt: $("#" + id_prefix + "wkt"),
+          geo: $("#" + id_prefix + "geo"),
           zoom: $("#" + id_prefix + "zoom"),
           center_lon: $("#" + id_prefix + "center_lon"),
           center_lat: $("#" + id_prefix + "center_lat"),
@@ -1758,28 +1789,20 @@
 
       EditWidget.prototype.captureEditor = function() {
         var _this = this;
-        return poll(function() {
-          return $('.mceEditor').length > 0;
-        }, function() {
-          var free;
-          if (!_this.usesHtml()) {
-            free = _this.fields.free.attr('id');
-            tinyMCE.execCommand('mceRemoveControl', false, free);
-          }
-          _this.fields.mapon.unbind('click').change(function() {
-            return _this._onUseMap();
-          });
-          return _this.fields.html.change(function() {
-            return _this._updateTinyEvents();
-          });
+        this.fields.mapon.change(function() {
+          return _this._onUseMap();
+        });
+        return this.fields.html.change(function() {
+          return _this._updateTinyEvents();
         });
       };
 
       EditWidget.prototype.populate = function(values) {
         var _ref, _ref2;
         if (values == null) values = this.widget.options.values;
+        this.fields.html.attr('checked', values.is_html);
         this.fields.mapon.attr('checked', values.is_map);
-        this.fields.wkt.val(to_s(values.wkt));
+        this.fields.geo.val(to_s(values.geo));
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
         this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
@@ -1792,10 +1815,10 @@
         var updateFields,
           _this = this;
         updateFields = function() {
-          return _this.updateFields();
+          return _this.updateFields(_this.fields.free.val());
         };
         this.fields.free.change(updateFields);
-        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
+        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('refresh.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
           _this.nlfeatures.saveViewport();
           _this.updateFields();
           return _this.flash('View Saved...');
@@ -1848,10 +1871,10 @@
         if (this.usesHtml()) {
           freeId = this.fields.free.attr('id');
           return poll(function() {
-            return tinyMCE.get(freeId) != null;
+            return tinymce.get(freeId) != null;
           }, function() {
             _this.fields.free.unbind('change');
-            return tinyMCE.get(freeId).onChange.add(function() {
+            return tinymce.get(freeId).onChange.add(function() {
               return _this.updateFields();
             });
           });
@@ -1863,9 +1886,9 @@
       };
 
       EditWidget.prototype.updateFields = function() {
-        var base_layer, center, free, wkt, zoom;
-        wkt = this.nlfeatures.getWktForSave();
-        this.fields.wkt.val(wkt);
+        var base_layer, center, geo, text, zoom;
+        geo = this.nlfeatures.getKml();
+        this.fields.geo.val(geo);
         zoom = this.nlfeatures.getSavedZoom();
         if (zoom != null) this.fields.zoom.val(zoom);
         center = this.nlfeatures.getSavedCenter();
@@ -1875,8 +1898,12 @@
         }
         base_layer = this.nlfeatures.getBaseLayerCode();
         if (base_layer != null) this.fields.base_layer.val(base_layer);
-        free = this.fields.free.val();
-        return this.fields.text.val("" + wkt + "/" + zoom + "/" + (center != null ? center.lon : void 0) + "/" + (center != null ? center.lat : void 0) + "/" + base_layer + "\n" + free);
+        if (this.usesHtml()) {
+          text = tinymce.get(this.fields.free.attr('id')).getContent();
+        } else {
+          text = this.fields.free.val();
+        }
+        return this.fields.text.val("" + geo + "|" + zoom + "|" + (center != null ? center.lon : void 0) + "|" + (center != null ? center.lat : void 0) + "|" + base_layer + "\n" + text);
       };
 
       EditWidget.prototype.flash = function(msg, delay) {
@@ -1903,7 +1930,7 @@
         },
         map_options: {},
         values: {
-          wkt: null,
+          geo: null,
           zoom: null,
           center: null,
           text: null,

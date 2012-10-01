@@ -32,7 +32,7 @@ Feature: Bug Fix Tests
     # Then I should see ".mceEditor" in "#element-38"
     # And "Elements-38-0-html" should be checked
 
-  @selenium
+  @javascript
   Scenario: Editing buttons should have unique IDs.
     Given I am logged into the admin console
     When I click "Add a new item to your archive"
@@ -45,7 +45,7 @@ Feature: Bug Fix Tests
     And I wait 5 seconds
     And I should see "#Elements-38-1-drag-button"
 
-  @selenium
+  @javascript
   Scenario: Viewports sufficiently west should not overflow
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -59,4 +59,11 @@ Feature: Bug Fix Tests
     When I click "Viewport overflow"
     Then "#dublin-core-coverage .map" should center on "-111.8833, 40.75"
 
+  @javascript
+  Scenario: TinyMCE should be hidden when editing an existing file
+    Given I have existing feature data named "Cucumber: Tiny Zombie"
+    And I am logged into the admin console
+    And I click "Items"
+    When I edit "Cucumber: Tiny Zombie"
+    Then I should see "#Elements-38-0-free"
 

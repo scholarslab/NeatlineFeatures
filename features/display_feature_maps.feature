@@ -4,7 +4,8 @@ Feature: Display Feature Maps on Item Pages
   I want to be able to include annotated maps on the item (and other) pages
   So that visitors to the site can view the feature data.
 
-  @selenium
+  @kml
+  @javascript
   Scenario: Display Feature Maps on Item Page
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -19,4 +20,5 @@ Feature: Display Feature Maps on Item Pages
     Then I should see an OpenLayers map
     And the map in "#dublin-core-coverage" should have a point feature
     And the map in "#dublin-core-coverage" should have a line feature
+    And element "#dublin-core-coverage .freetext" should not be on the page
 

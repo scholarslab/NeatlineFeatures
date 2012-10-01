@@ -4,7 +4,8 @@ Feature: Display Multimodal Coverages
   I want to be able to have geospatial and textual data in the same coverage field
   So that visitors can see all coverage data.
 
-  @selenium
+  @kml
+  @javascript
   Scenario: Multimodal Coverages
     Given I am logged into the admin console
     And I click "Add a new item to your archive"
@@ -18,5 +19,5 @@ Feature: Display Multimodal Coverages
     When I click "View Public Page"
     Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
     And I should see text "A pointed question" in "#dublin-core-coverage"
-    But I should not see text "WKT" in "#dublin-core-coverage .nlfeatures"
+    But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 
