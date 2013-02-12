@@ -13,8 +13,6 @@
  */
 ?><?php
 
-require_once APP_DIR . '/helpers/Functions.php';
-
 /**
  * This contructs the view and holds a bunch of utility methods.
  *

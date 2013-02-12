@@ -18,7 +18,7 @@ require_once NEATLINE_FEATURES_PLUGIN_DIR . '/models/NeatlineFeature.php';
 /**
  * This is a model class for the neatline_features table.
  **/
-class NeatlineFeatureTable extends Omeka_Db_Table
+class Table_NeatlineFeature extends Omeka_Db_Table
 {
 
     /**
@@ -57,7 +57,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
      **/
     public function getRecordByElementText($element_text)
     {
-        $db     = $this->getDb();
+        $db     = $this->_helper->db;
         $select = $db
             ->select()
             ->from(array( 'nf' => $this->getTableName() ))
@@ -198,7 +198,7 @@ class NeatlineFeatureTable extends Omeka_Db_Table
     {
         $name     = $this->getTableName();
         $item_id  = $item->id;
-        $db       = $this->getDb();
+        $db       = $this->_helper->db;
         $coverage = $db
             ->getTable('Element')
             ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');

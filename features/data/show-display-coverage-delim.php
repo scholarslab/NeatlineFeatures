@@ -1,4 +1,4 @@
-<?php head(array('title' => item('Dublin Core', 'Title'), 'bodyid'=>'items','bodyclass' => 'show')); ?>
+<?php echo head(array('title' => item('Dublin Core', 'Title'), 'bodyid'=>'items','bodyclass' => 'show')); ?>
 
 <div id="primary">
     
@@ -9,10 +9,10 @@
     </div>
     
 	<ul class="item-pagination navigation">
-	    <li id="previous-item" class="previous"><?php echo link_to_previous_item('Previous Item'); ?></li>
-	    <li id="next-item" class="next"><?php echo link_to_next_item('Next Item'); ?></li>
+	    <li id="previous-item" class="previous"><?php echo link_to_previous_item_show('Previous Item'); ?></li>
+	    <li id="next-item" class="next"><?php echo link_to_next_item_show('Next Item'); ?></li>
 	</ul>
 	
 </div><!-- end primary -->
 
-<?php foot(); ?>
+<?php echo foot(); ?>

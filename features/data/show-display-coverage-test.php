@@ -1,4 +1,4 @@
-<?php head(array('title' => item('Dublin Core', 'Title'), 'bodyid'=>'items','bodyclass' => 'show')); ?>
+<?php echo head(array('title' => item('Dublin Core', 'Title'), 'bodyid'=>'items','bodyclass' => 'show')); ?>
 
 <div id="primary">
 
@@ -13,4 +13,4 @@ $coverages = item('Dublin Core', 'Coverage', array('all' => true));
 
 </div><!-- end primary -->
 
-<?php foot(); ?>
+<?php echo foot(); ?>

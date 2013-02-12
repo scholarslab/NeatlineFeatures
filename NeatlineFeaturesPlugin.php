@@ -24,13 +24,13 @@ require_once NEATLINE_FEATURES_PLUGIN_DIR .
 require_once NEATLINE_FEATURES_PLUGIN_DIR .
     '/lib/NeatlineFeatures_Functions.php';
 require_once NEATLINE_FEATURES_PLUGIN_DIR .
-    '/models/NeatlineFeatureTable.php';
+    '/models/Table/Table_NeatlineFeature.php';
 
 /**
  * This class manages the plugin itself. It defines controllers for all the
  * hooks and filters.
  **/
-class NeatlineFeaturesPlugin
+class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
 {
     // Vars {{{
     /**
@@ -38,14 +38,14 @@ class NeatlineFeaturesPlugin
      *
      * @var Object
      **/
-    private $_db;
+    private $__db;
 
     /**
      * This is a list of the hooks this manager defines.
      *
      * @var array
      **/
-    private static $_hooks = array(
+    private static $_hookList = array(
         'install',
         'uninstall',
         'upgrade',
@@ -61,7 +61,7 @@ class NeatlineFeaturesPlugin
      *
      * @var array
      **/
-    private static $_filters = array(
+    private static $_filterList = array(
         array('formItemDublinCoreCoverage',
               array('Form', 'Item', 'Dublin Core', 'Coverage')),
         array('elementFormDisplayHtmlFlag',
@@ -74,7 +74,7 @@ class NeatlineFeaturesPlugin
     // Class setup {{{
     function __construct()
     {
-        $this->_db = get_db();
+        $this->__db = get_db();
         self::addHooksAndFilters();
     }
 
@@ -86,7 +86,7 @@ class NeatlineFeaturesPlugin
      **/
     public function addHooksAndFilters()
     {
-        foreach (self::$_hooks as $hookName) {
+        foreach (self::$_hookList as $hookName) {
             $functionName = Inflector::variablize($hookName);
             get_plugin_broker()->addHook(
                 $hookName,
@@ -95,7 +95,7 @@ class NeatlineFeaturesPlugin
             );
         }
 
-        foreach (self::$_filters as $filterInfo) {
+        foreach (self::$_filterList as $filterInfo) {
             $functionName = $filterInfo[0];
             add_filter($filterInfo[1], array($this, $functionName));
         }
@@ -112,7 +112,7 @@ class NeatlineFeaturesPlugin
     public function install()
     {
         $sql = "
-            CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}neatline_features` (
+            CREATE TABLE IF NOT EXISTS `{$this->__db->prefix}neatline_features` (
                 id              INT(10)        UNSIGNED NOT NULL AUTO_INCREMENT,
                 added           TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
                 item_id         INT(10)        UNSIGNED NOT NULL,
@@ -126,7 +126,7 @@ class NeatlineFeaturesPlugin
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-        $this->_db->query($sql);
+        $this->__db->query($sql);
     }
 
     /**
@@ -137,8 +137,8 @@ class NeatlineFeaturesPlugin
      **/
     public function uninstall()
     {
-        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}neatline_features`;";
-        $this->_db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `{$this->__db->prefix}neatline_features`;";
+        $this->__db->query($sql);
     }
 
     /**
@@ -152,11 +152,11 @@ class NeatlineFeaturesPlugin
      **/
     public function upgrade($oldVersion, $newVersion)
     {
-        $table = $this->_db->getTable('NeatlineFeature');
+        $table = $this->__db->getTable('NeatlineFeature');
         $name  = $table->getTableName();
 
         try {
-            $this->_db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
+            $this->__db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
         } catch (Exception $e) {
         }
     }
@@ -172,12 +172,12 @@ class NeatlineFeaturesPlugin
     private function _queueJsUri($uri)
     {
         // We are also outputting the script tags to load OpenLayers here.
-        $head = __v()->headScript();
+        $head = get_view()->headScript();
         $head->appendScript('', 'text/javascript', array('src' => $uri));
     }
 
     /**
-     * This returns the name of the minified JS file for passing to queue_js.
+     * This returns the name of the minified JS file for passing to queue_js_file.
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
@@ -196,20 +196,20 @@ class NeatlineFeaturesPlugin
      **/
     public function adminThemeHeader()
     {
-        queue_css('nlfeatures');
-        queue_css('nlfeature-editor');
+        queue_css_file('nlfeatures');
+        queue_css_file('nlfeature-editor');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.8&sensor=false");
-        queue_js('libraries/openlayers/OpenLayers.min');
-        queue_js('libraries/tile.stamen');
+        queue_js_file('libraries/openlayers/OpenLayers.min');
+        queue_js_file('libraries/tile.stamen');
 
         if (getenv('ENVIRONMENT') == 'development') {
-            queue_js('nlfeatures');
-            queue_js('editor/edit_features');
-            queue_js('featureswidget');
+            queue_js_file('nlfeatures');
+            queue_js_file('editor/edit_features');
+            queue_js_file('featureswidget');
         } else {
-            queue_js($this->_nlMinJs());
+            queue_js_file($this->_nlMinJs());
         }
     }
 
@@ -221,18 +221,18 @@ class NeatlineFeaturesPlugin
      **/
     public function publicThemeHeader()
     {
-        queue_css('nlfeatures');
+        queue_css_file('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
         $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.8&sensor=false");
-        queue_js('libraries/openlayers/OpenLayers.min');
-        queue_js('libraries/tile.stamen');
+        queue_js_file('libraries/openlayers/OpenLayers.min');
+        queue_js_file('libraries/tile.stamen');
 
         if (getenv('ENVIRONMENT') == 'development') {
-            queue_js('nlfeatures');
-            queue_js('featureswidget');
+            queue_js_file('nlfeatures');
+            queue_js_file('featureswidget');
         } else {
-            queue_js($this->_nlMinJs());
+            queue_js_file($this->_nlMinJs());
         }
     }
 
@@ -253,7 +253,7 @@ class NeatlineFeaturesPlugin
         $post = $utils->getPost();
         if (!is_null($post)) {
             $this
-                ->_db
+                ->__db
                 ->getTable('NeatlineFeature')
                 ->updateFeatures($record, $utils->getPost());
         }
@@ -270,7 +270,7 @@ class NeatlineFeaturesPlugin
     public function beforeDeleteItem($record)
     {
         $this
-            ->_db
+            ->__db
             ->getTable('NeatlineFeature')
             ->removeItemFeatures($record);
     }
