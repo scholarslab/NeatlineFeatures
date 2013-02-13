@@ -117,10 +117,13 @@ class NeatlineFeatures_Utils_View
                 ->getTable('ElementText');
             $search = $table
                 ->getSelect()
-                ->where('record_id=?',      $record->id)
-                ->where('record_type_id=?', $element->data_type_id)
-                ->where('element_id=?',     $element->id)
-                ->where('text=?',           is_null($value) ? '' : $value);
+                ->where('record_id=?',   $record->id)
+                ->where('element_id=?',  $element->id)
+                ->where('text=?',        is_null($value) ? '' : $value);
+            if (!is_null($element->data_type_id)) {
+                $search = $search
+                    ->where('record_type=?', $element->data_type_id);
+            }
             $etext = $table->fetchObject($search);
         }
 

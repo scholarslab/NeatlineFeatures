@@ -63,7 +63,7 @@ class NeatlineFeatures_Functions
      * @return bool $isKml Whether the string is KML.
      * @author Eric Rochester
      **/
-    public function isKml($coverage)
+    public static function isKml($coverage)
     {
         $isKml  = false;
 

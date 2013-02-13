@@ -111,7 +111,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $helper = new Omeka_Test_Helper_Plugin();
         $helper->setUp('NeatlineFeatures');
 
-        $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->core);
+        $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->application);
 
         // Retrieve the element for some DC fields.
         $el_table = get_db()->getTable('Element');
@@ -214,7 +214,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $etext->html = $html;
         $etext->element_id = $element->id;
         $etext->record_id = $item->id;
-        $etext->record_type_id = 2;
+        $etext->record_type = 2;
         $etext->save();
 
         $item[$element->name] = $etext;

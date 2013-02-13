@@ -57,7 +57,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
      **/
     public function getRecordByElementText($element_text)
     {
-        $db     = $this->_helper->db;
+        $db     = $this->_db;
         $select = $db
             ->select()
             ->from(array( 'nf' => $this->getTableName() ))
@@ -198,7 +198,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
     {
         $name     = $this->getTableName();
         $item_id  = $item->id;
-        $db       = $this->_helper->db;
+        $db       = $this->_db;
         $coverage = $db
             ->getTable('Element')
             ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');

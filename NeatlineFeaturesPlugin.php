@@ -245,9 +245,10 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function afterSaveItem($record)
+    public function afterSaveItem($args)
     {
-        $utils = new NeatlineFeatures_Utils_View();
+        $record = $args['record'];
+        $utils  = new NeatlineFeatures_Utils_View();
         $utils->setCoverageElement();
 
         $post = $utils->getPost();
@@ -267,8 +268,9 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function beforeDeleteItem($record)
+    public function beforeDeleteItem($args)
     {
+        $record = $args['record'];
         $this
             ->__db
             ->getTable('NeatlineFeature')
