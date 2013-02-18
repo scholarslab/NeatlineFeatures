@@ -33,19 +33,13 @@ require_once NEATLINE_FEATURES_PLUGIN_DIR .
 class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
 {
     // Vars {{{
-    /**
-     * This is a pointer to the current database.
-     *
-     * @var Object
-     **/
-    private $__db;
 
     /**
      * This is a list of the hooks this manager defines.
      *
      * @var array
      **/
-    private static $_hookList = array(
+    protected $_hooks = array(
         'install',
         'uninstall',
         'upgrade',
@@ -61,46 +55,21 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @var array
      **/
-    private static $_filterList = array(
-        array('formItemDublinCoreCoverage',
-              array('Form', 'Item', 'Dublin Core', 'Coverage')),
-        array('elementFormDisplayHtmlFlag',
-              'element_form_display_html_flag'),
-        array('displayItemDublinCoreCoverage',
-              array('Display', 'Item', 'Dublin Core', 'Coverage'))
+    protected $_filters = array(
+        'filterFormItemDublinCoreCoverage' =>
+            array('Form', 'Item', 'Dublin Core', 'Coverage'),
+        'filterElementFormDisplayHtmlFlag' =>
+            array('Element', 'Form', 'Display', 'Html Flag'),
+        'filterDisplayItemDublinCoreCoverage' =>
+            array('Display', 'Item', 'Dublin Core', 'Coverage')
     );
     // }}}
 
-    // Class setup {{{
-    function __construct()
+    public function __construct()
     {
-        $this->__db = get_db();
-        self::addHooksAndFilters();
+        parent::__construct();
+        $this->setUp();
     }
-
-    /**
-     * Iterate over the hooks and filters, define callbacks.
-     *
-     * @return void
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function addHooksAndFilters()
-    {
-        foreach (self::$_hookList as $hookName) {
-            $functionName = Inflector::variablize($hookName);
-            get_plugin_broker()->addHook(
-                $hookName,
-                array($this, $functionName),
-                'NeatlineFeatures'
-            );
-        }
-
-        foreach (self::$_filterList as $filterInfo) {
-            $functionName = $filterInfo[0];
-            add_filter($filterInfo[1], array($this, $functionName));
-        }
-    }
-    // }}}
 
     // Hooks {{{
     /**
@@ -109,10 +78,10 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function install()
+    public function hookInstall($args)
     {
         $sql = "
-            CREATE TABLE IF NOT EXISTS `{$this->__db->prefix}neatline_features` (
+            CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}neatline_features` (
                 id              INT(10)        UNSIGNED NOT NULL AUTO_INCREMENT,
                 added           TIMESTAMP      DEFAULT CURRENT_TIMESTAMP,
                 item_id         INT(10)        UNSIGNED NOT NULL,
@@ -126,7 +95,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
                 CONSTRAINT PRIMARY KEY (id),
                 INDEX (item_id, element_text_id)
             ) ENGINE=innodb DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-        $this->__db->query($sql);
+        $this->_db->query($sql);
     }
 
     /**
@@ -135,10 +104,10 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function uninstall()
+    public function hookUninstall()
     {
-        $sql = "DROP TABLE IF EXISTS `{$this->__db->prefix}neatline_features`;";
-        $this->__db->query($sql);
+        $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}neatline_features`;";
+        $this->_db->query($sql);
     }
 
     /**
@@ -150,13 +119,13 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester
      **/
-    public function upgrade($oldVersion, $newVersion)
+    public function hookUpgrade($oldVersion, $newVersion)
     {
-        $table = $this->__db->getTable('NeatlineFeature');
+        $table = $this->_db->getTable('NeatlineFeature');
         $name  = $table->getTableName();
 
         try {
-            $this->__db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
+            $this->_db->query("ALTER TABLE $name CHANGE COLUMN wkt geo TEXT;");
         } catch (Exception $e) {
         }
     }
@@ -194,7 +163,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function adminThemeHeader()
+    public function hookAdminThemeHeader($args)
     {
         queue_css_file('nlfeatures');
         queue_css_file('nlfeature-editor');
@@ -204,7 +173,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
         queue_js_file('libraries/openlayers/OpenLayers.min');
         queue_js_file('libraries/tile.stamen');
 
-        if (getenv('ENVIRONMENT') == 'development') {
+        if (getenv('APPLICATION_ENV') == 'development') {
             queue_js_file('nlfeatures');
             queue_js_file('editor/edit_features');
             queue_js_file('featureswidget');
@@ -219,7 +188,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function publicThemeHeader()
+    public function hookPublicThemeHeader()
     {
         queue_css_file('nlfeatures');
 
@@ -228,7 +197,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
         queue_js_file('libraries/openlayers/OpenLayers.min');
         queue_js_file('libraries/tile.stamen');
 
-        if (getenv('ENVIRONMENT') == 'development') {
+        if (getenv('APPLICATION_ENV') == 'development') {
             queue_js_file('nlfeatures');
             queue_js_file('featureswidget');
         } else {
@@ -245,7 +214,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function afterSaveItem($args)
+    public function hookAfterSaveItem($args)
     {
         $record = $args['record'];
         $utils  = new NeatlineFeatures_Utils_View();
@@ -254,7 +223,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
         $post = $utils->getPost();
         if (!is_null($post)) {
             $this
-                ->__db
+                ->_db
                 ->getTable('NeatlineFeature')
                 ->updateFeatures($record, $utils->getPost());
         }
@@ -268,11 +237,11 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function beforeDeleteItem($args)
+    public function hookBeforeDeleteItem($args)
     {
         $record = $args['record'];
         $this
-            ->__db
+            ->_db
             ->getTable('NeatlineFeature')
             ->removeItemFeatures($record);
     }
@@ -284,7 +253,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      *
      * @return void
      */
-    public function initialize()
+    public function hookInitialize()
     {
         add_translation_source(dirname(__FILE__) . '/languages');
     }
@@ -306,7 +275,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * form.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function formItemDublinCoreCoverage($html, $inputNameStem, $value,
+    public function filterFormItemDublinCoreCoverage($html, $inputNameStem, $value,
         $options, $record, $element)
     {
         $util = new NeatlineFeatures_Utils_View();
@@ -326,7 +295,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * element.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function elementFormDisplayHtmlFlag($html, $element)
+    public function filterElementFormDisplayHtmlFlag($html, $element)
     {
         if ($element->name == 'Coverage' &&
             $element->getElementSet()->name == 'Dublin Core') {
@@ -348,7 +317,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return The HTML to generate the map.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function displayItemDublinCoreCoverage($text, $record, $elementText)
+    public function filterDisplayItemDublinCoreCoverage($text, $record, $elementText)
     {
         return NeatlineFeatures_Functions::displayCoverage(
             $text, $record, $elementText

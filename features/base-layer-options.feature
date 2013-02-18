@@ -7,7 +7,7 @@ Feature: Users can select a base layer from a set of options
   @javascript
   Scenario: Select a Base Layer
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I click "Use Map" checkbox in "#element-38"
     And I switch to the "Google Physical" base layer on "#Elements-38-0-map"
     Then I see "#Elements-38-0-base_layer" contains "gphy"
@@ -15,7 +15,7 @@ Feature: Users can select a base layer from a set of options
   @javascript
   Scenario: Selected Base Layer should persist
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Base Layer Settings Persist" for the "Elements-50-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I switch to the "Google Physical" base layer on "#Elements-38-0-map"
@@ -28,7 +28,7 @@ Feature: Users can select a base layer from a set of options
   @javascript
   Scenario: Selected Base Layer should be visible on display
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Base Layer Settings Display" for the "Elements-50-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I switch to the "Google Physical" base layer on "#Elements-38-0-map"

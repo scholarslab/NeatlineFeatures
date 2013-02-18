@@ -8,7 +8,7 @@ Feature: Display Feature Maps on Item Pages
   @javascript
   Scenario: Display Feature Maps on Item Page
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Display Feature Maps" for the "Elements-50-0-text"      # Title
     And I enter "Display Feature Maps" for the "Elements-49-0-text"      # Subject
     And I click "Use Map" checkbox in "#element-38"

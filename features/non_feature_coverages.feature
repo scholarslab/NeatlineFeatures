@@ -6,7 +6,7 @@ Feature: Non-Feature Coverages
 
   Scenario: Add and Display Non-Feature Coverage Data
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Add Non-Feature Coverage Data" for the "Elements-50-0-text"  # Title
     And I enter "AddNonFeatureCoverageData" for the "Elements-49-0-text"  # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
@@ -16,7 +16,7 @@ Feature: Non-Feature Coverages
 
   Scenario: If existing coverage data does not contain features, don't show a map
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Default Raw Tab" for the "Elements-50-0-text"  # Title
     And I enter "Default Raw Tab" for the "Elements-49-0-text"  # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
@@ -30,7 +30,7 @@ Feature: Non-Feature Coverages
   @javascript
   Scenario: If a new coverage input is added, the existing map should still show
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: New Coverage, Existing Map" for the "Elements-50-0-text"   # Title
     And I enter "New Coverage, Existing Map" for the "Elements-49-0-text"             # Subject
     And I click "Use Map" checkbox in "#Elements-38-0-widget"

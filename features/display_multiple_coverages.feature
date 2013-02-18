@@ -8,7 +8,7 @@ Feature: Display Multiple Coverages
   Scenario: All Non-Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Display All Non-Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Non-Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
@@ -27,7 +27,7 @@ Feature: Display Multiple Coverages
   Scenario: All Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Display All Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display All Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I click "Use Map" checkbox in "#Elements-38-0-widget"
@@ -47,7 +47,7 @@ Feature: Display Multiple Coverages
   Scenario: Mixed Feature Coverages
     Given I am logged into the admin console
     And I replace "themes/default/items/show.php" with "plugins/NeatlineFeatures/features/data/show-display-coverage-delim.php"
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Display Mixed Feature Coverages" for the "Elements-50-0-text"      # Title
     And I enter "Display Mixed Feature Coverages" for the "Elements-49-0-text"      # Subject
     And I click "Use Map" checkbox in "#element-38"

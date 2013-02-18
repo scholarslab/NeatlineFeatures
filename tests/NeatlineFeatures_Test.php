@@ -31,11 +31,11 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
 
     // Variables {{{
     /**
-     * The NeatlineFeaturesPlugin object.
+     * The Omeka_Test_Helper_Plugin object.
      *
-     * @var NeatlineFeaturesPlugin
+     * @var Omeka_Test_Helper_Plugin
      **/
-    public $nfPlugin;
+    public $phelper;
 
     /**
      * The user we're logged in as.
@@ -105,11 +105,8 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->user = $this->db->getTable('user')->find(1);
         $this->_authenticateUser($this->user);
 
-        $plugin_broker = get_plugin_broker();
-        $this->nfPlugin = $this->_addHooksAndFilters(
-            $plugin_broker, 'NeatlineFeatures');
-        $helper = new Omeka_Test_Helper_Plugin();
-        $helper->setUp('NeatlineFeatures');
+        $this->phelper = new Omeka_Test_Helper_Plugin;
+        $this->phelper->setUp('NeatlineFeatures');
 
         $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->application);
 
@@ -176,8 +173,6 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_todel = array();
 
         $this->_item = null;
-
-        $this->nfPlugin->uninstall();
     }
     // }}}
 

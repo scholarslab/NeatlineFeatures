@@ -8,7 +8,7 @@ Feature: Display Multimodal Coverages
   @javascript
   Scenario: Multimodal Coverages
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Multimodal Coverage" for the "Elements-50-0-text"
     And I enter "Multimodal Coverage" for the "Elements-49-0-text"
     And I click "Use Map" checkbox in "#element-38"

@@ -6,7 +6,7 @@ Feature: Set Viewport
 
   Scenario: Can Set Viewport
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I click "Use Map" checkbox in "#element-38"
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
     And I zoom "#Elements-38-0-map" to "6"
@@ -18,7 +18,7 @@ Feature: Set Viewport
   @javascript
   Scenario: Viewport Settings Persist
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Viewport Settings Persist" for the "Elements-50-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I move "#Elements-38-0-map" to "-78.5057164, 38.0365267"
