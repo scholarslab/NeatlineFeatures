@@ -19,6 +19,19 @@
  */
 ?><?php
 
+if (!defined('NEATLINE_FEATURES_PLUGIN_VERSION')) {
+    define(
+        'NEATLINE_FEATURES_PLUGIN_VERSION',
+        get_plugin_ini('NeatlineFeatures', 'version')
+    );
+}
+if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
+    define(
+        'NEATLINE_FEATURES_PLUGIN_DIR',
+        dirname(__FILE__)
+    );
+}
+
 require_once NEATLINE_FEATURES_PLUGIN_DIR .
     '/lib/NeatlineFeatures/Utils/View.php';
 require_once NEATLINE_FEATURES_PLUGIN_DIR .
@@ -43,8 +56,8 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
         'install',
         'uninstall',
         'upgrade',
-        'admin_theme_header',
-        'public_theme_header',
+        'admin_head',
+        'public_head',
         'after_save_item',
         'before_delete_item',
         'initialize'
@@ -64,12 +77,6 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
             array('Display', 'Item', 'Dublin Core', 'Coverage')
     );
     // }}}
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->setUp();
-    }
 
     // Hooks {{{
     /**
@@ -163,7 +170,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function hookAdminThemeHeader($args)
+    public function hookAdminHead()
     {
         queue_css_file('nlfeatures');
         queue_css_file('nlfeature-editor');
@@ -188,7 +195,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function hookPublicThemeHeader()
+    public function hookPublicHead()
     {
         queue_css_file('nlfeatures');
 
