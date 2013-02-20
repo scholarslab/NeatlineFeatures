@@ -70,9 +70,9 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     protected $_filters = array(
         'filterFormItemDublinCoreCoverage' =>
-            array('Form', 'Item', 'Dublin Core', 'Coverage'),
+            array('ElementForm', 'Item', 'Dublin Core', 'Coverage'),
         'filterElementFormDisplayHtmlFlag' =>
-            array('Element', 'Form', 'Display', 'Html Flag'),
+            array('Element', 'Form', 'Display', 'HtmlFlag'),
         'filterDisplayItemDublinCoreCoverage' =>
             array('Display', 'Item', 'Dublin Core', 'Coverage')
     );
@@ -87,6 +87,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookInstall($args)
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) install");
         $sql = "
             CREATE TABLE IF NOT EXISTS `{$this->_db->prefix}neatline_features` (
                 id              INT(10)        UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -113,6 +114,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookUninstall()
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) uninstall");
         $sql = "DROP TABLE IF EXISTS `{$this->_db->prefix}neatline_features`;";
         $this->_db->query($sql);
     }
@@ -128,6 +130,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookUpgrade($oldVersion, $newVersion)
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) upgrade");
         $table = $this->_db->getTable('NeatlineFeature');
         $name  = $table->getTableName();
 
@@ -172,6 +175,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookAdminHead()
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) admin_head");
         queue_css_file('nlfeatures');
         queue_css_file('nlfeature-editor');
 
@@ -197,6 +201,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookPublicHead()
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) public_theme_header");
         queue_css_file('nlfeatures');
 
         // We are also outputting the script tags to load OpenLayers here.
@@ -223,6 +228,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookAfterSaveItem($args)
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) after_save_item");
         $record = $args['record'];
         $utils  = new NeatlineFeatures_Utils_View();
         $utils->setCoverageElement();
@@ -246,6 +252,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookBeforeDeleteItem($args)
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) before_delete_item");
         $record = $args['record'];
         $this
             ->_db
@@ -262,6 +269,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      */
     public function hookInitialize()
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) initialize");
         add_translation_source(dirname(__FILE__) . '/languages');
     }
 
@@ -282,9 +290,19 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * form.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function filterFormItemDublinCoreCoverage($html, $inputNameStem, $value,
-        $options, $record, $element)
+    public function filterFormItemDublinCoreCoverage($components, $args)
+        /*
+         * $html, $inputNameStem, $value,
+         * $options, $record, $element)
+         */
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) form_item_dublin_core_coverage");
+        // NeatlineFeatures_Functions::fdump('/tmp/nlfeatures.log', "components", $components);
+
+        $html = '<div class="input-block">';
+
+        return $components;
+
         $util = new NeatlineFeatures_Utils_View();
         $util->setEditOptions(
             $inputNameStem, $value, $options, $record, $element
@@ -304,6 +322,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function filterElementFormDisplayHtmlFlag($html, $element)
     {
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) element_form_display_html_flag");
         if ($element->name == 'Coverage' &&
             $element->getElementSet()->name == 'Dublin Core') {
             return '<span>&nbsp;</span>';
@@ -324,8 +343,10 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return The HTML to generate the map.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function filterDisplayItemDublinCoreCoverage($text, $record, $elementText)
+    public function filterDisplayItemDublinCoreCoverage($args)
     {
+        return $args;
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) display_item_dublin_core_coverage");
         return NeatlineFeatures_Functions::displayCoverage(
             $text, $record, $elementText
         );
