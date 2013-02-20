@@ -24,6 +24,7 @@ group :development do
   gem 'peach'
   gem 'rake'
   gem 'sass'
+  gem 'rb-fsevent'
 end
 
 group :vagrant do
