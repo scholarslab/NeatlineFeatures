@@ -70,31 +70,26 @@ class NeatlineFeatures_Utils_View
      **/
     private $_elementText;
 
+    public $debug;
+
     function __construct()
     {
+        $this->debug = false;
     }
 
     /**
      * This sets the options necessary to create the edit view.
      *
-     * @param string       $inputNameStem The stem of the input name.
-     * @param string       $value         The initial value for the input.
-     * @param array        $options       Additional options.
      * @param Omeka_Record $record        The element's record.
      * @param Element      $element       The Element.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function setEditOptions($inputNameStem, $value, $options, $record,
-        $element)
+    public function setEditOptions($record, $element)
     {
-        $this->_inputNameStem = $inputNameStem;
-        $this->_value         = $value;
-        $this->_options       = $options;
         $this->_record        = $record;
         $this->_element       = $element;
-        $this->_elementText   = $this->findElementText($record, $element, $value);
     }
 
     /**
@@ -192,7 +187,7 @@ class NeatlineFeatures_Utils_View
         } else {
             $feature = get_db()
                 ->getTable('NeatlineFeature')
-                ->getRecordByElementText($etext);
+                ->getRecordByElementText($etext[0]);
         }
         return $feature;
     }
@@ -309,85 +304,60 @@ class NeatlineFeatures_Utils_View
     /**
      * This returns the value of the 'html' field from the POST request.
      *
+     * @param $index int The index of the value to return.
+     *
      * @return string|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getHtmlValue()
+    public function getHtmlValue($index)
     {
         $edata = $_POST['Elements'][$this->_element->id];
-        $value = $edata[$this->getIndex()]['html'];
+        $value = $edata[$index]['html'];
         return $value;
     }
 
     /**
-     * This returns the ElementText for the current element and index or NULL.
+     * This returns the ElementText instances for the current element or NULL.
      *
-     * @return ElementText|NULL
+     * @return array of ElementText|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getElementText()
     {
-        $text  = NULL;
+        $texts  = NULL;
 
         if (isset($this->_elementText) && ! is_null($this->_elementText)) {
-            $text = $this->_elementText;
+            $texts = array($this->_elementText);
         } else {
-            $index = $this->getIndex();
-            $texts = $this->_record->getTextsByElement($this->_element);
-
-            if ($index !== NULL) {
-                if (array_key_exists($index, $texts)) {
-                    $text = $texts[$index];
-                }
-            }
+            $index     = $this->getIndex();
+            $textTable = get_db()->getTable('ElementText');
+            $select    = $textTable
+                ->getSelectForRecord($this->_record->id, get_class($this->_record))
+                ->where('element_texts.element_id=?', (int)$this->_element->id);
+            $texts     = $textTable->fetchObjects($select);
         }
 
-        return $text;
-    }
-
-    /**
-     * This predicate tests whether this element currently is marked to have
-     * HTML data.
-     *
-     * @return bool
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function isHtml()
-    {
-        $isHtml = 0;
-
-        if ($this->isPosted()) {
-            try {
-                $isHtml = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$this->getIndex()]['html'];
-            } catch (Exception $e) {
-                $isHtml = 0;
-            }
-        } else {
-            $etext = $this->getElementText();
-            if (isset($etext)) {
-                $isHtml = (bool)$etext->html;
-            }
-        }
-
-        return $isHtml;
+        return $texts;
     }
 
     /**
      * This predicate tests whether this element currently is marked to have 
      * map data.
      *
+     * @param $index integer|null This is the index of the element in the 
+     * output/input.
+     *
      * @return bool
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function isMap()
+    public function isMap($index=null)
     {
         $isMap = 0;
 
         if ($this->isPosted()) {
             try {
                 $isMap = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$this->getIndex()]['mapon'];
+                    [is_null($index) ? $this->getIndex() : $index]['mapon'];
             } catch (Exception $e) {
                 $isMap = 0;
             }
@@ -412,7 +382,7 @@ class NeatlineFeatures_Utils_View
      **/
     public function getEditControl()
     {
-        return $this->_getHtmlView($this->isHtml(), $this->isMap(), 'edit');
+        return $this->_getHtmlView('edit');
     }
 
     /**
@@ -423,7 +393,6 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $isHtml    = $this->isHtml();
         $isMap     = $this->isMap();
         $etext     = $this->_elementText;
 
@@ -439,7 +408,7 @@ class NeatlineFeatures_Utils_View
             // There's no data for this.
             $view = '';
         } else if ((bool)$isMap) {
-            $view = $this->getViewMap($isHtml);
+            $view = $this->getViewMap();
         } else {
             if (($i = strpos($value, "\r\n")) != FALSE) {
                 $view = substr($value, $i + 2);
@@ -454,57 +423,48 @@ class NeatlineFeatures_Utils_View
     /**
      * This returns the HTML string for the Map widget.
      *
-     * @param $isHtml bool Does the text value contain HTML?
-     * @param $isMap  bool Should the text be 
-     *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getViewMap($isHtml)
+    public function getViewMap()
     {
-        return $this->_getHtmlView($isHtml, 1, 'view');
+        return $this->_getHtmlView('view');
     }
 
     /**
      * This actually handles setting up the environment and passing execution 
      * off to a PHP-HTML file.
      *
-     * @param $isHtml bool   Does the text value contain HTML?
-     * @param $isMap  bool   Should the text be .
      * @param $view   string The mode to put the widget in.
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    private function _getHtmlView($isHtml, $isMap, $mode)
+    private function _getHtmlView($mode)
     {
-        $inputNameStem = $this->_inputNameStem;
-        $idPrefix      = preg_replace('/\W+/', '-', $inputNameStem);
-        $options       = $this->_options;
-        $record        = $this->_record;
-        $element       = $this->_element;
-
-        if (isset($this->_value) && !is_null($this->_value)) {
-            $value = $this->_value;
-        } else {
-            $value = $this->_text;
-        }
+        $record  = $this->_record;
+        $element = $this->_element;
 
         $post = $this->getPost();
-        if (is_null($post)) {
-            $feature    = $this->getNeatlineFeature();
-            $geo        = $feature->geo;
-            $zoom       = $feature->zoom;
-            $center_lon = $feature->center_lon;
-            $center_lat = $feature->center_lat;
-            $base_layer = $feature->base_layer;
+        if (is_null($post) && is_null($record->id)) {
+            $features = array();
+        } else if (is_null($post)) {
+            $features = get_db()
+                ->getTable('NeatlineFeature')
+                ->getItemFeatures($record);
         } else {
-            $i          = $this->getIndex();
-            $geo        = $post[$i]['geo'];
-            $zoom       = $post[$i]['zoom'];
-            $center_lon = $post[$i]['center_lon'];
-            $center_lat = $post[$i]['center_lat'];
-            $base_layer = $post[$i]['base_layer'];
+            $features = array();
+            for ($i=0, $posted=$post[$i]; !is_null($posted); $i++, $posted=$post[$i]) {
+                $features[] = array(
+                    'geo'        => $posted['geo'],
+                    'zoom'       => $posted['zoom'],
+                    'center_lon' => $posted['center_lon'],
+                    'center_lat' => $posted['center_lat'],
+                    'base_layer' => $posted['base_layer']
+                );
+                $i++;
+                $posted = $post[$i];
+            }
         }
 
         ob_start();

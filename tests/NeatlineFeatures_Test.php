@@ -121,9 +121,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_coverage = $el_table
             ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
         $this->_cutil = new NeatlineFeatures_Utils_View();
-        $this->_cutil->setEditOptions(
-            'Elements[38][0]', null, array(), null, $this->_coverage
-        );
+        $this->_cutil->setEditOptions(null, $this->_coverage);
 
         $this->_item = new Item;
         $this->_item->save();
@@ -209,7 +207,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $etext->html = $html;
         $etext->element_id = $element->id;
         $etext->record_id = $item->id;
-        $etext->record_type = 2;
+        $etext->record_type = get_class($item);
         $etext->save();
 
         $item[$element->name] = $etext;

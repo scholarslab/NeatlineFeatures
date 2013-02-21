@@ -71,8 +71,6 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
     protected $_filters = array(
         'filterFormItemDublinCoreCoverage' =>
             array('ElementForm', 'Item', 'Dublin Core', 'Coverage'),
-        'filterElementFormDisplayHtmlFlag' =>
-            array('Element', 'Form', 'Display', 'HtmlFlag'),
         'filterDisplayItemDublinCoreCoverage' =>
             array('Display', 'Item', 'Dublin Core', 'Coverage')
     );
@@ -291,44 +289,16 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function filterFormItemDublinCoreCoverage($components, $args)
-        /*
-         * $html, $inputNameStem, $value,
-         * $options, $record, $element)
-         */
     {
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) form_item_dublin_core_coverage");
-        // NeatlineFeatures_Functions::fdump('/tmp/nlfeatures.log', "components", $components);
+        NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) form_item_dublin_core_coverage");
+        NeatlineFeatures_Functions::fdump('/tmp/nlfeatures.log', "components", $components);
 
-        $html = '<div class="input-block">';
+        $util = new NeatlineFeatures_Utils_View();
+        $util->setEditOptions($args['record'], $args['element']);
+        $components['html'] .= $util->getEditControl();
 
         return $components;
 
-        $util = new NeatlineFeatures_Utils_View();
-        $util->setEditOptions(
-            $inputNameStem, $value, $options, $record, $element
-        );
-        return $util->getEditControl();
-    }
-
-    /**
-     * This turns off displaying the element form for the DC:Coverage field.
-     *
-     * @param string  $html    An empty string.
-     * @param Element $element The Element.
-     *
-     * @return string The string containing the HTML for the "Use HTML"
-     * element.
-     * @author Eric Rochester <erochest@virginia.edu>
-     **/
-    public function filterElementFormDisplayHtmlFlag($html, $element)
-    {
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) element_form_display_html_flag");
-        if ($element->name == 'Coverage' &&
-            $element->getElementSet()->name == 'Dublin Core') {
-            return '<span>&nbsp;</span>';
-        } else {
-            return $html;
-        }
     }
 
     /**
@@ -345,8 +315,8 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function filterDisplayItemDublinCoreCoverage($args)
     {
+        NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) display_item_dublin_core_coverage");
         return $args;
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) display_item_dublin_core_coverage");
         return NeatlineFeatures_Functions::displayCoverage(
             $text, $record, $elementText
         );
