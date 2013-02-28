@@ -64,12 +64,12 @@
   # the mode.
 
   class BaseWidget
-    constructor: (@widget) ->
+    constructor: (@widget, @n, @parent) ->
 
     initMap: ->
-      map = @fields.map
+      map   = @fields.map
       input = @widget.options.values
-      item =
+      item  =
         title  : 'Coverage'
         name   : 'Coverage'
         id     : @widget.element.attr 'id'
@@ -134,49 +134,43 @@
 
     build: ->
       el          = $ @widget.element
+      parent      = $ @parent
       id_prefix   = derefid @widget.options.id_prefix
       name_prefix = @widget.options.name_prefix
       use_html    = @widget.options.labels.html
       use_map     = @widget.options.labels.map
 
-      map_container = $ """
-        <div class="nlfeatures map-container">
-          <div id="#{id_prefix}map"></div>
-          <div class='nlfeatures-map-tools'>
-            <div class='nlflash'></div>
+      $('.input', parent)
+        .addClass('nlfeatures')
+        .addClass('nlfeatures-edit')
+        .before """
+          <div class="nlfeatures map-container">
+            <div id="#{id_prefix}map"></div>
+            <div class='nlfeatures-map-tools'>
+              <div class='nlflash'></div>
+            </div>
           </div>
-        </div>
-        """
-      text_container = $ """
-        <div class="nlfeatures text-container">
+          """
+      $('.input textarea', parent)
+        .attr('id', "#{id_prefix}-#{@n}-free")
+        .attr('name', "#{name_prefix}[#{@n}][free]")
+        .after """
           <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
           <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
-          <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
-          <div>
-            <label class="use-html">#{use_html}
-              <input type="hidden" name="#{name_prefix}[html]" value="0" />
-              <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
-            </label>
-            <label class="use-mapon">#{use_map}
-              <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
+          """
+      $('.use-html', parent)
+        .after """
+            <label class="use-mapon">#{use_map}<input type="hidden" name="#{name_prefix}[mapon]" value="0" />
               <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
             </label>
-          </div>
-        </div>
-        """
-
-      el.addClass('nlfeatures')
-        .addClass('nlfeatures-edit')
-        .append(map_container)
-        .append(text_container)
+          """
 
       @fields =
         map_container  : el.find ".map-container"
-        text_container : el.find ".text-container"
         map            : $ "##{id_prefix}map"
         map_tools      : el.find ".nlfeatures-map-tools"
         mapon          : $ "##{id_prefix}mapon"
@@ -191,7 +185,7 @@
         base_layer     : $ "##{id_prefix}base_layer"
         flash          : el.find ".nlflash"
 
-      el
+      parent
 
     # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
     # initialized, and then it turns off the TEXTAREA specified.
@@ -217,7 +211,7 @@
       @fields.mapon.change => this._onUseMap()
       @fields.html.change  => this._updateTinyEvents()
 
-    populate: (values=@widget.options.values) ->
+    populate: (values=@widget.options.values[@n]) ->
       @fields.html.attr      'checked', values.is_html
       @fields.mapon.attr     'checked', values.is_map
       @fields.geo.val        to_s(values.geo)
@@ -328,6 +322,17 @@
             )
         )
 
+  # This walks over the the DOM, looking under the parent for the widgets. It
+  # then instantiates a `BaseWidget` child class on the DOM node.
+  class WidgetCollection
+    constructor: (@widget, @parent, @selector, widgetize) ->
+      @nodes   = $(@selector, @parent)
+      @widgets = (widgetize(n, i) for n, i in @nodes)
+
+    init: -> w.init() for w in @widgets
+    showMap: -> w.showMap() for w in @widgets
+    hideMap: -> w.hideMap() for w in @widgets
+
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',
     options: {
@@ -353,13 +358,15 @@
 
     _create: ->
       id = @element.attr 'id'
-      @options.id_prefix   ?= '#' + id.substring(0, id.length - 'widget'.length)
+      @options.id_prefix   ?= "#Elements-#{id.split('-')[1]}-"
       @options.name_prefix ?= this._idPrefixToNamePrefix()
 
       @mode = if @options.mode == 'edit'
-        new EditWidget this
+        new WidgetCollection(this, @element, '.input-block',
+          (n, i) => new EditWidget(this, i, n))
       else
-        new ViewWidget this
+        new WidgetCollection(this, @element, '.element-text',
+          (n, i) => new ViewWidget(this, i, n))
 
       @mode.init()
       @mode.hideMap() unless @options.values.is_map
@@ -379,4 +386,3 @@
       $.Widget.prototype._setOption.apply this, arguments
 
   ))(jQuery)
-

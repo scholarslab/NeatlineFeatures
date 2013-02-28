@@ -41,6 +41,7 @@
 
     // A nasty hack to clobber the current way that TinyMCE is set up for any 
     // element that has *any* checked checkbox in them.
+/*
     if (window.Omeka !== undefined && Omeka.Items !== undefined) {
         Omeka.Items.enableWysiwyg = function (element) {
             $(element)
@@ -50,6 +51,7 @@
                 });
         }
     }
+ */
 
 })(jQuery);
 </script>

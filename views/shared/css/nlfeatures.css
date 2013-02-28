@@ -163,7 +163,7 @@
   -ms-border-radius: 5px;
   -khtml-border-radius: 5px;
   border-radius: 5px;
-  border: 1px solid #333;
+  border: 1px solid #333333;
   background: #eae9db;
   color: #333;
   padding: 2px 4px;
@@ -173,4 +173,10 @@
 /* line 178, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures label.olButton {
   color: #ddd;
+}
+
+/* line 183, ../../../_sass/shared/css/nlfeatures.scss */
+.field .use-mapon {
+  clear: none !important;
+  line-height: 2.125em;
 }

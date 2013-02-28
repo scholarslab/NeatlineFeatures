@@ -181,8 +181,7 @@
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
-                    parseFloat(boundsArray[3])
-                );
+                    parseFloat(boundsArray[3]));
             }
 
             // Starting options.
@@ -199,8 +198,7 @@
                     [
                         new OpenLayers.Control.MousePosition(),
                         new OpenLayers.Control.LayerSwitcher()
-                    ]
-                );
+                    ]);
             }
 
             var options = {
@@ -263,8 +261,7 @@
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
-                    parseFloat(boundsArray[3])
-                );
+                    parseFloat(boundsArray[3]));
             }
 
             if (this.options.map.center !== undefined) {
@@ -445,7 +442,7 @@
                     styleMap: style
                 });
 
-                if (item.geo !== null) {
+                if (item.geo !== null && item.geo !== undefined) {
                     var kml      = new OpenLayers.Format.KML();
                     var features = kml.read(item.geo);
 
@@ -528,7 +525,7 @@
             var self;
             self = this;
 
-            if (el == null) {
+            if (el === null || el === undefined) {
                 el = this.getFeatureElement(feature);
             }
             el.off('mouseup').off('mousedown');
@@ -538,7 +535,7 @@
          * This deselects the current feature.
          */
         deselectFeature: function(feature, force) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
             if (this.isFocusLocked(feature) && !force) {
@@ -561,12 +558,12 @@
         },
 
         lockFocus: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
 
-            if (feature != null) {
-                if (feature.nlfeatures == null) {
+            if (feature !== null && feature !== undefined) {
+                if (feature.nlfeatures === null || feature.nlfeatures === undefined) {
                     feature.nlfeatures = {
                         focusLocked: true
                     };
@@ -577,22 +574,24 @@
         },
 
         unlockFocus: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
 
-            if (feature != null &&
-                feature.nlfeatures != null) {
+            if (feature !== null && feature !== undefined &&
+                feature.nlfeatures !== null &&
+                feature.nlfeatures !== undefined) {
                 feature.nlfeatures.focusLocked = false;
             }
         },
 
         isFocusLocked: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
-            return (feature != null &&
-                    feature.nlfeatures != null &&
+            return (feature !== null && feature !== undefined &&
+                    feature.nlfeatures !== null &&
+                    feature.nlfeatures !== undefined &&
                     feature.nlfeatures.focusLocked);
         },
 
@@ -613,19 +612,22 @@
                 overFeature: function(feature) {
                     // This checks for ad-hoc features created by OL for edit
                     // handles on a real feature.
-                    if (feature.geometry.parent != null) {
+                    if (feature.geometry.parent !== null ||
+                        feature.geometry.parent !== undefined) {
                         return;
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        self.clickedFeature != null &&
+                        self.clickedFeature !== null &&
+                        self.clickedFeature !== undefined &&
                         feature.id !== self.clickedFeature.id) {
 
                         self.deselectFeature();
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        (self.clickedFeature == null ||
+                        (self.clickedFeature === null ||
+                         self.clickedFeature === undefined ||
                          feature.id !== self.clickedFeature.id)) {
 
                         self.selectFeature(feature);
@@ -644,7 +646,8 @@
 
             // Handle clicks on the map to remove focus.
             this.map.events.register('click', this.map, function(e) {
-                if (self.clickedFeature != null) {
+                if (self.clickedFeature !== null &&
+                    self.clickedFeature !== undefined) {
                     self.deselectFeature(self.clickedFeature, true);
                 }
             });
@@ -947,12 +950,12 @@
         viewportOptionsValid: function() {
             var good = true;
 
-            good = good && this.options.zoom != null;
+            good = good && (this.options.zoom !== null && this.options.zoom);
             good = good && this.options.zoom > 0;
 
-            good = good && this.options.center != null;
-            good = good && this.options.center.lon != null;
-            good = good && this.options.center.lat != null;
+            good = good && (this.options.center !== null && this.options.center !== undefined);
+            good = good && (this.options.center.lon !== null && this.options.center.lon !== undefined);
+            good = good && (this.options.center.lat !== null && this.options.center.lat !== undefined);
             good = good && !isNaN(parseFloat(this.options.center.lon));
             good = good && !isNaN(parseFloat(this.options.center.lat));
 
@@ -968,7 +971,7 @@
                 lonlat = new OpenLayers.LonLat(center.lon, center.lat);
             var proj, wsg;
 
-            if (center.srs != null) {
+            if (center.srs !== null && center.srs !== undefined) {
                 wsg    = new OpenLayers.Projection(center.srs);
                 proj   = this.map.getProjectionObject();
                 lonlat = lonlat.transform(wsg, proj);
@@ -1009,8 +1012,7 @@
                               new OpenLayers.LonLat(-8738850.21367, 4584105.47978),
                               3,
                               false,
-                              false
-                          );
+                              false);
                       }
                 });
                 this.map.addControl(geolocate);
@@ -1621,11 +1623,11 @@
 
 
 (function() {
-  var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function($) {
-    var BaseWidget, EditWidget, ViewWidget, derefid, poll, stripFirstLine, to_s;
+    var BaseWidget, EditWidget, ViewWidget, WidgetCollection, derefid, poll, stripFirstLine, to_s;
     derefid = function(id) {
       if (id[0] === '#') {
         return id.slice(1, id.length);
@@ -1642,8 +1644,12 @@
     };
     poll = function(predicate, callback, maxPoll, timeout) {
       var n, pred, _poll;
-      if (maxPoll == null) maxPoll = null;
-      if (timeout == null) timeout = 100;
+      if (maxPoll == null) {
+        maxPoll = null;
+      }
+      if (timeout == null) {
+        timeout = 100;
+      }
       n = 0;
       pred = (maxPoll != null) && maxPoll !== 0 ? function() {
         return predicate() || n >= maxPoll;
@@ -1667,8 +1673,10 @@
     };
     BaseWidget = (function() {
 
-      function BaseWidget(widget) {
+      function BaseWidget(widget, n, parent) {
         this.widget = widget;
+        this.n = n;
+        this.parent = parent;
       }
 
       BaseWidget.prototype.initMap = function() {
@@ -1688,9 +1696,15 @@
             id_prefix: this.widget.options.id_prefix
           }
         };
-        if (input.zoom != null) local_options.zoom = input.zoom;
-        if (input.center != null) local_options.center = input.center;
-        if (input.base_layer != null) local_options.base_layer = input.base_layer;
+        if (input.zoom != null) {
+          local_options.zoom = input.zoom;
+        }
+        if (input.center != null) {
+          local_options.center = input.center;
+        }
+        if (input.base_layer != null) {
+          local_options.base_layer = input.base_layer;
+        }
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -1704,7 +1718,7 @@
       __extends(ViewWidget, _super);
 
       function ViewWidget() {
-        ViewWidget.__super__.constructor.apply(this, arguments);
+        return ViewWidget.__super__.constructor.apply(this, arguments);
       }
 
       ViewWidget.prototype.init = function() {
@@ -1747,7 +1761,7 @@
       __extends(EditWidget, _super);
 
       function EditWidget() {
-        EditWidget.__super__.constructor.apply(this, arguments);
+        return EditWidget.__super__.constructor.apply(this, arguments);
       }
 
       EditWidget.prototype.init = function() {
@@ -1759,18 +1773,18 @@
       };
 
       EditWidget.prototype.build = function() {
-        var el, id_prefix, map_container, name_prefix, text_container, use_html, use_map;
+        var el, id_prefix, name_prefix, parent, use_html, use_map;
         el = $(this.widget.element);
+        parent = $(this.parent);
         id_prefix = derefid(this.widget.options.id_prefix);
         name_prefix = this.widget.options.name_prefix;
         use_html = this.widget.options.labels.html;
         use_map = this.widget.options.labels.map;
-        map_container = $("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
-        text_container = $("<div class=\"nlfeatures text-container\">\n  <input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n  <input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />\n  <textarea id=\"" + id_prefix + "free\" name=\"" + name_prefix + "[free]\" class=\"textinput\" rows=\"5\" cols=\"50\"></textarea>\n  <div>\n    <label class=\"use-html\">" + use_html + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[html]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[html]\" id=\"" + id_prefix + "html\" value=\"1\" />\n    </label>\n    <label class=\"use-mapon\">" + use_map + "\n      <input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n      <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n    </label>\n  </div>\n</div>");
-        el.addClass('nlfeatures').addClass('nlfeatures-edit').append(map_container).append(text_container);
+        $('.input', parent).addClass('nlfeatures').addClass('nlfeatures-edit').before("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
+        $('.input textarea', parent).attr('id', "" + id_prefix + "-" + this.n + "-free").attr('name', "" + name_prefix + "[" + this.n + "][free]").after("<input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />");
+        $('.use-html', parent).after("<label class=\"use-mapon\">" + use_map + "<input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n  <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n</label>");
         this.fields = {
           map_container: el.find(".map-container"),
-          text_container: el.find(".text-container"),
           map: $("#" + id_prefix + "map"),
           map_tools: el.find(".nlfeatures-map-tools"),
           mapon: $("#" + id_prefix + "mapon"),
@@ -1784,7 +1798,7 @@
           base_layer: $("#" + id_prefix + "base_layer"),
           flash: el.find(".nlflash")
         };
-        return el;
+        return parent;
       };
 
       EditWidget.prototype.captureEditor = function() {
@@ -1798,14 +1812,16 @@
       };
 
       EditWidget.prototype.populate = function(values) {
-        var _ref, _ref2;
-        if (values == null) values = this.widget.options.values;
+        var _ref, _ref1;
+        if (values == null) {
+          values = this.widget.options.values[this.n];
+        }
         this.fields.html.attr('checked', values.is_html);
         this.fields.mapon.attr('checked', values.is_map);
         this.fields.geo.val(to_s(values.geo));
         this.fields.zoom.val(to_s(values.zoom));
         this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-        this.fields.center_lat.val(to_s((_ref2 = values.center) != null ? _ref2.lat : void 0));
+        this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
         this.fields.base_layer.val(to_s(values.base_layer));
         this.fields.text.val(to_s(values.text));
         return this.fields.free.val(stripFirstLine(values.text));
@@ -1890,14 +1906,18 @@
         geo = this.nlfeatures.getKml();
         this.fields.geo.val(geo);
         zoom = this.nlfeatures.getSavedZoom();
-        if (zoom != null) this.fields.zoom.val(zoom);
+        if (zoom != null) {
+          this.fields.zoom.val(zoom);
+        }
         center = this.nlfeatures.getSavedCenter();
         if (center != null) {
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
         base_layer = this.nlfeatures.getBaseLayerCode();
-        if (base_layer != null) this.fields.base_layer.val(base_layer);
+        if (base_layer != null) {
+          this.fields.base_layer.val(base_layer);
+        }
         if (this.usesHtml()) {
           text = tinymce.get(this.fields.free.attr('id')).getContent();
         } else {
@@ -1908,7 +1928,9 @@
 
       EditWidget.prototype.flash = function(msg, delay) {
         var _this = this;
-        if (delay == null) delay = 5000;
+        if (delay == null) {
+          delay = 5000;
+        }
         return this.fields.flash.html(msg).fadeIn('slow', function() {
           return setTimeout(function() {
             return _this.fields.flash.fadeOut('slow');
@@ -1919,6 +1941,62 @@
       return EditWidget;
 
     })(BaseWidget);
+    WidgetCollection = (function() {
+
+      function WidgetCollection(widget, parent, selector, widgetize) {
+        var i, n;
+        this.widget = widget;
+        this.parent = parent;
+        this.selector = selector;
+        this.nodes = $(this.selector, this.parent);
+        this.widgets = (function() {
+          var _i, _len, _ref, _results;
+          _ref = this.nodes;
+          _results = [];
+          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
+            n = _ref[i];
+            _results.push(widgetize(n, i));
+          }
+          return _results;
+        }).call(this);
+      }
+
+      WidgetCollection.prototype.init = function() {
+        var w, _i, _len, _ref, _results;
+        _ref = this.widgets;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          w = _ref[_i];
+          _results.push(w.init());
+        }
+        return _results;
+      };
+
+      WidgetCollection.prototype.showMap = function() {
+        var w, _i, _len, _ref, _results;
+        _ref = this.widgets;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          w = _ref[_i];
+          _results.push(w.showMap());
+        }
+        return _results;
+      };
+
+      WidgetCollection.prototype.hideMap = function() {
+        var w, _i, _len, _ref, _results;
+        _ref = this.widgets;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          w = _ref[_i];
+          _results.push(w.hideMap());
+        }
+        return _results;
+      };
+
+      return WidgetCollection;
+
+    })();
     return $.widget('nlfeatures.featurewidget', {
       options: {
         mode: 'view',
@@ -1939,21 +2017,30 @@
         }
       },
       _create: function() {
-        var id, _base, _base2;
+        var id, _base, _base1, _ref, _ref1,
+          _this = this;
         id = this.element.attr('id');
-        if ((_base = this.options).id_prefix == null) {
-          _base.id_prefix = '#' + id.substring(0, id.length - 'widget'.length);
+        if ((_ref = (_base = this.options).id_prefix) == null) {
+          _base.id_prefix = "#Elements-" + (id.split('-')[1]) + "-";
         }
-        if ((_base2 = this.options).name_prefix == null) {
-          _base2.name_prefix = this._idPrefixToNamePrefix();
+        if ((_ref1 = (_base1 = this.options).name_prefix) == null) {
+          _base1.name_prefix = this._idPrefixToNamePrefix();
         }
-        this.mode = this.options.mode === 'edit' ? new EditWidget(this) : new ViewWidget(this);
+        this.mode = this.options.mode === 'edit' ? new WidgetCollection(this, this.element, '.input-block', function(n, i) {
+          return new EditWidget(_this, i, n);
+        }) : new WidgetCollection(this, this.element, '.element-text', function(n, i) {
+          return new ViewWidget(_this, i, n);
+        });
         this.mode.init();
-        if (!this.options.values.is_map) return this.mode.hideMap();
+        if (!this.options.values.is_map) {
+          return this.mode.hideMap();
+        }
       },
       _idPrefixToNamePrefix: function(id_prefix) {
         var base, indices, p, parts;
-        if (id_prefix == null) id_prefix = this.options.id_prefix;
+        if (id_prefix == null) {
+          id_prefix = this.options.id_prefix;
+        }
         id_prefix = derefid(id_prefix);
         parts = (function() {
           var _i, _len, _ref, _results;
@@ -1961,7 +2048,9 @@
           _results = [];
           for (_i = 0, _len = _ref.length; _i < _len; _i++) {
             p = _ref[_i];
-            if (p.length > 0) _results.push(p);
+            if (p.length > 0) {
+              _results.push(p);
+            }
           }
           return _results;
         })();

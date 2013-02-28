@@ -295,9 +295,10 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
 
         $util = new NeatlineFeatures_Utils_View();
         $util->setEditOptions($args['record'], $args['element']);
-        $components['html'] .= $util->getEditControl();
+        $components['inputs'] = $components['inputs'] . $util->getEditControl();
 
         return $components;
+
 
     }
 
