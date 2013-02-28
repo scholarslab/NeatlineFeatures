@@ -44,7 +44,7 @@ task 'build:browser', 'Compile and minify for use in browser', ->
     util.log "Creating #{builddir}/#{targetfile}.js"
 
     code = contents.join "\n\n"
-    fs.mkdir builddir, 0755, ->
+    fs.mkdir builddir, 0o0755, ->
       fs.writeFile "#{builddir}/#{targetfile}.js", code, 'utf8', (err) ->
         console.log err if err
         try
