@@ -4,24 +4,6 @@
 # This is a controller for the Features map. It sits a level above the map
 # itself, and therefore, it can coordinate the map with the rest of the editing
 # aparatus for the admin interface.
-#
-# This assumes that it is initialized with an existing HTML structure like
-# below. `idPrefix` is inferred from the parent element used to construct the
-# widget, and the input are assumed to have the IDs below based on that.
-#
-#
-# <div id="{idPrefix}widget" class='nlfeatures nlfeatures-edit'>
-#   <div>
-#     <!-- hidden field input {idPrefix}text  -->
-#     <!-- free-form textarea {idPrefix}free  -->
-#     <!-- Use HTML checkbox  {idPrefix}html  -->
-#     <!-- Use Map checkbox   {idPrefix}mapon -->
-#   </div>
-#   <div>
-#     <div id="{idPrefix}map"></div>
-#     <div class='nlfeatures-map-tools'></div>
-#   </div>
-# </div>
 
 (($) ->
   ## Some utility functions
@@ -64,24 +46,28 @@
   # the mode.
 
   class BaseWidget
+
     constructor: (@widget, @n, @parent) ->
 
+    value: -> @widget.options.values[@n]
+
     initMap: ->
+      # console.log 'initMap', @n
       map   = @fields.map
-      input = @widget.options.values
+      input = this.value()
       item  =
         title  : 'Coverage'
         name   : 'Coverage'
         id     : @widget.element.attr 'id'
-        geo    : input.geo
+        geo    : (input?.geo) ? ""
       local_options =
         mode   : @widget.options.mode
         json   : item
         markup :
           id_prefix: @widget.options.id_prefix
-      local_options.zoom       = input.zoom   if input.zoom?
-      local_options.center     = input.center if input.center?
-      local_options.base_layer = input.base_layer if input.base_layer?
+      local_options.zoom       = (input?.zoom)       ? null
+      local_options.center     = (input?.center)     ? null
+      local_options.base_layer = (input?.base_layer) ? null
 
       all_options = $.extend true, {}, @widget.options.map_options, local_options
       @nlfeatures = map
@@ -90,8 +76,8 @@
 
       @nlfeatures
 
-
   class ViewWidget extends BaseWidget
+
     init: ->
       this.build()
       this.initMap()
@@ -125,21 +111,17 @@
 
 
   class EditWidget extends BaseWidget
+
     init: ->
+      # console.log 'init', @n
       this.build()
       this.initMap()
       this.captureEditor()
       this.populate()
       this.wire()
 
-    build: ->
-      el          = $ @widget.element
-      parent      = $ @parent
-      id_prefix   = derefid @widget.options.id_prefix
-      name_prefix = @widget.options.name_prefix
-      use_html    = @widget.options.labels.html
-      use_map     = @widget.options.labels.map
-
+    _buildMap: (parent, id_prefix) ->
+      console.log '_buildMap', @n
       $('.input', parent)
         .addClass('nlfeatures')
         .addClass('nlfeatures-edit')
@@ -151,9 +133,12 @@
             </div>
           </div>
           """
+
+    _buildInputs: (parent, id_prefix, name_prefix) ->
+      # console.log '_buildInputs', @n
       $('.input textarea', parent)
-        .attr('id', "#{id_prefix}-#{@n}-free")
-        .attr('name', "#{name_prefix}[#{@n}][free]")
+        .attr('id',   "#{id_prefix}free")
+        .attr('name', "#{name_prefix}[free]")
         .after """
           <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
@@ -162,6 +147,9 @@
           <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           """
+
+    _buildUseMap: (parent, id_prefix, name_prefix, use_map) ->
+      # console.log '_buildUseMap', @n
       $('.use-html', parent)
         .after """
             <label class="use-mapon">#{use_map}<input type="hidden" name="#{name_prefix}[mapon]" value="0" />
@@ -169,10 +157,12 @@
             </label>
           """
 
+    _populateFields: (parent, id_prefix) ->
+      # console.log '_populateFields', @n
       @fields =
-        map_container  : el.find ".map-container"
+        map_container  : parent.find ".map-container"
         map            : $ "##{id_prefix}map"
-        map_tools      : el.find ".nlfeatures-map-tools"
+        map_tools      : parent.find ".nlfeatures-map-tools"
         mapon          : $ "##{id_prefix}mapon"
         text           : $ "##{id_prefix}text"
         free           : $ "##{id_prefix}free"
@@ -183,7 +173,21 @@
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
         base_layer     : $ "##{id_prefix}base_layer"
-        flash          : el.find ".nlflash"
+        flash          : parent.find ".nlflash"
+
+    build: ->
+      # console.log 'build', @n
+      el          = $ @widget.element
+      parent      = $ @parent
+      id_prefix   = "#{derefid @widget.options.id_prefix}#{@n}-"
+      name_prefix = "#{@widget.options.name_prefix}[#{@n}]"
+      use_html    = @widget.options.labels.html
+      use_map     = @widget.options.labels.map
+
+      this._buildMap       parent, id_prefix
+      this._buildInputs    parent, id_prefix, name_prefix
+      this._buildUseMap    parent, id_prefix, name_prefix, use_map
+      this._populateFields parent, id_prefix
 
       parent
 
@@ -208,21 +212,26 @@
     # NB: The work-around now is to monkey-patch Omeka.Items.enableWysiwyg to
     # target the checkboxes better. Now, this just sets some change events.
     captureEditor: ->
+      # console.log 'captureEditor', @n
+      # console.log @fields.mapon
       @fields.mapon.change => this._onUseMap()
       @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values[@n]) ->
-      @fields.html.attr      'checked', values.is_html
-      @fields.mapon.attr     'checked', values.is_map
-      @fields.geo.val        to_s(values.geo)
-      @fields.zoom.val       to_s(values.zoom)
-      @fields.center_lon.val to_s(values.center?.lon)
-      @fields.center_lat.val to_s(values.center?.lat)
-      @fields.base_layer.val to_s(values.base_layer)
-      @fields.text.val       to_s(values.text)
-      @fields.free.val       stripFirstLine(values.text)
+      # console.log 'populate', @n
+      if values?
+        @fields.html.attr      'checked', values.is_html
+        @fields.mapon.attr     'checked', values.is_map
+        @fields.geo.val        to_s(values.geo)
+        @fields.zoom.val       to_s(values.zoom)
+        @fields.center_lon.val to_s(values.center?.lon)
+        @fields.center_lat.val to_s(values.center?.lat)
+        @fields.base_layer.val to_s(values.base_layer)
+        @fields.text.val       to_s(values.text)
+        @fields.free.val       stripFirstLine(values.text)
 
     wire: ->
+      # console.log 'wire', @n
       updateFields = => this.updateFields(@fields.free.val())
       @fields.free.change updateFields
       @nlfeatures.element
@@ -245,6 +254,7 @@
     usesMap : -> @fields.mapon.is ':checked'
 
     showMap : ->
+      # console.log 'showMap ', @n
       tools = @fields.map.children 'button'
       tools.hide(
         'normal',
@@ -255,6 +265,7 @@
       )
 
     hideMap : ->
+      # console.log 'hideMap ', @n
       tools = @fields.map.children 'button'
       tools.fadeOut(
         'normal',
@@ -263,6 +274,7 @@
 
     # This handles when the Use Map checkbox is clicked.
     _onUseMap : ->
+      # console.log '_onUseMap ', @n
       if this.usesMap()
         this.showMap()
       else
@@ -271,6 +283,7 @@
 
     # This adds a change event to the TinyMCE editor to update the text field.
     _updateTinyEvents: ->
+      # console.log '_updateTinyEvents', @n
       if this.usesHtml()
         freeId = @fields.free.attr 'id'
         poll(
@@ -287,6 +300,7 @@
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
+      # console.log 'updateFields', @n
       geo = @nlfeatures.getKml()
       @fields.geo.val geo
 
@@ -311,6 +325,7 @@
     # This sets the value of the flash div and fades it in for a short time (5
     # seconds, by default).
     flash: (msg, delay=5000) ->
+      # console.log 'flash', @n
       @fields.flash
         .html(msg)
         .fadeIn(

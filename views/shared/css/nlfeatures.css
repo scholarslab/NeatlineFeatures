@@ -158,24 +158,20 @@
 /* line 164, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .nlflash {
   display: none;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
-  border-radius: 5px;
+  margin-top: -3px;
   border: 1px solid #333333;
   background: #eae9db;
   color: #333;
   padding: 2px 4px;
-  width: 25%;
+  width: 22%;
   opacity: 0.8;
 }
-/* line 178, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 179, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures label.olButton {
   color: #ddd;
 }
 
-/* line 183, ../../../_sass/shared/css/nlfeatures.scss */
+/* line 184, ../../../_sass/shared/css/nlfeatures.scss */
 .field .use-mapon {
   clear: none !important;
   line-height: 2.125em;

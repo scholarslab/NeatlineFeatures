@@ -1679,15 +1679,19 @@
         this.parent = parent;
       }
 
+      BaseWidget.prototype.value = function() {
+        return this.widget.options.values[this.n];
+      };
+
       BaseWidget.prototype.initMap = function() {
-        var all_options, input, item, local_options, map;
+        var all_options, input, item, local_options, map, _ref, _ref1, _ref2, _ref3;
         map = this.fields.map;
-        input = this.widget.options.values;
+        input = this.value();
         item = {
           title: 'Coverage',
           name: 'Coverage',
           id: this.widget.element.attr('id'),
-          geo: input.geo
+          geo: (_ref = (input != null ? input.geo : void 0)) != null ? _ref : ""
         };
         local_options = {
           mode: this.widget.options.mode,
@@ -1696,15 +1700,9 @@
             id_prefix: this.widget.options.id_prefix
           }
         };
-        if (input.zoom != null) {
-          local_options.zoom = input.zoom;
-        }
-        if (input.center != null) {
-          local_options.center = input.center;
-        }
-        if (input.base_layer != null) {
-          local_options.base_layer = input.base_layer;
-        }
+        local_options.zoom = (_ref1 = (input != null ? input.zoom : void 0)) != null ? _ref1 : null;
+        local_options.center = (_ref2 = (input != null ? input.center : void 0)) != null ? _ref2 : null;
+        local_options.base_layer = (_ref3 = (input != null ? input.base_layer : void 0)) != null ? _ref3 : null;
         all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
@@ -1772,21 +1770,24 @@
         return this.wire();
       };
 
-      EditWidget.prototype.build = function() {
-        var el, id_prefix, name_prefix, parent, use_html, use_map;
-        el = $(this.widget.element);
-        parent = $(this.parent);
-        id_prefix = derefid(this.widget.options.id_prefix);
-        name_prefix = this.widget.options.name_prefix;
-        use_html = this.widget.options.labels.html;
-        use_map = this.widget.options.labels.map;
-        $('.input', parent).addClass('nlfeatures').addClass('nlfeatures-edit').before("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
-        $('.input textarea', parent).attr('id', "" + id_prefix + "-" + this.n + "-free").attr('name', "" + name_prefix + "[" + this.n + "][free]").after("<input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />");
-        $('.use-html', parent).after("<label class=\"use-mapon\">" + use_map + "<input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n  <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n</label>");
-        this.fields = {
-          map_container: el.find(".map-container"),
+      EditWidget.prototype._buildMap = function(parent, id_prefix) {
+        console.log('_buildMap', this.n);
+        return $('.input', parent).addClass('nlfeatures').addClass('nlfeatures-edit').before("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
+      };
+
+      EditWidget.prototype._buildInputs = function(parent, id_prefix, name_prefix) {
+        return $('.input textarea', parent).attr('id', "" + id_prefix + "free").attr('name', "" + name_prefix + "[free]").after("<input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />");
+      };
+
+      EditWidget.prototype._buildUseMap = function(parent, id_prefix, name_prefix, use_map) {
+        return $('.use-html', parent).after("<label class=\"use-mapon\">" + use_map + "<input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n  <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n</label>");
+      };
+
+      EditWidget.prototype._populateFields = function(parent, id_prefix) {
+        return this.fields = {
+          map_container: parent.find(".map-container"),
           map: $("#" + id_prefix + "map"),
-          map_tools: el.find(".nlfeatures-map-tools"),
+          map_tools: parent.find(".nlfeatures-map-tools"),
           mapon: $("#" + id_prefix + "mapon"),
           text: $("#" + id_prefix + "text"),
           free: $("#" + id_prefix + "free"),
@@ -1796,8 +1797,22 @@
           center_lon: $("#" + id_prefix + "center_lon"),
           center_lat: $("#" + id_prefix + "center_lat"),
           base_layer: $("#" + id_prefix + "base_layer"),
-          flash: el.find(".nlflash")
+          flash: parent.find(".nlflash")
         };
+      };
+
+      EditWidget.prototype.build = function() {
+        var el, id_prefix, name_prefix, parent, use_html, use_map;
+        el = $(this.widget.element);
+        parent = $(this.parent);
+        id_prefix = "" + (derefid(this.widget.options.id_prefix)) + this.n + "-";
+        name_prefix = "" + this.widget.options.name_prefix + "[" + this.n + "]";
+        use_html = this.widget.options.labels.html;
+        use_map = this.widget.options.labels.map;
+        this._buildMap(parent, id_prefix);
+        this._buildInputs(parent, id_prefix, name_prefix);
+        this._buildUseMap(parent, id_prefix, name_prefix, use_map);
+        this._populateFields(parent, id_prefix);
         return parent;
       };
 
@@ -1816,15 +1831,17 @@
         if (values == null) {
           values = this.widget.options.values[this.n];
         }
-        this.fields.html.attr('checked', values.is_html);
-        this.fields.mapon.attr('checked', values.is_map);
-        this.fields.geo.val(to_s(values.geo));
-        this.fields.zoom.val(to_s(values.zoom));
-        this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-        this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
-        this.fields.base_layer.val(to_s(values.base_layer));
-        this.fields.text.val(to_s(values.text));
-        return this.fields.free.val(stripFirstLine(values.text));
+        if (values != null) {
+          this.fields.html.attr('checked', values.is_html);
+          this.fields.mapon.attr('checked', values.is_map);
+          this.fields.geo.val(to_s(values.geo));
+          this.fields.zoom.val(to_s(values.zoom));
+          this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
+          this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
+          this.fields.base_layer.val(to_s(values.base_layer));
+          this.fields.text.val(to_s(values.text));
+          return this.fields.free.val(stripFirstLine(values.text));
+        }
       };
 
       EditWidget.prototype.wire = function() {

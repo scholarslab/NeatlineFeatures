@@ -38,6 +38,7 @@
     cursor: pointer;
     z-index: 999;
     position: absolute;
+    margin-top: 3px;
     padding: 4px 5px !important;
     font-size: 0.9em;
     width: 63px;
@@ -49,30 +50,30 @@
 .nlfeatures .rotate-button {
     font-size: 0.85em;
     width: 52px;
-    right: 0px;
+    right: 245px;
 }
 
 .nlfeatures .scale-button {
     font-size: 0.85em;
     width: 47px;
-    right: 58px;
+    right: 299px;
 }
 
 .nlfeatures .drag-button {
     font-size: 0.85em;
     width: 45px;
-    right: 111px;
+    right: 348px;
 }
 
 .nlfeatures .delete-button {
     font-size: 0.85em;
     width: 45px;
-    right: 162px;
+    right: 395px;
 }
 
 .nlfeatures .viewport-button {
     font-size: 0.85em;
-    width: 65px;
-    right: 213px;
+    width: 75px;
+    right: 442px;
 }
 

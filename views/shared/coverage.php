@@ -41,17 +41,29 @@
 
     // A nasty hack to clobber the current way that TinyMCE is set up for any 
     // element that has *any* checked checkbox in them.
-/*
-    if (window.Omeka !== undefined && Omeka.Items !== undefined) {
-        Omeka.Items.enableWysiwyg = function (element) {
-            $(element)
-                .find('div.inputs label[class="use-html"] input[type="checkbox"]')
-                .each(function () {
-                    Omeka.Items.enableWysiwygCheckbox(this);
-                });
-        }
+    if (window.Omeka !== undefined && Omeka.Elements !== undefined) {
+        console.log('clobbering enableWysiwyg');
+        Omeka.Elements.enableWysiwyg = function (element) {
+            $(element).find('div.inputs label[class="use-html"] input[type="checkbox"]').each(function () {
+                var textarea = $(this).parents('.input-block').find('textarea');
+                if (textarea.length) {
+                    var textareaId = textarea.attr('id');
+                    var enableIfChecked = function () {
+                        if (this.checked) {
+                            tinyMCE.execCommand("mceAddControl", false, textareaId);
+                        } else {
+                            tinyMCE.execCommand("mceRemoveControl", false, textareaId);
+                        }
+                    };
+
+                    enableIfChecked.call(this);
+
+                    // Whenever the checkbox is toggled, toggle the WYSIWYG editor.
+                    $(this).click(enableIfChecked);
+                }
+            });
+        };
     }
- */
 
 })(jQuery);
 </script>
