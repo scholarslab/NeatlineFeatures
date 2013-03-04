@@ -26,6 +26,11 @@
 
 /* Map editor controls */
 
+header {
+    /* OL's controls are 1005. I think another's 1010. */
+    z-index: 1020;
+}
+
 .nlfeatures .olControlEditingToolbar {
     opacity: 0;
 }
@@ -36,7 +41,7 @@
 
 .nlfeatures .geo-edit {
     cursor: pointer;
-    z-index: 999;
+    z-index: 500;
     position: absolute;
     margin-top: 3px;
     padding: 4px 5px !important;
