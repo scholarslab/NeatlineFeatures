@@ -446,21 +446,43 @@ class NeatlineFeatures_Utils_View
         $element = $this->_element;
 
         $post = $this->getPost();
+        $features = array();
         if (is_null($post) && is_null($record->id)) {
-            $features = array();
         } else if (is_null($post)) {
-            $features = get_db()
+            $db       = get_db();
+            $etable   = $db->getTable('ElementText');
+            $elements = $db
                 ->getTable('NeatlineFeature')
                 ->getItemFeatures($record);
+            foreach ($elements as $el) {
+                $et = $etable->find($el->element_text_id);
+                $features[] = array(
+                    'is_map'     => $el->is_map,
+                    'geo'        => $el->geo,
+                    'zoom'       => $el->zoom,
+                    'center'     => array(
+                        'lon'    => $el->center_lon,
+                        'lat'    => $el->center_lat
+                    ),
+                    'base_layer' => $el->base_layer,
+                    'is_html'    => $et->html,
+                    'text'       => $et->text
+                );
+            }
         } else {
-            $features = array();
             for ($i=0, $posted=$post[$i]; !is_null($posted); $i++, $posted=$post[$i]) {
                 $features[] = array(
+                    'is_map'     => $posted['mapon'],
                     'geo'        => $posted['geo'],
                     'zoom'       => $posted['zoom'],
-                    'center_lon' => $posted['center_lon'],
-                    'center_lat' => $posted['center_lat'],
-                    'base_layer' => $posted['base_layer']
+                    'center'     => array(
+                        'lon'    => $posted['center_lon'],
+                        'lat'    => $posted['center_lat']
+                    ),
+                    'base_layer' => $posted['base_layer'],
+                    'is_html'    => $posted['html'],
+                    'text'       => $posted['text']
+                    // 'free'       => $posted['free']
                 );
                 $i++;
                 $posted = $post[$i];
