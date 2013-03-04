@@ -68,7 +68,7 @@
 }
 /* line 90, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .nlfeatures-map-tools {
-  width: 100%;
+  width: 99%;
   height: 45px;
   padding-top: 7px;
 }
@@ -93,7 +93,7 @@
 /* line 105, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .olMap {
   border: 1px solid white;
-  width: 100%;
+  width: 99%;
   height: 360px;
 }
 /* line 109, ../../../_sass/shared/css/nlfeatures.scss */
