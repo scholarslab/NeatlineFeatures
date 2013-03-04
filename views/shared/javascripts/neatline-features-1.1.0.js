@@ -1771,7 +1771,6 @@
       };
 
       EditWidget.prototype._buildMap = function(parent, id_prefix) {
-        console.log('_buildMap', this.n);
         return $('.input', parent).addClass('nlfeatures').addClass('nlfeatures-edit').before("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
       };
 
@@ -1827,20 +1826,24 @@
       };
 
       EditWidget.prototype.populate = function(values) {
-        var _ref, _ref1;
         if (values == null) {
           values = this.widget.options.values[this.n];
         }
+        console.log('populate', this.n, values);
         if (values != null) {
           this.fields.html.attr('checked', values.is_html);
           this.fields.mapon.attr('checked', values.is_map);
           this.fields.geo.val(to_s(values.geo));
           this.fields.zoom.val(to_s(values.zoom));
-          this.fields.center_lon.val(to_s((_ref = values.center) != null ? _ref.lon : void 0));
-          this.fields.center_lat.val(to_s((_ref1 = values.center) != null ? _ref1.lat : void 0));
+          if (values.center != null) {
+            this.fields.center_lon.val(to_s(values.center.lon));
+            this.fields.center_lat.val(to_s(values.center.lat));
+          }
           this.fields.base_layer.val(to_s(values.base_layer));
           this.fields.text.val(to_s(values.text));
-          return this.fields.free.val(stripFirstLine(values.text));
+          this.fields.free.val(stripFirstLine(values.text));
+          console.log(values.text);
+          return console.log(stripFirstLine(values.text));
         }
       };
 
@@ -1978,35 +1981,22 @@
         }).call(this);
       }
 
-      WidgetCollection.prototype.init = function() {
-        var w, _i, _len, _ref, _results;
+      WidgetCollection.prototype.init = function(options) {
+        var i, w, _i, _j, _len, _len1, _ref, _ref1, _ref2, _results;
         _ref = this.widgets;
-        _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           w = _ref[_i];
-          _results.push(w.init());
+          w.init();
         }
-        return _results;
-      };
-
-      WidgetCollection.prototype.showMap = function() {
-        var w, _i, _len, _ref, _results;
-        _ref = this.widgets;
+        _ref1 = this.widgets;
         _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          w = _ref[_i];
-          _results.push(w.showMap());
-        }
-        return _results;
-      };
-
-      WidgetCollection.prototype.hideMap = function() {
-        var w, _i, _len, _ref, _results;
-        _ref = this.widgets;
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          w = _ref[_i];
-          _results.push(w.hideMap());
+        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
+          w = _ref1[i];
+          if (!((_ref2 = options.values) != null ? _ref2[i].is_map : void 0)) {
+            _results.push(w.hideMap());
+          } else {
+            _results.push(void 0);
+          }
         }
         return _results;
       };
@@ -2048,10 +2038,7 @@
         }) : new WidgetCollection(this, this.element, '.element-text', function(n, i) {
           return new ViewWidget(_this, i, n);
         });
-        this.mode.init();
-        if (!this.options.values.is_map) {
-          return this.mode.hideMap();
-        }
+        return this.mode.init(this.options);
       },
       _idPrefixToNamePrefix: function(id_prefix) {
         var base, indices, p, parts;
