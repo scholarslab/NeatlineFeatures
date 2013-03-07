@@ -16,8 +16,11 @@
  */
 ?>
 <script type='text/javascript'>
-(function($) {
+// console.log('in script');
+(function($, undefined) {
+    // console.log('in scope');
     $(function() {
+        // console.log('in ready');
         var options = {
             mode: <?php echo json_encode($mode) ?>,
             labels: {
@@ -36,7 +39,11 @@
                 },
             values: <?php echo json_encode($features) ?>
             };
-        $("#element-38").featurewidget(options);
+        var existing = $("#element-38.nlfeatures-on").data('featurewidget');
+        if (typeof existing !== 'undefined') {
+            existing.destroy();
+        }
+        $("#<?php echo $parent_id ?>").featurewidget(options);
     });
 
     // A nasty hack to clobber the current way that TinyMCE is set up for any 

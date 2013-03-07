@@ -1808,6 +1808,7 @@
         name_prefix = "" + this.widget.options.name_prefix + "[" + this.n + "]";
         use_html = this.widget.options.labels.html;
         use_map = this.widget.options.labels.map;
+        el.addClass('nlfeatures-on');
         this._buildMap(parent, id_prefix);
         this._buildInputs(parent, id_prefix, name_prefix);
         this._buildUseMap(parent, id_prefix, name_prefix, use_map);
@@ -1829,10 +1830,9 @@
         if (values == null) {
           values = this.widget.options.values[this.n];
         }
-        console.log('populate', this.n, values);
         if (values != null) {
-          this.fields.html.attr('checked', values.is_html);
-          this.fields.mapon.attr('checked', values.is_map);
+          this.fields.html.prop('checked', +values.is_html);
+          this.fields.mapon.prop('checked', +values.is_map);
           this.fields.geo.val(to_s(values.geo));
           this.fields.zoom.val(to_s(values.zoom));
           if (values.center != null) {
@@ -1841,9 +1841,7 @@
           }
           this.fields.base_layer.val(to_s(values.base_layer));
           this.fields.text.val(to_s(values.text));
-          this.fields.free.val(stripFirstLine(values.text));
-          console.log(values.text);
-          return console.log(stripFirstLine(values.text));
+          return this.fields.free.val(stripFirstLine(values.text));
         }
       };
 
@@ -1865,11 +1863,11 @@
       };
 
       EditWidget.prototype.usesHtml = function() {
-        return this.fields.html.is(':checked');
+        return this.fields.html.prop('checked');
       };
 
       EditWidget.prototype.usesMap = function() {
-        return this.fields.mapon.is(':checked');
+        return this.fields.mapon.prop('checked');
       };
 
       EditWidget.prototype.showMap = function() {
@@ -1982,7 +1980,7 @@
       }
 
       WidgetCollection.prototype.init = function(options) {
-        var i, w, _i, _j, _len, _len1, _ref, _ref1, _ref2, _results;
+        var i, w, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3, _results;
         _ref = this.widgets;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           w = _ref[_i];
@@ -1992,7 +1990,7 @@
         _results = [];
         for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
           w = _ref1[i];
-          if (!((_ref2 = options.values) != null ? _ref2[i].is_map : void 0)) {
+          if (!((_ref2 = options.values) != null ? (_ref3 = _ref2[i]) != null ? _ref3.is_map : void 0 : void 0)) {
             _results.push(w.hideMap());
           } else {
             _results.push(void 0);

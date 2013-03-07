@@ -83,6 +83,7 @@
       this.populate()
 
     build: ->
+      # console.log @widget.element
       el        = $ @widget.element
       id_prefix = derefid @widget.options.id_prefix
 
@@ -177,6 +178,9 @@
       use_html    = @widget.options.labels.html
       use_map     = @widget.options.labels.map
 
+      # console.log('buildings', this.value())
+
+      el.addClass 'nlfeatures-on'
       this._buildMap       parent, id_prefix
       this._buildInputs    parent, id_prefix, name_prefix
       this._buildUseMap    parent, id_prefix, name_prefix, use_map
@@ -210,8 +214,8 @@
 
     populate: (values=@widget.options.values[@n]) ->
       if values?
-        @fields.html.prop        'checked', values.is_html
-        @fields.mapon.prop       'checked', values.is_map
+        @fields.html.prop        'checked', (+values.is_html)
+        @fields.mapon.prop       'checked', (+values.is_map)
         @fields.geo.val          to_s(values.geo)
         @fields.zoom.val         to_s(values.zoom)
         if values.center?
@@ -331,7 +335,7 @@
     init: (options) ->
       w.init() for w in @widgets
       for w, i in @widgets
-        w.hideMap() unless options.values?[i].is_map
+        w.hideMap() unless options.values?[i]?.is_map
 
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',
