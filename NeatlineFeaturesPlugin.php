@@ -290,34 +290,26 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function filterFormItemDublinCoreCoverage($components, $args)
     {
-        NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) form_item_dublin_core_coverage");
-        NeatlineFeatures_Functions::fdump('/tmp/nlfeatures.log', "components", $components);
-
         $util = new NeatlineFeatures_Utils_View();
         $util->setEditOptions($args['record'], $args['element']);
         $components['inputs'] = $components['inputs'] . $util->getEditControl();
 
         return $components;
-
-
     }
 
     /**
      * This displays the coverage data as a map, if applicable.
      *
-     * @param string           $text        The original text for the element.
-     * @param Omeka_Record     $record      The record that this text applies
-     * to.
-     * @param ElementText|null $elementText The ElementText record that stores
-     * this text. (This is optional and defaults to null.)
+     * @param string  $text  The original text for the element.
+     * @param array   $args  The record and element text triggering this.
      *
      * @return The HTML to generate the map.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function filterDisplayItemDublinCoreCoverage($args)
+    public function filterDisplayItemDublinCoreCoverage($text, $args)
     {
-        NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(filter) display_item_dublin_core_coverage");
-        return $args;
+        $record      = $args['record'];
+        $elementText = $args['element_text'];
         return NeatlineFeatures_Functions::displayCoverage(
             $text, $record, $elementText
         );
