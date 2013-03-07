@@ -5,6 +5,7 @@ end
 
 guard 'livereload' do
   watch(%r{views/.+\.(css|js|html|php|inc)})
+  watch(%r{.*\.php$})
 end
 
 def cake_build
