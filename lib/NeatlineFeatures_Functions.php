@@ -155,12 +155,43 @@ class NeatlineFeatures_Functions
 
     public static function fdump($filename, $name, $obj)
     {
+        if (is_string($obj)) {
+            $cname = 'string';
+        } else if (is_array($obj)) {
+            $cname = 'array';
+        } else {
+            $cname = '';
+        }
+
         if (is_null($obj)) {
             $repr = "NULL";
         } else {
             $repr = print_r($obj, true);
         }
-        NeatlineFeatures_Functions::flog($filename, "$name => $repr");
+
+        NeatlineFeatures_Functions::flog($filename, "($cname) $name => $repr");
+    }
+
+    public static function fstack($filename, $name, $backtrace=null)
+    {
+        if (is_null($backtrace)) {
+            $backtrace = debug_backtrace();
+        }
+        $buffer = '';
+        $i = 0;
+        foreach ($backtrace as $node) {
+            $buffer .= "$i. ";
+            if (array_key_exists('file', $node)) {
+                $buffer .= basename($node['file']);
+            }
+            $buffer .= ":" . $node['function'];
+            if (array_key_exists('line', $node)) {
+                $buffer .=  " ({$node['line']})";
+            }
+            $buffer .= "\n";
+            $i++;
+        }
+        NeatlineFeatures_Functions::flog($filename, "$name => $buffer");
     }
 
 }
