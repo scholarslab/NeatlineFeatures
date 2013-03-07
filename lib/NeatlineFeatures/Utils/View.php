@@ -293,10 +293,12 @@ class NeatlineFeatures_Utils_View
     public function getPost()
     {
         $post = null;
-        $eid  = (string)$this->getElementId();
-        if (array_key_exists('Elements', $_POST) &&
-            array_key_exists($eid, $_POST['Elements'])) {
-            $post = $_POST['Elements'][$eid];
+        if (count($_POST) > 0) {
+            $eid  = (string)$this->getElementId();
+            if (array_key_exists('Elements', $_POST) &&
+                array_key_exists($eid, $_POST['Elements'])) {
+                    $post = $_POST['Elements'][$eid];
+                }
         }
         return $post;
     }
@@ -393,16 +395,11 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $isMap     = $this->isMap();
-        $etext     = $this->_elementText;
+        $isMap = $this->isMap();
+        $etext = $this->_elementText;
 
         // Pull a fresh $value, if we can.
-        $value = '';
-        if (! is_null($etext)) {
-            $value = $etext->getText();
-        } else {
-            $value = $this->_text;
-        }
+        $value = is_null($etext) ? $this->_text : $etext->getText();
 
         if (! is_null($etext) && is_null($etext->record_id)) {
             // There's no data for this.
@@ -444,6 +441,7 @@ class NeatlineFeatures_Utils_View
     {
         $record  = $this->_record;
         $element = $this->_element;
+        $parent_id = $mode == 'edit' ? 'element-38' : 'dublin-core-coverage';
 
         $post = $this->getPost();
         $features = array();
@@ -469,8 +467,10 @@ class NeatlineFeatures_Utils_View
                     'text'       => $et->text
                 );
             }
-        } else {
-            for ($i=0, $posted=$post[$i]; !is_null($posted); $i++, $posted=$post[$i]) {
+        } else if (count($post) > 0) {
+            $pcount = count($post);
+            for ($i=0; $i<$pcount; $i++) {
+                $posted = $post[$i];
                 $features[] = array(
                     'is_map'     => $posted['mapon'],
                     'geo'        => $posted['geo'],
@@ -484,8 +484,6 @@ class NeatlineFeatures_Utils_View
                     'text'       => $posted['text']
                     // 'free'       => $posted['free']
                 );
-                $i++;
-                $posted = $post[$i];
             }
         }
 

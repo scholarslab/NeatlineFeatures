@@ -78,17 +78,14 @@ class Table_NeatlineFeature extends Omeka_Db_Table
                 str_ireplace("\r", "", str_ireplace('<br />', "\n", $element_text->text)),
                 3
             );
-            $wktParts = explode('/', $lines[0], 2);
-            $qwkt     = $db->quote($wktParts[0]);
-            $parts    = explode('|', $lines[0], 5);
-            $geo      = htmlspecialchars_decode($parts[0]);
-            $qgeo     = $db->quote($geo);
             $raw      = count($lines) >= 3 ? $lines[2] : '';
             $text     = $this->_findLongestNonHtml($raw);
-            if ($raw === $text) {
-                $text     = "%$text";
-            } else {
-                $text     = "%$text%";
+            if (!empty($text)) {
+                if ($raw === $text) {
+                    $text     = "%$text";
+                } else {
+                    $text     = "%$text%";
+                }
             }
 
             $select = $select
@@ -96,17 +93,40 @@ class Table_NeatlineFeature extends Omeka_Db_Table
                     array( 'et' => $etTable->getTableName() ),
                     'nf.element_text_id=et.id',
                     array()
-                )
-                ->where("nf.geo=$qgeo OR nf.geo=$qwkt")
-                ->where('et.record_id=?',      $element_text->record_id)
-                ->where('et.record_type_id=?', $element_text->record_type_id)
-                ->where('et.element_id=?',     $element_text->element_id)
-                ->where('et.html=?',           $element_text->html);
+                );
+
+            if (substr_compare($lines[0], '<kml', 0)) {
+                $parts    = explode('|', $lines[0], 5);
+                $geo      = htmlspecialchars_decode($parts[0]);
+                $geoDoc   = new DOMDocument();
+                if ($geoDoc->loadXML($geo)) {
+                    $coords = $geoDoc->getElementsByTagNameNS(
+                        'http://earth.google.com/kml/2.0',
+                        'coordinates'
+                    );
+                    if ($coords->length > 0) {
+                        $select = $select->where(
+                            "nf.geo LIKE ?", "%{$coords->item(0)->nodeValue}%"
+                        );
+                    }
+                }
+            } else {
+                $wktParts = explode('/', $lines[0], 2);
+                $qwkt     = $db->quote($wktParts[0]);
+                $select   = $select->where("nf.geo=$qwkt");
+            }
+
+            $select = $select
+                ->where('et.record_id=?',   $element_text->record_id)
+                ->where('et.record_type=?', $element_text->record_type)
+                ->where('et.element_id=?',  $element_text->element_id)
+                ->where('et.html=?',        $element_text->html);
             if (!empty($text)) {
                 $select = $select->where("et.text LIKE ?", $text);
             }
         }
 
+        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "SQL => '$select'");
         return (is_null($select) ? NULL : $this->fetchObject($select));
     }
 

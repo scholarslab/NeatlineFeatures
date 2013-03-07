@@ -131,6 +131,8 @@ class NeatlineFeatures_Functions
      **/
     public static function displayCoverage($text, $record, $elementText=NULL)
     {
+        // echo "<b>displayCoverage</b> => /<pre>$text</pre>/<br>";
+        return $text;
         $util = new NeatlineFeatures_Utils_View();
         $util->setViewOptions($text, $record, $elementText);
 
