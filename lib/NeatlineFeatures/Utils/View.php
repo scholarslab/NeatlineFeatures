@@ -70,6 +70,13 @@ class NeatlineFeatures_Utils_View
      **/
     private $_elementText;
 
+    /**
+     * A cached copy of the current NeatlineFeature
+     *
+     * @var NeatlineFeature
+     **/
+    private $_feature;
+
     public $debug;
 
     function __construct()
@@ -180,6 +187,9 @@ class NeatlineFeatures_Utils_View
      **/
     public function getNeatlineFeature()
     {
+        if (isset($this->_feature)) {
+            return $this->_feature;
+        }
         $feature = null;
         $etext = $this->getElementText();
         if (is_null($etext)) {
@@ -189,6 +199,7 @@ class NeatlineFeatures_Utils_View
                 ->getTable('NeatlineFeature')
                 ->getRecordByElementText($etext[0]);
         }
+        $this->_feature = $feature;
         return $feature;
     }
 
@@ -429,6 +440,27 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * @param $feature     NeatlineFeature
+     * @param $elementText ElementText
+     * @return array
+     *
+     **/
+    private function _elementTextToFeature($feature, $elementText) {
+        return array(
+            'is_map'     => $feature->is_map,
+            'geo'        => $feature->geo,
+            'zoom'       => $feature->zoom,
+            'center'     => array(
+                'lon'    => $feature->center_lon,
+                'lat'    => $feature->center_lat
+            ),
+            'base_layer' => $feature->base_layer,
+            'is_html'    => $elementText->html,
+            'text'       => $elementText->text
+        );
+    }
+
+    /**
      * This actually handles setting up the environment and passing execution 
      * off to a PHP-HTML file.
      *
@@ -439,34 +471,35 @@ class NeatlineFeatures_Utils_View
      **/
     private function _getHtmlView($mode)
     {
-        $record  = $this->_record;
-        $element = $this->_element;
-        $parent_id = $mode == 'edit' ? 'element-38' : 'dublin-core-coverage';
+        $record    = $this->_record;
+        $element   = $this->_element;
+        $post      = $this->getPost();
+        $features  = array();
+        $view_id   = '';
 
-        $post = $this->getPost();
-        $features = array();
         if (is_null($post) && is_null($record->id)) {
+
+        } else if (is_null($post) && isset($this->_elementText) &&
+                   !is_null($this->_elementText)) {
+            $feature = get_db()
+                ->getTable('NeatlineFeature')
+                ->getRecordByElementText($this->_elementText);
+            $features[] = $this->_elementTextToFeature(
+                $feature, $this->_elementText
+            );
+            $view_id   = "elements-38-{$feature->id}";
+
         } else if (is_null($post)) {
-            $db       = get_db();
-            $etable   = $db->getTable('ElementText');
-            $elements = $db
+            $db          = get_db();
+            $etable      = $db->getTable('ElementText');
+            $featureObjs = $db
                 ->getTable('NeatlineFeature')
                 ->getItemFeatures($record);
-            foreach ($elements as $el) {
-                $et = $etable->find($el->element_text_id);
-                $features[] = array(
-                    'is_map'     => $el->is_map,
-                    'geo'        => $el->geo,
-                    'zoom'       => $el->zoom,
-                    'center'     => array(
-                        'lon'    => $el->center_lon,
-                        'lat'    => $el->center_lat
-                    ),
-                    'base_layer' => $el->base_layer,
-                    'is_html'    => $et->html,
-                    'text'       => $et->text
-                );
+            foreach ($featureObjs as $fobj) {
+                $et = $etable->find($fobj->element_text_id);
+                $features[] = $this->_elementTextToFeature($fobj, $et);
             }
+
         } else if (count($post) > 0) {
             $pcount = count($post);
             for ($i=0; $i<$pcount; $i++) {
@@ -488,7 +521,7 @@ class NeatlineFeatures_Utils_View
         }
 
         ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
+        include NEATLINE_FEATURES_PLUGIN_DIR . "/views/shared/coverage-$mode.php";
         return ob_get_clean();
     }
 

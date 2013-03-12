@@ -45,6 +45,89 @@ class Table_NeatlineFeature extends Omeka_Db_Table
     }
 
     /**
+     * This adds a search for the free text portion of a feature to a select.
+     *
+     * @param $select Omeka_Db_Select The select statement to modify.
+     * @param $free   string          The text to searh for.
+     *
+     * @return Omeka_Db_Select
+     * @author Eric Rochester
+     **/
+    private function _whereText($select, $free)
+    {
+        if (!is_null($free) && !empty($free)) {
+            $select = $select->where('et.text LIKE ?', "%$free");
+        }
+        return $select;
+    }
+
+    /**
+     * This adds a join on a particular ElementText to a select.
+     *
+     * @param $select Omeka_Db_Select The select statement to modify.
+     * @param $et     ElementText     The element text to join on.
+     *
+     * @return $select Omeka_Db_Select
+     * @author Eric Rochester
+     **/
+    private function _whereElementText($select, $et)
+    {
+        $table  = $this->_db->getTable('ElementText');
+        $select = $select
+            ->join(
+                array( 'et' => $table->getTableName() ),
+                'nf.element_text_id=et.id',
+                array()
+            )
+            ->where('et.record_id=?',   $et->record_id)
+            ->where('et.record_type=?', $et->record_type)
+            ->where('et.element_id=?',  $et->element_id)
+            ->where('et.html=?',        $et->html);
+        return $select;
+    }
+
+    /**
+     * This adds a search for KML to a select.
+     *
+     * @param $select Omeka_Db_Select The select statement to modify.
+     * @param $kml    string          The KML to search for.
+     *
+     * @return $select Omeka_Db_Select
+     * @author Eric Rochester
+     **/
+    private function _whereKML($select, $kml)
+    {
+        $xml = new DOMDocument();
+        if ($xml->loadXML($kml)) {
+            $coords = $xml->getElementsByTagNameNS(
+                'http://earth.google.com/kml/2.0',
+                'coordinates'
+            );
+            if ($coords->length > 0) {
+                $select = $select->where(
+                    'nf.geo LIKE ?', "%{$coords->item(0)->nodeValue}%"
+                );
+            }
+        }
+        return $select;
+    }
+
+    /**
+     * This adds a search for WKT to a select.
+     *
+     * @param $select Omeka_Db_Select The select statement to modify.
+     * @param $wkt    string          The WKT string to search for.
+     *
+     * @return $select Omeka_Db_Select
+     * @author Eric Rochester
+     **/
+    private function _whereWKT($select, $wkt)
+    {
+        $qwkt = $this->_db->quote($wkt);
+        return $select->where("nf.geo=$qwkt");
+    }
+
+    /**
      * This looks in the database for a neatline features row for an element 
      * text.
      *
@@ -57,72 +140,42 @@ class Table_NeatlineFeature extends Omeka_Db_Table
      **/
     public function getRecordByElementText($element_text)
     {
-        $db     = $this->_db;
-        $select = $db
-            ->select()
-            ->from(array( 'nf' => $this->getTableName() ))
-            ->where('nf.item_id=?', $element_text->record_id);
-
-        if (isset($element_text->id) && !is_null($element_text->id)) {
-            $select = $select
-                ->where('nf.element_text_id=?', $element_text->id);
-
-        } else if (is_null($element_text->record_id)) {
+        if (is_null($element_text->record_id)) {
             $select = NULL;
-
         } else {
-            $etTable = $db->getTable('ElementText');
-
-            $lines   = explode(
-                "\n",
-                str_ireplace("\r", "", str_ireplace('<br />', "\n", $element_text->text)),
-                3
-            );
-            $raw      = count($lines) >= 3 ? $lines[2] : '';
-            $text     = $this->_findLongestNonHtml($raw);
-            if (!empty($text)) {
-                if ($raw === $text) {
-                    $text     = "%$text";
-                } else {
-                    $text     = "%$text%";
-                }
-            }
-
-            $select = $select
-                ->join(
-                    array( 'et' => $etTable->getTableName() ),
-                    'nf.element_text_id=et.id',
-                    array()
+            $select = $this->_db
+                ->select()
+                ->from(array( 'nf' => $this->getTableName() ))
+                ->where('nf.item_id=?', $element_text->record_id);
+            if (isset($element_text->id) && !is_null($element_text->id)) {
+                $select = $select->where(
+                    'nf.element_text_id=?', $element_text->id
+                );
+            } else {
+                $lines = explode(
+                    "\n",
+                    str_ireplace(
+                        "\r",
+                        "",
+                        str_ireplace('<br />', "\n", $element_text->text)
+                    ),
+                    3
                 );
 
-            if (substr_compare($lines[0], '<kml', 0)) {
-                $parts    = explode('|', $lines[0], 5);
-                $geo      = htmlspecialchars_decode($parts[0]);
-                $geoDoc   = new DOMDocument();
-                if ($geoDoc->loadXML($geo)) {
-                    $coords = $geoDoc->getElementsByTagNameNS(
-                        'http://earth.google.com/kml/2.0',
-                        'coordinates'
-                    );
-                    if ($coords->length > 0) {
-                        $select = $select->where(
-                            "nf.geo LIKE ?", "%{$coords->item(0)->nodeValue}%"
-                        );
-                    }
-                }
-            } else {
-                $wktParts = explode('/', $lines[0], 2);
-                $qwkt     = $db->quote($wktParts[0]);
-                $select   = $select->where("nf.geo=$qwkt");
-            }
+                $select = $this->_whereElementText($select, $element_text);
+                $select = $this->_whereText(
+                    $select, count($lines) >= 2 ? $lines[1] : ''
+                );
 
-            $select = $select
-                ->where('et.record_id=?',   $element_text->record_id)
-                ->where('et.record_type=?', $element_text->record_type)
-                ->where('et.element_id=?',  $element_text->element_id)
-                ->where('et.html=?',        $element_text->html);
-            if (!empty($text)) {
-                $select = $select->where("et.text LIKE ?", $text);
+                if (substr_compare($lines[0], '<kml', 0)) {
+                    $fields = explode('|', $lines[0], 5);
+                    $select = $this->_whereKML(
+                        $select, htmlspecialchars_decode($fields[0])
+                    );
+                } else {
+                    $fields = explode('/', $lines[0], 2);
+                    $select = $this->_whereWKT($select, $fields[0]);
+                }
             }
         }
 
