@@ -21,7 +21,7 @@ guard :shell do
   end
 end
 
-guard 'coffeescript', :input => 'views/shared/javascripts' do
+guard 'coffeescript', :input => 'views/shared/javascripts', :source_map => true do
   watch(/views\/shared\/javascripts\/(.*)\.coffee/)
 end
 
