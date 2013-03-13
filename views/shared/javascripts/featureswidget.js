@@ -221,11 +221,15 @@
       };
 
       EditWidget.prototype.build = function() {
-        var el, parent, use_html, use_map;
+        var el, id_prefix, parent, use_html, use_map;
         el = $(this.widget.element);
         parent = $(this.parent);
         use_html = this.widget.options.labels.html;
         use_map = this.widget.options.labels.map;
+        id_prefix = derefid(this.id_prefix);
+        if (parent.attr('id') == null) {
+          parent.attr('id', id_prefix + 'widget');
+        }
         el.addClass('nlfeatures-on');
         this._buildMap(parent);
         this._buildInputs(parent);

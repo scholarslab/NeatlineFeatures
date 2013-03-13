@@ -193,7 +193,9 @@
       parent      = $ @parent
       use_html    = @widget.options.labels.html
       use_map     = @widget.options.labels.map
+      id_prefix   = derefid @id_prefix
 
+      parent.attr('id', id_prefix + 'widget') unless parent.attr('id')?
       el.addClass 'nlfeatures-on'
       this._buildMap       parent
       this._buildInputs    parent
