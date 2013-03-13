@@ -63,7 +63,7 @@ Feature: Bug Fix Tests
   Scenario: TinyMCE should be hidden when editing an existing file
     Given I have existing feature data named "Cucumber: Tiny Zombie"
     And I am logged into the admin console
-    And I click "Items"
+    And I click "Items" in "#content-nav"
     When I edit "Cucumber: Tiny Zombie"
     Then I should see "#Elements-38-0-free"
 
