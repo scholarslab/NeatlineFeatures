@@ -16,13 +16,11 @@ Given /^I see text "([^"]*)" in input "([^"]*)"$/ do |text, el|
 end
 
 Then /^I see (\d+) "([^"]*)" in "([^"]*)"?$/ do |n, thing, parent|
-  wait_until do
-    find(parent).all(thing).length.should == n.to_i
-  end
+  find(parent).all(thing).length.should == n.to_i
 end
 
 Then /^I(?: should)? see "([^"]*)" in "([^"]*)"$/ do |target, context|
-  wait_until(30) do
+  using_wait_time(30) do
     within(context) do
       find(target).should be_visible
     end
