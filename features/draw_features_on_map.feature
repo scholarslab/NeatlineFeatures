@@ -73,7 +73,7 @@ Feature: Draw Features on a Map
     And I draw a line on "div.olMap"
     And I click on "Add Item"
     And I click "Use Map True should Persist"
-    And I click "Edit this Item"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
 
@@ -84,7 +84,7 @@ Feature: Draw Features on a Map
     And I enter "Use Map False should Persist" for the "Elements-49-0-text"
     And I click on "Add Item"
     And I click "Use Map False should Persist"
-    And I click "Edit this Item"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should not be checked
     And I should not see a map in "#element-38"
 
@@ -100,7 +100,7 @@ Feature: Draw Features on a Map
     And I draw a line on "div.olMap"
     And I click on "Add Item"
     And I click "Use Map True should Persist"
-    And I click "Edit this Item"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
     And I should see that "#Elements-38-0-free" does not contain "kml"

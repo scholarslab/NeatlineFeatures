@@ -22,7 +22,7 @@ Feature: Users can select a base layer from a set of options
     And I draw a point on "div.olMap"
     And I click on "Add Item"
     And I click "Base Layer Settings Persist"
-    When I click "Edit this Item"
+    When I click "Edit"
     Then I see "#Elements-38-0-base_layer" contains "gphy"
 
   @javascript
