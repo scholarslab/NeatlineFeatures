@@ -25,7 +25,7 @@ Feature: Delete Features from an Item
     And I enter "1" into "Elements-38-0-free"
     And I click "add_element_38"
     And I enter "2" into "Elements-38-1-free"
-    When I click on XPath ".//div[@class='input-block'][1]//input[@id='remove_element_38']"
+    When I click on XPath ".//div[@id='element-38']//div[@class='input-block'][1]//input[@value='Remove']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
     And I see "#Elements-38-1-free" contains "2"
@@ -38,7 +38,7 @@ Feature: Delete Features from an Item
     And I enter "1" into "Elements-38-0-free"
     And I click "add_element_38"
     And I enter "2" into "Elements-38-1-free"
-    When I click on XPath ".//div[@class='input-block'][2]//input[@id='remove_element_38']"
+    When I click on XPath ".//div[@id='element-38']//div[@class='input-block'][2]//input[@value='Remove']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
     And I see "#Elements-38-0-text" contains "1"
