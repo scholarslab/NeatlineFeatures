@@ -149,15 +149,11 @@ Then /^the viewport is defined in "([^"]*)"$/ do |widget|
 end
 
 Then /^the map in "([^"]*)" should have a point feature$/ do |parent|
-  within(parent) do
-    find('script').should have_content('<Point>')
-  end
+  evaluate_script("jQuery('#{parent} .map').data('nlfeatures').hasPoint()").should be_true
 end
 
 Then /^the map in "([^"]*)" should have a line feature$/ do |parent|
-  within(parent) do
-    find('script').should have_content('<LineString>')
-  end
+  evaluate_script("jQuery('#{parent} .map').data('nlfeatures').hasLine()").should be_true
 end
 
 Then /^the map at "([^"]*)" should have a point feature$/ do |xpath|
