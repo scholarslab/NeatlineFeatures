@@ -17,7 +17,7 @@ Feature: Display Multimodal Coverages
     And I click on "Add Item"
     And I click "Multimodal Coverage"
     When I click "View Public Page"
-    Then the map at "(//div[@id='dublin-core-coverage']//div[@class='nlfeatures'])[1]" should have a point feature
+    Then the map at "#dublin-core-coverage .map" should display a point feature
     And I should see text "A pointed question" in "#dublin-core-coverage"
     But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 
