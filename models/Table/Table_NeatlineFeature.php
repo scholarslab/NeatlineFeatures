@@ -97,16 +97,23 @@ class Table_NeatlineFeature extends Omeka_Db_Table
      **/
     private function _whereKML($select, $kml)
     {
-        $xml = new DOMDocument();
-        if ($xml->loadXML($kml)) {
-            $coords = $xml->getElementsByTagNameNS(
-                'http://earth.google.com/kml/2.0',
-                'coordinates'
-            );
-            if ($coords->length > 0) {
-                $select = $select->where(
-                    'nf.geo LIKE ?', "%{$coords->item(0)->nodeValue}%"
+        if (!empty($kml)) {
+            $xml = new DOMDocument();
+            try {
+                $loaded = $xml->loadXML($kml);
+            } catch (Exception $e) {
+                return $select;
+            }
+            if ($loaded) {
+                $coords = $xml->getElementsByTagNameNS(
+                    'http://earth.google.com/kml/2.0',
+                    'coordinates'
                 );
+                if ($coords->length > 0) {
+                    $select = $select->where(
+                        'nf.geo LIKE ?', "%{$coords->item(0)->nodeValue}%"
+                    );
+                }
             }
         }
         return $select;

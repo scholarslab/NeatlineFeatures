@@ -100,20 +100,9 @@ class NeatlineFeatures_Functions
      * @return bool $isKml Does the coverage contain KML?
      * @author Eric Rochester
      **/
-    public function isKmlCoverage($coverage)
+    public static function isKmlCoverage($coverage)
     {
-        $isKml = false;
-
-        $pattern = '/geo: "(.*?[^\\\\])",/';
-        $matches = array();
-        if (preg_match($pattern, $coverage, $matches) === 1) {
-            $kml   = $matches[1];
-            $kml   = str_replace('\\"', '"', $kml);
-            $kml   = str_replace('\\/', '/', $kml);
-            $isKml = NeatlineFeatures_Functions::isKml($kml);
-        }
-
-        return $isKml;
+        return (substr_compare($coverage, '<kml ', 0, 5) == 0);
     }
 
     /**
@@ -132,6 +121,7 @@ class NeatlineFeatures_Functions
     public static function displayCoverage($text, $record, $elementText=NULL)
     {
         $util = new NeatlineFeatures_Utils_View();
+        $util->setCoverageElement();
         $util->setViewOptions($text, $record, $elementText);
 
         $output = $util->getView();
