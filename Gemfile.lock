@@ -13,6 +13,8 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 1.0.0)
+    capybara-screenshot (0.3.4)
+      capybara (>= 1.0, < 3)
     capybara-webkit (0.14.2)
       capybara (~> 2.0, >= 2.0.2)
       json
@@ -169,6 +171,7 @@ PLATFORMS
 
 DEPENDENCIES
   capybara
+  capybara-screenshot
   capybara-webkit
   compass
   compass-susy-plugin
