@@ -102,7 +102,7 @@ class NeatlineFeatures_Functions
      **/
     public static function isKmlCoverage($coverage)
     {
-        return (substr_compare($coverage, '<kml ', 0, 5) == 0);
+        return (substr_compare($coverage, '<kml ', 0, 5) === 0);
     }
 
     /**
