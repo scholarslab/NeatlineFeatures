@@ -700,13 +700,6 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $covs = metadata(
             'item', array('Dublin Core', 'Coverage'), array('all' => true)
         );
-
-        echo "\n";
-        print_r($covs); echo "\n";
-        print_r($covs[1]); echo "\n";
-        print_r(NeatlineFeatures_Functions::isKmlCoverage($covs[0])); echo "\n";
-        print_r(NeatlineFeatures_Functions::isKmlCoverage($covs[1])); echo "\n";
-
         $this->assertCount(2, $covs);
         $this->assertFalse(NeatlineFeatures_Functions::isKmlCoverage($covs[0]));
         $this->assertFalse(NeatlineFeatures_Functions::isKmlCoverage($covs[1]));

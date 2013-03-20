@@ -13,19 +13,19 @@ echo "Plugin Directory: $PLUGIN_DIR"
 echo "Omeka Directory: $OMEKA_DIR"
 
 cd tests/ && phpunit --configuration phpunit_travis.xml --coverage-text
-# ec1=$?
+ec1=$?
 
-# echo
-# echo "Feature Tests"
-# cd ..
-# export OMEKA_HOST=http://localhost
-# export OMEKA_USER=features
-# export OMEKA_PASSWD=features
-# export OMEKA_MYSQL=null
+echo
+echo "Feature Tests"
+cd ..
+export OMEKA_HOST=http://localhost
+export OMEKA_USER=features
+export OMEKA_PASSWD=features
+export OMEKA_MYSQL=null
 # cucumber --profile default --tags @current
-# cucumber --profile default
-# ec2=$?
+cucumber --profile default
+ec2=$?
 
 # This fails if either test failed.
-#i [[ "$ec1" -eq "0" && "$ec2" -eq "0" ]]
+[[ "$ec1" -eq "0" && "$ec2" -eq "0" ]]
 
