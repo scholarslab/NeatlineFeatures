@@ -93,13 +93,13 @@ Feature: Draw Features on a Map
   Scenario: Free Text should not Contain KML
     Given I am logged into the admin console
     And I click "Add a new item"
-    And I enter "Cucumber: Use Map True should Persist" for the "Elements-50-0-text"
-    And I enter "Use Map True should Persist" for the "Elements-49-0-text"
+    And I enter "Cucumber: Free Text should not Contain KML" for the "Elements-50-0-text"
+    And I enter "Free Text should not Contain KML" for the "Elements-49-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div.olMap"
     And I draw a line on "div.olMap"
     And I click on "Add Item"
-    And I click "Use Map True should Persist"
+    And I click "Free Text should not Contain KML"
     And I click "Edit"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
