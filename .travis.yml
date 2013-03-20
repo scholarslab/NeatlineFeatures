@@ -6,7 +6,7 @@ php:
   #- 5.4
 
 env:
-  - OMEKA_BRANCH=stable-1.5
+  - OMEKA_BRANCH=stable-2.0
   #- OMEKA_BRANCH=master
 
 before_script:
