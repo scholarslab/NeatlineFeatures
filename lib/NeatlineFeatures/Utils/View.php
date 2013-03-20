@@ -418,8 +418,8 @@ class NeatlineFeatures_Utils_View
         } else if ((bool)$isMap) {
             $view = $this->getViewMap();
         } else {
-            if (($i = strpos($value, "\r\n")) != FALSE) {
-                $view = substr($value, $i + 2);
+            if (($i = strpos($value, "\n")) != FALSE) {
+                $view = substr($value, $i + 1);
             } else {
                 $view = $value;
             }

@@ -100,7 +100,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
         if (!empty($kml)) {
             $xml = new DOMDocument();
             try {
-                $loaded = $xml->loadXML($kml);
+                @$loaded = $xml->loadXML($kml);
             } catch (Exception $e) {
                 return $select;
             }
