@@ -2036,7 +2036,7 @@
         _results = [];
         for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
           w = _ref1[i];
-          if (!((_ref2 = options.values) != null ? (_ref3 = _ref2[i]) != null ? _ref3.is_map : void 0 : void 0)) {
+          if (!(+((_ref2 = options.values) != null ? (_ref3 = _ref2[i]) != null ? _ref3.is_map : void 0 : void 0))) {
             _results.push(w.hideMap());
           } else {
             _results.push(void 0);

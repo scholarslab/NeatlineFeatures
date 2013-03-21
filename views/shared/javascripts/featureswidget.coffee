@@ -351,7 +351,7 @@
     init: (options) ->
       w.init() for w in @widgets
       for w, i in @widgets
-        w.hideMap() unless options.values?[i]?.is_map
+        w.hideMap() unless (+options.values?[i]?.is_map)
 
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',
