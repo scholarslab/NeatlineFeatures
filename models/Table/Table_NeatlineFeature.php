@@ -56,7 +56,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
     private function _whereText($select, $free)
     {
         if (!is_null($free) && !empty($free)) {
-            $select = $select->where('et.text LIKE ?', "%$free");
+            $select = $select->where('et.text LIKE ?', "%{$free}%");
         }
         return $select;
     }
@@ -186,7 +186,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
             }
         }
 
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "SQL => '$select'");
+        // echo "SQL = <pre>$select</pre>";
         return (is_null($select) ? NULL : $this->fetchObject($select));
     }
 

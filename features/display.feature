@@ -37,6 +37,25 @@ Feature: Display coverage data on Item Pages
     And I should see text "A pointed question" in "#dublin-core-coverage"
     But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 
+  @current
+  @kml
+  @javascript
+  Scenario: Display multimodal HTML coverages on the item page
+    Given I am logged into the admin console
+    And I click "Add a new item"
+    And I enter "Cucumber: Multimodal HTML Coverage" for the "Elements-50-0-text"
+    And I enter "Multimodal Coverage" for the "Elements-49-0-text"
+    And I click "Use Map" checkbox in "#element-38"
+    And I draw a point on "div#Elements-38-0-map.olMap"
+    And I enter "A pointed question" into "Elements-38-0-free"
+    And I check "Elements[38][0][html]"
+    And I click on "Add Item"
+    When I click "Multimodal HTML Coverage"
+    And I take a screenshot
+    Then the map at "#dublin-core-coverage .map" should display a point feature
+    And I should see text "A pointed question" in "#dublin-core-coverage"
+    But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
+
   Scenario: Display non-feature coverage data on item page
     Given I am logged into the admin console
     And I click "Add a new item"
@@ -48,18 +67,16 @@ Feature: Display coverage data on Item Pages
     Then I should see text "Charlottesville, VA" in "#dublin-core-coverage"
     But I should not see an OpenLayers map in the "#dublin-core-coverage" field
 
-  @current
   @javascript
   Scenario: Display HTML non-feature coverage data on item page
     Given I am logged into the admin console
     And I click "Add a new item"
-    And I enter "Cucumber: Display Non-Feature Coverage" for the "Elements-50-0-text"      # Title
+    And I enter "Cucumber: Display HTML Non-Feature Coverage" for the "Elements-50-0-text"      # Title
     And I enter "Display Non-Feature Coverage" for the "Elements-49-0-text"      # Subject
     And I enter "Charlottesville, VA" into "Elements-38-0-free"
     And I check "Elements[38][0][html]"
     And I click on "Add Item"
-    When I click "Display Non-Feature Coverage"
-    # And I take a screenshot
+    When I click "Display HTML Non-Feature Coverage"
     Then I should see text "Charlottesville, VA" in "#dublin-core-coverage"
     But I should not see an OpenLayers map in the "#dublin-core-coverage" field
     And I should not see text "OpenLayers export" in "#dublin-core-coverage"
