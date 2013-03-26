@@ -100,7 +100,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This finds the element text from the value of the element, record, and 
+     * This finds the element text from the value of the element, record, and
      * value.
      *
      * @param $record  Omeka_Record The record associated with the ElementText.
@@ -153,7 +153,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This sets the input name stem from the element text, if it's available. 
+     * This sets the input name stem from the element text, if it's available.
      * Otherwise, it sets a random number.
      *
      * @return string
@@ -179,7 +179,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This returns either the valid nlfeature object for this ElementText or 
+     * This returns either the valid nlfeature object for this ElementText or
      * its own.
      *
      * @return NeatlineFeature
@@ -354,10 +354,10 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This predicate tests whether this element currently is marked to have 
+     * This predicate tests whether this element currently is marked to have
      * map data.
      *
-     * @param $index integer|null This is the index of the element in the 
+     * @param $index integer|null This is the index of the element in the
      * output/input.
      *
      * @return bool
@@ -461,7 +461,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This actually handles setting up the environment and passing execution 
+     * This actually handles setting up the environment and passing execution
      * off to a PHP-HTML file.
      *
      * @param $view   string The mode to put the widget in.
