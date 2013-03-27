@@ -121,7 +121,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_coverage = $el_table
             ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
         $this->_cutil = new NeatlineFeatures_Utils_View();
-        $this->_cutil->setEditOptions(null, $this->_coverage);
+        $this->_cutil->setEditOptions(null, $this->_coverage, "", "Elements[38][0]", 0);
 
         $this->_item = new Item;
         $this->_item->save();

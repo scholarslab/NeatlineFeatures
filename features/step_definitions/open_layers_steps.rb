@@ -212,7 +212,7 @@ end
 
 Then /^"([^"]*)" should have the base layer "([^"]*)"/ do |map, base_layer|
   sleep 5
-  map_base_layer = evaluate_script("jQuery('#{map}').data('featurewidget').mode.widgets[0].nlfeatures.getBaseLayerCode()")
+  map_base_layer = evaluate_script("jQuery('#{map}').data('featurewidget').mode.nlfeatures.getBaseLayerCode()")
   map_base_layer.should == base_layer
 end
 

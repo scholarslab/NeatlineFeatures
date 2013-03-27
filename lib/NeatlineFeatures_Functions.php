@@ -184,4 +184,14 @@ class NeatlineFeatures_Functions
         NeatlineFeatures_Functions::flog($filename, "$name => $buffer");
     }
 
+    public static function clog($msg)
+    {
+        echo '<script>console.log("' . str_replace('"', '\"', $msg) . '");</script>';
+    }
+
+    public static function cdump($obj)
+    {
+        NeatlineFeatures_Functions::clog(is_null($obj) ? "NULL" : print_r($obj, true));
+    }
+
 }

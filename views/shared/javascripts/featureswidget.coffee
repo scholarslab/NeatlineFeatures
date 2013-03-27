@@ -47,12 +47,12 @@
 
   class BaseWidget
 
-    constructor: (@widget, @n, @parent) ->
+    constructor: (@widget) ->
 
     $: (selector) ->
       $(selector, @parent)
 
-    value: -> @widget.options.values[@n]
+    value: -> @widget.options.value
 
     initMap: ->
       map   = @fields.map
@@ -66,7 +66,7 @@
         mode   : @widget.options.mode
         json   : item
         markup :
-          id_prefix: @id_prefix
+          id_prefix: @widget.options.id_prefix
       local_options.zoom       = (input?.zoom)       ? null
       local_options.center     = (input?.center)     ? null
       local_options.base_layer = (input?.base_layer) ? null
@@ -87,23 +87,23 @@
 
     build: ->
       el        = $ @widget.element
-      id_prefix = el.attr 'id'
+      id_prefix = derefid @widget.options.id_prefix
 
-      map  = $ "<div id='#{id_prefix}-map' class='map map-container'></div>"
-      free = $ "<div id='#{id_prefix}-free' class='freetext'></div>"
+      map  = $ "<div id='#{id_prefix}map' class='map map-container'></div>"
+      free = $ "<div id='#{id_prefix}free' class='freetext'></div>"
 
       el.addClass('nlfeatures')
         .append(map)
         .append(free)
 
       @fields =
-        map  : $ "##{id_prefix}-map"
-        free : $ "##{id_prefix}-free"
+        map  : $ "##{id_prefix}map"
+        free : $ "##{id_prefix}free"
 
       el
 
     populate: ->
-      free     = @widget.options.values[0].text
+      free     = @widget.options.values.text
       stripped = stripFirstLine free
       if stripped == ''
         @fields.free.detach()
@@ -111,31 +111,17 @@
       else
         @fields.free.html stripped
 
-    hideMap: ->
-
 
   class EditWidget extends BaseWidget
 
     init: ->
-      id           = @widget.element.attr 'id'
-      @id_prefix   = "#Elements-#{id.split('-')[1]}-#{@n}-"
-      @name_prefix = this._idPrefixToNamePrefix(@id_prefix)
       this.build()
       this.initMap()
       this.captureEditor()
       this.populate()
       this.wire()
 
-    # This converts the ID prefix to a name prefix, which uses array-access.
-    _idPrefixToNamePrefix: (id_prefix) ->
-      id_prefix = derefid @id_prefix
-      parts     = (p for p in id_prefix.split '-' when p.length > 0)
-      base      = parts.shift()
-      indices   = ("[#{p}]" for p in parts)
-      "#{base}#{ indices.join('') }"
-
-    _buildMap: (parent) ->
-      id_prefix = derefid @id_prefix
+    _buildMap: (parent, id_prefix) ->
       $('.input', parent)
         .addClass('nlfeatures')
         .addClass('nlfeatures-edit')
@@ -148,61 +134,57 @@
           </div>
           """
 
-    _buildInputs: (parent) ->
-      id_prefix = derefid @id_prefix
+    _buildInputs: (parent, id_prefix, name_prefix) ->
       $('.input textarea', parent)
         .attr('id',   "#{id_prefix}free")
-        .attr('name', "#{@name_prefix}[free]")
+        .attr('name', "#{name_prefix}[free]")
         .after """
-          <input type="hidden" id="#{id_prefix}geo" name="#{@name_prefix}[geo]" value="" />
-          <input type="hidden" id="#{id_prefix}zoom" name="#{@name_prefix}[zoom]" value="" />
-          <input type="hidden" id="#{id_prefix}center_lon" name="#{@name_prefix}[center_lon]" value="" />
-          <input type="hidden" id="#{id_prefix}center_lat" name="#{@name_prefix}[center_lat]" value="" />
-          <input type="hidden" id="#{id_prefix}base_layer" name="#{@name_prefix}[base_layer]" value="" />
-          <input type="hidden" id="#{id_prefix}text" name="#{@name_prefix}[text]" value="" />
+          <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
+          <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
+          <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
+          <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
+          <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
+          <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
           """
 
-    _buildUseMap: (parent, use_map) ->
-      id_prefix = derefid @id_prefix
+    _buildUseMap: (parent, id_prefix, name_prefix, use_map) ->
       $('.use-html', parent)
         .after """
-            <label class="use-mapon">#{use_map}<input type="hidden" name="#{@name_prefix}[mapon]" value="0" />
-              <input type="checkbox" name="#{@name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
+            <label class="use-mapon">#{use_map}<input type="hidden" name="#{name_prefix}[mapon]" value="0" />
+              <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
             </label>
           """
 
-    _populateFields: (parent) ->
+    _populateFields: (parent, id_prefix) ->
       @fields =
         map_container  : parent.find ".map-container"
-        map            : $ "#{@id_prefix}map"
+        map            : $ "##{id_prefix}map"
         map_tools      : parent.find ".nlfeatures-map-tools"
-        mapon          : $ "#{@id_prefix}mapon"
-        text           : $ "#{@id_prefix}text"
-        free           : $ "#{@id_prefix}free"
-        html           : $ "#{@id_prefix}html"
+        mapon          : $ "##{id_prefix}mapon"
+        text           : $ "##{id_prefix}text"
+        free           : $ "##{id_prefix}free"
+        html           : $ "##{id_prefix}html"
         # Hidden fields that need to be maintained.
-        geo            : $ "#{@id_prefix}geo"
-        zoom           : $ "#{@id_prefix}zoom"
-        center_lon     : $ "#{@id_prefix}center_lon"
-        center_lat     : $ "#{@id_prefix}center_lat"
-        base_layer     : $ "#{@id_prefix}base_layer"
+        geo            : $ "##{id_prefix}geo"
+        zoom           : $ "##{id_prefix}zoom"
+        center_lon     : $ "##{id_prefix}center_lon"
+        center_lat     : $ "##{id_prefix}center_lat"
+        base_layer     : $ "##{id_prefix}base_layer"
         flash          : parent.find ".nlflash"
 
     build: ->
       el          = $ @widget.element
-      parent      = $ @parent
+      id_prefix   = derefid @widget.options.id_prefix
+      name_prefix = @widget.options.name_prefix
       use_html    = @widget.options.labels.html
       use_map     = @widget.options.labels.map
-      id_prefix   = derefid @id_prefix
 
-      parent.attr('id', id_prefix + 'widget') unless parent.attr('id')?
-      el.addClass 'nlfeatures-on'
-      this._buildMap       parent
-      this._buildInputs    parent
-      this._buildUseMap    parent, use_map
-      this._populateFields parent
+      this._buildMap       el, id_prefix
+      this._buildInputs    el, id_prefix, name_prefix
+      this._buildUseMap    el, id_prefix, name_prefix, use_map
+      this._populateFields el, id_prefix
 
-      parent
+      this
 
     # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
     # initialized, and then it turns off the TEXTAREA specified.
@@ -341,22 +323,13 @@
             )
         )
 
-  # This walks over the the DOM, looking under the parent for the widgets. It
-  # then instantiates a `BaseWidget` child class on the DOM node.
-  class WidgetCollection
-    constructor: (@widget, @parent, @selector, widgetize) ->
-      @nodes   = $(@selector, @parent)
-      @widgets = (widgetize(n, i) for n, i in @nodes)
-
-    init: (options) ->
-      w.init() for w in @widgets
-      for w, i in @widgets
-        w.hideMap() unless (+options.values?[i]?.is_map)
-
   # And here's the widget itself.
   $.widget('nlfeatures.featurewidget',
     options: {
       mode        : 'view'
+
+      id_prefix   : null
+      name_prefix : null
 
       labels      :
         html      : 'Use HTML'
@@ -375,16 +348,24 @@
 
     _create: ->
       id = @element.attr 'id'
+      @options.id_prefix   ?= '#' + id.substring(0, id.length - 'widget'.length)
+      @options.name_prefix ?= this._idPrefixToNamePrefix()
 
       @mode = if @options.mode == 'edit'
-        new WidgetCollection(this, @element, '.input-block',
-          (n, i) => new EditWidget(this, i, n))
+        new EditWidget this
       else
-        new WidgetCollection(this, $('#dublin-core-coverage'),
-          "##{@element.attr('id')}",
-          (n, i) => new ViewWidget(this, i, n))
+        new ViewWidget this
 
-      @mode.init @options
+      @mode.init()
+      @mode.hideMap() unless @options.values.is_map
+
+    # This converts the ID prefix to a name prefix, which uses array-access.
+    _idPrefixToNamePrefix: (id_prefix=@options.id_prefix) ->
+      id_prefix = deref id_prefix
+      parts     = (p for p in id_prefix.split '-' when p.length > 0)
+      base      = parts.shift()
+      indices   = ("[#{p}]" for p in parts)
+      "#{base}#{ indices.join('') }"
 
     destroy: ->
       $.Widget.prototype.destroy.call this

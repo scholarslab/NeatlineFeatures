@@ -69,8 +69,8 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @var array
      **/
     protected $_filters = array(
-        'filterFormItemDublinCoreCoverage' =>
-            array('ElementForm', 'Item', 'Dublin Core', 'Coverage'),
+        'filterInputItemDublinCoreCoverage' =>
+            array('ElementInput', 'Item', 'Dublin Core', 'Coverage'),
         'filterDisplayItemDublinCoreCoverage' =>
             array('Display', 'Item', 'Dublin Core', 'Coverage')
     );
@@ -288,11 +288,23 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * form.
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function filterFormItemDublinCoreCoverage($components, $args)
+    public function filterInputItemDublinCoreCoverage($components, $args)
     {
+        // $args keys => input_name_stem, value, record, element, index, is_html
         $util = new NeatlineFeatures_Utils_View();
-        $util->setEditOptions($args['record'], $args['element']);
-        $components['inputs'] = $components['inputs'] . $util->getEditControl();
+        $util->setEditOptions(
+            $args['record'],
+            $args['element'],
+            $args['value'],
+            $args['input_name_stem'],
+            $args['index']
+        );
+        // echo "<script>console.log('";
+        // echo str_replace("\n", "\\n", str_replace("'", "\\'", print_r($components, true)));
+        // echo "');</script>";
+        // Default $components['inputs']:
+        // <div class="input-block"><div class="input"><textarea name="Elements[38][0][text]" id="Elements-38-0-text" rows="3" cols="50"></textarea></div><div class="controls"><input type="submit" name="" value="Remove" class="remove-element red button"></div><label class="use-html">Use HTML<input type="hidden" name="Elements[38][0][html]" value="0"><input type="checkbox" name="Elements[38][0][html]" id="Elements-38-0-html" value="1" class="use-html-checkbox"></label></div>
+        $components['inputs'] = $util->getEditControl();
 
         return $components;
     }
@@ -314,6 +326,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
             $text, $record, $elementText
         );
     }
+
     // }}}
 }
 

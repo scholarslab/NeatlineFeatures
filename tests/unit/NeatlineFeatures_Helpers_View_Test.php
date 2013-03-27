@@ -73,12 +73,12 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('html' => '1')
         );
-        $this->assertEquals('1', $this->_cutil->getHtmlValue(0));
+        $this->assertEquals('1', $this->_cutil->getHtmlValue());
 
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('html' => '3')
         );
-        $this->assertEquals('3', $this->_cutil->getHtmlValue(0));
+        $this->assertEquals('3', $this->_cutil->getHtmlValue());
     }
 
     /**
@@ -91,21 +91,19 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function testGetElementText()
     {
         $tutil = new NeatlineFeatures_Utils_View();
-        $tutil->setEditOptions($this->_item, $this->_title);
+        $tutil->setEditOptions($this->_item, $this->_title, "", "Elements[38][0]", 0);
 
         $etext = $tutil->getElementText();
         $this->assertNotNull($etext);
-        $this->assertCount(1, $etext);
-        $this->assertEquals('<b>A Title</b>', $etext[0]->text);
-        $this->assertTrue((bool)$etext[0]->html);
+        $this->assertEquals('<b>A Title</b>', $etext->text);
+        $this->assertTrue((bool)$etext->html);
 
         $sutil = new NeatlineFeatures_Utils_View();
-        $sutil->setEditOptions($this->_item, $this->_subject);
+        $sutil->setEditOptions($this->_item, $this->_subject, "", "Elements[38][0]", 0);
         $etext = $sutil->getElementText();
         $this->assertNotNull($etext);
-        $this->assertCount(1, $etext);
-        $this->assertEquals('Subject', $etext[0]->text);
-        $this->assertFalse((bool)$etext[0]->html);
+        $this->assertEquals('Subject', $etext->text);
+        $this->assertFalse((bool)$etext->html);
     }
 
     /**
@@ -119,7 +117,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('mapon' => '1')
         );
-        $this->assertTrue($this->_cutil->isMap(0));
+        $this->assertTrue($this->_cutil->isMap());
     }
 
     /**
@@ -133,7 +131,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array()
         );
-        $this->assertFalse((bool)$this->_cutil->isMap(0));
+        $this->assertFalse((bool)$this->_cutil->isMap());
     }
 
     /**
@@ -146,7 +144,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function testIsMapNoPostTrue()
     {
         $tutil = new NeatlineFeatures_Utils_View();
-        $tutil->setEditOptions($this->_item, $this->_title);
+        $tutil->setEditOptions($this->_item, $this->_title, "", "Elements[38][0]", 0);
 
         $text = "WKT: something\n\nhi";
         $this->addElementText($this->_item, $this->_coverage, $text);
@@ -164,7 +162,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $feature->is_map = 1;
         $feature->save();
 
-        $this->assertTrue($this->_cutil->isMap(0));
+        $this->assertTrue($this->_cutil->isMap());
     }
 
     /**
@@ -177,7 +175,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
     public function testIsMapNoPostFalse()
     {
         $sutil = new NeatlineFeatures_Utils_View();
-        $sutil->setEditOptions($this->_item, $this->_subject);
+        $sutil->setEditOptions($this->_item, $this->_subject, "", "Elements[38][0]", 0);
         $this->assertFalse((bool)$sutil->isMap());
     }
 

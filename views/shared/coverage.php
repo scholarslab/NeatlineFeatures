@@ -15,11 +15,14 @@
  * @license     http://www.apache.org/licenses/LICENSE-2.0.html Apache 2 License
  */
 ?>
+<div id="<?php echo $idPrefix ?>widget"></div>
 <script type='text/javascript'>
 (function($, undefined) {
     $(function() {
         var options = {
             mode: <?php echo json_encode($mode) ?>,
+            id_prefix: <?php echo json_encode('#' . $idPrefix) ?>,
+            name_prefix: <?php echo json_encode($inputNameStem) ?>,
             labels: {
                 html : <?php echo json_encode(__('Use HTML')) ?>,
                 map  : <?php echo json_encode(__('Use Map')) ?>
@@ -34,13 +37,20 @@
                         }
                     }
                 },
-            values: <?php echo json_encode($features) ?>
+            values: {
+                geo: <?php echo json_encode(is_null($geo) ? '' : $geo) ?>,
+                zoom: <?php echo json_encode(is_null($zoom) ? '' : $zoom) ?>,
+                center: {
+                    lon: <?php echo json_encode(is_null($center_lon) ? '' : $center_lon) ?>,
+                    lat: <?php echo json_encode(is_null($center_lat) ? '' : $center_lat) ?>
+                    },
+                base_layer: <?php echo json_encode(is_null($base_layer) ? '' : $base_layer) ?>,
+                text: <?php echo json_encode(is_null($value) ? '' : $value) ?>,
+                is_html: <?php echo json_encode(is_null($isHtml) ? '' : $isHtml) ?>,
+                is_map: <?php echo json_encode(is_null($isMap) ? '' : $isMap) ?>
+                }
             };
-        var existing = $("#element-38.nlfeatures-on").data('featurewidget');
-        if (typeof existing !== 'undefined') {
-            existing.destroy();
-        }
-        $("#element-38").featurewidget(options);
+        $("#<?php echo $idPrefix ?>widget").featurewidget(options);
     });
 
     // A nasty hack to clobber the current way that TinyMCE is set up for any 

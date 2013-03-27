@@ -1627,7 +1627,7 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function($) {
-    var BaseWidget, EditWidget, ViewWidget, WidgetCollection, derefid, poll, stripFirstLine, to_s;
+    var BaseWidget, EditWidget, ViewWidget, derefid, poll, stripFirstLine, to_s;
     derefid = function(id) {
       if (id[0] === '#') {
         return id.slice(1, id.length);
@@ -1673,10 +1673,8 @@
     };
     BaseWidget = (function() {
 
-      function BaseWidget(widget, n, parent) {
+      function BaseWidget(widget) {
         this.widget = widget;
-        this.n = n;
-        this.parent = parent;
       }
 
       BaseWidget.prototype.$ = function(selector) {
@@ -1684,7 +1682,7 @@
       };
 
       BaseWidget.prototype.value = function() {
-        return this.widget.options.values[this.n];
+        return this.widget.options.value;
       };
 
       BaseWidget.prototype.initMap = function() {
@@ -1701,7 +1699,7 @@
           mode: this.widget.options.mode,
           json: item,
           markup: {
-            id_prefix: this.id_prefix
+            id_prefix: this.widget.options.id_prefix
           }
         };
         local_options.zoom = (_ref1 = (input != null ? input.zoom : void 0)) != null ? _ref1 : null;
@@ -1732,20 +1730,20 @@
       ViewWidget.prototype.build = function() {
         var el, free, id_prefix, map;
         el = $(this.widget.element);
-        id_prefix = el.attr('id');
-        map = $("<div id='" + id_prefix + "-map' class='map map-container'></div>");
-        free = $("<div id='" + id_prefix + "-free' class='freetext'></div>");
+        id_prefix = derefid(this.widget.options.id_prefix);
+        map = $("<div id='" + id_prefix + "map' class='map map-container'></div>");
+        free = $("<div id='" + id_prefix + "free' class='freetext'></div>");
         el.addClass('nlfeatures').append(map).append(free);
         this.fields = {
-          map: $("#" + id_prefix + "-map"),
-          free: $("#" + id_prefix + "-free")
+          map: $("#" + id_prefix + "map"),
+          free: $("#" + id_prefix + "free")
         };
         return el;
       };
 
       ViewWidget.prototype.populate = function() {
         var free, stripped;
-        free = this.widget.options.values[0].text;
+        free = this.widget.options.values.text;
         stripped = stripFirstLine(free);
         if (stripped === '') {
           this.fields.free.detach();
@@ -1754,8 +1752,6 @@
           return this.fields.free.html(stripped);
         }
       };
-
-      ViewWidget.prototype.hideMap = function() {};
 
       return ViewWidget;
 
@@ -1769,10 +1765,6 @@
       }
 
       EditWidget.prototype.init = function() {
-        var id;
-        id = this.widget.element.attr('id');
-        this.id_prefix = "#Elements-" + (id.split('-')[1]) + "-" + this.n + "-";
-        this.name_prefix = this._idPrefixToNamePrefix(this.id_prefix);
         this.build();
         this.initMap();
         this.captureEditor();
@@ -1780,86 +1772,48 @@
         return this.wire();
       };
 
-      EditWidget.prototype._idPrefixToNamePrefix = function(id_prefix) {
-        var base, indices, p, parts;
-        id_prefix = derefid(this.id_prefix);
-        parts = (function() {
-          var _i, _len, _ref, _results;
-          _ref = id_prefix.split('-');
-          _results = [];
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            p = _ref[_i];
-            if (p.length > 0) {
-              _results.push(p);
-            }
-          }
-          return _results;
-        })();
-        base = parts.shift();
-        indices = (function() {
-          var _i, _len, _results;
-          _results = [];
-          for (_i = 0, _len = parts.length; _i < _len; _i++) {
-            p = parts[_i];
-            _results.push("[" + p + "]");
-          }
-          return _results;
-        })();
-        return "" + base + (indices.join(''));
-      };
-
-      EditWidget.prototype._buildMap = function(parent) {
-        var id_prefix;
-        id_prefix = derefid(this.id_prefix);
+      EditWidget.prototype._buildMap = function(parent, id_prefix) {
         return $('.input', parent).addClass('nlfeatures').addClass('nlfeatures-edit').before("<div class=\"nlfeatures map-container\">\n  <div id=\"" + id_prefix + "map\"></div>\n  <div class='nlfeatures-map-tools'>\n    <div class='nlflash'></div>\n  </div>\n</div>");
       };
 
-      EditWidget.prototype._buildInputs = function(parent) {
-        var id_prefix;
-        id_prefix = derefid(this.id_prefix);
-        return $('.input textarea', parent).attr('id', "" + id_prefix + "free").attr('name', "" + this.name_prefix + "[free]").after("<input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + this.name_prefix + "[geo]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + this.name_prefix + "[zoom]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + this.name_prefix + "[center_lon]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + this.name_prefix + "[center_lat]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + this.name_prefix + "[base_layer]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + this.name_prefix + "[text]\" value=\"\" />");
+      EditWidget.prototype._buildInputs = function(parent, id_prefix, name_prefix) {
+        return $('.input textarea', parent).attr('id', "" + id_prefix + "free").attr('name', "" + name_prefix + "[free]").after("<input type=\"hidden\" id=\"" + id_prefix + "geo\" name=\"" + name_prefix + "[geo]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "zoom\" name=\"" + name_prefix + "[zoom]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lon\" name=\"" + name_prefix + "[center_lon]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "center_lat\" name=\"" + name_prefix + "[center_lat]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "base_layer\" name=\"" + name_prefix + "[base_layer]\" value=\"\" />\n<input type=\"hidden\" id=\"" + id_prefix + "text\" name=\"" + name_prefix + "[text]\" value=\"\" />");
       };
 
-      EditWidget.prototype._buildUseMap = function(parent, use_map) {
-        var id_prefix;
-        id_prefix = derefid(this.id_prefix);
-        return $('.use-html', parent).after("<label class=\"use-mapon\">" + use_map + "<input type=\"hidden\" name=\"" + this.name_prefix + "[mapon]\" value=\"0\" />\n  <input type=\"checkbox\" name=\"" + this.name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n</label>");
+      EditWidget.prototype._buildUseMap = function(parent, id_prefix, name_prefix, use_map) {
+        return $('.use-html', parent).after("<label class=\"use-mapon\">" + use_map + "<input type=\"hidden\" name=\"" + name_prefix + "[mapon]\" value=\"0\" />\n  <input type=\"checkbox\" name=\"" + name_prefix + "[mapon]\" id=\"" + id_prefix + "mapon\" value=\"1\" />\n</label>");
       };
 
-      EditWidget.prototype._populateFields = function(parent) {
+      EditWidget.prototype._populateFields = function(parent, id_prefix) {
         return this.fields = {
           map_container: parent.find(".map-container"),
-          map: $("" + this.id_prefix + "map"),
+          map: $("#" + id_prefix + "map"),
           map_tools: parent.find(".nlfeatures-map-tools"),
-          mapon: $("" + this.id_prefix + "mapon"),
-          text: $("" + this.id_prefix + "text"),
-          free: $("" + this.id_prefix + "free"),
-          html: $("" + this.id_prefix + "html"),
-          geo: $("" + this.id_prefix + "geo"),
-          zoom: $("" + this.id_prefix + "zoom"),
-          center_lon: $("" + this.id_prefix + "center_lon"),
-          center_lat: $("" + this.id_prefix + "center_lat"),
-          base_layer: $("" + this.id_prefix + "base_layer"),
+          mapon: $("#" + id_prefix + "mapon"),
+          text: $("#" + id_prefix + "text"),
+          free: $("#" + id_prefix + "free"),
+          html: $("#" + id_prefix + "html"),
+          geo: $("#" + id_prefix + "geo"),
+          zoom: $("#" + id_prefix + "zoom"),
+          center_lon: $("#" + id_prefix + "center_lon"),
+          center_lat: $("#" + id_prefix + "center_lat"),
+          base_layer: $("#" + id_prefix + "base_layer"),
           flash: parent.find(".nlflash")
         };
       };
 
       EditWidget.prototype.build = function() {
-        var el, id_prefix, parent, use_html, use_map;
+        var el, id_prefix, name_prefix, use_html, use_map;
         el = $(this.widget.element);
-        parent = $(this.parent);
+        id_prefix = derefid(this.widget.options.id_prefix);
+        name_prefix = this.widget.options.name_prefix;
         use_html = this.widget.options.labels.html;
         use_map = this.widget.options.labels.map;
-        id_prefix = derefid(this.id_prefix);
-        if (parent.attr('id') == null) {
-          parent.attr('id', id_prefix + 'widget');
-        }
-        el.addClass('nlfeatures-on');
-        this._buildMap(parent);
-        this._buildInputs(parent);
-        this._buildUseMap(parent, use_map);
-        this._populateFields(parent);
-        return parent;
+        this._buildMap(el, id_prefix);
+        this._buildInputs(el, id_prefix, name_prefix);
+        this._buildUseMap(el, id_prefix, name_prefix, use_map);
+        this._populateFields(el, id_prefix);
+        return this;
       };
 
       EditWidget.prototype.captureEditor = function() {
@@ -2005,52 +1959,11 @@
       return EditWidget;
 
     })(BaseWidget);
-    WidgetCollection = (function() {
-
-      function WidgetCollection(widget, parent, selector, widgetize) {
-        var i, n;
-        this.widget = widget;
-        this.parent = parent;
-        this.selector = selector;
-        this.nodes = $(this.selector, this.parent);
-        this.widgets = (function() {
-          var _i, _len, _ref, _results;
-          _ref = this.nodes;
-          _results = [];
-          for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-            n = _ref[i];
-            _results.push(widgetize(n, i));
-          }
-          return _results;
-        }).call(this);
-      }
-
-      WidgetCollection.prototype.init = function(options) {
-        var i, w, _i, _j, _len, _len1, _ref, _ref1, _ref2, _ref3, _results;
-        _ref = this.widgets;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          w = _ref[_i];
-          w.init();
-        }
-        _ref1 = this.widgets;
-        _results = [];
-        for (i = _j = 0, _len1 = _ref1.length; _j < _len1; i = ++_j) {
-          w = _ref1[i];
-          if (!(+((_ref2 = options.values) != null ? (_ref3 = _ref2[i]) != null ? _ref3.is_map : void 0 : void 0))) {
-            _results.push(w.hideMap());
-          } else {
-            _results.push(void 0);
-          }
-        }
-        return _results;
-      };
-
-      return WidgetCollection;
-
-    })();
     return $.widget('nlfeatures.featurewidget', {
       options: {
         mode: 'view',
+        id_prefix: null,
+        name_prefix: null,
         labels: {
           html: 'Use HTML',
           map: 'Use Map'
@@ -2066,15 +1979,49 @@
         }
       },
       _create: function() {
-        var id,
-          _this = this;
+        var id, _base, _base1, _ref, _ref1;
         id = this.element.attr('id');
-        this.mode = this.options.mode === 'edit' ? new WidgetCollection(this, this.element, '.input-block', function(n, i) {
-          return new EditWidget(_this, i, n);
-        }) : new WidgetCollection(this, $('#dublin-core-coverage'), "#" + (this.element.attr('id')), function(n, i) {
-          return new ViewWidget(_this, i, n);
-        });
-        return this.mode.init(this.options);
+        if ((_ref = (_base = this.options).id_prefix) == null) {
+          _base.id_prefix = '#' + id.substring(0, id.length - 'widget'.length);
+        }
+        if ((_ref1 = (_base1 = this.options).name_prefix) == null) {
+          _base1.name_prefix = this._idPrefixToNamePrefix();
+        }
+        this.mode = this.options.mode === 'edit' ? new EditWidget(this) : new ViewWidget(this);
+        this.mode.init();
+        if (!this.options.values.is_map) {
+          return this.mode.hideMap();
+        }
+      },
+      _idPrefixToNamePrefix: function(id_prefix) {
+        var base, indices, p, parts;
+        if (id_prefix == null) {
+          id_prefix = this.options.id_prefix;
+        }
+        id_prefix = deref(id_prefix);
+        parts = (function() {
+          var _i, _len, _ref, _results;
+          _ref = id_prefix.split('-');
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            p = _ref[_i];
+            if (p.length > 0) {
+              _results.push(p);
+            }
+          }
+          return _results;
+        })();
+        base = parts.shift();
+        indices = (function() {
+          var _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = parts.length; _i < _len; _i++) {
+            p = parts[_i];
+            _results.push("[" + p + "]");
+          }
+          return _results;
+        })();
+        return "" + base + (indices.join(''));
       },
       destroy: function() {
         return $.Widget.prototype.destroy.call(this);
