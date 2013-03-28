@@ -135,6 +135,43 @@ class Table_NeatlineFeature extends Omeka_Db_Table
     }
 
     /**
+     * This looks in the database for a neatline features row that matches the 
+     * element text value given.
+     *
+     * @param $value string The value of the element text to match.
+     *
+     * @return $feature NeatlineFeature|null
+     * @author Eric Rochester
+     **/
+    public function getRecordByText($value)
+    {
+        $select = $this->_db
+            ->select()
+            ->from(array( 'nf' => $this->getTableName() ));
+        $lines = explode(
+            "\n",
+            str_ireplace(
+                "\r",
+                "",
+                str_ireplace('<br />', "\n", $value)
+            ),
+            3
+        );
+
+        if (substr_compare($lines[0], '<kml', 0)) {
+            $fields = explode('|', $lines[0], 5);
+            $select = $this->_whereKML(
+                $select, htmlspecialchars_decode($fields[0])
+            );
+        } else {
+            $fields = explode('/', $lines[0], 2);
+            $select = $this->_whereWKT($select, $fields[0]);
+        }
+
+        return $this->fetchObject($select);
+    }
+
+    /**
      * This looks in the database for a neatline features row for an element 
      * text.
      *
@@ -186,7 +223,6 @@ class Table_NeatlineFeature extends Omeka_Db_Table
             }
         }
 
-        // echo "SQL = <pre>$select</pre>";
         return (is_null($select) ? NULL : $this->fetchObject($select));
     }
 

@@ -163,6 +163,9 @@ class NeatlineFeatures_Utils_View
         $this->_text        = $text;
         $this->_record      = $record;
         $this->_elementText = $elementText;
+        if (!is_null($elementText)) {
+            $this->_value   = $elementText->text;
+        }
         $this->createInputNameStem();
     }
 
@@ -210,8 +213,15 @@ class NeatlineFeatures_Utils_View
         }
         $feature = null;
         $etext = $this->getElementText();
+
         if (is_null($etext)) {
-            $feature = new NeatlineFeature();
+            if (isset($this->_value) && !is_null($this->_value)) {
+                $feature = get_db()
+                    ->getTable('NeatlineFeature')
+                    ->getRecordByText($this->_value);
+            } else {
+                $feature = new NeatlineFeature();
+            }
         } else {
             $feature = get_db()
                 ->getTable('NeatlineFeature')
@@ -408,6 +418,37 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
+     * This attempts to find the index in _POST, based on the current element 
+     * text.
+     *
+     * This also caches any matching NeatlineFeature objects as 
+     * $this->_feature.
+     *
+     * @return $index int|null
+     * @author Eric Rochester
+     **/
+    private function _findIndex()
+    {
+        $i     = 0;
+        $j     = null;
+        $etext = $this->getElementText();
+        $els   = $_POST['Elements'][$this->getElementId()];
+
+        while (array_key_exists($i, $els)) {
+            $text    = $els[$i]['text'];
+            if ($etext->text == $els[$i]['text']) {
+                $j            = $i;
+                $this->_index = $j;
+                break;
+            }
+
+            $i++;
+        }
+
+        return $j;
+    }
+
+    /**
      * This predicate tests whether this element currently is marked to have
      * map data.
      *
@@ -422,11 +463,11 @@ class NeatlineFeatures_Utils_View
         $isMap = 0;
 
         if ($this->isPosted()) {
+            $index = is_null($index) ? $this->_findIndex() : $index;
             try {
                 $isMap = (bool)$_POST['Elements'][$this->getElementId()]
-                    [is_null($index) ? $this->getIndex() : $index]['mapon'];
+                    [$index]['mapon'];
             } catch (Exception $e) {
-                $isMap = 0;
             }
         } else {
             $etext = $this->getElementText();
@@ -554,11 +595,12 @@ class NeatlineFeatures_Utils_View
             $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
-            $geo        = $post[$i]['geo'];
-            $zoom       = $post[$i]['zoom'];
-            $center_lon = $post[$i]['center_lon'];
-            $center_lat = $post[$i]['center_lat'];
-            $base_layer = $post[$i]['base_layer'];
+            $p          = $post[$i];
+            $geo        = isset($p['geo'])        ? $p['geo']        : null;
+            $zoom       = isset($p['zoom'])       ? $p['zoom']       : null;
+            $center_lon = isset($p['center_lon']) ? $p['center_lon'] : null;
+            $center_lat = isset($p['center_lat']) ? $p['center_lat'] : null;
+            $base_layer = isset($p['base_layer']) ? $p['base_layer'] : null;
         }
 
         ob_start();

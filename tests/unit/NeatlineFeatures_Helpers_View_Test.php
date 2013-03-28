@@ -117,7 +117,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array('mapon' => '1')
         );
-        $this->assertTrue($this->_cutil->isMap());
+        $this->assertTrue($this->_cutil->isMap(0));
     }
 
     /**
@@ -131,7 +131,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $_POST['Elements'][(string)$this->_cutil->getElementId()] = array(
             '0' => array()
         );
-        $this->assertFalse((bool)$this->_cutil->isMap());
+        $this->assertFalse((bool)$this->_cutil->isMap(0));
     }
 
     /**
@@ -162,7 +162,7 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $feature->is_map = 1;
         $feature->save();
 
-        $this->assertTrue($this->_cutil->isMap());
+        $this->assertTrue($this->_cutil->isMap(0));
     }
 
     /**
@@ -378,7 +378,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:18:43 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_158</name><description>No description available</description><Polygon><outerBoundaryIs><LinearRing><coordinates>-10194865.083145,4313188.6314755 -9803507.4983789,3295658.9110849 -9744803.8606641,5017632.2840536 -10194865.083145,4313188.6314755</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark><Placemark><name>OpenLayers.Feature.Vector_182</name><description>No description available</description><LineString><coordinates>-8003262.6084573,5487261.3857724 -10097025.686953,6269976.5553037 -10958012.373438,4724114.0954794</coordinates></LineString></Placemark><Placemark><name>OpenLayers.Feature.Vector_194</name><description>No description available</description><LineString><coordinates>-10958012.373438,4724114.0954794 -10488383.271719,3119547.9979404</coordinates></LineString></Placemark></Folder></kml>|3|-9490421.4305667|3972279.4853711|osm\ncoverage a", 0);
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:53:02 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_451</name><description>No description available</description><Point><coordinates>-7474929.8690234,6739785.6570224</coordinates></Point></Placemark></Folder></kml>|3|-8739209.3930606|4584602.3035698|osm\ncoverage b", 1);
 
+        $this->dispatch('/');
         set_current_record('item', $item);
+
         $text = metadata('item', array('Dublin Core', 'Coverage'), array('delimiter' => '; '));
         $this->assertRegExp('/(?sm)<LinearRing>.*;/', $text);
         $this->assertRegExp('/(?sm);.*<Point>/',      $text);
@@ -438,7 +440,9 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             1
         );
 
+        $this->dispatch('/');
         set_current_record('item', $item);
+
         $text = metadata('item', array('Dublin Core', 'Coverage'), array('delimiter' => '; '));
         $this->assertRegExp('/(?sm)<LinearRing>.*;/', $text);
         $this->assertStringEndsWith('; Charlottesville, VA', $text);
@@ -563,8 +567,10 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:18:43 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_158</name><description>No description available</description><Polygon><outerBoundaryIs><LinearRing><coordinates>-10194865.083145,4313188.6314755 -9803507.4983789,3295658.9110849 -9744803.8606641,5017632.2840536 -10194865.083145,4313188.6314755</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark><Placemark><name>OpenLayers.Feature.Vector_182</name><description>No description available</description><LineString><coordinates>-8003262.6084573,5487261.3857724 -10097025.686953,6269976.5553037 -10958012.373438,4724114.0954794</coordinates></LineString></Placemark><Placemark><name>OpenLayers.Feature.Vector_194</name><description>No description available</description><LineString><coordinates>-10958012.373438,4724114.0954794 -10488383.271719,3119547.9979404</coordinates></LineString></Placemark></Folder></kml>|3|-9490421.4305667|3972279.4853711|osm\ncoverage a", 0);
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:53:02 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_451</name><description>No description available</description><Point><coordinates>-7474929.8690234,6739785.6570224</coordinates></Point></Placemark></Folder></kml>|3|-8739209.3930606|4584602.3035698|osm\ncoverage b", 1);
 
+        $this->dispatch('/');
         set_current_record('item', $item);
-        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true));
+
+        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true, 'no_filter' => true, 'no_escape' => true));
         $this->assertCount(2, $covs);
         $this->assertStringStartsWith('<kml ', $covs[0]);
         $this->assertStringEndsWith('coverage a', $covs[0]);
@@ -627,8 +633,10 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             1
         );
 
+        $this->dispatch('/');
         set_current_record('item', $item);
-        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true));
+
+        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true, 'no_filter' => true, 'no_escape' => true));
         $this->assertCount(2, $covs);
         $this->assertStringStartsWith('<kml ', $covs[0]);
         $this->assertStringEndsWith('coverage a', $covs[0]);
@@ -753,8 +761,10 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:18:43 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_158</name><description>No description available</description><Polygon><outerBoundaryIs><LinearRing><coordinates>-10194865.083145,4313188.6314755 -9803507.4983789,3295658.9110849 -9744803.8606641,5017632.2840536 -10194865.083145,4313188.6314755</coordinates></LinearRing></outerBoundaryIs></Polygon></Placemark><Placemark><name>OpenLayers.Feature.Vector_182</name><description>No description available</description><LineString><coordinates>-8003262.6084573,5487261.3857724 -10097025.686953,6269976.5553037 -10958012.373438,4724114.0954794</coordinates></LineString></Placemark><Placemark><name>OpenLayers.Feature.Vector_194</name><description>No description available</description><LineString><coordinates>-10958012.373438,4724114.0954794 -10488383.271719,3119547.9979404</coordinates></LineString></Placemark></Folder></kml>|3|-9490421.4305667|3972279.4853711|osm\ncoverage a", 0);
         $this->_addFeature($utils, $table, $item, "<kml xmlns=\"http://earth.google.com/kml/2.0\"><Folder><name>OpenLayers export</name><description>Exported on Thu Mar 07 2013 11:53:02 GMT-0500 (EST)</description><Placemark><name>OpenLayers.Feature.Vector_451</name><description>No description available</description><Point><coordinates>-7474929.8690234,6739785.6570224</coordinates></Point></Placemark></Folder></kml>|3|-8739209.3930606|4584602.3035698|osm\ncoverage b", 1);
 
+        $this->dispatch('/');
         set_current_record('item', $item);
-        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true));
+
+        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true, 'no_filter' => true, 'no_escape' => true));
         $this->assertCount(2, $covs);
         $this->assertTrue(NeatlineFeatures_Functions::isKmlCoverage($covs[0]));
         $this->assertTrue(NeatlineFeatures_Functions::isKmlCoverage($covs[1]));
@@ -815,8 +825,10 @@ class NeatlineFeatures_Utils_View_Test extends NeatlineFeatures_Test
             1
         );
 
+        $this->dispatch('/');
         set_current_record('item', $item);
-        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true));
+
+        $covs = metadata('item', array('Dublin Core', 'Coverage'), array('all' => true, 'no_filter' => true, 'no_escape' => true));
         $this->assertCount(2, $covs);
         $this->assertTrue(NeatlineFeatures_Functions::isKmlCoverage($covs[0]));
         $this->assertFalse(NeatlineFeatures_Functions::isKmlCoverage($covs[1]));
