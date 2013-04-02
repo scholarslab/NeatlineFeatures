@@ -122,7 +122,7 @@
       this.wire()
 
     _buildMap: (parent, id_prefix) ->
-      $('.input', parent)
+      $(parent)
         .addClass('nlfeatures')
         .addClass('nlfeatures-edit')
         .before """
@@ -135,10 +135,10 @@
           """
 
     _buildInputs: (parent, id_prefix, name_prefix) ->
-      $('.input textarea', parent)
-        .attr('id',   "#{id_prefix}free")
-        .attr('name', "#{name_prefix}[free]")
+      # <div class="input-block"><div class="input"><textarea name="Elements[38][0][text]" id="Elements-38-0-text" rows="3" cols="50"></textarea></div><div class="controls"><input type="submit" name="" value="Remove" class="remove-element red button"></div><label class="use-html">Use HTML<input type="hidden" name="Elements[38][0][html]" value="0"><input type="checkbox" name="Elements[38][0][html]" id="Elements-38-0-html" value="1" class="use-html-checkbox"></label></div>
+      $(parent)
         .after """
+          <textarea name=#{name_prefix}[free]" id="#{id_prefix}free" rows="3" cols="50"></textarea>
           <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
@@ -148,7 +148,7 @@
           """
 
     _buildUseMap: (parent, id_prefix, name_prefix, use_map) ->
-      $('.use-html', parent)
+      $('.use-html', parent.parent().parent())
         .after """
             <label class="use-mapon">#{use_map}<input type="hidden" name="#{name_prefix}[mapon]" value="0" />
               <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
@@ -156,10 +156,11 @@
           """
 
     _populateFields: (parent, id_prefix) ->
+      grand = parent.parent()
       @fields =
-        map_container  : parent.find ".map-container"
+        map_container  : grand.find ".map-container"
         map            : $ "##{id_prefix}map"
-        map_tools      : parent.find ".nlfeatures-map-tools"
+        map_tools      : grand.find ".nlfeatures-map-tools"
         mapon          : $ "##{id_prefix}mapon"
         text           : $ "##{id_prefix}text"
         free           : $ "##{id_prefix}free"
@@ -170,7 +171,7 @@
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
         base_layer     : $ "##{id_prefix}base_layer"
-        flash          : parent.find ".nlflash"
+        flash          : grand.find ".nlflash"
 
     build: ->
       el          = $ @widget.element
