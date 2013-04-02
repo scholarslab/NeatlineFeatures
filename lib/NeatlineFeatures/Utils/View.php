@@ -438,7 +438,7 @@ class NeatlineFeatures_Utils_View
         $els   = $_POST['Elements'][$this->getElementId()];
 
         if (isset($this->_inputNameStem) &&
-            strpos($this->_inputNameStem, "Elements") == 0) {
+            strpos($this->_inputNameStem, "Elements") === 0) {
             $j = intval(substr(
                 $this->_inputNameStem,
                 13,
