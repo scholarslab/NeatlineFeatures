@@ -402,8 +402,11 @@ class NeatlineFeatures_Utils_View
 
         if ($this->isPosted()) {
             try {
-                $isHtml = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$this->getIndex()]['html'];
+                $container = $_POST['Elements'][$this->getElementId()];
+                $i         = $this->getIndex();
+                if (array_key_exists($i, $container)) {
+                    $isHtml = (bool)$container[$i]['html'];
+                }
             } catch (Exception $e) {
                 $isHtml = 0;
             }
@@ -434,15 +437,26 @@ class NeatlineFeatures_Utils_View
         $etext = $this->getElementText();
         $els   = $_POST['Elements'][$this->getElementId()];
 
-        while (array_key_exists($i, $els)) {
-            $text    = $els[$i]['text'];
-            if ($etext->text == $els[$i]['text']) {
-                $j            = $i;
-                $this->_index = $j;
-                break;
-            }
+        if (isset($this->_inputNameStem) &&
+            strpos($this->_inputNameStem, "Elements") == 0) {
+            $j = intval(substr(
+                $this->_inputNameStem,
+                13,
+                strlen($this->_inputNameStem) - 14
+            ));
+        } else if (is_null($etext)) {
+            $j = count($els) - 1;
+        } else {
+            while (array_key_exists($i, $els)) {
+                $text    = $els[$i]['text'];
+                if ($etext->text == $els[$i]['text']) {
+                    $j            = $i;
+                    $this->_index = $j;
+                    break;
+                }
 
-            $i++;
+                $i++;
+            }
         }
 
         return $j;
@@ -464,10 +478,12 @@ class NeatlineFeatures_Utils_View
 
         if ($this->isPosted()) {
             $index = is_null($index) ? $this->_findIndex() : $index;
-            try {
-                $isMap = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$index]['mapon'];
-            } catch (Exception $e) {
+            $el    = $_POST['Elements'][$this->getElementId()];
+            if (array_key_exists($index, $el)) {
+                try {
+                    $isMap = (bool)$el[$index]['mapon'];
+                } catch (Exception $e) {
+                }
             }
         } else {
             $etext = $this->getElementText();
@@ -595,7 +611,7 @@ class NeatlineFeatures_Utils_View
             $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
-            $p          = $post[$i];
+            $p          = array_key_exists($i, $post) ? $post[$i] : array();
             $geo        = isset($p['geo'])        ? $p['geo']        : null;
             $zoom       = isset($p['zoom'])       ? $p['zoom']       : null;
             $center_lon = isset($p['center_lon']) ? $p['center_lon'] : null;

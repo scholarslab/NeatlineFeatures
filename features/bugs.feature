@@ -36,11 +36,11 @@ Feature: Bug Fix Tests
   Scenario: Editing buttons should have unique IDs.
     Given I am logged into the admin console
     When I click "Add a new item"
-    And I click "Use Map" checkbox in "#Elements-38-0-widget"
-    And I should see "#Elements-38-0-widget div.olMap"
+    And I click "Use Map" checkbox in the path ".//*[@id='Elements-38-0-widget']/../.."
+    And I should see "#Elements-38-0-map"
     And I click on "add_element_38"
-    And I click "Use Map" checkbox in "#Elements-38-1-widget"
-    And I should see "#Elements-38-1-widget div.olMap"
+    And I click "Use Map" checkbox in the path ".//*[@id='Elements-38-1-widget']/../.."
+    And I should see "#Elements-38-1-map"
     Then I should see "#Elements-38-0-drag-button"
     And I wait 5 seconds
     And I should see "#Elements-38-1-drag-button"
@@ -50,7 +50,7 @@ Feature: Bug Fix Tests
     Given I am logged into the admin console
     And I click "Add a new item"
     And I enter "Cucumber: Viewport overflow" for the "Elements-50-0-text"
-    And I click "Use Map" checkbox in "#Elements-38-0-widget"
+    And I click "Use Map" checkbox in the path ".//*[@id='Elements-38-0-widget']/../.."
     And I move "#Elements-38-0-map" to "-111.883333, 40.75"
     And I zoom "#Elements-38-0-map" to "10"
     And I draw a point on "div.olMap"

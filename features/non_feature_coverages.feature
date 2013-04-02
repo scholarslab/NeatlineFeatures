@@ -33,10 +33,10 @@ Feature: Non-Feature Coverages
     And I click "Add a new item"
     And I enter "Cucumber: New Coverage, Existing Map" for the "Elements-50-0-text"   # Title
     And I enter "New Coverage, Existing Map" for the "Elements-49-0-text"             # Subject
-    And I click "Use Map" checkbox in "#Elements-38-0-widget"
+    And I click "Use Map" checkbox in the path ".//*[@id='Elements-38-0-widget']/../.."
     And I draw a point on "div#Elements-38-0-map.olMap"
     When I click on "add_element_38"
-    Then I should see "#Elements-38-1-widget"
-    And I should see a map in "#Elements-38-0-widget"
+    Then I should see "#Elements-38-1-free"
+    And I should see "#Elements-38-0-map"
     And "Elements-38-0-mapon" should be checked
 

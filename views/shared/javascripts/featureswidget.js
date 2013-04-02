@@ -60,7 +60,7 @@
       };
 
       BaseWidget.prototype.value = function() {
-        return this.widget.options.value;
+        return this.widget.options.values;
       };
 
       BaseWidget.prototype.initMap = function() {
@@ -83,7 +83,7 @@
         local_options.zoom = (_ref1 = (input != null ? input.zoom : void 0)) != null ? _ref1 : null;
         local_options.center = (_ref2 = (input != null ? input.center : void 0)) != null ? _ref2 : null;
         local_options.base_layer = (_ref3 = (input != null ? input.base_layer : void 0)) != null ? _ref3 : null;
-        all_options = $.extend(true, {}, this.widget.options.map_options, local_options);
+        all_options = $.extend(true, {}, this.widget.options.map_options, this.widget.options.values, local_options);
         this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
         return this.nlfeatures;
       };
@@ -208,7 +208,7 @@
 
       EditWidget.prototype.populate = function(values) {
         if (values == null) {
-          values = this.widget.options.values[this.n];
+          values = this.widget.options.values;
         }
         if (values != null) {
           this.fields.html.prop('checked', +values.is_html);

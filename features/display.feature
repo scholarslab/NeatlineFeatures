@@ -37,7 +37,6 @@ Feature: Display coverage data on Item Pages
     And I should see text "A pointed question" in "#dublin-core-coverage"
     But I should not see text "kml" in "#dublin-core-coverage .nlfeatures"
 
-  @current
   @kml
   @javascript
   Scenario: Display multimodal HTML coverages on the item page

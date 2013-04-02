@@ -52,7 +52,7 @@
     $: (selector) ->
       $(selector, @parent)
 
-    value: -> @widget.options.value
+    value: -> @widget.options.values
 
     initMap: ->
       map   = @fields.map
@@ -71,7 +71,7 @@
       local_options.center     = (input?.center)     ? null
       local_options.base_layer = (input?.base_layer) ? null
 
-      all_options = $.extend true, {}, @widget.options.map_options, local_options
+      all_options = $.extend true, {}, @widget.options.map_options, @widget.options.values, local_options
       @nlfeatures = map
         .nlfeatures(all_options)
         .data('nlfeatures')
@@ -211,7 +211,7 @@
       @fields.mapon.change => this._onUseMap()
       @fields.html.change  => this._updateTinyEvents()
 
-    populate: (values=@widget.options.values[@n]) ->
+    populate: (values=@widget.options.values) ->
       if values?
         @fields.html.prop        'checked', (+values.is_html)
         @fields.mapon.prop       'checked', (+values.is_map)
