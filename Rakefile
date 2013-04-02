@@ -29,7 +29,7 @@ namespace :watch do
 
   desc 'This watches the CSS files.'
   task :sass do
-    sh %{sass --watch views/shared/css/nlfeatures.scss:views/shared/css/nlfeatures.css}
+    sh %{sass --watch _sass/shared/css/nlfeatures.scss:views/shared/css/nlfeatures.css}
   end
 
   desc 'This watches coffee script files.'
