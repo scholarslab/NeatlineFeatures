@@ -109,6 +109,10 @@ $border2: #FFF;
         svg {
             display: block;
         }
+        .olControlLayerSwitcher .olButton {
+            line-height: 1em;
+            float: none;
+        }
     }
     .primary {
         background-color: #0064cd;
