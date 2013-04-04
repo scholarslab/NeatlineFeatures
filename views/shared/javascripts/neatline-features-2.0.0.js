@@ -612,7 +612,7 @@
                 overFeature: function(feature) {
                     // This checks for ad-hoc features created by OL for edit
                     // handles on a real feature.
-                    if (feature.geometry.parent !== null ||
+                    if (feature.geometry.parent !== null &&
                         feature.geometry.parent !== undefined) {
                         return;
                     }
