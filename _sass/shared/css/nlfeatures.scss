@@ -88,7 +88,7 @@ $border2: #FFF;
         padding: 1.5em;
     }
     .nlfeatures-map-tools {
-        width: 100%;
+        width: 99%;
         height: 45px;
         padding-top: 7px;
     }
@@ -104,10 +104,14 @@ $border2: #FFF;
     }
     .olMap {
         border: 1px solid $border2;
-        width: 100%;
+        width: 99%;
         height: 360px;
         svg {
             display: block;
+        }
+        .olControlLayerSwitcher .olButton {
+            line-height: 1em;
+            float: none;
         }
     }
     .primary {
@@ -163,20 +167,26 @@ $border2: #FFF;
     }
     .nlflash {
         display: none;
-        -moz-border-radius: 5px;
-        -o-border-radius: 5px;
-        -ms-border-radius: 5px;
-        -khtml-border-radius: 5px;
-        border-radius: 5px;
+        // -moz-border-radius: 5px;
+        // -o-border-radius: 5px;
+        // -ms-border-radius: 5px;
+        // -khtml-border-radius: 5px;
+        margin-top: -3px;
+        // border-radius: 5px;
         border: 1px solid #333;
         background: #eae9db;
         color: #333;
         padding: 2px 4px;
-        width: 25%;
+        width: 22%;
         opacity: 0.8;
     }
     label.olButton {
         color: #ddd;
     }
+
+}
+.field .use-mapon {
+    clear: none !important;
+    line-height: 2.125em;
 }
 

@@ -16,7 +16,7 @@
 /**
  * This is a model class for the neatline_feature records.
  **/
-class NeatlineFeature extends Omeka_Record
+class NeatlineFeature extends Omeka_Record_AbstractRecord
 {
 
     //{{{ Properties

@@ -13,8 +13,6 @@
  */
 ?><?php
 
-require_once APP_DIR . '/helpers/Functions.php';
-
 /**
  * This contructs the view and holds a bunch of utility methods.
  *
@@ -72,35 +70,51 @@ class NeatlineFeatures_Utils_View
      **/
     private $_elementText;
 
+    /**
+     * A cached copy of the current NeatlineFeature
+     *
+     * @var NeatlineFeature
+     **/
+    private $_feature;
+
+    /**
+     * The index of the element in the form.
+     *
+     * @var int
+     **/
+    private $_index;
+
+    public $debug;
+
     function __construct()
     {
+        $this->debug = false;
     }
 
     /**
      * This sets the options necessary to create the edit view.
      *
-     * @param string       $inputNameStem The stem of the input name.
-     * @param string       $value         The initial value for the input.
-     * @param array        $options       Additional options.
-     * @param Omeka_Record $record        The element's record.
-     * @param Element      $element       The Element.
+     * @param Omeka_Record $record    The element's record.
+     * @param Element      $element   The Element.
+     * @param string       $value     The value of the element.
+     * @param string       $name_stem The @id name stem for the input element.
+     * @param int          $index     The index of the element in the list of
+     *                                coverage fields for the item.
      *
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function setEditOptions($inputNameStem, $value, $options, $record,
-        $element)
+    public function setEditOptions($record, $element, $value, $name_stem, $index)
     {
-        $this->_inputNameStem = $inputNameStem;
-        $this->_value         = $value;
-        $this->_options       = $options;
         $this->_record        = $record;
         $this->_element       = $element;
-        $this->_elementText   = $this->findElementText($record, $element, $value);
+        $this->_value         = $value;
+        $this->_inputNameStem = $name_stem;
+        $this->_index         = $index;
     }
 
     /**
-     * This finds the element text from the value of the element, record, and 
+     * This finds the element text from the value of the element, record, and
      * value.
      *
      * @param $record  Omeka_Record The record associated with the ElementText.
@@ -119,10 +133,13 @@ class NeatlineFeatures_Utils_View
                 ->getTable('ElementText');
             $search = $table
                 ->getSelect()
-                ->where('record_id=?',      $record->id)
-                ->where('record_type_id=?', $element->data_type_id)
-                ->where('element_id=?',     $element->id)
-                ->where('text=?',           is_null($value) ? '' : $value);
+                ->where('record_id=?',   $record->id)
+                ->where('element_id=?',  $element->id)
+                ->where('text=?',        is_null($value) ? '' : $value);
+            if (!is_null($element->data_type_id)) {
+                $search = $search
+                    ->where('record_type=?', $element->data_type_id);
+            }
             $etext = $table->fetchObject($search);
         }
 
@@ -146,11 +163,14 @@ class NeatlineFeatures_Utils_View
         $this->_text        = $text;
         $this->_record      = $record;
         $this->_elementText = $elementText;
+        if (!is_null($elementText)) {
+            $this->_value   = $elementText->text;
+        }
         $this->createInputNameStem();
     }
 
     /**
-     * This sets the input name stem from the element text, if it's available. 
+     * This sets the input name stem from the element text, if it's available.
      * Otherwise, it sets a random number.
      *
      * @return string
@@ -158,6 +178,10 @@ class NeatlineFeatures_Utils_View
      **/
     public function createInputNameStem()
     {
+        if (isset($this->_inputNameStem)) {
+            return $this->_inputNameStem;
+        }
+
         $stem = NULL;
 
         if (is_null($this->_elementText)) {
@@ -176,7 +200,7 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This returns either the valid nlfeature object for this ElementText or 
+     * This returns either the valid nlfeature object for this ElementText or
      * its own.
      *
      * @return NeatlineFeature
@@ -184,15 +208,26 @@ class NeatlineFeatures_Utils_View
      **/
     public function getNeatlineFeature()
     {
+        if (isset($this->_feature)) {
+            return $this->_feature;
+        }
         $feature = null;
         $etext = $this->getElementText();
+
         if (is_null($etext)) {
-            $feature = new NeatlineFeature();
+            if (isset($this->_value) && !is_null($this->_value)) {
+                $feature = get_db()
+                    ->getTable('NeatlineFeature')
+                    ->getRecordByText($this->_value);
+            } else {
+                $feature = new NeatlineFeature();
+            }
         } else {
             $feature = get_db()
                 ->getTable('NeatlineFeature')
                 ->getRecordByElementText($etext);
         }
+        $this->_feature = $feature;
         return $feature;
     }
 
@@ -267,13 +302,17 @@ class NeatlineFeatures_Utils_View
      **/
     public function getIndex()
     {
-        $matches = array();
-        $count   = preg_match(
-            '/^Elements\[\d+\]\[(\d+)\]/',
-            $this->_inputNameStem,
-            $matches
-        );
-        return ($count != 0 ? $matches[1] : NULL);
+        if (!isset($this->_index)) {
+            $matches = array();
+            $count   = preg_match(
+                '/^Elements\[\d+\]\[(\d+)\]/',
+                $this->_inputNameStem,
+                $matches
+            );
+            $this->_index = ($count != 0 ? $matches[1] : NULL);
+        }
+
+        return $this->_index;
     }
 
     /**
@@ -297,10 +336,12 @@ class NeatlineFeatures_Utils_View
     public function getPost()
     {
         $post = null;
-        $eid  = (string)$this->getElementId();
-        if (array_key_exists('Elements', $_POST) &&
-            array_key_exists($eid, $_POST['Elements'])) {
-            $post = $_POST['Elements'][$eid];
+        if (count($_POST) > 0) {
+            $eid  = (string)$this->getElementId();
+            if (array_key_exists('Elements', $_POST) &&
+                array_key_exists($eid, $_POST['Elements'])) {
+                    $post = $_POST['Elements'][$eid];
+                }
         }
         return $post;
     }
@@ -308,36 +349,40 @@ class NeatlineFeatures_Utils_View
     /**
      * This returns the value of the 'html' field from the POST request.
      *
+     * @param $index int The index of the value to return.
+     *
      * @return string|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function getHtmlValue()
+    public function getHtmlValue($index=null)
     {
         $edata = $_POST['Elements'][$this->_element->id];
-        $value = $edata[$this->getIndex()]['html'];
+        $index = is_null($index) ? $this->getIndex() : $index;
+        $value = $edata[$index]['html'];
         return $value;
     }
 
     /**
-     * This returns the ElementText for the current element and index or NULL.
+     * This returns the ElementText instances for the current element or NULL.
      *
-     * @return ElementText|NULL
+     * @return array of ElementText|NULL
      * @author Eric Rochester <erochest@virginia.edu>
      **/
     public function getElementText()
     {
-        $text  = NULL;
+        $text = NULL;
 
         if (isset($this->_elementText) && ! is_null($this->_elementText)) {
             $text = $this->_elementText;
         } else {
-            $index = $this->getIndex();
-            $texts = $this->_record->getTextsByElement($this->_element);
-
-            if ($index !== NULL) {
-                if (array_key_exists($index, $texts)) {
-                    $text = $texts[$index];
-                }
+            $index     = $this->getIndex();
+            $textTable = get_db()->getTable('ElementText');
+            $select    = $textTable
+                ->getSelectForRecord($this->_record->id, get_class($this->_record))
+                ->where('element_texts.element_id=?', (int)$this->_element->id);
+            $texts     = $textTable->fetchObjects($select);
+            if (array_key_exists($index, $texts)) {
+                $text = $texts[$index];
             }
         }
 
@@ -345,11 +390,11 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This predicate tests whether this element currently is marked to have
+     * This predicate tests whether this element currently is marked to have 
      * HTML data.
      *
      * @return bool
-     * @author Eric Rochester <erochest@virginia.edu>
+     * @author Eric Rochester
      **/
     public function isHtml()
     {
@@ -357,8 +402,11 @@ class NeatlineFeatures_Utils_View
 
         if ($this->isPosted()) {
             try {
-                $isHtml = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$this->getIndex()]['html'];
+                $container = $_POST['Elements'][$this->getElementId()];
+                $i         = $this->getIndex();
+                if (array_key_exists($i, $container)) {
+                    $isHtml = (bool)$container[$i]['html'];
+                }
             } catch (Exception $e) {
                 $isHtml = 0;
             }
@@ -373,22 +421,69 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This predicate tests whether this element currently is marked to have 
+     * This attempts to find the index in _POST, based on the current element 
+     * text.
+     *
+     * This also caches any matching NeatlineFeature objects as 
+     * $this->_feature.
+     *
+     * @return $index int|null
+     * @author Eric Rochester
+     **/
+    private function _findIndex()
+    {
+        $i     = 0;
+        $j     = null;
+        $etext = $this->getElementText();
+        $els   = $_POST['Elements'][$this->getElementId()];
+
+        if (isset($this->_inputNameStem) &&
+            strpos($this->_inputNameStem, "Elements") === 0) {
+            $j = intval(substr(
+                $this->_inputNameStem,
+                13,
+                strlen($this->_inputNameStem) - 14
+            ));
+        } else if (is_null($etext)) {
+            $j = count($els) - 1;
+        } else {
+            while (array_key_exists($i, $els)) {
+                $text    = $els[$i]['text'];
+                if ($etext->text == $els[$i]['text']) {
+                    $j            = $i;
+                    $this->_index = $j;
+                    break;
+                }
+
+                $i++;
+            }
+        }
+
+        return $j;
+    }
+
+    /**
+     * This predicate tests whether this element currently is marked to have
      * map data.
+     *
+     * @param $index integer|null This is the index of the element in the
+     * output/input.
      *
      * @return bool
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function isMap()
+    public function isMap($index=null)
     {
         $isMap = 0;
 
         if ($this->isPosted()) {
-            try {
-                $isMap = (bool)$_POST['Elements'][$this->getElementId()]
-                    [$this->getIndex()]['mapon'];
-            } catch (Exception $e) {
-                $isMap = 0;
+            $index = is_null($index) ? $this->_findIndex() : $index;
+            $el    = $_POST['Elements'][$this->getElementId()];
+            if (array_key_exists($index, $el)) {
+                try {
+                    $isMap = (bool)$el[$index]['mapon'];
+                } catch (Exception $e) {
+                }
             }
         } else {
             $etext = $this->getElementText();
@@ -422,17 +517,12 @@ class NeatlineFeatures_Utils_View
      **/
     public function getView()
     {
-        $isHtml    = $this->isHtml();
-        $isMap     = $this->isMap();
-        $etext     = $this->_elementText;
+        $isHtml = $this->isHtml();
+        $isMap  = $this->isMap();
+        $etext  = $this->_elementText;
 
         // Pull a fresh $value, if we can.
-        $value = '';
-        if (! is_null($etext)) {
-            $value = $etext->getText();
-        } else {
-            $value = $this->_text;
-        }
+        $value = is_null($etext) ? $this->_text : $etext->getText();
 
         if (! is_null($etext) && is_null($etext->record_id)) {
             // There's no data for this.
@@ -440,8 +530,8 @@ class NeatlineFeatures_Utils_View
         } else if ((bool)$isMap) {
             $view = $this->getViewMap($isHtml);
         } else {
-            if (($i = strpos($value, "\r\n")) != FALSE) {
-                $view = substr($value, $i + 2);
+            if (($i = strpos($value, "\n")) != FALSE) {
+                $view = substr($value, $i + 1);
             } else {
                 $view = $value;
             }
@@ -454,7 +544,6 @@ class NeatlineFeatures_Utils_View
      * This returns the HTML string for the Map widget.
      *
      * @param $isHtml bool Does the text value contain HTML?
-     * @param $isMap  bool Should the text be 
      *
      * @return string
      * @author Eric Rochester <erochest@virginia.edu>
@@ -465,11 +554,32 @@ class NeatlineFeatures_Utils_View
     }
 
     /**
-     * This actually handles setting up the environment and passing execution 
+     * @param $feature     NeatlineFeature
+     * @param $elementText ElementText
+     * @return array
+     *
+     **/
+    private function _elementTextToFeature($feature, $elementText) {
+        return array(
+            'is_map'     => $feature->is_map,
+            'geo'        => $feature->geo,
+            'zoom'       => $feature->zoom,
+            'center'     => array(
+                'lon'    => $feature->center_lon,
+                'lat'    => $feature->center_lat
+            ),
+            'base_layer' => $feature->base_layer,
+            'is_html'    => $elementText->html,
+            'text'       => $elementText->text
+        );
+    }
+
+    /**
+     * This actually handles setting up the environment and passing execution
      * off to a PHP-HTML file.
      *
      * @param $isHtml bool   Does the text value contain HTML?
-     * @param $isMap  bool   Should the text be .
+     * @param $isMap  bool   Does the features table have map coverage data?
      * @param $view   string The mode to put the widget in.
      *
      * @return string
@@ -482,6 +592,9 @@ class NeatlineFeatures_Utils_View
         $options       = $this->_options;
         $record        = $this->_record;
         $element       = $this->_element;
+        $post          = $this->getPost();
+        $features      = array();
+        $view_id       = '';
 
         if (isset($this->_value) && !is_null($this->_value)) {
             $value = $this->_value;
@@ -489,7 +602,6 @@ class NeatlineFeatures_Utils_View
             $value = $this->_text;
         }
 
-        $post = $this->getPost();
         if (is_null($post)) {
             $feature    = $this->getNeatlineFeature();
             $geo        = $feature->geo;
@@ -499,15 +611,16 @@ class NeatlineFeatures_Utils_View
             $base_layer = $feature->base_layer;
         } else {
             $i          = $this->getIndex();
-            $geo        = $post[$i]['geo'];
-            $zoom       = $post[$i]['zoom'];
-            $center_lon = $post[$i]['center_lon'];
-            $center_lat = $post[$i]['center_lat'];
-            $base_layer = $post[$i]['base_layer'];
+            $p          = array_key_exists($i, $post) ? $post[$i] : array();
+            $geo        = isset($p['geo'])        ? $p['geo']        : null;
+            $zoom       = isset($p['zoom'])       ? $p['zoom']       : null;
+            $center_lon = isset($p['center_lon']) ? $p['center_lon'] : null;
+            $center_lat = isset($p['center_lat']) ? $p['center_lat'] : null;
+            $base_layer = isset($p['base_layer']) ? $p['base_layer'] : null;
         }
 
         ob_start();
-        include NEATLINE_FEATURES_PLUGIN_DIR . '/views/shared/coverage.php';
+        include NEATLINE_FEATURES_PLUGIN_DIR . "/views/shared/coverage.php";
         return ob_get_clean();
     }
 

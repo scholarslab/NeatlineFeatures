@@ -10,19 +10,19 @@ Feature: Draw Features on a Map
 
   Scenario: Coverage has no map displayed by default
     Given I am logged into the admin console
-    When I click "Add a new item to your archive"
+    When I click "Add a new item"
     And I wait 5 seconds
     Then I should not see a map in "#element-38" 
 
   Scenario: Coverage has a "Use Map" checkbox
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     When I click "Use Map" checkbox in "#element-38"
     Then I should see a map in "#element-38"
 
   Scenario: Coverage Has a Map
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     When I click "Use Map" checkbox in "#element-38"
     Then I should see a map in "#element-38"
     And I should see "#Elements-38-0-free"
@@ -32,7 +32,7 @@ Feature: Draw Features on a Map
   @javascript
   Scenario: Draw Point on a Map
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a point on "div.olMap"
     Then a point is defined in "#Elements-38-0-geo"
@@ -41,7 +41,7 @@ Feature: Draw Features on a Map
   @javascript
   Scenario: Draw Line on a Map
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I click "Use Map" checkbox in "#element-38"
     When I draw a line on "div.olMap"
     Then a line is defined in "#Elements-38-0-geo"
@@ -50,7 +50,7 @@ Feature: Draw Features on a Map
   @javascript
   Scenario: Save Data Drawn on Coverage Map
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Draw On Coverage Map" for the "Elements-50-0-text"     # Title
     And I enter "Draw On Coverage Map" for the "Elements-49-0-text"               # Subject
     And I click "Use Map" checkbox in "#element-38"
@@ -65,7 +65,7 @@ Feature: Draw Features on a Map
   @javascript
   Scenario: 'Use Map' True should Persist
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Use Map True should Persist" for the "Elements-50-0-text"
     And I enter "Use Map True should Persist" for the "Elements-49-0-text"
     And I click "Use Map" checkbox in "#element-38"
@@ -73,18 +73,18 @@ Feature: Draw Features on a Map
     And I draw a line on "div.olMap"
     And I click on "Add Item"
     And I click "Use Map True should Persist"
-    And I click "Edit this Item"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
 
   Scenario: 'Use Map' False should Persist
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "Cucumber: Use Map False should Persist" for the "Elements-50-0-text"
     And I enter "Use Map False should Persist" for the "Elements-49-0-text"
     And I click on "Add Item"
     And I click "Use Map False should Persist"
-    And I click "Edit this Item"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should not be checked
     And I should not see a map in "#element-38"
 
@@ -92,15 +92,15 @@ Feature: Draw Features on a Map
   @javascript
   Scenario: Free Text should not Contain KML
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
-    And I enter "Cucumber: Use Map True should Persist" for the "Elements-50-0-text"
-    And I enter "Use Map True should Persist" for the "Elements-49-0-text"
+    And I click "Add a new item"
+    And I enter "Cucumber: Free Text should not Contain KML" for the "Elements-50-0-text"
+    And I enter "Free Text should not Contain KML" for the "Elements-49-0-text"
     And I click "Use Map" checkbox in "#element-38"
     And I draw a point on "div.olMap"
     And I draw a line on "div.olMap"
     And I click on "Add Item"
-    And I click "Use Map True should Persist"
-    And I click "Edit this Item"
+    And I click "Free Text should not Contain KML"
+    And I click "Edit"
     Then "Elements-38-0-mapon" should be checked
     And I should see a map in "#element-38"
     And I should see that "#Elements-38-0-free" does not contain "kml"
@@ -108,6 +108,6 @@ Feature: Draw Features on a Map
   # This fails since GeoLocation isn't turned on automatically in the browser.
   #Scenario: Map Location Should Default to the User's Location
     #Given I am logged into the admin console
-    #When I click "Add a new item to your archive"
+    #When I click "Add a new item"
     #Then "#Elements-38-0-map" should center on my location
 

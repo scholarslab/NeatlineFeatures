@@ -11,6 +11,5 @@ if (!defined('NEATLINE_FEATURES_PLUGIN_DIR')) {
 }
 
 require_once $omekaDir . '/application/tests/bootstrap.php';
-require_once $omekaDir . '/plugins/NeatlineFeatures/NeatlineFeaturesPlugin.php';
 require_once 'NeatlineFeatures_Test.php';
 

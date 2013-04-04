@@ -1,106 +1,74 @@
-/* line 35, ../../../_sass/shared/css/nlfeatures.scss */
 .nlfeatures .nlfeatures-edit {
   color: #fafafa;
-  background-color: #382e22;
-}
-/* line 39, ../../../_sass/shared/css/nlfeatures.scss */
+  background-color: #382e22; }
 .nlfeatures .nlfeatures-edit-nav-menu {
   background: transparent;
-  border-left: 1px solid white;
-}
-/* line 42, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul {
-  margin-bottom: 0px;
-  border-left: 1px solid white;
-  background: transparent;
-  float: left;
-  margin-left: 1em;
-}
-/* line 48, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul li {
-  background-color: #2e261c;
-  border-bottom-color: #2e261c;
-  color: #dddddd;
-  list-style-type: none;
-  display: block;
-  float: left;
-  width: 75px;
-  padding: 1em;
-  margin: 0px;
-  border-top: 1px solid white;
-  border-right: 1px solid white;
-}
-/* line 60, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul li a {
-  color: #dddddd;
-  text-decoration: none;
-  font-size: 0.9em;
-}
-/* line 66, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul li:hover {
-  background-color: #382e22;
-  cursor: pointer;
-}
-/* line 70, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul li.selected {
-  background-color: #eae9db;
-  border-bottom-color: #eae9db;
-  color: black;
-}
-/* line 72, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-menu ul li.selected a {
-  color: black;
-}
-/* line 78, ../../../_sass/shared/css/nlfeatures.scss */
+  border-left: 1px solid white; }
+  .nlfeatures .nlfeatures-edit-nav-menu ul {
+    margin-bottom: 0px;
+    border-left: 1px solid white;
+    background: transparent;
+    float: left;
+    margin-left: 1em; }
+    .nlfeatures .nlfeatures-edit-nav-menu ul li {
+      background-color: #2e261c;
+      border-bottom-color: #2e261c;
+      color: #dddddd;
+      list-style-type: none;
+      display: block;
+      float: left;
+      width: 75px;
+      padding: 1em;
+      margin: 0px;
+      border-top: 1px solid white;
+      border-right: 1px solid white; }
+      .nlfeatures .nlfeatures-edit-nav-menu ul li a {
+        color: #dddddd;
+        text-decoration: none;
+        font-size: 0.9em; }
+    .nlfeatures .nlfeatures-edit-nav-menu ul li:hover {
+      background-color: #382e22;
+      cursor: pointer; }
+    .nlfeatures .nlfeatures-edit-nav-menu ul li.selected {
+      background-color: #eae9db;
+      border-bottom-color: #eae9db;
+      color: black; }
+      .nlfeatures .nlfeatures-edit-nav-menu ul li.selected a {
+        color: black; }
 .nlfeatures .nlfeatures-edit-nav-tools {
-  float: right;
-}
-/* line 80, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .nlfeatures-edit-nav-tools li {
-  width: 20px;
-}
-/* line 84, ../../../_sass/shared/css/nlfeatures.scss */
+  float: right; }
+  .nlfeatures .nlfeatures-edit-nav-tools li {
+    width: 20px; }
 .nlfeatures .nlfeatures-edit-body {
   clear: both;
   color: black;
   background-color: #eae9db;
-  padding: 1.5em;
-}
-/* line 90, ../../../_sass/shared/css/nlfeatures.scss */
+  padding: 1.5em; }
 .nlfeatures .nlfeatures-map-tools {
-  width: 100%;
+  width: 99%;
   height: 45px;
-  padding-top: 7px;
-}
-/* line 24, ../../../_sass/shared/css/nlfeatures.scss */
+  padding-top: 7px; }
 .nlfeatures .text-container:after {
   content: ".";
   display: block;
   clear: both;
   visibility: hidden;
   line-height: 0;
-  height: 0;
-}
-/* line 98, ../../../_sass/shared/css/nlfeatures.scss */
+  height: 0; }
 .nlfeatures .map-container {
-  margin-top: 10px;
-}
-/* line 102, ../../../_sass/shared/css/nlfeatures.scss */
+  margin-top: 10px; }
 .nlfeatures .nlfeatures-edit-raw,
 .nlfeatures .nlfeatures-edit-map {
-  background: transparent;
-}
-/* line 105, ../../../_sass/shared/css/nlfeatures.scss */
+  background: transparent; }
 .nlfeatures .olMap {
   border: 1px solid white;
-  width: 100%;
-  height: 360px;
-}
-/* line 109, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures .olMap svg {
-  display: block;
-}
-/* line 113, ../../../_sass/shared/css/nlfeatures.scss */
+  width: 99%;
+  height: 360px; }
+  .nlfeatures .olMap svg {
+    display: block; }
+  .nlfeatures .olMap .olControlLayerSwitcher .olButton {
+    line-height: 1em;
+    float: none; }
 .nlfeatures .primary {
   background-color: #0064cd;
   background-repeat: repeat-x;
@@ -114,13 +82,9 @@
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   border: 1px solid #004b9a;
-  border-bottom-color: #003f81;
-}
-/* line 128, ../../../_sass/shared/css/nlfeatures.scss */
+  border-bottom-color: #003f81; }
 .nlfeatures .primary:hover {
-  color: #fff;
-}
-/* line 131, ../../../_sass/shared/css/nlfeatures.scss */
+  color: #fff; }
 .nlfeatures .disabled {
   background-color: #cccccc;
   background-repeat: repeat-x;
@@ -134,9 +98,7 @@
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   border: 1px solid #004b9a;
-  border-bottom-color: #003f81;
-}
-/* line 146, ../../../_sass/shared/css/nlfeatures.scss */
+  border-bottom-color: #003f81; }
 .nlfeatures label.use-mapon {
   position: relative;
   float: left;
@@ -144,33 +106,26 @@
   width: 8em;
   text-align: left;
   font-size: 1.1em;
-  margin: 0;
-}
-/* line 155, ../../../_sass/shared/css/nlfeatures.scss */
-.nlfeatures label.use-mapon input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin: 0;
-  float: none;
-  padding: 0;
-}
-/* line 164, ../../../_sass/shared/css/nlfeatures.scss */
+  margin: 0; }
+  .nlfeatures label.use-mapon input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    float: none;
+    padding: 0; }
 .nlfeatures .nlflash {
   display: none;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -khtml-border-radius: 5px;
-  border-radius: 5px;
+  margin-top: -3px;
   border: 1px solid #333;
   background: #eae9db;
   color: #333;
   padding: 2px 4px;
-  width: 25%;
-  opacity: 0.8;
-}
-/* line 178, ../../../_sass/shared/css/nlfeatures.scss */
+  width: 22%;
+  opacity: 0.8; }
 .nlfeatures label.olButton {
-  color: #ddd;
-}
+  color: #ddd; }
+
+.field .use-mapon {
+  clear: none !important;
+  line-height: 2.125em; }

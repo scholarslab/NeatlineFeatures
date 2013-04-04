@@ -29,12 +29,12 @@ namespace :watch do
 
   desc 'This watches the CSS files.'
   task :sass do
-    sh %{sass --watch views/shared/css/nlfeatures.scss:views/shared/css/nlfeatures.css}
+    sh %{sass --watch _sass/shared/css/nlfeatures.scss:views/shared/css/nlfeatures.css}
   end
 
   desc 'This watches coffee script files.'
   task :coffee do
-    sh %{coffee --watch --compile views/admin/javascripts/ views/shared/javascripts/}
+    sh %{coffee --watch --map --compile views/admin/javascripts/ views/shared/javascripts/}
   end
 
 #  desc 'This watches the Jasmine spec Coffee Script files.'
@@ -50,7 +50,7 @@ end
 
 desc 'This compiles the CoffeeScript files.'
 task :coffee do
-  sh %{find . -name \\*.coffee | xargs coffee --compile}
+  sh %{find . -name \\*.coffee | xargs coffee --map --compile}
 end
 
 desc "Updates the version in the 'plugin.ini' and 'package.json' files. If

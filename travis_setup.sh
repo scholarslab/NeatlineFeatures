@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 if [ -z $OMEKA_BRANCH ]; then
-OMEKA_BRANCH=stable-1.5
+OMEKA_BRANCH=stable-2.0
 fi
 
 export PLUGIN_DIR=`pwd`
@@ -42,7 +42,7 @@ prefix   = "omeka_"
 charset  = "utf8"
 EOF
 cp $OMEKA_DIR/.htaccess.changeme $OMEKA_DIR/.htaccess
-sed -i 's/[; ]*debug.exceptions *=.*/debug.exceptions = 1/' $OMEKA_DIR/application/config/config.ini 
+sed -i 's/[; ]*debug.exceptions *=.*/debug.exceptions = true/' $OMEKA_DIR/application/config/config.ini 
 
 mysql -uroot -e "CREATE DATABASE omeka CHARACTER SET = 'utf8' COLLATE = 'utf8_unicode_ci';"
 gzip -cd $PLUGIN_DIR/features/data/db-dump.sql.gz | mysql -uroot omeka

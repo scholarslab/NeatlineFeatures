@@ -29,6 +29,10 @@ class NeatlineFeatures_Bug_Test extends NeatlineFeatures_Test
     public function testNullWkt()
     {
         $this->dispatch('/items/add');
-        $this->assertNotQueryContentContains('#element-38//script', 'wkt: null');
+
+        // I was looking inside the right element using
+        // assertNotContentsContains, but it was throwing an error (appeared to
+        // be a Zend problem). So I'm falling back on this.
+        $this->assertNotContains('wkt: null', $this->response->outputBody());
     }
 }

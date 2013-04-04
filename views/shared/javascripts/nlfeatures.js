@@ -181,8 +181,7 @@
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
-                    parseFloat(boundsArray[3])
-                );
+                    parseFloat(boundsArray[3]));
             }
 
             // Starting options.
@@ -199,8 +198,7 @@
                     [
                         new OpenLayers.Control.MousePosition(),
                         new OpenLayers.Control.LayerSwitcher()
-                    ]
-                );
+                    ]);
             }
 
             var options = {
@@ -263,8 +261,7 @@
                     parseFloat(boundsArray[0]),
                     parseFloat(boundsArray[1]),
                     parseFloat(boundsArray[2]),
-                    parseFloat(boundsArray[3])
-                );
+                    parseFloat(boundsArray[3]));
             }
 
             if (this.options.map.center !== undefined) {
@@ -445,7 +442,7 @@
                     styleMap: style
                 });
 
-                if (item.geo !== null) {
+                if (item.geo !== null && item.geo !== undefined) {
                     var kml      = new OpenLayers.Format.KML();
                     var features = kml.read(item.geo);
 
@@ -528,7 +525,7 @@
             var self;
             self = this;
 
-            if (el == null) {
+            if (el === null || el === undefined) {
                 el = this.getFeatureElement(feature);
             }
             el.off('mouseup').off('mousedown');
@@ -538,7 +535,7 @@
          * This deselects the current feature.
          */
         deselectFeature: function(feature, force) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
             if (this.isFocusLocked(feature) && !force) {
@@ -561,12 +558,12 @@
         },
 
         lockFocus: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
 
-            if (feature != null) {
-                if (feature.nlfeatures == null) {
+            if (feature !== null && feature !== undefined) {
+                if (feature.nlfeatures === null || feature.nlfeatures === undefined) {
                     feature.nlfeatures = {
                         focusLocked: true
                     };
@@ -577,22 +574,24 @@
         },
 
         unlockFocus: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
 
-            if (feature != null &&
-                feature.nlfeatures != null) {
+            if (feature !== null && feature !== undefined &&
+                feature.nlfeatures !== null &&
+                feature.nlfeatures !== undefined) {
                 feature.nlfeatures.focusLocked = false;
             }
         },
 
         isFocusLocked: function(feature) {
-            if (feature == null) {
+            if (feature === null || feature === undefined) {
                 feature = this.clickedFeature;
             }
-            return (feature != null &&
-                    feature.nlfeatures != null &&
+            return (feature !== null && feature !== undefined &&
+                    feature.nlfeatures !== null &&
+                    feature.nlfeatures !== undefined &&
                     feature.nlfeatures.focusLocked);
         },
 
@@ -613,19 +612,22 @@
                 overFeature: function(feature) {
                     // This checks for ad-hoc features created by OL for edit
                     // handles on a real feature.
-                    if (feature.geometry.parent != null) {
+                    if (feature.geometry.parent !== null &&
+                        feature.geometry.parent !== undefined) {
                         return;
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        self.clickedFeature != null &&
+                        self.clickedFeature !== null &&
+                        self.clickedFeature !== undefined &&
                         feature.id !== self.clickedFeature.id) {
 
                         self.deselectFeature();
                     }
 
                     if (self.modifyFeatures !== undefined &&
-                        (self.clickedFeature == null ||
+                        (self.clickedFeature === null ||
+                         self.clickedFeature === undefined ||
                          feature.id !== self.clickedFeature.id)) {
 
                         self.selectFeature(feature);
@@ -644,7 +646,8 @@
 
             // Handle clicks on the map to remove focus.
             this.map.events.register('click', this.map, function(e) {
-                if (self.clickedFeature != null) {
+                if (self.clickedFeature !== null &&
+                    self.clickedFeature !== undefined) {
                     self.deselectFeature(self.clickedFeature, true);
                 }
             });
@@ -947,12 +950,12 @@
         viewportOptionsValid: function() {
             var good = true;
 
-            good = good && this.options.zoom != null;
+            good = good && (this.options.zoom !== null && this.options.zoom);
             good = good && this.options.zoom > 0;
 
-            good = good && this.options.center != null;
-            good = good && this.options.center.lon != null;
-            good = good && this.options.center.lat != null;
+            good = good && (this.options.center !== null && this.options.center !== undefined);
+            good = good && (this.options.center.lon !== null && this.options.center.lon !== undefined);
+            good = good && (this.options.center.lat !== null && this.options.center.lat !== undefined);
             good = good && !isNaN(parseFloat(this.options.center.lon));
             good = good && !isNaN(parseFloat(this.options.center.lat));
 
@@ -968,7 +971,7 @@
                 lonlat = new OpenLayers.LonLat(center.lon, center.lat);
             var proj, wsg;
 
-            if (center.srs != null) {
+            if (center.srs !== null && center.srs !== undefined) {
                 wsg    = new OpenLayers.Projection(center.srs);
                 proj   = this.map.getProjectionObject();
                 lonlat = lonlat.transform(wsg, proj);
@@ -1009,8 +1012,7 @@
                               new OpenLayers.LonLat(-8738850.21367, 4584105.47978),
                               3,
                               false,
-                              false
-                          );
+                              false);
                       }
                 });
                 this.map.addControl(geolocate);

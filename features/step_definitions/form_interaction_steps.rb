@@ -33,6 +33,12 @@ Given /^I enter "([^"]*)" into "([^"]*)"$/ do |value, field|
   change_and_wait field
 end
 
+Given /^I click "([^"]*)" checkbox in the path "([^"]*)"$/ do |checkbox, parent|
+  within(:xpath, parent) do
+    check checkbox
+  end
+end
+
 Given /^I click "([^"]*)" checkbox in "([^"]*)"$/ do |checkbox, parent|
   within(parent) do
     check checkbox

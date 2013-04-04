@@ -6,13 +6,13 @@ Feature: Delete Features from an Item
 
   Scenario: Cannot Remove Only Coverage
     Given I am logged into the admin console
-    When I click "Add a new item to your archive"
+    When I click "Add a new item"
     Then I see 1 ".input-block" in "#element-38"
     But I should not see "#remove_element_38" in "#element-38"
 
   Scenario: Add Coverage
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     When I click "add_element_38"
     Then I should see "#Elements-38-1-widget" in "#element-38"
     And I see 2 ".input-block" in "#element-38"
@@ -21,11 +21,11 @@ Feature: Delete Features from an Item
   @javascript
   Scenario: Remove First Coverage
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "1" into "Elements-38-0-free"
     And I click "add_element_38"
     And I enter "2" into "Elements-38-1-free"
-    When I click on XPath ".//div[@class='input-block'][1]//input[@id='remove_element_38']"
+    When I click on XPath ".//div[@id='element-38']//div[@class='input-block'][1]//input[@value='Remove']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
     And I see "#Elements-38-1-free" contains "2"
@@ -34,11 +34,11 @@ Feature: Delete Features from an Item
   @javascript
   Scenario: Remove Second Coverage
     Given I am logged into the admin console
-    And I click "Add a new item to your archive"
+    And I click "Add a new item"
     And I enter "1" into "Elements-38-0-free"
     And I click "add_element_38"
     And I enter "2" into "Elements-38-1-free"
-    When I click on XPath ".//div[@class='input-block'][2]//input[@id='remove_element_38']"
+    When I click on XPath ".//div[@id='element-38']//div[@class='input-block'][2]//input[@value='Remove']"
     And I click "OK" in the alert
     Then I see 1 ".input-block" in "#element-38"
     And I see "#Elements-38-0-text" contains "1"
