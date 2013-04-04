@@ -23,18 +23,18 @@ Dublin Core Element Set named "Use Map."
 Go to the Item Edit view for the item you want to associate a geospatial
 feature with. Scroll to the Coverage field and select "Use Map"
 
-<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_1.png"><img class="alignnone size-full wp-image-430" title="features_1" src="http://23.21.98.97/wp-content/uploads/2011/05/features_1.png" alt="" width="620" height="277" /></a>
+<a href="http://neatline.org/wp-content/uploads/2013/04/features_1.png"><img class="alignnone size-full wp-image-430" title="features_1" src="http://neatline.org/wp-content/uploads/2013/04/features_1.png" alt="" width="620" height="277" /></a>
 
 This will reveal a map with some basic editing tools. If your browser supports
 this and if you give this page permission to know where you are, the map will
 also center on your current location.
 
-<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png"><img class="alignnone size-full wp-image-431" title="features_2" src="http://23.21.98.97/wp-content/uploads/2011/05/features_2.png" alt="" width="627" height="536" /></a>
+<a href="http://neatline.org/wp-content/uploads/2013/04/features_2.png"><img class="alignnone size-full wp-image-431" title="features_2" src="http://neatline.org/wp-content/uploads/2013/04/features_2.png" alt="" width="627" height="536" /></a>
 
 Simply zoom to the location you want to draw a feature on, select the drawing
 tool, and draw.
 
-<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png"><img class="alignnone size-full wp-image-432" title="features_3" src="http://23.21.98.97/wp-content/uploads/2011/05/features_3.png" alt="" width="622" height="535" /></a>
+<a href="http://neatline.org/wp-content/uploads/2013/04/features_3.png"><img class="alignnone size-full wp-image-432" title="features_3" src="http://neatline.org/wp-content/uploads/2013/04/features_3.png" alt="" width="622" height="535" /></a>
 
 There are three drawing tools, from left to right:
 
@@ -58,7 +58,7 @@ NeatlineFeatures also provides you a choice of base layers for your map. To
 select a different base layer, click on the stack of papers in the upper-right
 corner of the coverage map and select from the list.
 
-<a href="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png"><img class="alignnone size-full wp-image-474" title="NeatlineFeatures select base layer" src="http://23.21.98.97/wp-content/uploads/2011/05/Screen-shot-2012-04-10-at-2.49.43-PM.png" alt="" width="640" height="548" /></a>
+<a href="http://neatline.org/wp-content/uploads/2013/04/features_4.png"><img class="alignnone size-full wp-image-474" title="NeatlineFeatures select base layer" src="http://neatline.org/wp-content/uploads/2013/04/features_4.png" alt="" width="640" height="548" /></a>
 
 ### Textual Information
 
@@ -70,7 +70,7 @@ still enter text and HTML into the coverage field.
 Once you have drawn a coverage on an item, an interactive map viewer will
 appear on the item view with the coverage you drew.
 
-<a href="http://23.21.98.97/wp-content/uploads/2011/05/features_4.png"><img class="alignnone size-full wp-image-433" title="features_4" src="http://23.21.98.97/wp-content/uploads/2011/05/features_4.png" alt="" width="765" height="545" /></a>
+<a href="http://neatline.org/wp-content/uploads/2013/04/features_5.png"><img class="alignnone size-full wp-image-433" title="features_4" src="http://neatline.org/wp-content/uploads/2013/04/features_5.png" alt="" width="765" height="545" /></a>
 
 Any text entered in the coverage field will display under the map.
 
