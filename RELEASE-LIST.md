@@ -9,6 +9,8 @@ It's easiest to start with a fresh repository, so the instructions start there.
 1. `cd omeka/plugins`
 1. `git clone git@github.com:scholarslab/NeatlineFeatures.git`
 1. `cd NeatlineFeatures`
+1. `git checkout develop`
+1. `git checkout master`
 1. `git flow init`
 1. `git flow release start $VERSION`
 1. `rake version[$VERSION]`
