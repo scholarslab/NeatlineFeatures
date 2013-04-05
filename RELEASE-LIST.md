@@ -24,7 +24,7 @@ It's easiest to start with a fresh repository, so the instructions start there.
    * `git commit` (if there are new translations)
 1. `git commit`
 1. create new db with installation and features package installed and dump to
-  `features/data/db-dump.sql.gz`.
+  `features/data/db-dump.sql.gz` (`rake vm:dbdump`).
 1. `git commit`
 1. `rake package`
 1. quick check the zip
