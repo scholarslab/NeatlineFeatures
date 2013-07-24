@@ -1,9 +1,11 @@
 {
-    "name"         : "NeatlineFeatures",
-    "version"      : "1.1.0",
+    "name"         : "neatlinefeatures",
+    "version"      : "2.0.0",
     "dependencies" : {
-        "inireader" : "~0.2.4",
-        "iniparser" : "~1.0.5",
-        "glob"      : "~3.1.9"
+        "inireader"     : "~0.2.4",
+        "iniparser"     : "~1.0.5",
+        "glob"          : "~3.1.9",
+        "coffee-script" : "~1.6.3",
+        "uglify-js"     : "~2.3.6"
     }
 }

@@ -14,7 +14,7 @@ Feature: Delete Features from an Item
     Given I am logged into the admin console
     And I click "Add a new item"
     When I click "add_element_38"
-    Then I should see "#Elements-38-1-widget" in "#element-38"
+    Then I should see "#Elements-38-1-free" in "#element-38"
     And I see 2 ".input-block" in "#element-38"
     And I see 2 "input.remove-element" in "#element-38"
 

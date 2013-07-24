@@ -170,6 +170,12 @@ task :build_mo do
   end
 end
 
+desc 'Dumps the database on the local system.'
+task :dbdump, [:output] do |task, args|
+  output = args[:output] || 'features/data/db-dump.sql.gz'
+  sh %{mysqldump -uomeka -pomeka omeka | gzip > #{output}}
+end
+
 begin
   require 'cucumber/rake/task'
 
@@ -201,6 +207,17 @@ begin
   desc 'Run tasks for Travis CI.'
   task :travis do
     system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL=null && bundle exec cucumber')
+  end
+
+  desc 'Run tasks for Travis CI with MySQL cleaning.'
+  task :travisclean do
+    system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL="mysql -uomeka -pomeka omeka" && bundle exec cucumber')
+  end
+
+  desc 'Run tagged tasks for Travis CI.'
+  task :travistag, [:task] do |t, args|
+    task = args[:task]
+    system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL="mysql -uomeka -pomeka omeka" && bundle exec cucumber --tags ' + task)
   end
 
   desc 'Run in neatline.dev environment. The task defaults to "cucumber:default".'
