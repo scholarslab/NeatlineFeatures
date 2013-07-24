@@ -29,7 +29,7 @@ It's easiest to start with a fresh repository, so the instructions start there.
    dump to `features/data/db-dump.sql.gz` (`rake vm:dbdump` or `rake dbdump`).
 1. `git commit`
 1. `rake package`
-1. quick check the zip
+1. quick check the zip in `./pkg/`
 1. test the zip
 1. `git flow release finish $VERSION`
 1. `git push`
