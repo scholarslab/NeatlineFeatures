@@ -19,8 +19,8 @@ echo
 echo "Feature Tests"
 cd ..
 export OMEKA_HOST=http://localhost
-export OMEKA_USER=neatline
-export OMEKA_PASSWD=neatline
+export OMEKA_USER=features
+export OMEKA_PASSWD=features
 export OMEKA_MYSQL=null
 # cucumber --profile default --tags @current
 cucumber --profile default

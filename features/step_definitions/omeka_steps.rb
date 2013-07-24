@@ -12,7 +12,7 @@ end
 Given /^I edit "([^"]*)"$/ do |title|
   steps %Q{
     Given I click on "#{title}"
-    Given I click "Edit this Item"
+    Given I click "Edit"
   }
 end
 

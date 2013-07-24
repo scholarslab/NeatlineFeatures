@@ -31,11 +31,11 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
 
     // Variables {{{
     /**
-     * The NeatlineFeaturesPlugin object.
+     * The Omeka_Test_Helper_Plugin object.
      *
-     * @var NeatlineFeaturesPlugin
+     * @var Omeka_Test_Helper_Plugin
      **/
-    public $nfPlugin;
+    public $phelper;
 
     /**
      * The user we're logged in as.
@@ -105,13 +105,10 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->user = $this->db->getTable('user')->find(1);
         $this->_authenticateUser($this->user);
 
-        $plugin_broker = get_plugin_broker();
-        $this->nfPlugin = $this->_addHooksAndFilters(
-            $plugin_broker, 'NeatlineFeatures');
-        $helper = new Omeka_Test_Helper_Plugin();
-        $helper->setUp('NeatlineFeatures');
+        $this->phelper = new Omeka_Test_Helper_Plugin;
+        $this->phelper->setUp('NeatlineFeatures');
 
-        $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->core);
+        $this->_dbHelper = Omeka_Test_Helper_Db::factory($this->application);
 
         // Retrieve the element for some DC fields.
         $el_table = get_db()->getTable('Element');
@@ -124,9 +121,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_coverage = $el_table
             ->findByElementSetNameAndElementName('Dublin Core', 'Coverage');
         $this->_cutil = new NeatlineFeatures_Utils_View();
-        $this->_cutil->setEditOptions(
-            'Elements[38][0]', null, array(), null, $this->_coverage
-        );
+        $this->_cutil->setEditOptions(null, $this->_coverage, "", "Elements[38][0]", 0);
 
         $this->_item = new Item;
         $this->_item->save();
@@ -176,8 +171,6 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $this->_todel = array();
 
         $this->_item = null;
-
-        $this->nfPlugin->uninstall();
     }
     // }}}
 
@@ -214,7 +207,7 @@ class NeatlineFeatures_Test extends Omeka_Test_AppTestCase
         $etext->html = $html;
         $etext->element_id = $element->id;
         $etext->record_id = $item->id;
-        $etext->record_type_id = 2;
+        $etext->record_type = get_class($item);
         $etext->save();
 
         $item[$element->name] = $etext;

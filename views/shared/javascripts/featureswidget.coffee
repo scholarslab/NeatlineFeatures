@@ -4,24 +4,6 @@
 # This is a controller for the Features map. It sits a level above the map
 # itself, and therefore, it can coordinate the map with the rest of the editing
 # aparatus for the admin interface.
-#
-# This assumes that it is initialized with an existing HTML structure like
-# below. `idPrefix` is inferred from the parent element used to construct the
-# widget, and the input are assumed to have the IDs below based on that.
-#
-#
-# <div id="{idPrefix}widget" class='nlfeatures nlfeatures-edit'>
-#   <div>
-#     <!-- hidden field input {idPrefix}text  -->
-#     <!-- free-form textarea {idPrefix}free  -->
-#     <!-- Use HTML checkbox  {idPrefix}html  -->
-#     <!-- Use Map checkbox   {idPrefix}mapon -->
-#   </div>
-#   <div>
-#     <div id="{idPrefix}map"></div>
-#     <div class='nlfeatures-map-tools'></div>
-#   </div>
-# </div>
 
 (($) ->
   ## Some utility functions
@@ -64,34 +46,40 @@
   # the mode.
 
   class BaseWidget
+
     constructor: (@widget) ->
 
+    $: (selector) ->
+      $(selector, @parent)
+
+    value: -> @widget.options.values
+
     initMap: ->
-      map = @fields.map
-      input = @widget.options.values
-      item =
+      map   = @fields.map
+      input = this.value()
+      item  =
         title  : 'Coverage'
         name   : 'Coverage'
         id     : @widget.element.attr 'id'
-        geo    : input.geo
+        geo    : (input?.geo) ? ""
       local_options =
         mode   : @widget.options.mode
         json   : item
         markup :
           id_prefix: @widget.options.id_prefix
-      local_options.zoom       = input.zoom   if input.zoom?
-      local_options.center     = input.center if input.center?
-      local_options.base_layer = input.base_layer if input.base_layer?
+      local_options.zoom       = (input?.zoom)       ? null
+      local_options.center     = (input?.center)     ? null
+      local_options.base_layer = (input?.base_layer) ? null
 
-      all_options = $.extend true, {}, @widget.options.map_options, local_options
+      all_options = $.extend true, {}, @widget.options.map_options, @widget.options.values, local_options
       @nlfeatures = map
         .nlfeatures(all_options)
         .data('nlfeatures')
 
       @nlfeatures
 
-
   class ViewWidget extends BaseWidget
+
     init: ->
       this.build()
       this.initMap()
@@ -125,6 +113,7 @@
 
 
   class EditWidget extends BaseWidget
+
     init: ->
       this.build()
       this.initMap()
@@ -132,53 +121,46 @@
       this.populate()
       this.wire()
 
-    build: ->
-      el          = $ @widget.element
-      id_prefix   = derefid @widget.options.id_prefix
-      name_prefix = @widget.options.name_prefix
-      use_html    = @widget.options.labels.html
-      use_map     = @widget.options.labels.map
-
-      map_container = $ """
-        <div class="nlfeatures map-container">
-          <div id="#{id_prefix}map"></div>
-          <div class='nlfeatures-map-tools'>
-            <div class='nlflash'></div>
+    _buildMap: (parent, id_prefix) ->
+      $(parent)
+        .addClass('nlfeatures')
+        .addClass('nlfeatures-edit')
+        .before """
+          <div class="nlfeatures map-container">
+            <div id="#{id_prefix}map"></div>
+            <div class='nlfeatures-map-tools'>
+              <div class='nlflash'></div>
+            </div>
           </div>
-        </div>
-        """
-      text_container = $ """
-        <div class="nlfeatures text-container">
+          """
+
+    _buildInputs: (parent, id_prefix, name_prefix) ->
+      # <div class="input-block"><div class="input"><textarea name="Elements[38][0][text]" id="Elements-38-0-text" rows="3" cols="50"></textarea></div><div class="controls"><input type="submit" name="" value="Remove" class="remove-element red button"></div><label class="use-html">Use HTML<input type="hidden" name="Elements[38][0][html]" value="0"><input type="checkbox" name="Elements[38][0][html]" id="Elements-38-0-html" value="1" class="use-html-checkbox"></label></div>
+      $(parent)
+        .after """
+          <textarea name=#{name_prefix}[free]" id="#{id_prefix}free" rows="3" cols="50"></textarea>
           <input type="hidden" id="#{id_prefix}geo" name="#{name_prefix}[geo]" value="" />
           <input type="hidden" id="#{id_prefix}zoom" name="#{name_prefix}[zoom]" value="" />
           <input type="hidden" id="#{id_prefix}center_lon" name="#{name_prefix}[center_lon]" value="" />
           <input type="hidden" id="#{id_prefix}center_lat" name="#{name_prefix}[center_lat]" value="" />
           <input type="hidden" id="#{id_prefix}base_layer" name="#{name_prefix}[base_layer]" value="" />
           <input type="hidden" id="#{id_prefix}text" name="#{name_prefix}[text]" value="" />
-          <textarea id="#{id_prefix}free" name="#{name_prefix}[free]" class="textinput" rows="5" cols="50"></textarea>
-          <div>
-            <label class="use-html">#{use_html}
-              <input type="hidden" name="#{name_prefix}[html]" value="0" />
-              <input type="checkbox" name="#{name_prefix}[html]" id="#{id_prefix}html" value="1" />
-            </label>
-            <label class="use-mapon">#{use_map}
-              <input type="hidden" name="#{name_prefix}[mapon]" value="0" />
+          """
+
+    _buildUseMap: (parent, id_prefix, name_prefix, use_map) ->
+      $('.use-html', parent.parent().parent())
+        .after """
+            <label class="use-mapon">#{use_map}<input type="hidden" name="#{name_prefix}[mapon]" value="0" />
               <input type="checkbox" name="#{name_prefix}[mapon]" id="#{id_prefix}mapon" value="1" />
             </label>
-          </div>
-        </div>
-        """
+          """
 
-      el.addClass('nlfeatures')
-        .addClass('nlfeatures-edit')
-        .append(map_container)
-        .append(text_container)
-
+    _populateFields: (parent, id_prefix) ->
+      grand = parent.parent()
       @fields =
-        map_container  : el.find ".map-container"
-        text_container : el.find ".text-container"
+        map_container  : grand.find ".map-container"
         map            : $ "##{id_prefix}map"
-        map_tools      : el.find ".nlfeatures-map-tools"
+        map_tools      : grand.find ".nlfeatures-map-tools"
         mapon          : $ "##{id_prefix}mapon"
         text           : $ "##{id_prefix}text"
         free           : $ "##{id_prefix}free"
@@ -189,9 +171,21 @@
         center_lon     : $ "##{id_prefix}center_lon"
         center_lat     : $ "##{id_prefix}center_lat"
         base_layer     : $ "##{id_prefix}base_layer"
-        flash          : el.find ".nlflash"
+        flash          : grand.find ".nlflash"
 
-      el
+    build: ->
+      el          = $ @widget.element
+      id_prefix   = derefid @widget.options.id_prefix
+      name_prefix = @widget.options.name_prefix
+      use_html    = @widget.options.labels.html
+      use_map     = @widget.options.labels.map
+
+      this._buildMap       el, id_prefix
+      this._buildInputs    el, id_prefix, name_prefix
+      this._buildUseMap    el, id_prefix, name_prefix, use_map
+      this._populateFields el, id_prefix
+
+      this
 
     # If "Use HTML" isn't checked, this polls until the TinyMCE controls have
     # initialized, and then it turns off the TEXTAREA specified.
@@ -218,15 +212,17 @@
       @fields.html.change  => this._updateTinyEvents()
 
     populate: (values=@widget.options.values) ->
-      @fields.html.attr      'checked', values.is_html
-      @fields.mapon.attr     'checked', values.is_map
-      @fields.geo.val        to_s(values.geo)
-      @fields.zoom.val       to_s(values.zoom)
-      @fields.center_lon.val to_s(values.center?.lon)
-      @fields.center_lat.val to_s(values.center?.lat)
-      @fields.base_layer.val to_s(values.base_layer)
-      @fields.text.val       to_s(values.text)
-      @fields.free.val       stripFirstLine(values.text)
+      if values?
+        @fields.html.prop        'checked', (+values.is_html)
+        @fields.mapon.prop       'checked', (+values.is_map)
+        @fields.geo.val          to_s(values.geo)
+        @fields.zoom.val         to_s(values.zoom)
+        if values.center?
+          @fields.center_lon.val to_s(values.center.lon)
+          @fields.center_lat.val to_s(values.center.lat)
+        @fields.base_layer.val   to_s(values.base_layer)
+        @fields.text.val         to_s(values.text)
+        @fields.free.val         stripFirstLine(values.text)
 
     wire: ->
       updateFields = => this.updateFields(@fields.free.val())
@@ -247,8 +243,8 @@
 
     # Tests for the content types active. These look at the states of the
     # checkboxes.
-    usesHtml: -> @fields.html.is  ':checked'
-    usesMap : -> @fields.mapon.is ':checked'
+    usesHtml: -> @fields.html.prop  'checked'
+    usesMap : -> @fields.mapon.prop 'checked'
 
     showMap : ->
       tools = @fields.map.children 'button'
@@ -366,7 +362,7 @@
 
     # This converts the ID prefix to a name prefix, which uses array-access.
     _idPrefixToNamePrefix: (id_prefix=@options.id_prefix) ->
-      id_prefix = derefid id_prefix
+      id_prefix = deref id_prefix
       parts     = (p for p in id_prefix.split '-' when p.length > 0)
       base      = parts.shift()
       indices   = ("[#{p}]" for p in parts)
@@ -379,4 +375,3 @@
       $.Widget.prototype._setOption.apply this, arguments
 
   ))(jQuery)
-

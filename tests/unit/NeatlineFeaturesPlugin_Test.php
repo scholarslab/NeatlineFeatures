@@ -64,7 +64,10 @@ class NeatlineFeaturesPlugin_Test extends NeatlineFeatures_Test
      **/
     public function testUninstall()
     {
-        $this->nfPlugin->uninstall();
+        $this
+            ->phelper
+            ->pluginBroker
+            ->callHook('uninstall', array(), 'NeatlineFeatures');
 
         $db     = $this->db;
         $tables = $db->listTables();

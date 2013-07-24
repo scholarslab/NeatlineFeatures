@@ -5,6 +5,7 @@ end
 
 guard 'livereload' do
   watch(%r{views/.+\.(css|js|html|php|inc)})
+  watch(%r{.*\.php$})
 end
 
 def cake_build
@@ -20,7 +21,7 @@ guard :shell do
   end
 end
 
-guard 'coffeescript', :input => 'views/shared/javascripts' do
+guard 'coffeescript', :input => 'views/shared/javascripts', :source_map => true do
   watch(/views\/shared\/javascripts\/(.*)\.coffee/)
 end
 

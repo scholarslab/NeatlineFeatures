@@ -1,8 +1,9 @@
-source :rubygems
+source 'https://rubygems.org'
 
 group :test do
   gem 'capybara'
   gem 'capybara-webkit'
+  gem 'capybara-screenshot'
   gem 'cucumber'
   gem 'geo_magic'
   gem 'growl'
@@ -24,6 +25,7 @@ group :development do
   gem 'peach'
   gem 'rake'
   gem 'sass'
+  gem 'rb-fsevent'
 end
 
 group :vagrant do

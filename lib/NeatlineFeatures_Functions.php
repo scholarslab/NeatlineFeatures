@@ -63,7 +63,7 @@ class NeatlineFeatures_Functions
      * @return bool $isKml Whether the string is KML.
      * @author Eric Rochester
      **/
-    public function isKml($coverage)
+    public static function isKml($coverage)
     {
         $isKml  = false;
 
@@ -100,20 +100,9 @@ class NeatlineFeatures_Functions
      * @return bool $isKml Does the coverage contain KML?
      * @author Eric Rochester
      **/
-    public function isKmlCoverage($coverage)
+    public static function isKmlCoverage($coverage)
     {
-        $isKml = false;
-
-        $pattern = '/geo: "(.*?[^\\\\])",/';
-        $matches = array();
-        if (preg_match($pattern, $coverage, $matches) === 1) {
-            $kml   = $matches[1];
-            $kml   = str_replace('\\"', '"', $kml);
-            $kml   = str_replace('\\/', '/', $kml);
-            $isKml = NeatlineFeatures_Functions::isKml($kml);
-        }
-
-        return $isKml;
+        return (substr_compare($coverage, '<kml ', 0, 5) === 0);
     }
 
     /**
@@ -132,6 +121,7 @@ class NeatlineFeatures_Functions
     public static function displayCoverage($text, $record, $elementText=NULL)
     {
         $util = new NeatlineFeatures_Utils_View();
+        $util->setCoverageElement();
         $util->setViewOptions($text, $record, $elementText);
 
         $output = $util->getView();
@@ -155,12 +145,53 @@ class NeatlineFeatures_Functions
 
     public static function fdump($filename, $name, $obj)
     {
+        if (is_string($obj)) {
+            $cname = 'string';
+        } else if (is_array($obj)) {
+            $cname = 'array';
+        } else {
+            $cname = '';
+        }
+
         if (is_null($obj)) {
             $repr = "NULL";
         } else {
             $repr = print_r($obj, true);
         }
-        NeatlineFeatures_Functions::flog($filename, "$name => $repr");
+
+        NeatlineFeatures_Functions::flog($filename, "($cname) $name => $repr");
+    }
+
+    public static function fstack($filename, $name, $backtrace=null)
+    {
+        if (is_null($backtrace)) {
+            $backtrace = debug_backtrace();
+        }
+        $buffer = '';
+        $i = 0;
+        foreach ($backtrace as $node) {
+            $buffer .= "$i. ";
+            if (array_key_exists('file', $node)) {
+                $buffer .= basename($node['file']);
+            }
+            $buffer .= ":" . $node['function'];
+            if (array_key_exists('line', $node)) {
+                $buffer .=  " ({$node['line']})";
+            }
+            $buffer .= "\n";
+            $i++;
+        }
+        NeatlineFeatures_Functions::flog($filename, "$name => $buffer");
+    }
+
+    public static function clog($msg)
+    {
+        echo '<script>console.log("' . str_replace('"', '\"', $msg) . '");</script>';
+    }
+
+    public static function cdump($obj)
+    {
+        NeatlineFeatures_Functions::clog(is_null($obj) ? "NULL" : print_r($obj, true));
     }
 
 }

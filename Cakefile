@@ -44,15 +44,15 @@ task 'build:browser', 'Compile and minify for use in browser', ->
     util.log "Creating #{builddir}/#{targetfile}.js"
 
     code = contents.join "\n\n"
-    fs.mkdir builddir, 0755, ->
+    fs.mkdir builddir, 0o0755, ->
       fs.writeFile "#{builddir}/#{targetfile}.js", code, 'utf8', (err) ->
         console.log err if err
         try
           util.log "Creating #{builddir}/#{targetfile}-min.js"
-          {parser, uglify} = require 'uglify-js'
-          ast = parser.parse code
-          code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle ast, extra: yes
+          {code} = require('uglify-js').minify code, fromString: true
           fs.writeFile "#{builddir}/#{targetfile}-min.js", code
+        catch e
+          util.log "ERROR: #{e}"
 
 task 'clean', 'Clean up all minified JS files.', ->
   pattern = "#{builddir}/#{targetprefix}-*.js"
