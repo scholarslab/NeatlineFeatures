@@ -14,6 +14,7 @@ It's easiest to start with a fresh repository, so the instructions start there.
 1. `git flow init`
 1. `git flow release start $VERSION`
 1. `npm install`
+1. `PATH=$PATH:./node_modules/.bin`
 1. `rake version[$VERSION]`
 1. `rake compass coffee minify`
 1. `git add --all views/shared/javascripts`
