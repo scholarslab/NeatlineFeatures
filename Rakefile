@@ -203,6 +203,17 @@ begin
     system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL=null && bundle exec cucumber')
   end
 
+  desc 'Run tasks for Travis CI with MySQL cleaning.'
+  task :travisclean do
+    system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL="mysql -uomeka -pomeka omeka" && bundle exec cucumber')
+  end
+
+  desc 'Run tagged tasks for Travis CI.'
+  task :travistag, [:task] do |t, args|
+    task = args[:task]
+    system('export OMEKA_HOST=http://localhost OMEKA_USER=neatline OMEKA_PASSWD=neatline OMEKA_MYSQL="mysql -uomeka -pomeka omeka" && bundle exec cucumber --tags ' + task)
+  end
+
   desc 'Run in neatline.dev environment. The task defaults to "cucumber:default".'
   task :neatlinecuke, [:task] do |t, args|
     task = args[:task] || 'cucumber:default'
