@@ -170,6 +170,12 @@ task :build_mo do
   end
 end
 
+desc 'Dumps the database on the local system.'
+task :dbdump, [:output] do |task, args|
+  output = args[:output] || 'features/data/db-dump.sql.gz'
+  sh %{mysqldump -uomeka -pomeka omeka | gzip > #{output}}
+end
+
 begin
   require 'cucumber/rake/task'
 
