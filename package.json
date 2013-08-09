@@ -1,6 +1,6 @@
 {
     "name"         : "neatlinefeatures",
-    "version"      : "2.0.0",
+    "version"      : "2.0.1",
     "dependencies" : {
         "inireader"     : "~0.2.4",
         "iniparser"     : "~1.0.5",
