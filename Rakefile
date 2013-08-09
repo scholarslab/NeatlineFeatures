@@ -111,12 +111,13 @@ PackageTask.new('NeatlineFeatures') do |p|
   p.need_tar_gz = true
   p.need_zip    = true
 
-  p.package_files.include('plugin.*')
-  p.package_files.include('lib/**/*.php')
-  p.package_files.include('LICENSE')
-  p.package_files.include('models/**.php')
-  p.package_files.include('NeatlineFeaturesPlugin.php')
   p.package_files.include('README.md')
+  p.package_files.include('LICENSE')
+  p.package_files.include('plugin.*')
+  p.package_files.include('NeatlineFeaturesPlugin.php')
+  p.package_files.include('lib/**/*.php')
+  p.package_files.include('languages/*')
+  p.package_files.include('models/**/*.php')
   p.package_files.include('views/**/*.css')
   p.package_files.include('views/**/*.gif')
   p.package_files.include('views/**/*.js')
