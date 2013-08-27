@@ -171,23 +171,34 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      * @return void
      * @author Eric Rochester <erochest@virginia.edu>
      **/
-    public function hookAdminHead()
+    public function hookAdminHead($args)
     {
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) admin_head");
-        queue_css_file('nlfeatures');
-        queue_css_file('nlfeature-editor');
+        $fc         = Zend_Registry::get('bootstrap')
+            ->getResource('frontcontroller');
+        $req        = $fc->getRequest();
+        $module     = $req->getModuleName();
+        $controller = $req->getControllerName();
+        $action     = $req->getActionName();
 
-        // We are also outputting the script tags to load OpenLayers here.
-        $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.8&sensor=false");
-        queue_js_file('libraries/openlayers/OpenLayers.min');
-        queue_js_file('libraries/tile.stamen');
+        if ($controller == 'items'
+            && ($action == 'edit' || $action == 'show')) {
+            queue_css_file('nlfeatures');
+            queue_css_file('nlfeature-editor');
 
-        if (getenv('APPLICATION_ENV') == 'development') {
-            queue_js_file('nlfeatures');
-            queue_js_file('editor/edit_features');
-            queue_js_file('featureswidget');
-        } else {
-            queue_js_file($this->_nlMinJs());
+            // We are also outputting the script tags to load OpenLayers here.
+            $this->_queueJsUri(
+                "http://maps.google.com/maps/api/js?v=3.8&sensor=false"
+            );
+            queue_js_file('libraries/openlayers/OpenLayers.min');
+            queue_js_file('libraries/tile.stamen');
+
+            if (getenv('APPLICATION_ENV') == 'development') {
+                queue_js_file('nlfeatures');
+                queue_js_file('editor/edit_features');
+                queue_js_file('featureswidget');
+            } else {
+                queue_js_file($this->_nlMinJs());
+            }
         }
     }
 
@@ -199,19 +210,30 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
      **/
     public function hookPublicHead()
     {
-        // NeatlineFeatures_Functions::flog('/tmp/nlfeatures.log', "(hook) public_theme_header");
-        queue_css_file('nlfeatures');
+        $fc         = Zend_Registry::get('bootstrap')
+            ->getResource('frontcontroller');
+        $req        = $fc->getRequest();
+        $module     = $req->getModuleName();
+        $controller = $req->getControllerName();
+        $action     = $req->getActionName();
 
-        // We are also outputting the script tags to load OpenLayers here.
-        $this->_queueJsUri("http://maps.google.com/maps/api/js?v=3.8&sensor=false");
-        queue_js_file('libraries/openlayers/OpenLayers.min');
-        queue_js_file('libraries/tile.stamen');
+        if ($controller == 'items'
+            && ($action == 'edit' || $action == 'show')) {
+            queue_css_file('nlfeatures');
 
-        if (getenv('APPLICATION_ENV') == 'development') {
-            queue_js_file('nlfeatures');
-            queue_js_file('featureswidget');
-        } else {
-            queue_js_file($this->_nlMinJs());
+            // We are also outputting the script tags to load OpenLayers here.
+            $this->_queueJsUri(
+                "http://maps.google.com/maps/api/js?v=3.8&sensor=false"
+            );
+            queue_js_file('libraries/openlayers/OpenLayers.min');
+            queue_js_file('libraries/tile.stamen');
+
+            if (getenv('APPLICATION_ENV') == 'development') {
+                queue_js_file('nlfeatures');
+                queue_js_file('featureswidget');
+            } else {
+                queue_js_file($this->_nlMinJs());
+            }
         }
     }
 
