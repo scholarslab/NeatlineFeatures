@@ -289,7 +289,7 @@
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
-      geo = @nlfeatures.getKml()
+      geo = @nlfeatures.getWktForSave()
       @fields.geo.val geo
 
       zoom = @nlfeatures.getSavedZoom()
