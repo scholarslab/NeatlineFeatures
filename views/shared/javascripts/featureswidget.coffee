@@ -55,7 +55,7 @@
     value: -> @widget.options.values
 
     initMap: ->
-      map   = @fields.map
+      @map  = @fields.map
       input = this.value()
       item  =
         title  : 'Coverage'
@@ -72,11 +72,8 @@
       local_options.base_layer = (input?.base_layer) ? null
 
       all_options = $.extend true, {}, @widget.options.map_options, @widget.options.values, local_options
-      @nlfeatures = map
-        .nlfeatures(all_options)
-        .data('nlfeatures')
-
-      @nlfeatures
+      @map.nlfeatures(all_options)
+      @map
 
   class ViewWidget extends BaseWidget
 
@@ -227,17 +224,17 @@
     wire: ->
       updateFields = => this.updateFields(@fields.free.val())
       @fields.free.change updateFields
-      @nlfeatures.element
+      @map
         .bind('featureadded.nlfeatures', updateFields)
         .bind('update.nlfeatures'      , updateFields)
         .bind('delete.nlfeatures'      , updateFields)
         .bind('refresh.nlfeatures'     , updateFields)
         .bind('saveview.nlfeatures'    , =>
-          @nlfeatures.saveViewport()
+          @map.nlfeatures('saveViewport')
           this.updateFields()
           this.flash 'View Saved...'
         )
-      @nlfeatures.map.events.on(
+      @map.nlfeatures('getMap').events.on(
         changebaselayer: updateFields
       )
 
@@ -289,18 +286,18 @@
     # This handles passing the content from the visible inputs (the map) to the
     # hidden field that Omeka actually uses.
     updateFields: ->
-      geo = @nlfeatures.getWktForSave()
+      geo = @map.nlfeatures('getWktForSave')
       @fields.geo.val geo
 
-      zoom = @nlfeatures.getSavedZoom()
+      zoom = @map.nlfeatures('getSavedZoom')
       @fields.zoom.val zoom if zoom?
 
-      center = @nlfeatures.getSavedCenter()
+      center = @map.nlfeatures('getSavedCenter')
       if center?
         @fields.center_lon.val center.lon
         @fields.center_lat.val center.lat
 
-      base_layer = @nlfeatures.getBaseLayerCode()
+      base_layer = @map.nlfeatures('getBaseLayerCode')
       @fields.base_layer.val base_layer if base_layer?
 
       if this.usesHtml()

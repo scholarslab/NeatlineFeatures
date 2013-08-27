@@ -277,6 +277,11 @@
         },
 
         /*
+         * This returns the map.
+         */
+        getMap: function() { return this.map; },
+
+        /*
          * This creates the base layers.
          */
         _getBaseLayers: function() {
@@ -1687,9 +1692,9 @@
       };
 
       BaseWidget.prototype.initMap = function() {
-        var all_options, input, item, local_options, map, _ref, _ref1, _ref2, _ref3;
+        var all_options, input, item, local_options, _ref, _ref1, _ref2, _ref3;
 
-        map = this.fields.map;
+        this.map = this.fields.map;
         input = this.value();
         item = {
           title: 'Coverage',
@@ -1708,8 +1713,8 @@
         local_options.center = (_ref2 = (input != null ? input.center : void 0)) != null ? _ref2 : null;
         local_options.base_layer = (_ref3 = (input != null ? input.base_layer : void 0)) != null ? _ref3 : null;
         all_options = $.extend(true, {}, this.widget.options.map_options, this.widget.options.values, local_options);
-        this.nlfeatures = map.nlfeatures(all_options).data('nlfeatures');
-        return this.nlfeatures;
+        this.map.nlfeatures(all_options);
+        return this.map;
       };
 
       return BaseWidget;
@@ -1862,12 +1867,12 @@
           return _this.updateFields(_this.fields.free.val());
         };
         this.fields.free.change(updateFields);
-        this.nlfeatures.element.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('refresh.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
-          _this.nlfeatures.saveViewport();
+        this.map.bind('featureadded.nlfeatures', updateFields).bind('update.nlfeatures', updateFields).bind('delete.nlfeatures', updateFields).bind('refresh.nlfeatures', updateFields).bind('saveview.nlfeatures', function() {
+          _this.map.nlfeatures('saveViewport');
           _this.updateFields();
           return _this.flash('View Saved...');
         });
-        return this.nlfeatures.map.events.on({
+        return this.map.nlfeatures('getMap').events.on({
           changebaselayer: updateFields
         });
       };
@@ -1935,18 +1940,18 @@
       EditWidget.prototype.updateFields = function() {
         var base_layer, center, geo, text, zoom;
 
-        geo = this.nlfeatures.getWktForSave();
+        geo = this.map.nlfeatures('getWktForSave');
         this.fields.geo.val(geo);
-        zoom = this.nlfeatures.getSavedZoom();
+        zoom = this.map.nlfeatures('getSavedZoom');
         if (zoom != null) {
           this.fields.zoom.val(zoom);
         }
-        center = this.nlfeatures.getSavedCenter();
+        center = this.map.nlfeatures('getSavedCenter');
         if (center != null) {
           this.fields.center_lon.val(center.lon);
           this.fields.center_lat.val(center.lat);
         }
-        base_layer = this.nlfeatures.getBaseLayerCode();
+        base_layer = this.map.nlfeatures('getBaseLayerCode');
         if (base_layer != null) {
           this.fields.base_layer.val(base_layer);
         }
