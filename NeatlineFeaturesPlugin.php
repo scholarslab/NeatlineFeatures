@@ -181,7 +181,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
         $action     = $req->getActionName();
 
         if ($controller == 'items'
-            && ($action == 'edit' || $action == 'show')) {
+            && ($action == 'add' || $action == 'edit' || $action == 'show')) {
             queue_css_file('nlfeatures');
             queue_css_file('nlfeature-editor');
 
