@@ -277,6 +277,11 @@
         },
 
         /*
+         * This returns the map.
+         */
+        getMap: function() { return this.map; },
+
+        /*
          * This creates the base layers.
          */
         _getBaseLayers: function() {
