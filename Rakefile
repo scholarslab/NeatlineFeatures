@@ -146,7 +146,7 @@ task :update_pot do
   pot_duplicates = Tempfile.new("-duplicates.pot")
   pot_duplicates.close
 
-  files.pmap do |filename|
+  files.each do |filename|
     sh %{xgettext -L php --from-code=utf-8 -k__ --flag=__:1:pass-php-format --omit-header -F -o #{pot_temp.path} #{filename}}
   end
 

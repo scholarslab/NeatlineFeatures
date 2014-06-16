@@ -187,7 +187,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
 
             // We are also outputting the script tags to load OpenLayers here.
             $this->_queueJsUri(
-                "http://maps.google.com/maps/api/js?v=3.8&sensor=false"
+                "//maps.google.com/maps/api/js?v=3.8&sensor=false"
             );
             queue_js_file('libraries/openlayers/OpenLayers.min');
             queue_js_file('libraries/tile.stamen');
@@ -223,7 +223,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
 
             // We are also outputting the script tags to load OpenLayers here.
             $this->_queueJsUri(
-                "http://maps.google.com/maps/api/js?v=3.8&sensor=false"
+                "//maps.google.com/maps/api/js?v=3.8&sensor=false"
             );
             queue_js_file('libraries/openlayers/OpenLayers.min');
             queue_js_file('libraries/tile.stamen');

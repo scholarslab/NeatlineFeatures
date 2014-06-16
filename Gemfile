@@ -28,8 +28,3 @@ group :development do
   gem 'rb-fsevent'
 end
 
-group :vagrant do
-  gem 'vagrant', '~> 1.0.3'
-  gem 'zayin'
-end
-

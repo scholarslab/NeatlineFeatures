@@ -365,7 +365,7 @@ class Table_NeatlineFeature extends Omeka_Db_Table
     {
         $value = $default;
         try {
-            if (array_key_exists($key, $params)) {
+            if (array_key_exists($key, $params) && !empty($params[$key])) {
                 $value = $params[$key];
             }
         } catch (Exception $e) {
