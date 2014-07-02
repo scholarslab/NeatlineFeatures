@@ -20,7 +20,7 @@ It's easiest to start with a fresh repository, so the instructions start there.
 1. `git add --all views/shared/javascripts`
 1. `git commit`
 1. Update i18n:
-   * `tx pull --all`
+   * `tx pull --all --force`
    * `rake update_pot build_mo`
    * `git add --all languages`
    * `git commit` (if there are new translations)
