@@ -163,7 +163,7 @@ class NeatlineFeatures_Utils_View
         $this->_text        = $text;
         $this->_record      = $record;
         $this->_elementText = $elementText;
-        if (!is_null($elementText)) {
+        if (!is_null($elementText) && $elementText != NULL) {
             $this->_value   = $elementText->text;
         }
         $this->createInputNameStem();
@@ -412,7 +412,7 @@ class NeatlineFeatures_Utils_View
             }
         } else {
             $etext = $this->getElementText();
-            if (isset($etext)) {
+            if (isset($etext) && $etext != NULL && !is_null($etext)) {
                 $isHtml = (bool)$etext->html;
             }
         }
@@ -522,9 +522,10 @@ class NeatlineFeatures_Utils_View
         $etext  = $this->_elementText;
 
         // Pull a fresh $value, if we can.
-        $value = is_null($etext) ? $this->_text : $etext->getText();
+        $value = (is_null($etext) || $etext == NULL)
+               ? $this->_text : $etext->getText();
 
-        if (! is_null($etext) && is_null($etext->record_id)) {
+        if (! is_null($etext) && $etext != NULL && is_null($etext->record_id)) {
             // There's no data for this.
             $view = '';
         } else if ((bool)$isMap) {
