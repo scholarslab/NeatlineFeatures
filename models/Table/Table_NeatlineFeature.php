@@ -184,7 +184,8 @@ class Table_NeatlineFeature extends Omeka_Db_Table
      **/
     public function getRecordByElementText($element_text)
     {
-        if (is_null($element_text->record_id)) {
+        if (is_null($element_text) || $element_text == NULL ||
+            is_null($element_text->record_id)) {
             $select = NULL;
         } else {
             $select = $this->_db
