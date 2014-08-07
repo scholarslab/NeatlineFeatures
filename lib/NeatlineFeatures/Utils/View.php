@@ -605,11 +605,13 @@ class NeatlineFeatures_Utils_View
 
         if (is_null($post)) {
             $feature    = $this->getNeatlineFeature();
-            $geo        = $feature->geo;
-            $zoom       = $feature->zoom;
-            $center_lon = $feature->center_lon;
-            $center_lat = $feature->center_lat;
-            $base_layer = $feature->base_layer;
+            if (!is_null($feature)) {
+                $geo        = $feature->geo;
+                $zoom       = $feature->zoom;
+                $center_lon = $feature->center_lon;
+                $center_lat = $feature->center_lat;
+                $base_layer = $feature->base_layer;
+            }
         } else {
             $i          = $this->getIndex();
             $p          = array_key_exists($i, $post) ? $post[$i] : array();
