@@ -93,7 +93,7 @@ class NeatlineFeaturesPlugin extends Omeka_Plugin_AbstractPlugin
                 item_id         INT(10)        UNSIGNED NOT NULL,
                 element_text_id INT(10)        UNSIGNED NOT NULL,
                 is_map          TINYINT(1)     NOT NULL DEFAULT 0,
-                geo             TEXT           ,
+                geo             MEDIUMTEXT           ,
                 zoom            SMALLINT(2)    NOT NULL DEFAULT 3,
                 center_lon      DECIMAL(20, 7) NOT NULL DEFAULT 0.0,
                 center_lat      DECIMAL(20, 7) NOT NULL DEFAULT 0.0,
