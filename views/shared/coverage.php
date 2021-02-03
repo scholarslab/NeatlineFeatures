@@ -59,9 +59,9 @@
                     var textareaId = textarea.attr('id');
                     var enableIfChecked = function () {
                         if (this.checked) {
-                            tinyMCE.execCommand("mceAddControl", false, textareaId);
+                            tinyMCE.execCommand("mceAddEditor", false, textareaId);
                         } else {
-                            tinyMCE.execCommand("mceRemoveControl", false, textareaId);
+                            tinyMCE.execCommand("mceRemoveEditor", false, textareaId);
                         }
                     };
 
